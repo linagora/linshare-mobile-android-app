@@ -1,0 +1,3 @@
+include ':presentation', ':data'
+include ':domain'
+rootProject.name='Linshare'
