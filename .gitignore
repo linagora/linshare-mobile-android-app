@@ -1,0 +1,30 @@
+*.iml
+
+# Gradle files
+.gradle
+/build
+
+# Local configuration file (sdk path, etc)
+/local.properties
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+.externalNativeBuild
+.cxx
+
+# Android Studio captures folder
+captures/
+
+# Signing files
+*.jks
+/keystore.properties
+
+### AndroidStudio Patch ###
+!/gradle/wrapper/gradle-wrapper.jar
