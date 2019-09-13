@@ -20,9 +20,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro',
+                    "$rootProject.rootDir.absolutePath/domain/proguard-rules.pro",
+                    "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
             signingConfig signingConfigs.release
         }
     }
