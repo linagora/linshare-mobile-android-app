@@ -13,3 +13,7 @@ More information on http://www.linshare.org/
 ## Compilation Guide
 
 You will require Android Studio 3.5
+
+```
+./gradlew build
+```
