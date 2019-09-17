@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
@@ -64,9 +66,17 @@ if (propFile.exists()){
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin.stdlib
+
     implementation deps.androidx.appcompat
     implementation deps.androidx.core_ktx
 
+    implementation deps.dagger.android
+    implementation deps.dagger.android_support
+    implementation deps.dagger.dagger
+
     implementation project(':data')
     implementation project(':domain')
+
+    kapt deps.dagger.dagger_compiler
+    kapt deps.dagger.android_processor
 }
