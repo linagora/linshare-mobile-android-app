@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.di.annotation;
+package com.linagora.android.linshare.inject.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.*;

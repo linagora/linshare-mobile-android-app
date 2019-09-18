@@ -2,7 +2,7 @@ package com.linagora.android.linshare.view
 
 import androidx.lifecycle.ViewModel
 
-import com.linagora.android.linshare.di.annotation.ViewModelKey
+import com.linagora.android.linshare.inject.annotation.ViewModelKey
 
 import dagger.Binds
 import dagger.Module

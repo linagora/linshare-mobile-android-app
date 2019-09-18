@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.di
+package com.linagora.android.linshare.inject
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
