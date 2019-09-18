@@ -11,7 +11,9 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidSupportInjectionModule::class,
-        AppModule::class
+        AppModule::class,
+        ActivityBindingModule::class,
+        ViewModelModule::class
     ]
 )
 interface AppComponent : AndroidInjector<LinShareApplication> {

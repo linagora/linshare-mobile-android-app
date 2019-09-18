@@ -3,13 +3,18 @@ package com.linagora.android.linshare.view
 import android.os.Bundle
 
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.base.BaseActivity
 
-import dagger.android.support.DaggerAppCompatActivity
+class MainActivity : BaseActivity() {
 
-class MainActivity : DaggerAppCompatActivity() {
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = getViewModel(viewModelFactory)
+
         setContentView(R.layout.activity_main)
     }
 }
