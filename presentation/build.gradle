@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply from: "$projectDir/extensions.gradle"
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
@@ -42,11 +44,10 @@ android {
 
 Properties props = new Properties()
 def propFile = new File('keystore.properties')
-if (propFile.exists()){
+if (propFile.exists()) {
     props.load(new FileInputStream(propFile))
 
-    if (props!=null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
-            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+    if (hasKeystoreProperties(props)) {
         android.signingConfigs.release.storeFile = rootProject.file(props['STORE_FILE'])
         android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
         android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
@@ -55,7 +56,7 @@ if (propFile.exists()){
         println 'keystore.properties found but some entries are missing'
         android.buildTypes.release.signingConfig = null
     }
-}else {
+} else {
     println 'keystore.properties not found. Using debug key'
     android.signingConfigs.release.storeFile = rootProject.file('debugKeystore.jks')
     android.signingConfigs.release.storePassword = 'linshare'
@@ -68,11 +69,13 @@ dependencies {
     implementation deps.kotlin.stdlib
 
     implementation deps.androidx.appcompat
+    implementation deps.androidx.constraintlayout
     implementation deps.androidx.core_ktx
+    implementation deps.androidx.navigation_fragment
+    implementation deps.androidx.navigation_ui
 
     implementation deps.dagger.android
     implementation deps.dagger.android_support
-    implementation deps.dagger.dagger
 
     implementation project(':data')
     implementation project(':domain')
