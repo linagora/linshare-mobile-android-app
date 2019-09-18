@@ -25,6 +25,10 @@ captures/
 # Signing files
 *.jks
 /keystore.properties
+!debugKeystore.jks
 
 ### AndroidStudio Patch ###
 !/gradle/wrapper/gradle-wrapper.jar
+
+*/debug
+*/release
