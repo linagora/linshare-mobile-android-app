@@ -1,0 +1,7 @@
+ext.hasKeystoreProperties = { props ->
+    if (props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD')
+            && props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+        return true
+    }
+    return false
+}
