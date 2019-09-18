@@ -17,6 +17,7 @@ android {
         targetSdkVersion build_versions.target_sdk
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -24,11 +25,13 @@ android {
     }
 
     buildTypes {
-        debug {
+        develop {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard-rules.pro'
+                    'proguard-rules.pro',
+                    "$rootProject.rootDir.absolutePath/domain/proguard-rules.pro",
+                    "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
         }
         release {
             minifyEnabled true
@@ -79,9 +82,18 @@ dependencies {
 
     implementation deps.lifecycle.extensions
 
+    implementation deps.kotlin.reflect
+
     implementation project(':data')
     implementation project(':domain')
 
     kapt deps.dagger.dagger_compiler
     kapt deps.dagger.android_processor
+
+    androidTestImplementation deps.truth
+
+    androidTestImplementation deps.espresso.core
+    androidTestImplementation deps.instrumentationTest.junit_ext
+    androidTestImplementation deps.instrumentationTest.test_rules
+    androidTestImplementation deps.instrumentationTest.test_runner
 }

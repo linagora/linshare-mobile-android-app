@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.di
+package com.linagora.android.linshare.inject
 
 import android.content.Context
 import com.linagora.android.linshare.view.LinShareApplication

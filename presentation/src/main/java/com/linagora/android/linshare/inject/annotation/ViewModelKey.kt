@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.di.annotation
+package com.linagora.android.linshare.inject.annotation
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
