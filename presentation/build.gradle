@@ -77,6 +77,8 @@ dependencies {
     implementation deps.dagger.android
     implementation deps.dagger.android_support
 
+    implementation deps.lifecycle.extensions
+
     implementation project(':data')
     implementation project(':domain')
 

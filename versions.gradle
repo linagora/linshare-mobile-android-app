@@ -12,6 +12,8 @@ versions.dagger = "2.24"
 
 versions.kotlin_stdlib = "1.3.50"
 
+versions.lifecycle = "2.1.0"
+
 versions.navigation = "2.1.0"
 
 ext.versions = versions
@@ -45,6 +47,11 @@ kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin_stdlib
 kotlin.gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin_stdlib"
 
 deps.kotlin = kotlin
+
+def lifecycle = [:]
+lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
+
+deps.lifecycle = lifecycle
 
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 
