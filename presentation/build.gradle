@@ -20,6 +20,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    lintOptions {
+        abortOnError true
+        ignoreWarnings true
+    }
+
     signingConfigs {
         release
     }
