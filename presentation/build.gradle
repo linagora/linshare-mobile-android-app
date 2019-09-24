@@ -45,6 +45,10 @@ android {
     }
 }
 
+configurations {
+    ktlint
+}
+
 Properties props = new Properties()
 def propFile = new File('keystore.properties')
 if (propFile.exists()) {
@@ -96,4 +100,14 @@ dependencies {
     androidTestImplementation deps.instrumentationTest.junit_ext
     androidTestImplementation deps.instrumentationTest.test_rules
     androidTestImplementation deps.instrumentationTest.test_runner
+
+    ktlint deps.ktlint
 }
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "src/**/*.kt"
+}
+check.dependsOn ktlint
