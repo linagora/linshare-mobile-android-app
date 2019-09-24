@@ -1,7 +1,6 @@
 package com.linagora.android.linshare.view
 
 import android.os.Bundle
-
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.base.BaseActivity
