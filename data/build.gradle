@@ -4,6 +4,14 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion build_versions.target_sdk
+    defaultConfig {
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+    }
+    buildTypes {
+        develop {
+        }
+    }
 }
 
 dependencies {
