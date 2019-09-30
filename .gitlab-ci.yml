@@ -39,4 +39,4 @@ testDebug:
   tags:
     - docker
   script:
-    - ./gradlew -Pci --console=plain testDebug
+    - ./gradlew -Pci --console=plain clean :domain:test :presentation:testDebug :data:testDebug
