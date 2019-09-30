@@ -15,6 +15,7 @@ versions.espresso = "3.1.0"
 versions.junit_ext = "1.1.0"
 
 versions.kotlin_stdlib = "1.3.50"
+versions.ktlint = "0.34.2"
 
 versions.lifecycle = "2.1.0"
 
@@ -68,6 +69,8 @@ kotlin.gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotl
 kotlin.reflect = "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin_stdlib"
 
 deps.kotlin = kotlin
+
+deps.ktlint = "com.pinterest:ktlint:$versions.ktlint"
 
 def lifecycle = [:]
 lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"

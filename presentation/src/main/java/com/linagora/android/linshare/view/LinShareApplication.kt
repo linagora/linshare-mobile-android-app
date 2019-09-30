@@ -1,7 +1,6 @@
 package com.linagora.android.linshare.view
 
 import com.linagora.android.linshare.inject.DaggerAppComponent
-
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 
