@@ -1,3 +1,5 @@
-include ':presentation', ':data'
-include ':domain'
+include ':presentation',
+        ':data',
+        ':testshared',
+        ':domain'
 rootProject.name='Linshare'
