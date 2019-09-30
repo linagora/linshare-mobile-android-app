@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'de.mannodermaus.android-junit5'
 
 android {
     compileSdkVersion build_versions.target_sdk
@@ -12,10 +13,45 @@ android {
         develop {
         }
     }
+    testOptions {
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                showExceptions true
+                exceptionFormat "full"
+                showCauses true
+                showStackTraces true
+                showStandardStreams = false
+            }
+        }
+    }
+}
+
+configurations {
+    ktlint
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation deps.kotlin.stdlib
     implementation deps.androidx.core_ktx
+
+    implementation project(":domain")
+
+    testImplementation deps.junit5.api
+
+    testImplementation project(":testshared")
+
+    testRuntimeOnly deps.junit5.engine
+
+    ktlint deps.ktlint
 }
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "src/**/*.kt"
+}
+check.dependsOn ktlint
