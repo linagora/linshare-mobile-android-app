@@ -5,7 +5,6 @@ import com.linagora.android.linshare.view.MainActivity
 import com.linagora.android.linshare.view.MainActivityModule
 import com.linagora.android.linshare.view.splash.SplashActivity
 import com.linagora.android.linshare.view.splash.SplashActivityModule
-
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

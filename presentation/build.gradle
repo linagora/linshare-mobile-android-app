@@ -20,6 +20,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    lintOptions {
+        abortOnError true
+        ignoreWarnings true
+    }
+
     signingConfigs {
         release
     }
@@ -43,6 +48,10 @@ android {
             signingConfig signingConfigs.release
         }
     }
+}
+
+configurations {
+    ktlint
 }
 
 Properties props = new Properties()
@@ -96,4 +105,14 @@ dependencies {
     androidTestImplementation deps.instrumentationTest.junit_ext
     androidTestImplementation deps.instrumentationTest.test_rules
     androidTestImplementation deps.instrumentationTest.test_runner
+
+    ktlint deps.ktlint
 }
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "src/**/*.kt"
+}
+check.dependsOn ktlint
