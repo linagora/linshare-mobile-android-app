@@ -26,6 +26,12 @@ android {
     }
 
     signingConfigs {
+        debug {
+            storeFile file('../debugKeystore.jks')
+            storePassword 'linshare'
+            keyAlias = 'linshareAndroid'
+            keyPassword 'linshare'
+        }
         release
     }
 
@@ -37,6 +43,7 @@ android {
                     'proguard-rules.pro',
                     "$rootProject.rootDir.absolutePath/domain/proguard-rules.pro",
                     "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
+            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
