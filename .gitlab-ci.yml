@@ -25,7 +25,7 @@ ktlint:
   tags:
     - docker
   script:
-    - ./gradlew -Pci --console=plain :presentation:ktlint
+    - ./gradlew -Pci --console=plain ktlint
 
 assembleDebug:
   stage: build
@@ -39,4 +39,4 @@ testDebug:
   tags:
     - docker
   script:
-    - ./gradlew -Pci --console=plain testDebug
+    - ./gradlew -Pci --console=plain clean :domain:test :presentation:testDebug :data:testDebug

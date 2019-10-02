@@ -1,0 +1,28 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+configurations {
+    ktlint
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation deps.coroutines.test
+    implementation deps.junit5.api
+    implementation deps.kotlin.stdlib
+    implementation deps.truth
+    
+    implementation project(":domain")
+
+    ktlint deps.ktlint
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "src/**/*.kt"
+}
+check.dependsOn ktlint
+
