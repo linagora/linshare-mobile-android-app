@@ -92,6 +92,7 @@ dependencies {
     implementation deps.androidx.core_ktx
     implementation deps.androidx.navigation_fragment
     implementation deps.androidx.navigation_ui
+    implementation deps.androidx.preference
 
     implementation deps.dagger.android
     implementation deps.dagger.android_support
