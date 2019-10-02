@@ -13,6 +13,7 @@ versions.dagger = "2.24"
 
 versions.espresso = "3.1.0"
 
+versions.javaxInject = '1'
 versions.junit_ext = "1.1.0"
 versions.junit5 = "5.5.1"
 versions.junit5_plugin = "1.5.1.0"
@@ -22,7 +23,11 @@ versions.ktlint = "0.34.2"
 
 versions.lifecycle = "2.1.0"
 
+versions.mockito = "3.1.0"
+
 versions.navigation = "2.1.0"
+
+versions.preference = "1.1.0"
 
 versions.test_rules = "1.1.0"
 versions.test_runner = "1.1.0"
@@ -36,6 +41,7 @@ androidx.constraintlayout = "androidx.constraintlayout:constraintlayout:$version
 androidx.core_ktx = "androidx.core:core-ktx:$versions.core_ktx"
 androidx.navigation_fragment = "androidx.navigation:navigation-fragment-ktx:$versions.navigation"
 androidx.navigation_ui = "androidx.navigation:navigation-ui-ktx:$versions.navigation"
+androidx.preference = "androidx.preference:preference-ktx:$versions.preference"
 
 deps.androidx = androidx
 
@@ -73,6 +79,10 @@ instrumentationTest.test_runner = "androidx.test:runner:$versions.test_runner"
 
 deps.instrumentationTest = instrumentationTest
 
+def javax = [:]
+javax.inject = "javax.inject:javax.inject:$versions.javaxInject"
+deps.javax = javax
+
 deps.junit5_plugin = "de.mannodermaus.gradle.plugins:android-junit5:$versions.junit5_plugin"
 
 def junit5 = [:]
@@ -93,6 +103,11 @@ def lifecycle = [:]
 lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
 
 deps.lifecycle = lifecycle
+
+def mockito = [:]
+mockito.core = "org.mockito:mockito-inline:$versions.mockito"
+
+deps.mockito = mockito
 
 deps.truth = "com.google.truth:truth:$versions.truth"
 
