@@ -8,13 +8,15 @@ import org.junit.jupiter.api.Test
 
 abstract class TokenRepositoryContract {
 
-    private val TOKEN = Token("ZHBoYW1ob2FuZ0BsaW5hZ29yYS5jb206aThqckJ3KTgzNk4=")
-    private val TOKEN_2 = Token("ZHBoYW1ob2GzX0BsaW5hZ29yYS5jb206aThqckJ3KTgzNk4=")
+    val TOKEN_VALUE = "ZHBoYW1ob2FuZ0BsaW5hZ29yYS5jb206aThqckJ3KTgzNk4="
+    val TOKEN_VALUE_2 = "ZHBoYW1ob2GzX0BsaW5hZ29yYS5jb206aThqckJ3KTgzNk4="
+    private val TOKEN = Token(TOKEN_VALUE)
+    private val TOKEN_2 = Token(TOKEN_VALUE_2)
 
     abstract val tokenRepository: TokenRepository
 
     @Test
-    fun persistsTokenShouldSaveToken() {
+    open fun persistsTokenShouldSaveToken() {
         runBlockingTest {
             tokenRepository.persistsToken(TOKEN)
 
@@ -23,7 +25,7 @@ abstract class TokenRepositoryContract {
     }
 
     @Test
-    fun persistsTokenShouldUpdateToken() {
+    open fun persistsTokenShouldUpdateToken() {
         runBlockingTest {
             tokenRepository.persistsToken(TOKEN)
             tokenRepository.persistsToken(TOKEN_2)
@@ -33,14 +35,14 @@ abstract class TokenRepositoryContract {
     }
 
     @Test
-    fun getTokenShouldReturnEmptyWithNoneSavedToken() {
+    open fun getTokenShouldReturnEmptyWithNoneSavedToken() {
         runBlockingTest {
             assertThat(tokenRepository.getToken()).isNull()
         }
     }
 
     @Test
-    fun getTokenShouldReturnEmptyAfterClearingToken() {
+    open fun getTokenShouldReturnEmptyAfterClearingToken() {
         runBlockingTest {
             tokenRepository.persistsToken(TOKEN)
             tokenRepository.clearToken()
