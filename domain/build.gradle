@@ -26,7 +26,10 @@ configurations {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation deps.androidx.core_ktx
+    implementation deps.arrow.core_data
+    implementation deps.coroutines.core
     implementation deps.kotlin.stdlib
 
     testImplementation deps.junit5.api
