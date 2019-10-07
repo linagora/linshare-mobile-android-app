@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import com.linagora.android.linshare.data.repository.credential.PreferenceTokenRepository.Key
 import com.linagora.android.linshare.domain.repository.TokenRepository
+import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_VALUE
+import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_VALUE_2
 import com.linagora.android.testshared.repository.credential.TokenRepositoryContract
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
