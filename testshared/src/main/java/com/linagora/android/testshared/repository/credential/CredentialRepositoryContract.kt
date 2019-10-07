@@ -4,22 +4,26 @@ import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.repository.CredentialRepository
-import java.net.URL
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
+import java.net.URL
 
 abstract class CredentialRepositoryContract {
 
-    private val USER_NAME = Username("alica@domain.com")
-    private val USER_NAME2 = Username("bob@domain.com")
-    private val SERVER_NAME = URL("http://domain.com")
-    private val CREDENTIAL = Credential(SERVER_NAME, USER_NAME)
-    private val CREDENTIAL2 = Credential(SERVER_NAME, USER_NAME2)
+    val NAME = "alica@domain.com"
+    val NAME2 = "bob@domain.com"
+    val SERVER_NAME = "http://domain.com"
+
+    private val USER_NAME = Username(NAME)
+    private val USER_NAME2 = Username(NAME2)
+    private val SERVER_URL = URL(SERVER_NAME)
+    private val CREDENTIAL = Credential(SERVER_URL, USER_NAME)
+    private val CREDENTIAL2 = Credential(SERVER_URL, USER_NAME2)
 
     abstract val credentialRepository: CredentialRepository
 
     @Test
-    fun persistsCredentialShouldSaveCredential() {
+    open fun persistsCredentialShouldSaveCredential() {
         runBlockingTest {
             credentialRepository.persistsCredential(CREDENTIAL)
 
@@ -30,7 +34,7 @@ abstract class CredentialRepositoryContract {
     }
 
     @Test
-    fun persistsCredentialShouldUpdateCredential() {
+    open fun persistsCredentialShouldUpdateCredential() {
         runBlockingTest {
             credentialRepository.persistsCredential(CREDENTIAL)
             credentialRepository.persistsCredential(CREDENTIAL2)

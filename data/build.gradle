@@ -34,12 +34,18 @@ configurations {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation deps.kotlin.stdlib
     implementation deps.androidx.core_ktx
+
+    implementation deps.javax.inject
+
+    implementation deps.kotlin.stdlib
 
     implementation project(":domain")
 
+    testImplementation deps.coroutines.test
     testImplementation deps.junit5.api
+    testImplementation deps.mockito.core
+    testImplementation deps.truth
 
     testImplementation project(":testshared")
 
