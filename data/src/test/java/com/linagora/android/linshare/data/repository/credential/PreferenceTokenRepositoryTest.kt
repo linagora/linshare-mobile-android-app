@@ -2,8 +2,9 @@ package com.linagora.android.linshare.data.repository.credential
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
-import com.linagora.android.linshare.data.repository.credential.PreferenceTokenRepository.Key
 import com.linagora.android.linshare.domain.repository.TokenRepository
+import com.linagora.android.testshared.TestFixtures.Credentials.CREDENTIAL
+import com.linagora.android.testshared.TestFixtures.Credentials.CREDENTIAL2
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_VALUE
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_VALUE_2
 import com.linagora.android.testshared.repository.credential.TokenRepositoryContract
@@ -38,7 +39,7 @@ class PreferenceTokenRepositoryTest : TokenRepositoryContract() {
 
     @Test
     override fun persistsTokenShouldSaveToken() {
-        `when`(sharedPreferences.getString(Key.TOKEN, null))
+        `when`(sharedPreferences.getString(CREDENTIAL.toString(), null))
             .thenAnswer { TOKEN_VALUE }
 
         super.persistsTokenShouldSaveToken()
@@ -46,7 +47,7 @@ class PreferenceTokenRepositoryTest : TokenRepositoryContract() {
 
     @Test
     override fun persistsTokenShouldUpdateToken() {
-        `when`(sharedPreferences.getString(Key.TOKEN, null))
+        `when`(sharedPreferences.getString(CREDENTIAL2.toString(), null))
             .thenAnswer { TOKEN_VALUE_2 }
 
         super.persistsTokenShouldUpdateToken()
@@ -54,7 +55,7 @@ class PreferenceTokenRepositoryTest : TokenRepositoryContract() {
 
     @Test
     override fun getTokenShouldReturnEmptyWithNoneSavedToken() {
-        `when`(sharedPreferences.getString(Key.TOKEN, null))
+        `when`(sharedPreferences.getString(CREDENTIAL.toString(), null))
             .thenAnswer { null }
 
         super.getTokenShouldReturnEmptyWithNoneSavedToken()
@@ -62,7 +63,7 @@ class PreferenceTokenRepositoryTest : TokenRepositoryContract() {
 
     @Test
     override fun getTokenShouldReturnEmptyAfterClearingToken() {
-        `when`(sharedPreferences.getString(Key.TOKEN, null))
+        `when`(sharedPreferences.getString(CREDENTIAL.toString(), null))
             .thenAnswer { null }
 
         super.getTokenShouldReturnEmptyAfterClearingToken()
