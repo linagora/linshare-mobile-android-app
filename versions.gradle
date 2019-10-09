@@ -30,6 +30,8 @@ versions.navigation = "2.1.0"
 
 versions.preference = "1.1.0"
 
+versions.retrofit = "2.6.2"
+
 versions.test_rules = "1.1.0"
 versions.test_runner = "1.1.0"
 versions.truth = "1.0"
@@ -114,6 +116,12 @@ def mockito = [:]
 mockito.core = "org.mockito:mockito-inline:$versions.mockito"
 
 deps.mockito = mockito
+
+def retrofit = [:]
+retrofit.core = "com.squareup.retrofit2:retrofit:$versions.retrofit"
+retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+
+deps.retrofit = retrofit
 
 deps.truth = "com.google.truth:truth:$versions.truth"
 
