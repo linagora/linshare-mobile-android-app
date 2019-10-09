@@ -1,7 +1,7 @@
 package com.linagora.android.linshare.domain.model
 
-data class Token(val tokenString: String) {
+data class Token(val token: String) {
     init {
-        require(tokenString.isNotBlank()) { "token is invalid" }
+        require(token.isNotBlank()) { "token is invalid" }
     }
 }
