@@ -40,6 +40,8 @@ dependencies {
 
     implementation deps.kotlin.stdlib
 
+    implementation deps.retrofit.core
+
     implementation project(":domain")
 
     testImplementation deps.coroutines.test
