@@ -42,11 +42,14 @@ dependencies {
 
     implementation deps.retrofit.core
 
+    implementation deps.coroutines.core
+
     implementation project(":domain")
 
     testImplementation deps.coroutines.test
     testImplementation deps.junit5.api
     testImplementation deps.mockito.core
+    testImplementation deps.retrofit.gson
     testImplementation deps.truth
 
     testImplementation project(":testshared")
