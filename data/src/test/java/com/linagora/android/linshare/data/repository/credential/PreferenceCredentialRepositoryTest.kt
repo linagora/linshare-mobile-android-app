@@ -4,6 +4,9 @@ import android.content.SharedPreferences
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.repository.credential.PreferenceCredentialRepository.Key
 import com.linagora.android.linshare.domain.repository.CredentialRepository
+import com.linagora.android.testshared.TestFixtures.Credentials.NAME
+import com.linagora.android.testshared.TestFixtures.Credentials.NAME2
+import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_NAME
 import com.linagora.android.testshared.repository.credential.CredentialRepositoryContract
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach

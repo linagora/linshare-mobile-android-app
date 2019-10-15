@@ -1,24 +1,13 @@
 package com.linagora.android.testshared.repository.credential
 
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.domain.model.Credential
-import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.repository.CredentialRepository
+import com.linagora.android.testshared.TestFixtures.Credentials.CREDENTIAL
+import com.linagora.android.testshared.TestFixtures.Credentials.CREDENTIAL2
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
-import java.net.URL
 
 abstract class CredentialRepositoryContract {
-
-    val NAME = "alica@domain.com"
-    val NAME2 = "bob@domain.com"
-    val SERVER_NAME = "http://domain.com"
-
-    private val USER_NAME = Username(NAME)
-    private val USER_NAME2 = Username(NAME2)
-    private val SERVER_URL = URL(SERVER_NAME)
-    private val CREDENTIAL = Credential(SERVER_URL, USER_NAME)
-    private val CREDENTIAL2 = Credential(SERVER_URL, USER_NAME2)
 
     abstract val credentialRepository: CredentialRepository
 
