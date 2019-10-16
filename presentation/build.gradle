@@ -37,6 +37,7 @@ android {
 
     buildTypes {
         develop {
+            debuggable true
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
@@ -54,6 +55,15 @@ android {
                     "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
             signingConfig signingConfigs.release
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -93,6 +103,10 @@ dependencies {
     implementation deps.androidx.navigation_fragment
     implementation deps.androidx.navigation_ui
     implementation deps.androidx.preference
+    implementation deps.arrow.core_data
+
+    implementation deps.coroutines.core
+    implementation deps.coroutines.android
 
     implementation deps.dagger.android
     implementation deps.dagger.android_support
@@ -100,6 +114,14 @@ dependencies {
     implementation deps.lifecycle.extensions
 
     implementation deps.kotlin.reflect
+
+    implementation deps.okhttp.logging_interceptor
+    implementation deps.okhttp.runtime
+    implementation("com.squareup.okio:okio:2.4.0")
+
+
+    implementation deps.retrofit.core
+    implementation deps.retrofit.gson
 
     implementation project(':data')
     implementation project(':domain')
@@ -113,6 +135,16 @@ dependencies {
     androidTestImplementation deps.instrumentationTest.junit_ext
     androidTestImplementation deps.instrumentationTest.test_rules
     androidTestImplementation deps.instrumentationTest.test_runner
+
+    testImplementation deps.androidx.core_testing
+    testImplementation deps.coroutines.test
+    testImplementation deps.junit5.api
+    testImplementation deps.mockito.core
+    testImplementation deps.truth
+
+    testImplementation project(":testshared")
+
+    kaptTest deps.dagger.dagger_compiler
 
     ktlint deps.ktlint
 }
