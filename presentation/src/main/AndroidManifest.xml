@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.linagora.android.linshare">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".view.LinShareApplication"
         android:allowBackup="true"
@@ -23,6 +25,7 @@
         </activity>
         <activity
             android:name=".view.MainActivity"/>
+        <activity android:name=".view.authentication.LoginActivity"/>
     </application>
 
 </manifest>
