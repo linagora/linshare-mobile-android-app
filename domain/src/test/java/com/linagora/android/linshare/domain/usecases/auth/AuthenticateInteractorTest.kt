@@ -1,17 +1,19 @@
 package com.linagora.android.linshare.domain.usecases.auth
 
-import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_PASSWORD
-import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
-import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD_2
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME2
+import com.linagora.android.testshared.TestFixtures.State.AUTHENTICATE_SUCCESS_STATE
+import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
+import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
+import com.linagora.android.testshared.TestFixtures.State.WRONG_CREDENTIAL_STATE
+import com.linagora.android.testshared.TestFixtures.State.WRONG_PASSWORD_STATE
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
@@ -28,16 +30,6 @@ class AuthenticateInteractorTest {
     private lateinit var authenticationRepository: AuthenticationRepository
 
     private lateinit var authenticateInteractor: AuthenticateInteractor
-
-    private val INIT_STATE = Either.Right(Idle)
-
-    private val LOADING_STATE = Either.Right(Loading)
-
-    private val AUTHENTICATE_SUCCESS_STATE = Either.Right(AuthenticationViewState(TOKEN))
-
-    private val WRONG_CREDENTIAL_STATE = Either.Left(AuthenticationFailure(BadCredentials(WRONG_CREDENTIAL)))
-
-    private val WRONG_PASSWORD_STATE = Either.Left(AuthenticationFailure(BadCredentials(WRONG_PASSWORD)))
 
     @BeforeEach
     fun setUp() {

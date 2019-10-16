@@ -12,6 +12,7 @@ compileKotlin {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation deps.arrow.core_data
     implementation deps.coroutines.test
     implementation deps.junit5.api
     implementation deps.kotlin.stdlib

@@ -1,9 +1,16 @@
 package com.linagora.android.testshared
 
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
+import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
+import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
+import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import java.net.URL
 
 object TestFixtures {
@@ -50,5 +57,30 @@ object TestFixtures {
         val LINSHARE_PASSWORD1 = Password(LINSHARE_PASSWORD)
         val PASSWORD = Password(PASSWORD_VALUE)
         val PASSWORD_2 = Password(PASSWORD_VALUE_2)
+    }
+
+    object State {
+
+        val INIT_STATE = Either.Right(Idle)
+
+        val LOADING_STATE = Either.Right(Loading)
+
+        val AUTHENTICATE_SUCCESS_STATE = Either.Right(AuthenticationViewState(TestFixtures.Tokens.TOKEN))
+
+        val WRONG_CREDENTIAL_STATE = Either.Left(
+            AuthenticationFailure(
+                BadCredentials(
+                    AuthenticationException.WRONG_CREDENTIAL
+                )
+            )
+        )
+
+        val WRONG_PASSWORD_STATE = Either.Left(
+            AuthenticationFailure(
+                BadCredentials(
+                    AuthenticationException.WRONG_PASSWORD
+                )
+            )
+        )
     }
 }
