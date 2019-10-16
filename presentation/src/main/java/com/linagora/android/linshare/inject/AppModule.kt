@@ -3,6 +3,12 @@ package com.linagora.android.linshare.inject
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.linagora.android.linshare.data.repository.authentication.LinshareAuthenticationRepository
+import com.linagora.android.linshare.data.repository.credential.PreferenceCredentialRepository
+import com.linagora.android.linshare.data.repository.credential.PreferenceTokenRepository
+import com.linagora.android.linshare.domain.repository.CredentialRepository
+import com.linagora.android.linshare.domain.repository.TokenRepository
+import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.view.LinShareApplication
 import dagger.Module
 import dagger.Provides
@@ -20,5 +26,23 @@ class AppModule {
     @Singleton
     fun provideSharedPreferences(application: LinShareApplication): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(application)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCredentialRepository(preferenceCredentialRepository: PreferenceCredentialRepository): CredentialRepository {
+        return preferenceCredentialRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenRepository(preferenceTokenRepository: PreferenceTokenRepository): TokenRepository {
+        return preferenceTokenRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationRepository(linshareAuthenticationRepository: LinshareAuthenticationRepository): AuthenticationRepository {
+        return linshareAuthenticationRepository
     }
 }
