@@ -7,10 +7,12 @@ import org.junit.jupiter.api.fail
 class PortTest {
 
     private val GOOD_PORT = listOf(
+        1,
         8080,
         28080,
         80,
-        30000
+        30000,
+        65535
     )
 
     private val BAD_PORT = listOf(
