@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--wizard-->
+    <dimen name="margin_top_wizard">20dp</dimen>
+    <dimen name="margin_bottom_page_title">32dp</dimen>
+    <dimen name="wizard_image_width">220dp</dimen>
+    <dimen name="wizard_image_height">185dp</dimen>
+
+    <dimen name="already_have_account_text_size">22sp</dimen>
+    <dimen name="login_button_width">220dp</dimen>
+    <dimen name="round_corner_login_button">20dp</dimen>
+</resources>

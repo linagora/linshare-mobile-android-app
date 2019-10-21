@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.view.authentication.LoginActivity
+import com.linagora.android.linshare.view.MainActivity
 import com.linagora.android.linshare.view.base.BaseActivity
 import kotlinx.coroutines.runBlocking
 
@@ -20,7 +20,8 @@ class SplashActivity : BaseActivity() {
         setContentView(R.layout.activity_splash)
 
         runBlocking {
-            startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
         }
     }
 }

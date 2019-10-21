@@ -39,6 +39,8 @@ versions.test_rules = "1.1.0"
 versions.test_runner = "1.1.0"
 versions.truth = "1.0"
 
+versions.view_pager2 = "1.0.0-beta05"
+
 ext.versions = versions
 
 def androidx = [:]
@@ -79,7 +81,7 @@ espresso.core = "androidx.test.espresso:espresso-core:$versions.espresso"
 deps.espresso = espresso
 
 def build_versions = [:]
-build_versions.min_sdk = 15
+build_versions.min_sdk = 21
 build_versions.target_sdk = 29
 build_versions.build_tools = "29.0.2"
 ext.build_versions = build_versions
@@ -133,6 +135,8 @@ retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 deps.retrofit = retrofit
 
 deps.truth = "com.google.truth:truth:$versions.truth"
+
+deps.view_pager2 = "androidx.viewpager2:viewpager2:$versions.view_pager2"
 
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 

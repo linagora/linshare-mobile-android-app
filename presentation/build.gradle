@@ -50,6 +50,10 @@ android {
         release
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         develop {
             debuggable true
@@ -132,11 +136,11 @@ dependencies {
 
     implementation deps.okhttp.logging_interceptor
     implementation deps.okhttp.runtime
-    implementation("com.squareup.okio:okio:2.4.0")
-
 
     implementation deps.retrofit.core
     implementation deps.retrofit.gson
+
+    implementation deps.view_pager2
 
     implementation project(':data')
     implementation project(':domain')
