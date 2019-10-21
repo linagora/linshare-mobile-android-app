@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navigation_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/wizardFragment">
 
+    <fragment
+        android:id="@+id/wizardFragment"
+        android:name="com.linagora.android.linshare.view.authentication.wizard.WizardFragment"
+        android:label="WizardFragment" />
 </navigation>

@@ -2,4 +2,16 @@
     <string name="app_name">LinShare</string>
 
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="already_have_account">Already have a LinShare account?</string>
+    <string name="login">Login</string>
+
+    <!--Wizard-->
+    <string name="wizard_title_one">Linshare</string>
+    <string name="wizard_intro_one">Create different workspace for your project</string>
+
+    <string name="wizard_title_two">Linshare</string>
+    <string name="wizard_intro_two">Create different workspace for your project</string>
+
+    <string name="wizard_title_three">Linshare</string>
+    <string name="wizard_intro_three">Create different workspace for your project</string>
 </resources>
