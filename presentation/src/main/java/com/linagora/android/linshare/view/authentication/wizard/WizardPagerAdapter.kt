@@ -17,17 +17,14 @@ class WizardPagerAdapter(val context: Context) : RecyclerView.Adapter<WizardView
         val PAGE_TYPES = listOf(WIZARD_PAGE_TYPE)
 
         private val WIZARD_PAGE_1 = WizardPage(
-            R.string.wizard_title_one,
             R.drawable.ic_group,
             R.string.wizard_intro_one)
 
         private val WIZARD_PAGE_2 = WizardPage(
-            R.string.wizard_title_two,
             R.drawable.ic_group,
             R.string.wizard_intro_two)
 
         private val WIZARD_PAGE_3 = WizardPage(
-            R.string.wizard_title_three,
             R.drawable.ic_group,
             R.string.wizard_intro_three)
 
@@ -53,7 +50,6 @@ class WizardPagerAdapter(val context: Context) : RecyclerView.Adapter<WizardView
 
     override fun onBindViewHolder(holder: WizardViewHolder, position: Int) {
         val page = PAGES[position]
-        holder.binding.txtPageTitle.text = context.getString(page.titleRes)
         holder.binding.txtPageIntro.text = context.getString(page.pageIntroRes)
     }
 
