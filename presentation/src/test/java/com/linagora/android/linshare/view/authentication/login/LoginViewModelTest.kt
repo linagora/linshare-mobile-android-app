@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.view.authentication
+package com.linagora.android.linshare.view.authentication.login
 
 import androidx.lifecycle.Observer
 import arrow.core.Either
@@ -36,7 +36,7 @@ import org.mockito.MockitoAnnotations
 @ExtendWith(
     InstantExecutorExtension::class
 )
-class LoginActivityViewModelTest {
+class LoginViewModelTest {
 
     @Mock
     lateinit var baseUrlInterceptor: DynamicBaseUrlInterceptor
@@ -47,7 +47,7 @@ class LoginActivityViewModelTest {
     @Mock
     lateinit var viewObserver: Observer<Either<Failure, Success>>
 
-    private lateinit var loginViewModel: LoginActivityViewModel
+    private lateinit var loginViewModel: LoginViewModel
 
     companion object {
         @JvmField
@@ -59,10 +59,12 @@ class LoginActivityViewModelTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        loginViewModel = LoginActivityViewModel(
-            baseUrlInterceptor = baseUrlInterceptor,
-            authenticateInteractor = authenticateInteractor,
-            dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher))
+        loginViewModel =
+            LoginViewModel(
+                baseUrlInterceptor = baseUrlInterceptor,
+                authenticateInteractor = authenticateInteractor,
+                dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher)
+            )
     }
 
     @Test

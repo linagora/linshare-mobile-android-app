@@ -11,7 +11,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:windowSoftInputMode="adjustResize">
         <activity
             android:name=".view.splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -24,8 +25,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MainActivity"/>
-        <activity android:name=".view.authentication.LoginActivity"/>
+            android:name=".view.MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>
