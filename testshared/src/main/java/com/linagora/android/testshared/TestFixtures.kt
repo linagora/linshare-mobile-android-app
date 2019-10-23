@@ -9,6 +9,9 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationExceptio
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
+import com.linagora.android.linshare.domain.usecases.auth.ConnectError
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
+import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import java.net.URL
@@ -81,6 +84,18 @@ object TestFixtures {
                     AuthenticationException.WRONG_PASSWORD
                 )
             )
+        )
+
+        val CONNECT_ERROR_STATE = Either.Left(
+            AuthenticationFailure(ConnectError)
+        )
+
+        val UNKNOW_ERROR_STATE = Either.Left(
+            AuthenticationFailure(UnknownError)
+        )
+
+        val SERVER_NOT_FOUND_STATE = Either.Left(
+            AuthenticationFailure(ServerNotFound)
         )
     }
 }

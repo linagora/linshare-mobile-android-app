@@ -6,9 +6,17 @@ import com.linagora.android.linshare.data.repository.credential.MemoryCredential
 import com.linagora.android.linshare.data.repository.credential.MemoryTokenRepository
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.CONNECT_ERROR
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.EMPTY_TOKEN
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.SERVER_NOT_FOUND
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.UNKNOWN
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_PASSWORD
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
+import com.linagora.android.linshare.domain.usecases.auth.ConnectError
+import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
+import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.testshared.TestFixtures.Authentications.LINSHARE_PASSWORD1
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD_2
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_BASE_URL
@@ -21,6 +29,7 @@ import com.linagora.android.testshared.repository.authentication.AuthenticationR
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -88,6 +97,66 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
                 .thenThrow(BadCredentials(WRONG_PASSWORD))
 
             super.retrievePermanentTokenShouldFailureWithWrongPassword()
+        }
+    }
+
+    @Test
+    fun retrievePermanentTokenShouldFailureWithEmptyToken() {
+        runBlockingTest {
+            Mockito.`when`(linshareDataSource.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
+                .thenThrow(EmptyToken)
+
+            val exception = assertThrows<EmptyToken> {
+                runBlockingTest {
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                }
+            }
+            assertThat(exception.message).isEqualTo(EMPTY_TOKEN)
+        }
+    }
+
+    @Test
+    fun retrievePermanentTokenShouldFailureWithServerNotFound() {
+        runBlockingTest {
+            Mockito.`when`(linshareDataSource.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
+                .thenThrow(ServerNotFound)
+
+            val exception = assertThrows<ServerNotFound> {
+                runBlockingTest {
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                }
+            }
+            assertThat(exception.message).isEqualTo(SERVER_NOT_FOUND)
+        }
+    }
+
+    @Test
+    fun retrievePermanentTokenShouldFailureWithUnknownError() {
+        runBlockingTest {
+            Mockito.`when`(linshareDataSource.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
+                .thenThrow(UnknownError)
+
+            val exception = assertThrows<UnknownError> {
+                runBlockingTest {
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                }
+            }
+            assertThat(exception.message).isEqualTo(UNKNOWN)
+        }
+    }
+
+    @Test
+    fun retrievePermanentTokenShouldFailureWithConnectError() {
+        runBlockingTest {
+            Mockito.`when`(linshareDataSource.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
+                .thenThrow(ConnectError)
+
+            val exception = assertThrows<ConnectError> {
+                runBlockingTest {
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                }
+            }
+            assertThat(exception.message).isEqualTo(CONNECT_ERROR)
         }
     }
 }
