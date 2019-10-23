@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer
 import arrow.core.Either
 import com.linagora.android.linshare.CoroutinesExtension
 import com.linagora.android.linshare.InstantExecutorExtension
+import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticateInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -16,8 +17,10 @@ import com.linagora.android.linshare.util.withServicePath
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.testshared.TestFixtures.Authentications.LINSHARE_PASSWORD1
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD
+import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD_VALUE
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_BASE_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_USER1
+import com.linagora.android.testshared.TestFixtures.Credentials.NAME
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME
 import com.linagora.android.testshared.TestFixtures.State.AUTHENTICATE_SUCCESS_STATE
@@ -146,5 +149,41 @@ class LoginViewModelTest {
             `verify`(viewObserver).onChanged(LOADING_STATE)
             `verify`(viewObserver).onChanged(WRONG_CREDENTIAL_STATE)
         }
+    }
+
+    @Test
+    fun authenticateShouldNoticeWhenUrlEmpty() {
+        loginViewModel.viewState.observeForever(viewObserver)
+
+        loginViewModel.authenticate("", NAME, PASSWORD_VALUE)
+
+        `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
+            errorMessage = R.string.wrong_url,
+            errorType = ErrorType.WRONG_URL
+        )))
+    }
+
+    @Test
+    fun loginFormChangedShouldNoticeWhenUsernameEmpty() {
+        loginViewModel.viewState.observeForever(viewObserver)
+
+        loginViewModel.authenticate("linsahre.domain", "", PASSWORD_VALUE)
+
+        `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
+            errorMessage = R.string.credential_error_message,
+            errorType = ErrorType.WRONG_CREDENTIAL
+        )))
+    }
+
+    @Test
+    fun loginFormChangedShouldNoticeWhenPasswordWrong() {
+        loginViewModel.viewState.observeForever(viewObserver)
+
+        loginViewModel.authenticate("linsahre.domain", NAME, "")
+
+        `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
+            errorMessage = R.string.credential_error_message,
+            errorType = ErrorType.WRONG_CREDENTIAL
+        )))
     }
 }

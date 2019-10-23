@@ -6,7 +6,20 @@
     <dimen name="wizard_image_width">220dp</dimen>
     <dimen name="wizard_image_height">185dp</dimen>
 
+    <!--login-->
+    <dimen name="logo_margin_top">8dp</dimen>
+    <dimen name="slogan_text_size">17dp</dimen>
+    <dimen name="guide_text_size">15sp</dimen>
+    <dimen name="guide_margin_top">72dp</dimen>
+    <dimen name="login_input_radius">6dp</dimen>
+    <dimen name="input_margin_side">40dp</dimen>
+    <dimen name="input_margin_top">32dp</dimen>
+    <dimen name="input_gap">20dp</dimen>
+    <dimen name="input_height">40dp</dimen>
+    <dimen name="input_padding">6dp</dimen>
+    <dimen name="login_button_height">48dp</dimen>
+
     <dimen name="already_have_account_text_size">22sp</dimen>
     <dimen name="login_button_width">220dp</dimen>
-    <dimen name="round_corner_login_button">20dp</dimen>
+    <dimen name="round_corner_login_button">80dp</dimen>
 </resources>

@@ -7,5 +7,12 @@
     <fragment
         android:id="@+id/wizardFragment"
         android:name="com.linagora.android.linshare.view.authentication.wizard.WizardFragment"
-        android:label="WizardFragment" />
+        android:label="WizardFragment" >
+        <action
+            android:id="@+id/toLoginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.linagora.android.linshare.view.authentication.login.LoginFragment"/>
 </navigation>

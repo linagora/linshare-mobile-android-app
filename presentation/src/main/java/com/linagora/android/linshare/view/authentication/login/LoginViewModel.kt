@@ -1,22 +1,18 @@
 package com.linagora.android.linshare.view.authentication.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
+import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticateInteractor
-import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
-import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
-import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.network.Endpoint
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.withServicePath
 import com.linagora.android.linshare.view.base.BaseViewModel
 import kotlinx.coroutines.launch
-import java.net.MalformedURLException
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.net.URL
 import javax.inject.Inject
 
@@ -26,8 +22,11 @@ class LoginViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider
 ) : BaseViewModel(dispatcherProvider) {
 
-    private val mutableLoginFormValidation = MutableLiveData(false)
-    val loginFormValidation: LiveData<Boolean> = mutableLoginFormValidation
+    companion object {
+        private const val HTTP_PREFIX = "http://"
+        private const val HTTPS_PREFIX = "https://"
+        private val EMPTY = null
+    }
 
     fun authenticate(baseUrl: URL, username: Username, password: Password) {
         viewModelScope.launch(dispatcherProvider.io) {
@@ -41,18 +40,8 @@ class LoginViewModel @Inject constructor(
     }
 
     fun authenticate(baseUrl: String, username: String, password: String) {
-        try {
-            parseForm(baseUrl, username, password)
-                .apply { authenticate(this.first, this.second, this.third) }
-        } catch (malformedExp: MalformedURLException) {
-            dispatchState(Either.left(AuthenticationFailure(
-                BadCredentials(malformedExp.message ?: WRONG_CREDENTIAL)))
-            )
-        } catch (illegalExp: IllegalArgumentException) {
-            dispatchState(Either.left(AuthenticationFailure(
-                BadCredentials(illegalExp.message ?: WRONG_CREDENTIAL)))
-            )
-        }
+        parseForm(baseUrl, username, password)
+            ?.let { authenticate(it.first, it.second, it.third) }
     }
 
     private fun setUpServiceBaseUrl(baseUrl: URL) {
@@ -60,13 +49,61 @@ class LoginViewModel @Inject constructor(
     }
 
     fun loginFormChanged(url: String, username: String, password: String) {
-        mutableLoginFormValidation.value = runCatching {
-            parseForm(url, username, password)
-            true
-        }.getOrDefault(false)
+        parseForm(url, username, password)
     }
 
-    private fun parseForm(url: String, username: String, password: String): Triple<URL, Username, Password> {
-        return Triple(URL(url), Username(username), Password(password))
+    private fun parseForm(url: String, username: String, password: String): Triple<URL, Username, Password>? {
+        val parsedUrl = parseOrNoticeUrlError(url)
+        val parseUsername = parseOrNoticeUsernameError(username)
+        val parsePassword = parseOrNoticePasswordError(password)
+
+        return runCatching {
+            Triple(parsedUrl!!, parseUsername!!, parsePassword!!)
+        }.getOrDefault(EMPTY)
+    }
+
+    private fun validateUrl(url: String): URL {
+        require(url.isNotBlank())
+        val fullUrl = url.takeIf { it.toHttpUrlOrNull() == null }
+            ?.let { HTTPS_PREFIX + url }
+            ?: url
+
+        return URL(fullUrl)
+    }
+
+    private fun parseOrNoticeUrlError(url: String): URL? {
+        return try {
+            validateUrl(url)
+        } catch (exp: Exception) {
+            dispatchState(Either.Right(LoginFormState(
+                errorMessage = R.string.wrong_url,
+                errorType = ErrorType.WRONG_URL
+            )))
+            EMPTY
+        }
+    }
+
+    private fun parseOrNoticePasswordError(password: String): Password? {
+        return try {
+            Password(password)
+        } catch (exp: Exception) {
+            dispatchState(Either.Right(LoginFormState(
+                errorMessage = R.string.credential_error_message,
+                errorType = ErrorType.WRONG_CREDENTIAL
+            )))
+            EMPTY
+        }
+    }
+
+    private fun parseOrNoticeUsernameError(username: String): Username? {
+        return try {
+            Username(username)
+        } catch (exp: Exception) {
+            dispatchState(Either.Right(LoginFormState(
+                errorMessage = R.string.credential_error_message,
+                errorType = ErrorType.WRONG_CREDENTIAL
+            )))
+            EMPTY
+        }
     }
 }

@@ -14,4 +14,15 @@
 
     <string name="wizard_title_three">Linshare</string>
     <string name="wizard_intro_three">Create different workspace for your project</string>
+
+    <!--Login-->
+    <string name="linshare_slogan">Store and share your files from everywhere</string>
+    <string name="please_enter_credential">Please enter your login information</string>
+    <string name="https">https://</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="server_not_found">Authentication failed, server not found, please try again</string>
+    <string name="credential_error_message">Authentication failed, either the email or the password is invalid, please try again</string>
+    <string name="wrong_url">Server URL is not valid, please try again</string>
+    <string name="unknow_error">Unknown error occurred, please try again</string>
 </resources>
