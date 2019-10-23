@@ -6,4 +6,9 @@
 
     <color name="grey_20">#cccccc</color>
     <color name="grey_80">#37474F</color>
+
+    <color name="text_with_logo_color">#FFF</color>
+    <color name="error_border_color">#FF5858</color>
+
+    <color name="disable_state_color">#FFFFFF</color>
 </resources>

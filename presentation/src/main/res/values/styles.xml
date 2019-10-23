@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorSecondary">?attr/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme" parent="Base.AppTheme"/>
@@ -27,4 +27,13 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
+    <style name="LoginButton" parent="Widget.AppCompat.Button">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/login_drawable</item>
+        <item name="android:textColor">@color/text_with_logo_color</item>
+    </style>
+
+    <style name="LoginToolbar" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="colorControlNormal">@color/text_with_logo_color</item>
+    </style>
 </resources>
