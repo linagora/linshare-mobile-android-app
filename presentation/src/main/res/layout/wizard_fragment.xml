@@ -29,9 +29,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/margin_top_wizard"
+            android:layout_marginTop="@dimen/page_indicator_margin_top"
             app:pageIndicatorColor="@color/grey_20"
-            app:currentPageIndicatorColor="@color/grey_80"/>
+            app:currentPageIndicatorColor="@color/colorPrimary"/>
 
         <TextView
             android:id="@+id/wizardTxtAccount"
@@ -45,13 +45,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/wizardLoginBtn"
             android:layout_width="@dimen/login_button_width"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top_wizard"
             android:background="@drawable/round_button_primary_solid"
             android:text="@string/login"
+            style="@style/LoginButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

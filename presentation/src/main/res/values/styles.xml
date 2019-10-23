@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/text_with_logo_color</item>
     </style>
 
     <style name="AppTheme" parent="Base.AppTheme"/>
@@ -31,9 +32,5 @@
         <item name="android:layout_height">48dp</item>
         <item name="android:background">@drawable/login_drawable</item>
         <item name="android:textColor">@color/text_with_logo_color</item>
-    </style>
-
-    <style name="LoginToolbar" parent="Widget.AppCompat.Toolbar.Button.Navigation">
-        <item name="colorControlNormal">@color/text_with_logo_color</item>
     </style>
 </resources>

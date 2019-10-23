@@ -20,8 +20,8 @@ class PageIndicator @JvmOverloads constructor(
 ) : View(context, attributes, defStyle, defStyleRes), View.OnAttachStateChangeListener {
 
     companion object {
-        const val DEFAULT_DOT_SIZE = 8
-        const val DEFAULT_GAP = 12
+        const val DEFAULT_DOT_SIZE = 6
+        const val DEFAULT_GAP = 8
 
         const val DEFAULT_UNSELECTED_COLOUR = 0xCCCCCC
         const val DEFAULT_SELECTED_COLOUR = 0x37474F
