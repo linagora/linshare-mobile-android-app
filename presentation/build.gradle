@@ -140,6 +140,8 @@ dependencies {
     implementation deps.retrofit.core
     implementation deps.retrofit.gson
 
+    implementation deps.timber
+
     implementation deps.view_pager2
 
     implementation project(':data')

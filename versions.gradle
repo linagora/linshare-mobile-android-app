@@ -37,6 +37,7 @@ versions.retrofit = "2.6.2"
 
 versions.test_rules = "1.1.0"
 versions.test_runner = "1.1.0"
+versions.timber = "4.7.1"
 versions.truth = "1.0"
 
 versions.view_pager2 = "1.0.0-beta05"
@@ -135,6 +136,8 @@ retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 deps.retrofit = retrofit
 
 deps.truth = "com.google.truth:truth:$versions.truth"
+
+deps.timber = "com.jakewharton.timber:timber:$versions.timber"
 
 deps.view_pager2 = "androidx.viewpager2:viewpager2:$versions.view_pager2"
 

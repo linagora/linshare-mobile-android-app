@@ -6,6 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
+import timber.log.Timber
 
 @BindingAdapter("guide")
 fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {
@@ -23,7 +24,7 @@ fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {
                 setTextColor(resources.getColor(R.color.text_with_logo_color))
             }
     } catch (exp: Exception) {
-        exp.printStackTrace()
+        Timber.w("bindLoginGuide() ignore this exception: ${exp.message}")
     }
 }
 
@@ -48,6 +49,6 @@ fun bindingInputError(editText: EditText, loginFormState: LoginFormState) {
 
         editText.setBackgroundResource(background)
     } catch (exp: Exception) {
-        exp.printStackTrace()
+        Timber.w("bindInputError() ignore this exception: ${exp.message}")
     }
 }
