@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.LoginFragmentBinding
@@ -111,6 +112,7 @@ class LoginFragment : MainNavigationFragment() {
             is AuthenticationViewState -> {
                 Toast.makeText(context, "${success.token}", Toast.LENGTH_LONG).show()
                 loginFormState.set(LoginFormState(isLoading = false))
+                loginSuccess()
             }
         }
     }
@@ -141,5 +143,9 @@ class LoginFragment : MainNavigationFragment() {
             ErrorType.UNKNOWN_ERROR -> R.string.unknow_error
             else -> null
         }
+    }
+
+    private fun loginSuccess() {
+        findNavController().navigate(R.id.toAccountDetailsFragment)
     }
 }
