@@ -10,6 +10,8 @@ apply from: "$projectDir/extensions.gradle"
 
 apply plugin: 'de.mannodermaus.android-junit5'
 
+apply plugin: "androidx.navigation.safeargs.kotlin"
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
