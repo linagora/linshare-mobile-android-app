@@ -20,9 +20,17 @@
     <string name="please_enter_credential">Please enter your login information</string>
     <string name="https">https://</string>
     <string name="email">email</string>
+    <string name="email_title">Email:</string>
+    <string name="first_name_title">First name:</string>
+    <string name="last_name_title">Last name:</string>
     <string name="password">password</string>
     <string name="server_not_found">Authentication failed, server not found, please try again</string>
     <string name="credential_error_message">Authentication failed, either the email or the password is invalid, please try again</string>
     <string name="wrong_url">Server URL is not valid, please try again</string>
     <string name="unknow_error">Unknown error occurred, please try again</string>
+    <string name="remove_account">Remove account</string>
+    <string name="last_login_title">Last login:</string>
+    <string name="available_space_title">Available space:</string>
+    <string name="notification">Notification</string>
+    <string name="stay_connected">Stay connected</string>
 </resources>

@@ -30,4 +30,12 @@
     <dimen name="already_have_account_text_size">21sp</dimen>
     <dimen name="login_button_width">220dp</dimen>
     <dimen name="round_corner_login_button">40dp</dimen>
+
+    <!--account details-->
+    <dimen name="align_text_account_detail">48dp</dimen>
+    <dimen name="info_elevation">6dp</dimen>
+    <dimen name="info_line_margin">16dp</dimen>
+    <dimen name="info_margin_start">8dp</dimen>
+    <dimen name="button_margin_end">24dp</dimen>
+    <dimen name="url_name_text_size">23sp</dimen>
 </resources>
