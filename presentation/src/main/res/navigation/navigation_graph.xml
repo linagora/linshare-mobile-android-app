@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/wizardFragment">
 
     <fragment
         android:id="@+id/wizardFragment"
         android:name="com.linagora.android.linshare.view.authentication.wizard.WizardFragment"
-        android:label="WizardFragment" >
+        android:label="WizardFragment"
+        tools:layout="@layout/wizard_fragment">
         <action
             android:id="@+id/toLoginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.linagora.android.linshare.view.authentication.login.LoginFragment"/>
+        android:name="com.linagora.android.linshare.view.authentication.login.LoginFragment"
+        tools:layout="@layout/login_fragment">
+        <action
+            android:id="@+id/toAccountDetailsFragment"
+            app:destination="@id/accountDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountDetailsFragment"
+        android:name="com.linagora.android.linshare.view.accounts.AccountDetailsFragment"
+        tools:layout="@layout/fragment_account_detail">
+    </fragment>
 </navigation>
