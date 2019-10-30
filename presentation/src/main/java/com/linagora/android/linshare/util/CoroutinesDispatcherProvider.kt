@@ -5,7 +5,9 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 data class CoroutinesDispatcherProvider(
     val main: CoroutineDispatcher,
     val computation: CoroutineDispatcher,
