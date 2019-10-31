@@ -67,7 +67,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
                 .thenAnswer { Token(TOKEN_VALUE) }
 
             super.retrievePermanentTokenShouldSuccessWithRightUsernamePassword()
-            assertThat(credentialRepository.getCredential()).isEqualTo(LINSHARE_CREDENTIAL)
+            assertThat(credentialRepository.getAllCredential()).containsExactly(LINSHARE_CREDENTIAL)
             assertThat(tokenRepository.getToken(LINSHARE_CREDENTIAL))
         }
     }
