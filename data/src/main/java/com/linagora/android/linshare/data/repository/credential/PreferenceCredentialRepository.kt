@@ -24,7 +24,25 @@ class PreferenceCredentialRepository @Inject constructor(
         }
     }
 
-    override suspend fun getCredential(): Credential? {
+    override suspend fun removeCredential(credential: Credential) {
+        with(sharedPreferences) {
+            val serverName = getString(Key.SERVER_NAME, null)
+            val userName = getString(Key.USER_NAME, null)
+
+            if (!serverName.isNullOrEmpty() && !userName.isNullOrEmpty()) {
+                with(edit()) {
+                    remove(Key.SERVER_NAME)
+                    remove(Key.USER_NAME)
+                }
+            }
+        }
+    }
+
+    override suspend fun setCurrentCredential(credential: Credential): Boolean {
+        return containsCredential(credential)
+    }
+
+    override suspend fun getCurrentCredential(): Credential? {
         return with(sharedPreferences) {
             val serverName = getString(Key.SERVER_NAME, null)
             val userName = getString(Key.USER_NAME, null)
@@ -37,10 +55,33 @@ class PreferenceCredentialRepository @Inject constructor(
         }
     }
 
+    override suspend fun getAllCredential(): Set<Credential> {
+        return getCurrentCredential()
+            ?.let { setOf(it) }
+            ?: emptySet()
+    }
+
     override suspend fun clearCredential() {
         with(sharedPreferences.edit()) {
             remove(Key.SERVER_NAME)
             remove(Key.USER_NAME)
         }
+    }
+
+    private fun containsCredential(credential: Credential): Boolean {
+        with(sharedPreferences) {
+            val serverName = getString(Key.SERVER_NAME, null)
+            val userName = getString(Key.USER_NAME, null)
+
+            serverName?.let {
+                userName?.let {
+                    if (credential.serverUrl.toString() == serverName &&
+                        credential.userName.username == userName) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
 }

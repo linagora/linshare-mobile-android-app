@@ -1,14 +1,12 @@
 package com.linagora.android.linshare.data.repository.credential
 
 import android.content.SharedPreferences
-import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.repository.credential.PreferenceCredentialRepository.Key
 import com.linagora.android.linshare.domain.repository.CredentialRepository
 import com.linagora.android.testshared.TestFixtures.Credentials.NAME
 import com.linagora.android.testshared.TestFixtures.Credentials.NAME2
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_NAME
 import com.linagora.android.testshared.repository.credential.CredentialRepositoryContract
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -37,6 +35,16 @@ class PreferenceCredentialRepositoryTest : CredentialRepositoryContract() {
     }
 
     @Test
+    override fun persistsCredentialShouldNotSaveDuplicateCredential() {
+        `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
+            .thenAnswer { SERVER_NAME }
+        `when`(sharedPreferences.getString(Key.USER_NAME, null))
+            .thenAnswer { NAME }
+
+        super.persistsCredentialShouldNotSaveDuplicateCredential()
+    }
+
+    @Test
     override fun persistsCredentialShouldSaveCredential() {
         `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
             .thenAnswer { SERVER_NAME }
@@ -57,26 +65,52 @@ class PreferenceCredentialRepositoryTest : CredentialRepositoryContract() {
     }
 
     @Test
-    fun getCredentialShouldReturnNullWhenMissingServerName() {
-        `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
-            .thenAnswer { null }
-        `when`(sharedPreferences.getString(Key.USER_NAME, null))
-            .thenAnswer { NAME }
-
-        runBlockingTest {
-            assertThat(credentialRepository.getCredential()).isNull()
-        }
-    }
-
-    @Test
-    fun getCredentialShouldReturnNullWhenMissingUserName() {
+    override fun persistCredentialShouldSetCurrentCredentialForTheLastSavedCredential() {
         `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
             .thenAnswer { SERVER_NAME }
         `when`(sharedPreferences.getString(Key.USER_NAME, null))
-            .thenAnswer { null }
+            .thenAnswer { NAME2 }
 
-        runBlockingTest {
-            assertThat(credentialRepository.getCredential()).isNull()
-        }
+        super.persistCredentialShouldSetCurrentCredentialForTheLastSavedCredential()
+    }
+
+    @Test
+    override fun removeCredentialShouldRemoveExactlyCredential() {
+        `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
+            .thenAnswer { SERVER_NAME }
+        `when`(sharedPreferences.getString(Key.USER_NAME, null))
+            .thenAnswer { NAME2 }
+
+        super.removeCredentialShouldRemoveExactlyCredential()
+    }
+
+    @Test
+    override fun setCurrentCredentialShouldSuccess() {
+        `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
+            .thenAnswer { SERVER_NAME }
+        `when`(sharedPreferences.getString(Key.USER_NAME, null))
+            .thenAnswer { NAME2 }
+
+        super.setCurrentCredentialShouldSuccess()
+    }
+
+    @Test
+    override fun setCurrentCredentialShouldFailedWithNotSavedCredential() {
+        `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
+            .thenAnswer { SERVER_NAME }
+        `when`(sharedPreferences.getString(Key.USER_NAME, null))
+            .thenAnswer { NAME }
+
+        super.setCurrentCredentialShouldFailedWithNotSavedCredential()
+    }
+
+    @Test
+    override fun setCurrentCredentialShouldNotUpdateWithNotSavedCredential() {
+        `when`(sharedPreferences.getString(Key.SERVER_NAME, null))
+            .thenAnswer { SERVER_NAME }
+        `when`(sharedPreferences.getString(Key.USER_NAME, null))
+            .thenAnswer { NAME }
+
+        super.setCurrentCredentialShouldNotUpdateWithNotSavedCredential()
     }
 }
