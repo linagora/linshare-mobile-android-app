@@ -8,6 +8,8 @@ apply plugin: 'kotlin-kapt'
 
 apply from: "$projectDir/extensions.gradle"
 
+apply plugin: 'de.mannodermaus.android-junit5'
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
@@ -18,6 +20,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    testOptions {
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                showExceptions true
+                exceptionFormat "full"
+                showCauses true
+                showStackTraces true
+                showStandardStreams = false
+            }
+        }
     }
 
     lintOptions {
@@ -143,6 +158,8 @@ dependencies {
     testImplementation deps.truth
 
     testImplementation project(":testshared")
+
+    testRuntimeOnly deps.junit5.engine
 
     kaptTest deps.dagger.dagger_compiler
 
