@@ -26,5 +26,8 @@
         android:id="@+id/accountDetailsFragment"
         android:name="com.linagora.android.linshare.view.accounts.AccountDetailsFragment"
         tools:layout="@layout/fragment_account_detail">
+        <argument
+            android:name="credential"
+            app:argType="com.linagora.android.linshare.model.CredentialParcelable" />
     </fragment>
 </navigation>
