@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.domain.usecases.auth
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
@@ -32,7 +33,10 @@ class AuthenticateInteractor @Inject constructor(
                 withTimeout(AUTHENTICATION_REQUEST_TIMEOUT_MS) {
                     authenticationRepository.retrievePermanentToken(baseUrl, username, password)
                 }.run {
-                    emitState { Either.Right(AuthenticationViewState(this@run)) }
+                    emitState { Either.Right(AuthenticationViewState(
+                        credential = Credential(baseUrl, username),
+                        token = this@run))
+                    }
                 }
             } catch (authException: AuthenticationException) {
                 emitState { Either.Left(AuthenticationFailure(authException)) }

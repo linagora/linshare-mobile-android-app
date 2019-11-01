@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
 import java.net.URL
 
 object TestFixtures {
@@ -68,7 +69,8 @@ object TestFixtures {
 
         val LOADING_STATE = Either.Right(Loading)
 
-        val AUTHENTICATE_SUCCESS_STATE = Either.Right(AuthenticationViewState(TestFixtures.Tokens.TOKEN))
+        val AUTHENTICATE_SUCCESS_STATE = Either.Right(
+            AuthenticationViewState(LINSHARE_CREDENTIAL, TestFixtures.Tokens.TOKEN))
 
         val WRONG_CREDENTIAL_STATE = Either.Left(
             AuthenticationFailure(

@@ -6,6 +6,8 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationExceptio
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_PASSWORD
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD_2
+import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_BASE_URL
+import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_USER1
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME2
@@ -43,10 +45,10 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldSuccessWithRightUsernamePassword() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME, PASSWORD))
+            `when`(authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD))
                 .thenAnswer { TOKEN }
 
-            assertThat(authenticateInteractor(SERVER_URL, USER_NAME, PASSWORD)
+            assertThat(authenticateInteractor(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD)
                     .map { it(INIT_STATE) }
                     .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, AUTHENTICATE_SUCCESS_STATE)
