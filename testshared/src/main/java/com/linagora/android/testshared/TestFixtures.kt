@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.domain.usecases.auth.ConnectError
+import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
 import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
@@ -98,6 +99,10 @@ object TestFixtures {
 
         val SERVER_NOT_FOUND_STATE = Either.Left(
             AuthenticationFailure(ServerNotFound)
+        )
+
+        val EMPTY_TOKEN_STATE = Either.Left(
+            AuthenticationFailure(EmptyToken)
         )
     }
 }
