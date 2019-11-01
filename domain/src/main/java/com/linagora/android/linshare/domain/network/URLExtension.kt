@@ -1,6 +1,5 @@
-package com.linagora.android.linshare.util
+package com.linagora.android.linshare.domain.network
 
-import com.linagora.android.linshare.network.ServicePath
 import java.net.URL
 
 fun URL.withServicePath(servicePath: ServicePath): URL {

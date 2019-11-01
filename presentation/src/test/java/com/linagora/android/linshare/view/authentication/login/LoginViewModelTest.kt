@@ -11,9 +11,7 @@ import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
-import com.linagora.android.linshare.network.Endpoint
 import com.linagora.android.linshare.runBlockingTest
-import com.linagora.android.linshare.util.withServicePath
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.testshared.TestFixtures.Authentications.LINSHARE_PASSWORD1
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD
@@ -73,7 +71,7 @@ class LoginViewModelTest {
     @Test
     fun authenticateShouldSuccessWithRightCredential() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION), LINSHARE_USER1, LINSHARE_PASSWORD1))
+            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -94,7 +92,7 @@ class LoginViewModelTest {
     @Test
     fun authenticateShouldFailedWithWrongBaseURL() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(SERVER_URL.withServicePath(Endpoint.AUTHENTICAION), LINSHARE_USER1, LINSHARE_PASSWORD1))
+            Mockito.`when`(authenticateInteractor(SERVER_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -114,7 +112,7 @@ class LoginViewModelTest {
     @Test
     fun authenticateShouldFailedWithWrongUsername() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION), LINSHARE_USER1, PASSWORD))
+            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -134,7 +132,7 @@ class LoginViewModelTest {
     @Test
     fun authenticateShouldFailedWithWrongPassword() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION), USER_NAME, LINSHARE_PASSWORD1))
+            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, USER_NAME, LINSHARE_PASSWORD1))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }

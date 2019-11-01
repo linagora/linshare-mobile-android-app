@@ -5,6 +5,8 @@ import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.network.Endpoint
+import com.linagora.android.linshare.domain.network.withServicePath
 import com.linagora.android.linshare.domain.repository.CredentialRepository
 import com.linagora.android.linshare.domain.repository.TokenRepository
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
@@ -18,7 +20,10 @@ class LinshareAuthenticationRepository @Inject constructor(
 ) : AuthenticationRepository {
 
     override suspend fun retrievePermanentToken(baseUrl: URL, username: Username, password: Password): Token {
-        return linshareDataSource.retrievePermanentToken(baseUrl, username, password)
+        return linshareDataSource.retrievePermanentToken(
+                baseUrl = baseUrl.withServicePath(Endpoint.AUTHENTICAION),
+                username = username,
+                password = password)
             .also { storeAuthenticationInfo(baseUrl, username, it) }
     }
 
