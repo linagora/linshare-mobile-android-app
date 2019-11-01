@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.LoginFragmentBinding
+import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
@@ -22,6 +23,7 @@ import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.util.afterTextChanged
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
@@ -112,7 +114,7 @@ class LoginFragment : MainNavigationFragment() {
             is AuthenticationViewState -> {
                 Toast.makeText(context, "${success.token}", Toast.LENGTH_LONG).show()
                 loginFormState.set(LoginFormState(isLoading = false))
-                loginSuccess()
+                loginSuccess(success.credential)
             }
         }
     }
@@ -145,7 +147,8 @@ class LoginFragment : MainNavigationFragment() {
         }
     }
 
-    private fun loginSuccess() {
-        findNavController().navigate(R.id.toAccountDetailsFragment)
+    private fun loginSuccess(credentials: Credential) {
+        val action = LoginFragmentDirections.toAccountDetailsFragment(credentials.toParcelable())
+        findNavController().navigate(action)
     }
 }

@@ -19,6 +19,7 @@ versions.javaxInject = '1'
 versions.junit_ext = "1.1.0"
 versions.junit5 = "5.5.1"
 versions.junit5_plugin = "1.5.1.0"
+versions.jwt_decode = "1.4.0"
 
 versions.kotlin_stdlib = "1.3.50"
 versions.ktlint = "0.34.2"
@@ -60,6 +61,11 @@ def arrow = [:]
 arrow.core_data = "io.arrow-kt:arrow-core-data:$versions.arrow"
 
 deps.arrow = arrow
+
+def auth0 = [:]
+auth0.jwt_decode = "com.auth0.android:jwtdecode:$versions.jwt_decode"
+
+deps.auth0 = auth0
 
 def coroutines = [:]
 coroutines.core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"

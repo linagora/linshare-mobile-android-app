@@ -2,6 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="androidx.lifecycle.LiveData"/>
+        <import type="com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState"/>
+
+        <variable
+            name="details"
+            type="LiveData&lt;AccountDetailsViewState&gt;" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,7 +32,7 @@
                     android:id="@+id/txtAccountTitle"
                     android:textColor="@color/text_with_logo_color"
                     android:textSize="@dimen/url_name_text_size"
-                    android:text="linshare.linagora.com"
+                    android:text="@{details}"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -64,7 +73,7 @@
                     android:layout_marginBottom="@dimen/info_line_margin"
                     android:layout_marginStart="@dimen/info_margin_start"
                     android:textSize="@dimen/guide_text_size"
-                    android:text="user1@linshare.org"
+                    app:subject="@{details}"
                     app:layout_constraintBaseline_toBaselineOf="@id/txtTitleAccount"
                     app:layout_constraintStart_toEndOf="@+id/txtTitleAccount"
                     app:layout_constraintTop_toTopOf="parent"

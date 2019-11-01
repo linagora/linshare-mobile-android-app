@@ -3,7 +3,9 @@ package com.linagora.android.linshare.util
 import android.widget.EditText
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
 import timber.log.Timber
@@ -51,4 +53,16 @@ fun bindingInputError(editText: EditText, loginFormState: LoginFormState) {
     } catch (exp: Exception) {
         Timber.w("bindInputError() ignore this exception: ${exp.message}")
     }
+}
+
+@BindingAdapter("android:text")
+fun bindingDomainName(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
+    textView.text = accountDetailsViewState.credential
+        ?.serverUrl
+        ?.authority
+}
+
+@BindingAdapter("subject")
+fun bindingSubjectFromDecodedToken(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
+    textView.text = runCatching { JWT(accountDetailsViewState.token!!.token).subject }.getOrNull()
 }

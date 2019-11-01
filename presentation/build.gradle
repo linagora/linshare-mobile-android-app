@@ -129,6 +129,7 @@ dependencies {
     implementation deps.androidx.navigation_ui
     implementation deps.androidx.preference
     implementation deps.arrow.core_data
+    implementation deps.auth0.jwt_decode
 
     implementation deps.coroutines.core
     implementation deps.coroutines.android
