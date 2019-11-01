@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.network
+package com.linagora.android.linshare.domain.network
 
 data class ServicePath(val path: String) {
     init {

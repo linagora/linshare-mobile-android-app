@@ -1,8 +1,7 @@
-package com.linagora.android.linshare.network
+package com.linagora.android.linshare.domain.network
 
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.network.Endpoint.AUTHENTICATION_PATH
-import com.linagora.android.linshare.util.withServicePath
+import com.linagora.android.linshare.domain.network.Endpoint.AUTHENTICATION_PATH
 import org.junit.jupiter.api.Test
 import java.net.URL
 

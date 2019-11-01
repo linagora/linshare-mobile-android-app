@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.network
+package com.linagora.android.linshare.domain.network
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
