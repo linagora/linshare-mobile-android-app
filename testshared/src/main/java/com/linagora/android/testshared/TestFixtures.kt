@@ -2,9 +2,11 @@ package com.linagora.android.testshared
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.Credential
+import com.linagora.android.linshare.domain.model.LastLogin
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
@@ -13,9 +15,12 @@ import com.linagora.android.linshare.domain.usecases.auth.ConnectError
 import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
 import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
+import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
+import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import java.net.URL
 
 object TestFixtures {
@@ -104,5 +109,22 @@ object TestFixtures {
         val EMPTY_TOKEN_STATE = Either.Left(
             AuthenticationFailure(EmptyToken)
         )
+
+        val ACCOUNT_DETAILS_SUCCESS_STATE = Either.Right(
+            AccountDetailsViewState(
+                credential = LINSHARE_CREDENTIAL,
+                token = TOKEN,
+                lastLogin = LAST_LOGIN
+            )
+        )
+
+        val ERROR_STATE = Either.Left(Error)
+    }
+
+    object Accounts {
+
+        const val MILLISECONDS_LAST_LOGIN = 1572939335187
+
+        val LAST_LOGIN = LastLogin(MILLISECONDS_LAST_LOGIN)
     }
 }
