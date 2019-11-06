@@ -148,6 +148,7 @@ dependencies {
     implementation deps.retrofit.gson
 
     implementation deps.timber
+    implementation deps.threeten.abp
 
     implementation deps.view_pager2
 
@@ -168,6 +169,7 @@ dependencies {
     testImplementation deps.coroutines.test
     testImplementation deps.junit5.api
     testImplementation deps.mockito.core
+    testImplementation deps.threeten.bp
     testImplementation deps.truth
 
     testImplementation project(":testshared")

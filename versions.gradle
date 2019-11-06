@@ -38,6 +38,8 @@ versions.retrofit = "2.6.2"
 
 versions.test_rules = "1.1.0"
 versions.test_runner = "1.1.0"
+versions.threetenabp = "1.2.1"
+versions.threetenbp = "1.4.0"
 versions.timber = "4.7.1"
 versions.truth = "1.0"
 
@@ -141,6 +143,12 @@ retrofit.core = "com.squareup.retrofit2:retrofit:$versions.retrofit"
 retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 
 deps.retrofit = retrofit
+
+def threeten = [:]
+threeten.abp = "com.jakewharton.threetenabp:threetenabp:$versions.threetenabp"
+threeten.bp = "org.threeten:threetenbp:$versions.threetenbp"
+
+deps.threeten = threeten
 
 deps.truth = "com.google.truth:truth:$versions.truth"
 
