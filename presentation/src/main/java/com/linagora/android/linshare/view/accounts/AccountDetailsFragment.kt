@@ -62,6 +62,9 @@ class AccountDetailsFragment : MainNavigationFragment() {
                     token = success.token
                 )
             }
+            is AccountDetailsViewState -> {
+                detailsViewState.value = success
+            }
         }
     }
 }

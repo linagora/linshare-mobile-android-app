@@ -66,3 +66,10 @@ fun bindingDomainName(textView: TextView, accountDetailsViewState: AccountDetail
 fun bindingSubjectFromDecodedToken(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
     textView.text = runCatching { JWT(accountDetailsViewState.token!!.token).subject }.getOrNull()
 }
+
+@BindingAdapter("lastLogin")
+fun bindingLastLogin(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
+    textView.text = runCatching {
+        TimeUtils.convertToLocalTime(accountDetailsViewState.lastLogin!!.date)
+    }.getOrNull()
+}
