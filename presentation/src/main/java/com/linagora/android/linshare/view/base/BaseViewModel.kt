@@ -29,6 +29,7 @@ abstract class BaseViewModel(
     @MainThread
     fun dispatchState(state: Either<Failure, Success>) {
         this.state.value = state
+        onDispatchedState(state)
     }
 
     suspend fun consumeStates(states: Flow<State<Either<Failure, Success>>>) {
@@ -40,4 +41,14 @@ abstract class BaseViewModel(
     }
 
     private fun state() = state.value!!
+
+    private fun onDispatchedState(state: Either<Failure, Success>) {
+        when (state) {
+            is Either.Right -> onSuccessDispatched(state.b)
+            is Either.Left -> onFailureDispatched(state.a)
+        }
+    }
+
+    protected open fun onSuccessDispatched(success: Success) {}
+    protected open fun onFailureDispatched(failure: Failure) {}
 }

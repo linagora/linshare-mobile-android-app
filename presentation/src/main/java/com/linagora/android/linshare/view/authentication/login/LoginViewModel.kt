@@ -6,6 +6,8 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticateInteractor
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
@@ -21,7 +23,6 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel(dispatcherProvider) {
 
     companion object {
-        private const val HTTP_PREFIX = "http://"
         private const val HTTPS_PREFIX = "https://"
         private val EMPTY = null
     }
@@ -33,7 +34,6 @@ class LoginViewModel @Inject constructor(
                 username = username,
                 password = password)
             )
-            setUpServiceBaseUrl(baseUrl)
         }
     }
 
@@ -42,12 +42,14 @@ class LoginViewModel @Inject constructor(
             ?.let { authenticate(it.first, it.second, it.third) }
     }
 
-    private fun setUpServiceBaseUrl(baseUrl: URL) {
-        baseUrlInterceptor.changeBaseUrl(baseUrl)
+    override fun onSuccessDispatched(success: Success) {
+        success.takeIf { it is AuthenticationViewState }
+            ?.let { it as AuthenticationViewState }
+            ?.let { setUpServiceBaseUrl(it.credential.serverUrl) }
     }
 
-    fun loginFormChanged(url: String, username: String, password: String) {
-        parseForm(url, username, password)
+    private fun setUpServiceBaseUrl(baseUrl: URL) {
+        baseUrlInterceptor.changeBaseUrl(baseUrl)
     }
 
     private fun parseForm(url: String, username: String, password: String): Triple<URL, Username, Password>? {
