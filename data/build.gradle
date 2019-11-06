@@ -49,6 +49,7 @@ dependencies {
     implementation deps.kotlin.stdlib
 
     implementation deps.retrofit.core
+    implementation deps.retrofit.gson
 
     implementation deps.coroutines.core
 

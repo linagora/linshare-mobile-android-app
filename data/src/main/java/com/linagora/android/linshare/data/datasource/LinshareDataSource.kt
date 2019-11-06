@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.data.datasource
 
 import com.linagora.android.linshare.data.api.LinshareApi
+import com.linagora.android.linshare.domain.model.LastLogin
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
@@ -53,5 +54,15 @@ class LinshareDataSource @Inject constructor(
             401 -> BadCredentials(WRONG_CREDENTIAL)
             else -> UnknownError
         }
+    }
+
+    suspend fun getLastLogin(): LastLogin? {
+        return runCatching {
+            LastLogin(
+                linshareApi.auditAuthenticationEntryUser()
+                    .last()
+                    .creationDate
+            )
+        }.getOrNull()
     }
 }
