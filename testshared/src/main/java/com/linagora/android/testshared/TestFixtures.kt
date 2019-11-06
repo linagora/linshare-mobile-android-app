@@ -22,6 +22,7 @@ import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import java.net.URL
+import java.util.Date
 
 object TestFixtures {
 
@@ -123,8 +124,10 @@ object TestFixtures {
 
     object Accounts {
 
-        const val MILLISECONDS_LAST_LOGIN = 1572939335187
+        private const val MILLISECONDS_LAST_LOGIN = 1572939335187
 
-        val LAST_LOGIN = LastLogin(MILLISECONDS_LAST_LOGIN)
+        val LAST_LOGIN_DATE = Date(MILLISECONDS_LAST_LOGIN)
+
+        val LAST_LOGIN = LastLogin(LAST_LOGIN_DATE)
     }
 }

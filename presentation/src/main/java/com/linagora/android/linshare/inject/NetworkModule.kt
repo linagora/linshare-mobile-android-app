@@ -1,7 +1,9 @@
 package com.linagora.android.linshare.inject
 
+import com.google.gson.GsonBuilder
 import com.linagora.android.linshare.BuildConfig
 import com.linagora.android.linshare.data.api.LinshareApi
+import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
 import com.linagora.android.linshare.util.Constant.DEFAULT_TIMEOUT_SECONDS
@@ -11,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Date
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Singleton
 
@@ -44,9 +47,12 @@ class NetworkModule {
     fun provideLinshareApi(
         clientBuilder: OkHttpClient.Builder
     ): LinshareApi {
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Date::class.java, DateLongDeserializer())
+            .create()
         return Retrofit.Builder()
             .baseUrl(DEFAULT_LINSHARE_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(clientBuilder.build())
             .build()
             .create(LinshareApi::class.java)
