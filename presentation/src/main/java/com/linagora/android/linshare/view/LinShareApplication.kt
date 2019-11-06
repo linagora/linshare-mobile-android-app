@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.view
 
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.linagora.android.linshare.BuildConfig
 import com.linagora.android.linshare.inject.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -10,6 +11,8 @@ class LinShareApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
+
+        AndroidThreeTen.init(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
