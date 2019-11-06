@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.linagora.android.linshare.BuildConfig
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
+import com.linagora.android.linshare.network.AuthorizationInterceptor
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
 import com.linagora.android.linshare.util.Constant.DEFAULT_TIMEOUT_SECONDS
@@ -23,11 +24,13 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideHttpClientBuilder(
-        dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor
+        dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
+        authorizationInterceptor: AuthorizationInterceptor
     ): OkHttpClient.Builder {
 
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(dynamicBaseUrlInterceptor)
+            .addInterceptor(authorizationInterceptor)
             .connectTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .readTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .writeTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)
