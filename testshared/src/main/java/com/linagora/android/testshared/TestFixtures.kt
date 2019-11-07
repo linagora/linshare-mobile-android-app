@@ -1,11 +1,14 @@
 package com.linagora.android.testshared
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.LastLogin
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
@@ -23,6 +26,7 @@ import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENT
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import java.net.URL
 import java.util.Date
+import java.util.UUID
 
 object TestFixtures {
 
@@ -129,5 +133,29 @@ object TestFixtures {
         val LAST_LOGIN_DATE = Date(MILLISECONDS_LAST_LOGIN)
 
         val LAST_LOGIN = LastLogin(LAST_LOGIN_DATE)
+
+        const val QUOTA_UUID_VALUE = "77d10c28-583c-45a8-b747-d8a028f980bb"
+
+        private val QUOTA_UUID = UUID.fromString(QUOTA_UUID_VALUE)
+
+        val LINSHARE_USER = User(
+            UUID.fromString("b7240862-d03c-4b30-a46b-ffa1eb65301c"),
+            "John",
+            "Doe",
+            "user1@linshare.org",
+            Date(1570681477515),
+            Date(1570681477515),
+            QUOTA_UUID,
+            "INTERNAL",
+            "SIMPLE",
+            true
+        )
+
+        val QUOTA = AccountQuota(
+            QuotaSize(6000000),
+            QuotaSize(123),
+            QuotaSize(6000000),
+            false
+        )
     }
 }
