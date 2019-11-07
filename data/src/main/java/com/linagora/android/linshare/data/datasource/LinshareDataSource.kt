@@ -1,9 +1,11 @@
 package com.linagora.android.linshare.data.datasource
 
 import com.linagora.android.linshare.data.api.LinshareApi
+import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.LastLogin
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
@@ -63,6 +65,18 @@ class LinshareDataSource @Inject constructor(
                     .last()
                     .creationDate
             )
+        }.getOrNull()
+    }
+
+    suspend fun isAuthorized(): User? {
+        return runCatching {
+            linshareApi.isAuthorized()
+        }.getOrNull()
+    }
+
+    suspend fun findQuota(quotaUuid: String): AccountQuota? {
+        return kotlin.runCatching {
+            linshareApi.getQuota(quotaUuid)
         }.getOrNull()
     }
 }
