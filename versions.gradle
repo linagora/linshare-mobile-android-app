@@ -36,6 +36,8 @@ versions.preference = "1.1.0"
 
 versions.retrofit = "2.6.2"
 
+versions.slf4j_timber = "3.1"
+
 versions.test_rules = "1.1.0"
 versions.test_runner = "1.1.0"
 versions.threetenabp = "1.2.1"
@@ -143,6 +145,8 @@ retrofit.core = "com.squareup.retrofit2:retrofit:$versions.retrofit"
 retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 
 deps.retrofit = retrofit
+
+deps.slf4j_timber = "com.arcao:slf4j-timber:$versions.slf4j_timber"
 
 def threeten = [:]
 threeten.abp = "com.jakewharton.threetenabp:threetenabp:$versions.threetenabp"

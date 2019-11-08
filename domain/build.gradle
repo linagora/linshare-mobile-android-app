@@ -32,6 +32,7 @@ dependencies {
     implementation deps.coroutines.core
     implementation deps.javax.inject
     implementation deps.kotlin.stdlib
+    implementation deps.slf4j_timber
 
     testImplementation deps.coroutines.test
     testImplementation deps.junit5.api
