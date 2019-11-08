@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -140,7 +139,6 @@ class PageIndicator @JvmOverloads constructor(
     }
 
     private fun drawSelectedDot(canvas: Canvas?) {
-        Log.d("DATPH", "drawSelectedDot $selectedDotX")
         canvas?.drawCircle(selectedDotX, dotCenterY, dotRadius, selectedPaint)
     }
 
@@ -170,7 +168,6 @@ class PageIndicator @JvmOverloads constructor(
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                Log.d("DATPH", "onPageSelected $position")
                 super.onPageSelected(position)
                 isAttached.takeIf { isAttached }
                     ?.let {
@@ -194,7 +191,6 @@ class PageIndicator @JvmOverloads constructor(
         previousPage = currentPage
         currentPage = page
         updateSelectedPosition()
-        Log.d("DATPH", "setSelectedPAge $previousPage - $currentPage")
     }
 
     private fun setPageCount(pageCount: Int) {
