@@ -7,11 +7,15 @@ import com.linagora.android.linshare.data.repository.authentication.LinshareAuth
 import com.linagora.android.linshare.data.repository.credential.PreferenceCredentialRepository
 import com.linagora.android.linshare.data.repository.credential.PreferenceTokenRepository
 import com.linagora.android.linshare.data.repository.user.LinshareAuditUserRepository
+import com.linagora.android.linshare.data.repository.user.LinshareQuotaRepository
+import com.linagora.android.linshare.data.repository.user.LinshareUserRepository
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.repository.CredentialRepository
 import com.linagora.android.linshare.domain.repository.TokenRepository
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.repository.user.AuditUserRepository
+import com.linagora.android.linshare.domain.repository.user.QuotaRepository
+import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.linshare.network.AuthorizationManagerImp
 import com.linagora.android.linshare.view.LinShareApplication
 import dagger.Module
@@ -54,6 +58,18 @@ class AppModule {
     @Singleton
     fun provideAuditUserRepository(linshareAuditUserRepository: LinshareAuditUserRepository): AuditUserRepository {
         return linshareAuditUserRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(userRepository: LinshareUserRepository): UserRepository {
+        return userRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuotaRepository(quotaRepository: LinshareQuotaRepository): QuotaRepository {
+        return quotaRepository
     }
 
     @Provides

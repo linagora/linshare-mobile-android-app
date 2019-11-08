@@ -176,7 +176,7 @@
                     android:layout_marginBottom="@dimen/info_line_margin"
                     android:layout_marginStart="@dimen/info_margin_start"
                     android:textSize="@dimen/guide_text_size"
-                    android:text="1.4 GB on 6 GB"
+                    app:availableSpace="@{details}"
                     app:layout_constraintStart_toEndOf="@+id/txtTitleSpace"
                     app:layout_constraintBaseline_toBaselineOf="@id/txtTitleSpace"
                     app:layout_constraintBottom_toBottomOf="parent"/>

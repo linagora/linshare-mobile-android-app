@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.util
 
+import android.text.format.Formatter
 import android.widget.EditText
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -71,5 +72,15 @@ fun bindingSubjectFromDecodedToken(textView: TextView, accountDetailsViewState: 
 fun bindingLastLogin(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
     textView.text = runCatching {
         TimeUtils.convertToLocalTime(accountDetailsViewState.lastLogin!!.date)
+    }.getOrNull()
+}
+
+@BindingAdapter("availableSpace")
+fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
+    textView.text = runCatching {
+        val accountQuota = accountDetailsViewState.quota!!
+        val quotaSize = Formatter.formatFileSize(textView.context, accountQuota.quota.size)
+        val usedSize = Formatter.formatFileSize(textView.context, accountQuota.quota.size - accountQuota.usedSpace.size)
+        String.format("%s on %s", usedSize, quotaSize)
     }.getOrNull()
 }
