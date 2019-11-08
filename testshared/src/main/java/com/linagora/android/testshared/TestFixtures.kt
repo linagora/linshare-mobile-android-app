@@ -22,6 +22,8 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
+import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
+import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import java.net.URL
@@ -81,7 +83,7 @@ object TestFixtures {
         val LOADING_STATE = Either.Right(Loading)
 
         val AUTHENTICATE_SUCCESS_STATE = Either.Right(
-            AuthenticationViewState(LINSHARE_CREDENTIAL, TestFixtures.Tokens.TOKEN))
+            AuthenticationViewState(LINSHARE_CREDENTIAL, TOKEN))
 
         val WRONG_CREDENTIAL_STATE = Either.Left(
             AuthenticationFailure(
@@ -115,11 +117,18 @@ object TestFixtures {
             AuthenticationFailure(EmptyToken)
         )
 
+        val ACCOUNT_DETAILS_WITH_CREDENTIAL = AccountDetailsViewState(
+            credential = LINSHARE_CREDENTIAL,
+            token = TOKEN
+        )
+
         val ACCOUNT_DETAILS_SUCCESS_STATE = Either.Right(
             AccountDetailsViewState(
                 credential = LINSHARE_CREDENTIAL,
                 token = TOKEN,
-                lastLogin = LAST_LOGIN
+                lastLogin = LAST_LOGIN,
+                user = LINSHARE_USER,
+                quota = QUOTA
             )
         )
 
