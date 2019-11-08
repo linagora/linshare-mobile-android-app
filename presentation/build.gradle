@@ -147,7 +147,8 @@ dependencies {
     implementation deps.retrofit.core
     implementation deps.retrofit.gson
 
-    implementation deps.timber
+    implementation deps.slf4j_timber
+
     implementation deps.threeten.abp
 
     implementation deps.view_pager2
