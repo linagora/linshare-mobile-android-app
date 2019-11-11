@@ -26,13 +26,14 @@ import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_USER1
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME2
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
+import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_2
 import com.linagora.android.testshared.repository.authentication.AuthenticationRepositoryContract
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() {
@@ -64,7 +65,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     override fun retrievePermanentTokenShouldSuccessWithRightUsernamePassword() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
@@ -79,7 +80,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     override fun retrievePermanentTokenShouldFailureWithWrongUrl() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = SERVER_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = USER_NAME2,
                     password = LINSHARE_PASSWORD1))
@@ -91,7 +92,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     override fun retrievePermanentTokenShouldFailureWithWrongUsername() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = USER_NAME2,
                     password = LINSHARE_PASSWORD1))
@@ -103,7 +104,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     override fun retrievePermanentTokenShouldFailureWithWrongPassword() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = LINSHARE_USER1,
                     password = PASSWORD_2))
@@ -116,7 +117,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     fun retrievePermanentTokenShouldFailureWithEmptyToken() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
@@ -134,7 +135,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     fun retrievePermanentTokenShouldFailureWithServerNotFound() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
@@ -152,7 +153,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     fun retrievePermanentTokenShouldFailureWithUnknownError() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
@@ -170,7 +171,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     @Test
     fun retrievePermanentTokenShouldFailureWithConnectError() {
         runBlockingTest {
-            Mockito.`when`(linshareDataSource.retrievePermanentToken(
+            `when`(linshareDataSource.retrievePermanentToken(
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
@@ -182,6 +183,25 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
                 }
             }
             assertThat(exception.message).isEqualTo(CONNECT_ERROR)
+        }
+    }
+
+    @Test
+    override fun deletePermanentTokenShouldSuccessWithExistToken() {
+        runBlockingTest {
+            `when`(linshareDataSource.deletePermanentToken(TOKEN))
+                .thenAnswer { true }
+
+            super.deletePermanentTokenShouldSuccessWithExistToken()
+        }
+    }
+
+    @Test
+    override fun deletePermanentTokenShouldSuccessWithNotExistToken() {
+        runBlockingTest {
+            `when`(linshareDataSource.deletePermanentToken(TOKEN_2))
+                .thenAnswer { true }
+            super.deletePermanentTokenShouldSuccessWithNotExistToken()
         }
     }
 }

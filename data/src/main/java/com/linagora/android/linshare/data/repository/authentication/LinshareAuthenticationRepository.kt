@@ -32,4 +32,8 @@ class LinshareAuthenticationRepository @Inject constructor(
             .also { credentialRepository.persistsCredential(it) }
             .also { tokenRepository.persistsToken(it, token) }
     }
+
+    override suspend fun deletePermanentToken(token: Token): Boolean {
+        return linshareDataSource.deletePermanentToken(token)
+    }
 }
