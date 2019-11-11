@@ -33,6 +33,13 @@ import java.util.UUID
 object TestFixtures {
 
     object Tokens {
+        val TOKEN_UUID_VALUE = "3c105392-66f8-4947-a604-aa03a14784da"
+
+        val TOKEN_UUID_VALUE_2 = "3c105392-66f8-4947-a604-aa03a14784da"
+
+        val TOKEN_UUID: UUID = UUID.fromString(TOKEN_UUID_VALUE)
+
+        val TOKEN_UUID_2: UUID = UUID.fromString(TOKEN_UUID_VALUE_2)
 
         const val TOKEN_VALUE = "eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBsaW5zaGFyZS5vcmciLCJkb21haW" +
                 "4iOiI0YTBjMmNmNC01ZjA5LTRmYjAtOWNhZS0yYzdlYTdiNjRmYWEiLCJpc3MiOiJMaW5TaGFyZSIsImV4cCI6" +
@@ -43,8 +50,8 @@ object TestFixtures {
                 "K_64WjHoDad3ho7lZsPDSq44UrTaUUYncVHvQ"
         const val TOKEN_VALUE_2 = "ZHBoYW1ob2GzX0BsaW5hZ29yYS5jb206aThqckJ3KTgzNk4="
 
-        val TOKEN = Token(TOKEN_VALUE)
-        val TOKEN_2 = Token(TOKEN_VALUE_2)
+        val TOKEN = Token(TOKEN_UUID, TOKEN_VALUE)
+        val TOKEN_2 = Token(TOKEN_UUID_2, TOKEN_VALUE_2)
     }
 
     object Credentials {

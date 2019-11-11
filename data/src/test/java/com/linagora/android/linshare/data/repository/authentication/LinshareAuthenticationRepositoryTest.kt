@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.LinshareDataSource
 import com.linagora.android.linshare.data.repository.credential.MemoryCredentialRepository
 import com.linagora.android.linshare.data.repository.credential.MemoryTokenRepository
-import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.network.Endpoint
 import com.linagora.android.linshare.domain.network.withServicePath
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
@@ -26,7 +25,7 @@ import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENT
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_USER1
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME2
-import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_VALUE
+import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import com.linagora.android.testshared.repository.authentication.AuthenticationRepositoryContract
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
@@ -69,7 +68,7 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
                     baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
-                .thenAnswer { Token(TOKEN_VALUE) }
+                .thenAnswer { TOKEN }
 
             super.retrievePermanentTokenShouldSuccessWithRightUsernamePassword()
             assertThat(credentialRepository.getAllCredential()).containsExactly(LINSHARE_CREDENTIAL)
