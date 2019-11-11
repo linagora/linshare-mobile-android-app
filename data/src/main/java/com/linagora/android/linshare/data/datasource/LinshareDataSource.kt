@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.data.datasource
 
 import com.linagora.android.linshare.data.api.LinshareApi
+import com.linagora.android.linshare.data.model.authentication.PermanentTokenBodyRequest
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.LastLogin
 import com.linagora.android.linshare.domain.model.Password
@@ -29,15 +30,17 @@ class LinshareDataSource @Inject constructor(
 
     suspend fun retrievePermanentToken(baseUrl: URL, username: Username, password: Password): Token {
         try {
-            val response = linshareApi.getPermanentToken(
+            val response = linshareApi.createPermanentToken(
                 authenticateUrl = baseUrl.toString(),
-                basicToken = Credentials.basic(username.username, password.value)
+                basicToken = Credentials.basic(username.username, password.value),
+                permanentToken = PermanentTokenBodyRequest(label = "LinShare-Android-App")
             )
             return when (response.isSuccessful) {
                 true -> response.body() ?: throw EmptyToken
                 else -> throw produceError(response)
             }
         } catch (exp: Exception) {
+            exp.printStackTrace()
             when (exp) {
                 is EmptyToken, ServerNotFound -> throw exp
                 is BadCredentials -> throw exp

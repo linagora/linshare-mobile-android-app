@@ -127,7 +127,7 @@ deps.ktlint = "com.pinterest:ktlint:$versions.ktlint"
 
 def lifecycle = [:]
 lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
-
+lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime:$versions.lifecycle"
 deps.lifecycle = lifecycle
 
 def mockito = [:]

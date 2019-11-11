@@ -8,6 +8,7 @@ android {
     defaultConfig {
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         develop {
@@ -24,6 +25,7 @@ android {
                 showStandardStreams = false
             }
         }
+        animationsDisabled true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -32,6 +34,11 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE-notice.md'
     }
 }
 
@@ -43,10 +50,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation deps.androidx.core_ktx
+    implementation deps.androidx.preference
 
     implementation deps.javax.inject
 
     implementation deps.kotlin.stdlib
+
+    implementation deps.lifecycle.extensions
 
     implementation deps.retrofit.core
     implementation deps.retrofit.gson
@@ -56,6 +66,15 @@ dependencies {
     implementation deps.slf4j_timber
 
     implementation project(":domain")
+
+    androidTestImplementation deps.coroutines.test
+    androidTestImplementation deps.espresso.core
+    androidTestImplementation deps.instrumentationTest.junit_ext
+    androidTestImplementation deps.instrumentationTest.test_rules
+    androidTestImplementation deps.instrumentationTest.test_runner
+    androidTestImplementation deps.truth
+
+    androidTestImplementation project(":testshared")
 
     testImplementation deps.coroutines.test
     testImplementation deps.junit5.api

@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.domain.model
 
+import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_UUID
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
@@ -16,13 +17,13 @@ class TokenTest {
     @Test
     fun testValidToken() {
         try {
-            Token(GOOD_TOKEN)
+            Token(TOKEN_UUID, GOOD_TOKEN)
         } catch (exp: IllegalArgumentException) {
             fail(exp)
         }
 
         for (token in BAD_TOKENS) {
-            assertThrows<java.lang.IllegalArgumentException> { Token(token) }
+            assertThrows<java.lang.IllegalArgumentException> { Token(TOKEN_UUID, token) }
         }
     }
 }

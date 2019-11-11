@@ -25,16 +25,8 @@ class PreferenceCredentialRepository @Inject constructor(
     }
 
     override suspend fun removeCredential(credential: Credential) {
-        with(sharedPreferences) {
-            val serverName = getString(Key.SERVER_NAME, null)
-            val userName = getString(Key.USER_NAME, null)
-
-            if (!serverName.isNullOrEmpty() && !userName.isNullOrEmpty()) {
-                with(edit()) {
-                    remove(Key.SERVER_NAME)
-                    remove(Key.USER_NAME)
-                }
-            }
+        if (containsCredential(credential)) {
+            clearCredential()
         }
     }
 
@@ -65,6 +57,7 @@ class PreferenceCredentialRepository @Inject constructor(
         with(sharedPreferences.edit()) {
             remove(Key.SERVER_NAME)
             remove(Key.USER_NAME)
+            commit()
         }
     }
 
