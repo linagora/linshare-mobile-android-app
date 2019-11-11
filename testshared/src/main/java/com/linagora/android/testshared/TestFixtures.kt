@@ -17,6 +17,7 @@ import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.domain.usecases.auth.ConnectError
 import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
 import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
+import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
@@ -140,6 +141,8 @@ object TestFixtures {
         )
 
         val ERROR_STATE = Either.Left(Error)
+
+        val SUCCESS_REMOVE_ACCOUNT_STATE = Either.right(SuccessRemoveAccount)
     }
 
     object Accounts {

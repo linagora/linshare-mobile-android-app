@@ -10,4 +10,6 @@ interface AuthenticationRepository {
 
     @Throws(AuthenticationException::class)
     suspend fun retrievePermanentToken(baseUrl: URL, username: Username, password: Password): Token
+
+    suspend fun deletePermanentToken(token: Token): Boolean
 }
