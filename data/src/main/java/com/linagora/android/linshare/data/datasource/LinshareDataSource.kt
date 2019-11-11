@@ -61,6 +61,13 @@ class LinshareDataSource @Inject constructor(
         }
     }
 
+    suspend fun deletePermanentToken(token: Token): Boolean {
+        return runCatching {
+            linshareApi.deletePermanentToken(token.uuid.toString())
+            return true
+        }.getOrDefault(false)
+    }
+
     suspend fun getLastLogin(): LastLogin? {
         return runCatching {
             LastLogin(

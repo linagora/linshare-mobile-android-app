@@ -36,4 +36,13 @@ class MemoryAuthenticationRepository(
     private fun validatePassword(password: Password, predicate: (Password) -> Boolean): Password {
         return password.takeIf(predicate) ?: throw BadCredentials(WRONG_PASSWORD)
     }
+
+    override suspend fun deletePermanentToken(token: Token): Boolean {
+        return authenticationStore.get().takeIf { it.third == token }
+            ?.let {
+                authenticationStore.set(null)
+                true
+            }
+            ?: true
+    }
 }

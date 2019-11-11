@@ -7,6 +7,7 @@ import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -26,6 +27,15 @@ interface LinshareApi {
         @Header("Authorization") basicToken: String,
         @Body permanentToken: PermanentTokenBodyRequest
     ): Response<Token>
+
+    @DELETE("/jwt/{uuid}")
+    @Headers(
+        "Accept: application/json",
+        "Content-Type: application/json"
+    )
+    suspend fun deletePermanentToken(
+        @Path("uuid") tokenUuid: String
+    ): Token
 
     @GET("/audit?type=AUTHENTICATION&action=SUCCESS")
     suspend fun auditAuthenticationEntryUser(): List<AuthenticationAuditLogEntryUserResponse>

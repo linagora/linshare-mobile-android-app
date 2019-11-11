@@ -12,6 +12,7 @@ import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_USER1
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME2
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
+import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN_2
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -57,5 +58,19 @@ abstract class AuthenticationRepositoryContract {
             }
         }
         assertThat(exception.message).isEqualTo(WRONG_PASSWORD)
+    }
+
+    @Test
+    open fun deletePermanentTokenShouldSuccessWithExistToken() {
+        runBlockingTest {
+            assertThat(authenticationRepository.deletePermanentToken(TOKEN)).isTrue()
+        }
+    }
+
+    @Test
+    open fun deletePermanentTokenShouldSuccessWithNotExistToken() {
+        runBlockingTest {
+            assertThat(authenticationRepository.deletePermanentToken(TOKEN_2)).isTrue()
+        }
     }
 }
