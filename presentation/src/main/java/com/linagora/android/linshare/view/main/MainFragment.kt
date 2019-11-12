@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentMainBinding
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.model.mapper.toParcelable
@@ -39,7 +38,6 @@ class MainFragment : MainNavigationFragment() {
     private fun initViewModel() {
         viewModel = getViewModel(viewModelFactory)
         viewModel.viewState.observe(this, Observer { state ->
-            println(state)
             state.fold(
                 ifLeft = { gotoLoginPage() },
                 ifRight = { success -> success
@@ -52,7 +50,8 @@ class MainFragment : MainNavigationFragment() {
     }
 
     private fun gotoLoginPage() {
-        findNavController().navigate(R.id.wizardFragment)
+        val action = MainFragmentDirections.actionMainFragmentToWizardFragment()
+        findNavController().navigate(action)
     }
 
     private fun jumpIn(authenticationViewState: AuthenticationViewState) {

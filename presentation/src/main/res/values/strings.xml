@@ -33,4 +33,8 @@
     <string name="available_space_title">Available space:</string>
     <string name="notification">Notification</string>
     <string name="stay_connected">Stay connected</string>
+
+    <string name="confirm_remove_account_title">Are you sure you want to remove this account ?</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove">Remove</string>
 </resources>

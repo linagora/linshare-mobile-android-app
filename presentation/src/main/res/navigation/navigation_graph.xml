@@ -40,6 +40,11 @@
             app:destination="@id/accountDetailsFragment"
             app:popUpTo="@+id/navigation_graph"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_mainFragment_to_wizardFragment"
+            app:destination="@id/wizardFragment"
+            app:popUpTo="@+id/navigation_graph"
+            app:popUpToInclusive="true"/>
     </fragment>
 
 </navigation>

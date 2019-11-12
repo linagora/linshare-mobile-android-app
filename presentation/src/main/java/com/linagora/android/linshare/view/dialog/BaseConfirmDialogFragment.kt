@@ -31,12 +31,12 @@ open class BaseConfirmDialogFragment(
             cancelBtn.text = negativeText
             removeBtn.text = positiveText
             cancelBtn.setOnClickListener {
-                this@BaseConfirmDialogFragment.dismiss()
                 onNegative?.invoke(it)
+                this@BaseConfirmDialogFragment.dismiss()
             }
             removeBtn.setOnClickListener {
-                this@BaseConfirmDialogFragment.dismiss()
                 onPositive?.invoke(it)
+                this@BaseConfirmDialogFragment.dismiss()
             }
         }
         contentView.layoutParams.height = (resources.displayMetrics.heightPixels * CONFIRM_DIALOG_HEIGHT_RATIO)

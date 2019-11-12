@@ -23,11 +23,12 @@ class RemoveAccountInteractor @Inject constructor(
     operator fun invoke(credential: Credential): Flow<State<Either<Failure, Success>>> {
         return flow<State<Either<Failure, Success>>> {
             emitState { Either.right(Loading) }
+            credentialRepository.removeCredential(credential)
             tokenRepository.getToken(credential)
                 ?.apply {
+                    tokenRepository.removeToken(credential)
                     authenticationRepository.deletePermanentToken(this)
                 }
-            credentialRepository.removeCredential(credential)
             emitState { Either.right(SuccessRemoveAccount) }
         }
     }
