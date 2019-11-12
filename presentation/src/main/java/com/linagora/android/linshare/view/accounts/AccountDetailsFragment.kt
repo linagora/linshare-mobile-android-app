@@ -10,13 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
+import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentAccountDetailBinding
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
+import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.mapper.toCredential
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.dialog.ConfirmRemoveAccountDialog
+import kotlinx.android.synthetic.main.fragment_account_detail.imgBtnRemoveAcc
 import javax.inject.Inject
 
 class AccountDetailsFragment : MainNavigationFragment() {
@@ -30,11 +34,6 @@ class AccountDetailsFragment : MainNavigationFragment() {
 
     private val argument: AccountDetailsFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        findNavController().popBackStack()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,6 +44,26 @@ class AccountDetailsFragment : MainNavigationFragment() {
         binding.lifecycleOwner = this
         initViewModel()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView(view)
+    }
+
+    private fun initView(rootView: View) {
+        imgBtnRemoveAcc.setOnClickListener {
+            with(rootView.context) {
+                ConfirmRemoveAccountDialog(
+                    title = getString(R.string.confirm_remove_account_title),
+                    negativeText = getString(R.string.cancel),
+                    positiveText = getString(R.string.remove),
+                    onPositive = {
+                        accountDetailViewModel.removeAccount(argument.credential.toCredential())
+                    }
+                ).show(childFragmentManager, "confirm_remove_account_dialog")
+            }
+        }
     }
 
     private fun initViewModel() {
@@ -71,6 +90,14 @@ class AccountDetailsFragment : MainNavigationFragment() {
             is AccountDetailsViewState -> {
                 detailsViewState.value = success
             }
+            is SuccessRemoveAccount -> {
+                accountDetailViewModel.resetInterceptors()
+                gotoLoginScreen()
+            }
         }
+    }
+
+    private fun gotoLoginScreen() {
+        findNavController().navigate(R.id.wizardFragment)
     }
 }

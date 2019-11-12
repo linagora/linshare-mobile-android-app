@@ -4,11 +4,15 @@ import androidx.lifecycle.Observer
 import arrow.core.Either
 import com.linagora.android.linshare.CoroutinesExtension
 import com.linagora.android.linshare.InstantExecutorExtension
+import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.usecases.account.GetAccountDetailsInteractor
+import com.linagora.android.linshare.domain.usecases.auth.RemoveAccountInteractor
+import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
+import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.runBlockingTest
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.testshared.TestFixtures.Credentials.CREDENTIAL
@@ -37,6 +41,15 @@ class AccountDetailsViewModelTest {
     @Mock
     lateinit var viewObserver: Observer<Either<Failure, Success>>
 
+    @Mock
+    lateinit var removeAccount: RemoveAccountInteractor
+
+    @Mock
+    lateinit var dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor
+
+    @Mock
+    lateinit var authorizationManager: AuthorizationManager
+
     private lateinit var accountDetailsViewModel: AccountDetailsViewModel
 
     companion object {
@@ -51,7 +64,10 @@ class AccountDetailsViewModelTest {
 
         accountDetailsViewModel = AccountDetailsViewModel(
             getAccountDetails = getAccountDetails,
-            dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher)
+            dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher),
+            removeAccountInteractor = removeAccount,
+            dynamicBaseUrlInterceptor = dynamicBaseUrlInterceptor,
+            authorizationManager = authorizationManager
         )
     }
 
@@ -117,5 +133,33 @@ class AccountDetailsViewModelTest {
             verify(viewObserver).onChanged(AUTHENTICATE_SUCCESS_STATE)
             verify(viewObserver).onChanged(ERROR_STATE)
         }
+    }
+
+    @Test
+    fun removeAccountShouldSuccessWithRightCredential() {
+        coroutinesExtension.runBlockingTest {
+            `when`(removeAccount(LINSHARE_CREDENTIAL))
+                .then {
+                    flow<State<Either<Failure, Success>>> {
+                        emitState { LOADING_STATE }
+                        emitState { Either.right(SuccessRemoveAccount) }
+                    }
+                }
+
+            accountDetailsViewModel.viewState.observeForever(viewObserver)
+
+            accountDetailsViewModel.removeAccount(LINSHARE_CREDENTIAL)
+
+            verify(viewObserver).onChanged(LOADING_STATE)
+            verify(viewObserver).onChanged(Either.right(SuccessRemoveAccount))
+        }
+    }
+
+    @Test
+    fun resetInterceptorsShouldResetAllRelatedInterceptors() {
+        accountDetailsViewModel.resetInterceptors()
+
+        verify(dynamicBaseUrlInterceptor).reset()
+        verify(authorizationManager).reset()
     }
 }

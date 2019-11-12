@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -112,7 +111,6 @@ class LoginFragment : MainNavigationFragment() {
             is Loading -> loginFormState.set(LoginFormState(isLoading = true))
             is LoginFormState -> loginFormState.set(success)
             is AuthenticationViewState -> {
-                Toast.makeText(context, "${success.token}", Toast.LENGTH_LONG).show()
                 loginFormState.set(LoginFormState(isLoading = false))
                 loginSuccess(success.credential)
             }
