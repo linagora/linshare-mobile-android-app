@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/text_with_logo_color</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="AppTheme" parent="Base.AppTheme"/>
@@ -33,5 +34,15 @@
         <item name="android:background">@drawable/login_drawable</item>
         <item name="android:textColor">@color/text_with_logo_color</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/dialog_bottom_sheet_background</item>
+        <item name="android:layout_marginStart">@dimen/bottom_dialog_margin_side</item>
+        <item name="android:layout_marginEnd">@dimen/bottom_dialog_margin_side</item>
     </style>
 </resources>

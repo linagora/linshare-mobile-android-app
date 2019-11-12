@@ -38,4 +38,9 @@
     <dimen name="info_margin_start">8dp</dimen>
     <dimen name="button_margin_end">24dp</dimen>
     <dimen name="url_name_text_size">23sp</dimen>
+
+    <!-- dialog -->
+    <dimen name="dialog_round_corner">24dp</dimen>
+    <dimen name="dialog_button_width">128dp</dimen>
+    <dimen name="bottom_dialog_margin_side">5dp</dimen>
 </resources>
