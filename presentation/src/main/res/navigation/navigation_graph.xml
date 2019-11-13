@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/wizardFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
         android:id="@+id/wizardFragment"
@@ -30,4 +30,15 @@
             android:name="credential"
             app:argType="com.linagora.android.linshare.model.CredentialParcelable" />
     </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.linagora.android.linshare.view.main.MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_accountDetailsFragment"
+            app:destination="@id/accountDetailsFragment"
+            app:popUpTo="@+id/navigation_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
 </navigation>

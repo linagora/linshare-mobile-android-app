@@ -6,6 +6,7 @@ import com.linagora.android.linshare.view.MainActivityModule
 import com.linagora.android.linshare.view.accounts.AccountDetailModule
 import com.linagora.android.linshare.view.authentication.login.LoginModule
 import com.linagora.android.linshare.view.authentication.wizard.WizardModule
+import com.linagora.android.linshare.view.main.MainFragmentModule
 import com.linagora.android.linshare.view.splash.SplashActivity
 import com.linagora.android.linshare.view.splash.SplashActivityModule
 import dagger.Module
@@ -22,6 +23,7 @@ abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = [
         MainActivityModule::class,
+        MainFragmentModule::class,
         WizardModule::class,
         LoginModule::class,
         AccountDetailModule::class
