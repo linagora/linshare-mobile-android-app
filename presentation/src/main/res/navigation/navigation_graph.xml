@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/wizardFragment"
         android:name="com.linagora.android.linshare.view.authentication.wizard.WizardFragment"
-        android:label="WizardFragment"
         tools:layout="@layout/wizard_fragment">
         <action
             android:id="@+id/toLoginFragment"
@@ -20,7 +19,9 @@
         tools:layout="@layout/login_fragment">
         <action
             android:id="@+id/toAccountDetailsFragment"
-            app:destination="@id/accountDetailsFragment" />
+            app:destination="@id/accountDetailsFragment"
+            app:popUpTo="@+id/navigation_graph"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/accountDetailsFragment"

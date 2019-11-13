@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
 import com.linagora.android.linshare.databinding.FragmentAccountDetailBinding
@@ -28,6 +29,11 @@ class AccountDetailsFragment : MainNavigationFragment() {
     private val detailsViewState = MutableLiveData(AccountDetailsViewState.INIT_STATE)
 
     private val argument: AccountDetailsFragmentArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        findNavController().popBackStack()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
