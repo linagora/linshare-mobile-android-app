@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">LinShare</string>
+
+    <string name="already_have_account">Bạn đã có tài khoản LinShare ?</string>
+    <string name="login">Đăng nhập</string>
+
+    <!--Wizard-->
+    <string name="wizard_title_one">Linshare</string>
+    <string name="wizard_intro_one">Tạo không gian làm việc riêng cho dự án của bạn</string>
+
+    <string name="wizard_title_two">Linshare</string>
+    <string name="wizard_intro_two">Tạo không gian làm việc riêng cho dự án của bạn</string>
+
+    <string name="wizard_title_three">Linshare</string>
+    <string name="wizard_intro_three">Tạo không gian làm việc riêng cho dự án của bạn</string>
+
+    <!--Login-->
+    <string name="linshare_slogan">Lưu trữ và chia sẻ tệp ở bất kì đâu</string>
+    <string name="please_enter_credential">Điền thông tin đăng nhập</string>
+    <string name="https">https://</string>
+    <string name="email">email</string>
+    <string name="email_title">Email:</string>
+    <string name="first_name_title">Tên:</string>
+    <string name="last_name_title">Họ:</string>
+    <string name="password">mật khẩu</string>
+    <string name="server_not_found">Lỗi xác thực, không tìm thấy máy chủ, hãy thử lại</string>
+    <string name="credential_error_message">Lỗi xác thực, email hoặc mật khẩu không đúng, hãy thử lại</string>
+    <string name="wrong_url">Địa chỉ máy chủ không chính xác, hãy thử lại</string>
+    <string name="unknow_error">Lỗi không xác định, hãy thử lại</string>
+    <string name="remove_account">Xóa tài khoản</string>
+    <string name="last_login_title">Lần đăng nhập cuối:</string>
+    <string name="available_space_title">Bộ nhớ khả dụng:</string>
+    <string name="notification">Thông báo</string>
+
+    <string name="confirm_remove_account_title">Bạn muốn xóa tài khoản này ?</string>
+    <string name="cancel">Hủy</string>
+    <string name="remove">Xóa</string>
+</resources>
