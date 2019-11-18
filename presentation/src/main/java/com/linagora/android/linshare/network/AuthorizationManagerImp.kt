@@ -13,4 +13,8 @@ class AuthorizationManagerImp @Inject constructor(
     override fun updateToken(token: Token) {
         authorizationInterceptor.updateToken(token)
     }
+
+    override fun reset() {
+        authorizationInterceptor.reset()
+    }
 }

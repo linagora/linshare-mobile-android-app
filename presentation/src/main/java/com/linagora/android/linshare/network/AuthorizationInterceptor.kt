@@ -18,6 +18,10 @@ class AuthorizationInterceptor @Inject constructor() : Interceptor {
         currentTokenStored.set(token)
     }
 
+    fun reset() {
+        currentTokenStored.set(null)
+    }
+
     override fun intercept(chain: Chain): Response {
         return chain.proceed(buildNewRequest(chain.request()))
     }
