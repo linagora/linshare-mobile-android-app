@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.linagora.android.linshare.databinding.FragmentMainBinding
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.model.mapper.toParcelable
-import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.Navigation.LoginFlow
 import javax.inject.Inject
 
 class MainFragment : MainNavigationFragment() {
@@ -19,7 +21,8 @@ class MainFragment : MainNavigationFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: MainFragmentViewModel
+    private val mainActivityViewModel: MainActivityViewModel
+            by activityViewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,26 +39,23 @@ class MainFragment : MainNavigationFragment() {
     }
 
     private fun initViewModel() {
-        viewModel = getViewModel(viewModelFactory)
-        viewModel.viewState.observe(this, Observer { state ->
+        mainActivityViewModel.viewState.observe(this, Observer { state ->
             state.fold(
                 ifLeft = { gotoLoginPage() },
-                ifRight = { success -> success
-                    .takeIf { it is AuthenticationViewState }
-                    ?.let { jumpIn(it as AuthenticationViewState) }
+                ifRight = { success ->
+                    success.takeIf { it is AuthenticationViewState }
+                        ?.let { jumpIn(it as AuthenticationViewState) }
                 }
             )
         })
-        viewModel.checkSignedIn()
     }
 
     private fun gotoLoginPage() {
-        val action = MainFragmentDirections.actionMainFragmentToWizardFragment()
+        val action = MainFragmentDirections.actionMainFragmentToWizardFragment(LoginFlow.DIRECT)
         findNavController().navigate(action)
     }
 
     private fun jumpIn(authenticationViewState: AuthenticationViewState) {
-        viewModel.setUpInterceptors(authenticationViewState)
         val action = MainFragmentDirections
             .actionMainFragmentToAccountDetailsFragment(
                 credential = authenticationViewState.credential.toParcelable()
