@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,8 @@ import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.mapper.toCredential
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.MainActivityViewModel
+import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.UNAUTHENTICATED
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.dialog.ConfirmRemoveAccountDialog
 import kotlinx.android.synthetic.main.fragment_account_detail.imgBtnRemoveAcc
@@ -29,6 +32,8 @@ class AccountDetailsFragment : MainNavigationFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var accountDetailViewModel: AccountDetailsViewModel
+
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels { viewModelFactory }
 
     private val detailsViewState = MutableLiveData(AccountDetailsViewState.INIT_STATE)
 
@@ -92,12 +97,13 @@ class AccountDetailsFragment : MainNavigationFragment() {
             }
             is SuccessRemoveAccount -> {
                 accountDetailViewModel.resetInterceptors()
+                mainActivityViewModel.authenticationState.value = UNAUTHENTICATED
                 gotoLoginScreen()
             }
         }
     }
 
     private fun gotoLoginScreen() {
-        findNavController().navigate(R.id.wizardFragment)
+        findNavController().navigate(R.id.mainFragment)
     }
 }

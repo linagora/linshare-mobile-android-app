@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.databinding.ObservableField
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.LoginFragmentBinding
@@ -25,7 +27,10 @@ import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.util.afterTextChanged
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.MainActivityViewModel
+import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.Navigation.LoginFlow.DIRECT
 import com.linagora.android.linshare.view.authentication.login.LoginFormState.Companion
 import kotlinx.android.synthetic.main.login_fragment.btnLogin
 import kotlinx.android.synthetic.main.login_fragment.edtLoginPassword
@@ -40,7 +45,12 @@ class LoginFragment : MainNavigationFragment() {
 
     private lateinit var loginViewModel: LoginViewModel
 
+    private val mainActivityViewModel: MainActivityViewModel
+            by activityViewModels { viewModelFactory }
+
     private lateinit var binding: LoginFragmentBinding
+
+    private val args: LoginFragmentArgs by navArgs()
 
     private val loginFormState = ObservableField(LoginFormState.INIT_STATE)
 
@@ -112,6 +122,7 @@ class LoginFragment : MainNavigationFragment() {
             is LoginFormState -> loginFormState.set(success)
             is AuthenticationViewState -> {
                 loginFormState.set(LoginFormState(isLoading = false))
+                mainActivityViewModel.authenticationState.value = AUTHENTICATED
                 loginSuccess(success.credential)
             }
         }
@@ -146,7 +157,12 @@ class LoginFragment : MainNavigationFragment() {
     }
 
     private fun loginSuccess(credentials: Credential) {
-        val action = LoginFragmentDirections.toAccountDetailsFragment(credentials.toParcelable())
-        findNavController().navigate(action)
+        when (args.loginFlow) {
+            DIRECT -> {
+                val action = LoginFragmentDirections.toAccountDetailsFragment(credentials.toParcelable())
+                findNavController().navigate(action)
+            }
+            else -> findNavController().popBackStack(R.id.uploadFragment, false)
+        }
     }
 }

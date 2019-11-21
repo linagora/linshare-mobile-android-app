@@ -18,7 +18,7 @@ abstract class BaseViewModel(
 ) : ViewModel() {
 
     companion object {
-        private val INITIAL_STATE = Either.Right(Success.Idle)
+        val INITIAL_STATE = Either.Right(Success.Idle)
     }
 
     private val state = MutableLiveData<Either<Failure, Success>>()
