@@ -9,6 +9,7 @@ import com.linagora.android.linshare.view.authentication.wizard.WizardModule
 import com.linagora.android.linshare.view.main.MainFragmentModule
 import com.linagora.android.linshare.view.splash.SplashActivity
 import com.linagora.android.linshare.view.splash.SplashActivityModule
+import com.linagora.android.linshare.view.upload.UploadFragmentModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -26,7 +27,8 @@ abstract class ActivityBindingModule {
         MainFragmentModule::class,
         WizardModule::class,
         LoginModule::class,
-        AccountDetailModule::class
+        AccountDetailModule::class,
+        UploadFragmentModule::class
     ])
     internal abstract fun mainActivity(): MainActivity
 }
