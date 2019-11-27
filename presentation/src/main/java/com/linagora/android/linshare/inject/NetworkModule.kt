@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.linagora.android.linshare.BuildConfig
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
+import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.network.AuthorizationInterceptor
@@ -12,6 +13,7 @@ import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
 import com.linagora.android.linshare.util.Constant.DEFAULT_TIMEOUT_SECONDS
 import dagger.Module
 import dagger.Provides
+import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -39,7 +41,7 @@ class NetworkModule {
 
         if (BuildConfig.DEBUG) {
             val logger = HttpLoggingInterceptor()
-            logger.level = HttpLoggingInterceptor.Level.BODY
+            logger.level = HttpLoggingInterceptor.Level.HEADERS
             builder.addInterceptor(logger)
         }
 
@@ -55,6 +57,7 @@ class NetworkModule {
         val gson = GsonBuilder()
             .registerTypeAdapter(Date::class.java, DateLongDeserializer())
             .registerTypeAdapter(QuotaSize::class.java, QuotaSizeDeserializer())
+            .registerTypeAdapter(MediaType::class.java, MediaTypeDeserializer())
             .create()
         return Retrofit.Builder()
             .baseUrl(DEFAULT_LINSHARE_BASE_URL)
