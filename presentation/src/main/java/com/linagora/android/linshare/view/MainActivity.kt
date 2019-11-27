@@ -28,8 +28,7 @@ class MainActivity : BaseActivity(), NavigationHost {
         )
 
         val INIT_DESTINATIONS = setOf(
-            R.id.mainFragment,
-            R.id.uploadFragment
+            R.id.mainFragment
         )
     }
 
