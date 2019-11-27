@@ -128,6 +128,7 @@ dependencies {
     implementation deps.androidx.navigation_fragment
     implementation deps.androidx.navigation_ui
     implementation deps.androidx.preference
+    implementation deps.apache.commons_io
     implementation deps.arrow.core_data
     implementation deps.auth0.jwt_decode
 
