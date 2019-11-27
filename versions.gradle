@@ -36,6 +36,7 @@ versions.okhttp = "4.2.1"
 versions.preference = "1.1.0"
 
 versions.retrofit = "2.6.2"
+versions.robolectric = "4.3"
 
 versions.slf4j_timber = "3.1"
 
@@ -151,6 +152,8 @@ retrofit.core = "com.squareup.retrofit2:retrofit:$versions.retrofit"
 retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 
 deps.retrofit = retrofit
+
+deps.robolectric = "org.robolectric:robolectric:$versions.robolectric"
 
 deps.slf4j_timber = "com.arcao:slf4j-timber:$versions.slf4j_timber"
 
