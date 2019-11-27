@@ -1,5 +1,6 @@
 package com.linagora.android.testshared
 
+import android.net.Uri
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Credential
@@ -8,6 +9,8 @@ import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
@@ -27,6 +30,7 @@ import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
+import okhttp3.MediaType
 import java.net.URL
 import java.util.Date
 import java.util.UUID
@@ -175,6 +179,48 @@ object TestFixtures {
             QuotaSize(123),
             QuotaSize(6000000),
             false
+        )
+    }
+
+    object Documents {
+
+        val DOCUMENT_REQUEST = DocumentRequest(
+            uri = Uri.parse("content://0@media/external/file/276"),
+            fileName = "document.txt",
+            fileSize = 25,
+            mediaType = MediaType.get("text/plain")
+        )
+
+        val DOCUMENT = Document(
+            uuid = UUID.fromString("21a2901-b120-4111-9b0d-cbd9d493d7f9"),
+            description = "",
+            name = "document.txt",
+            creationDate = Date(1574837876965),
+            modificationDate = Date(1574837876965),
+            expirationDate = Date(1582786676962),
+            ciphered = false,
+            type = MediaType.get("text/plain"),
+            size = 25,
+            metaData = "",
+            sha256sum = "00d0235f6bfd0134d418f0d662c60ada1c45e087bd485bc8b77a24e7a8508b55",
+            hasThumbnail = true,
+            shared = 0
+        )
+
+        val DOCUMENT_2 = Document(
+            uuid = UUID.fromString("21a2901-b120-4111-9b0d-cbd8d493d7f9"),
+            description = "",
+            name = "documents.txt",
+            creationDate = Date(1574837876965),
+            modificationDate = Date(1574837876965),
+            expirationDate = Date(1582786676962),
+            ciphered = false,
+            type = MediaType.get("text/plain"),
+            size = 25,
+            metaData = "",
+            sha256sum = "00d0235f6bfd0134d418f0d662c60ada1c45e087bd485bc8b77a24e7a8508b55",
+            hasThumbnail = true,
+            shared = 0
         )
     }
 }

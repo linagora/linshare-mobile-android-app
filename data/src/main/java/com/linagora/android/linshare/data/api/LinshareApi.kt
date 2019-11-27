@@ -5,13 +5,17 @@ import com.linagora.android.linshare.data.model.authentication.PermanentTokenBod
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
+import com.linagora.android.linshare.domain.model.document.Document
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Url
 
@@ -45,5 +49,15 @@ interface LinshareApi {
     suspend fun isAuthorized(): User
 
     @GET("/quota/{uuid}")
+    @Headers("Accept: application/json")
     suspend fun getQuota(@Path("uuid") quotaUuid: String): AccountQuota
+
+    @Multipart
+    @POST("/documents")
+    @Headers("Accept: application/json")
+    suspend fun upload(
+        @Part("file") file: RequestBody,
+        @Part("filename") fileName: String,
+        @Part("filesize") fileSize: Long
+    ): Document
 }
