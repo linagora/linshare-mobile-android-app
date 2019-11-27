@@ -1,12 +1,42 @@
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+
+    buildTypes {
+        develop {
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                showExceptions true
+                exceptionFormat "full"
+                showCauses true
+                showStackTraces true
+                showStandardStreams = false
+            }
+        }
+        animationsDisabled true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
 
 configurations {
     ktlint
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
 }
 
 dependencies {
