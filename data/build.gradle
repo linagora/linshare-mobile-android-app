@@ -15,6 +15,9 @@ android {
         }
     }
     testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
         unitTests.all {
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
@@ -81,6 +84,7 @@ dependencies {
     testImplementation deps.junit5.api
     testImplementation deps.mockito.core
     testImplementation deps.retrofit.gson
+    testImplementation deps.robolectric
     testImplementation deps.truth
 
     testImplementation project(":testshared")

@@ -44,10 +44,11 @@ dependencies {
 
     implementation deps.arrow.core_data
     implementation deps.coroutines.test
+    implementation deps.mockito.core
     implementation deps.junit5.api
     implementation deps.kotlin.stdlib
     implementation deps.truth
-    
+    implementation deps.retrofit.core
     implementation project(":domain")
 
     ktlint deps.ktlint
