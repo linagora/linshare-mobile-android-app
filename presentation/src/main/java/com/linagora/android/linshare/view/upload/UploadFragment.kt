@@ -12,11 +12,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.databinding.FragmentUploadBinding
+import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.util.Constant
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
+import kotlinx.android.synthetic.main.fragment_upload.btnUpload
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -29,8 +38,22 @@ class UploadFragment : MainNavigationFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    lateinit var dispatcherProvider: CoroutinesDispatcherProvider
+
+    private lateinit var uploadScoped: CoroutineScope
+
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
+
+    private lateinit var uploadFragmentViewModel: UploadFragmentViewModel
+
+    private lateinit var binding: FragmentUploadBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        uploadScoped = CoroutineScope(dispatcherProvider.main)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +61,8 @@ class UploadFragment : MainNavigationFragment() {
         savedInstanceState: Bundle?
     ): View? {
         initViewModel()
-        return inflater.inflate(R.layout.fragment_upload, container, false)
+        binding = FragmentUploadBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     private fun initViewModel() {
@@ -48,22 +72,51 @@ class UploadFragment : MainNavigationFragment() {
                 INVALID_AUTHENTICATION -> navigateToWizardLogin()
             }
         })
+
+        uploadFragmentViewModel = getViewModel(viewModelFactory)
     }
 
     private fun receiveFile() {
         LOGGER.info("receiveFile()")
         val bundle = requireArguments()
         val uriFile = bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
-        requireContext().contentResolver.query(uriFile!!, null, null, null, null)
-            ?.use { cursor ->
-                with(cursor) {
-                    moveToFirst()
-                    val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    val size = getString(getColumnIndex(OpenableColumns.SIZE))
-                    val filePath = getString(getColumnIndex(MediaStore.Images.Media.DATA))
-                    LOGGER.info("name: $fileName - size: $size - filePath: $filePath")
+        extractFileInfo(uriFile!!)
+    }
+
+    private fun extractFileInfo(uri: Uri) {
+        uploadScoped.launch(dispatcherProvider.io) {
+            requireContext().contentResolver.query(uri, null, null, null, null)
+                ?.use { cursor ->
+                    with(cursor) {
+                        moveToFirst()
+                        val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                        val size = getLong(getColumnIndex(OpenableColumns.SIZE))
+                        val mimeType = getString(getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
+                        LOGGER.info("name: $fileName - size: $size - mimeType: $mimeType")
+                        withContext(dispatcherProvider.main) {
+                            bindingData(fileName, size)
+                            setUpUploadButton(uri, fileName, size, mimeType)
+                        }
+                    }
                 }
-            }
+        }
+    }
+
+    private fun bindingData(fileName: String, size: Long) {
+        binding.fileName = fileName
+        binding.fileSize = size
+    }
+
+    private fun setUpUploadButton(uri: Uri, fileName: String, size: Long, mimeType: String) {
+        btnUpload.isEnabled = true
+        btnUpload.setOnClickListener {
+            uploadFragmentViewModel.upload(DocumentRequest(
+                uri = uri,
+                fileName = fileName,
+                fileSize = size,
+                mediaType = mimeType.toMediaType()
+            ))
+        }
     }
 
     private fun navigateToWizardLogin() {
