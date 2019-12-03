@@ -154,6 +154,8 @@ dependencies {
 
     implementation deps.view_pager2
 
+    implementation deps.work.run_time
+
     implementation project(':data')
     implementation project(':domain')
 
