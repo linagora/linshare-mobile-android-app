@@ -49,6 +49,8 @@ versions.truth = "1.0"
 
 versions.view_pager2 = "1.0.0-beta05"
 
+versions.work = "2.2.0"
+
 ext.versions = versions
 
 def androidx = [:]
@@ -168,6 +170,10 @@ deps.truth = "com.google.truth:truth:$versions.truth"
 deps.timber = "com.jakewharton.timber:timber:$versions.timber"
 
 deps.view_pager2 = "androidx.viewpager2:viewpager2:$versions.view_pager2"
+
+def work = [:]
+work.run_time = "androidx.work:work-runtime-ktx:$versions.work"
+deps.work = work
 
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 
