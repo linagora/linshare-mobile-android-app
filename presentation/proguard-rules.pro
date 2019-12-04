@@ -19,6 +19,8 @@
 -keepattributes SourceFile,LineNumberTable
 -keep class com.linagora.android.linshare.model.** { *; }
 
+-keep enum com.linagora.android.linshare.view.Navigation$LoginFlow
+
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile

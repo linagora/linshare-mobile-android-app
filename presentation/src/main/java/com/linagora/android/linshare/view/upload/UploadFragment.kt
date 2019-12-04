@@ -11,21 +11,25 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentUploadBinding
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
-import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.upload.worker.UploadWorker
+import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_URI_INPUT_KEY
 import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -45,8 +49,6 @@ class UploadFragment : MainNavigationFragment() {
 
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
-
-    private lateinit var uploadFragmentViewModel: UploadFragmentViewModel
 
     private lateinit var binding: FragmentUploadBinding
 
@@ -72,8 +74,6 @@ class UploadFragment : MainNavigationFragment() {
                 INVALID_AUTHENTICATION -> navigateToWizardLogin()
             }
         })
-
-        uploadFragmentViewModel = getViewModel(viewModelFactory)
     }
 
     private fun receiveFile() {
@@ -95,7 +95,7 @@ class UploadFragment : MainNavigationFragment() {
                         LOGGER.info("name: $fileName - size: $size - mimeType: $mimeType")
                         withContext(dispatcherProvider.main) {
                             bindingData(fileName, size)
-                            setUpUploadButton(uri, fileName, size, mimeType)
+                            setUpUploadButton(uri)
                         }
                     }
                 }
@@ -107,16 +107,29 @@ class UploadFragment : MainNavigationFragment() {
         binding.fileSize = size
     }
 
-    private fun setUpUploadButton(uri: Uri, fileName: String, size: Long, mimeType: String) {
+    private fun setUpUploadButton(uri: Uri) {
         btnUpload.isEnabled = true
         btnUpload.setOnClickListener {
-            uploadFragmentViewModel.upload(DocumentRequest(
-                uri = uri,
-                fileName = fileName,
-                fileSize = size,
-                mediaType = mimeType.toMediaType()
-            ))
+
+            val inputData = createInputDataForUploadFile(uri)
+
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val uploadRequest = OneTimeWorkRequestBuilder<UploadWorker>()
+                .setInputData(inputData)
+                .setConstraints(constraints)
+                .build()
+
+            WorkManager.getInstance(requireContext()).enqueue(uploadRequest)
         }
+    }
+
+    private fun createInputDataForUploadFile(uri: Uri): Data {
+        return Data.Builder()
+            .putString(FILE_URI_INPUT_KEY, uri.toString())
+            .build()
     }
 
     private fun navigateToWizardLogin() {

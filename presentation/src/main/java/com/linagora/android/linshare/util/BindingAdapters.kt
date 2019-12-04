@@ -84,3 +84,10 @@ fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDet
         String.format("%s on %s", usedSize, quotaSize)
     }.getOrNull()
 }
+
+@BindingAdapter("fileSize")
+fun bindingFileSize(textView: TextView, fileSize: Long) {
+    textView.text = runCatching {
+        Formatter.formatFileSize(textView.context, fileSize)
+    }.getOrNull()
+}
