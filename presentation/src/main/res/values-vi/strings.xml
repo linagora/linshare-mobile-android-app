@@ -35,4 +35,10 @@
     <string name="confirm_remove_account_title">Bạn muốn xóa tài khoản này ?</string>
     <string name="cancel">Hủy</string>
     <string name="remove">Xóa</string>
+
+    <string name="uploading_title">Đang tải tệp lên LinShare</string>
+    <string name="upload_finished_title">Linshare hoàn thành tải lên</string>
+    <string name="uploading_file">Đang tải lên file %s</string>
+    <string name="upload_success">Tải lên tệp %s thành công</string>
+    <string name="upload_failed">Tải lên không thành công</string>
 </resources>

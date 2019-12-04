@@ -35,4 +35,10 @@
     <string name="confirm_remove_account_title">Are you sure you want to remove this account ?</string>
     <string name="cancel">Cancel</string>
     <string name="remove">Remove</string>
+
+    <string name="uploading_title">Uploading a file to LinShare</string>
+    <string name="upload_finished_title">Linshare upload finished</string>
+    <string name="uploading_file">Uploading file %s</string>
+    <string name="upload_success">Upload succeeded for you file %s</string>
+    <string name="upload_failed">Upload failed</string>
 </resources>
