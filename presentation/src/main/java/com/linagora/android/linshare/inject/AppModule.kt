@@ -25,10 +25,10 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class AppModule {
+open class AppModule {
 
     @Provides
-    fun provideContext(application: LinShareApplication): Context {
+    open fun provideContext(application: LinShareApplication): Context {
         return application.applicationContext
     }
 
@@ -82,7 +82,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideDocumentRepository(documentRepository: DocumentRepositoryImp): DocumentRepository {
+    open fun provideDocumentRepository(documentRepository: DocumentRepositoryImp): DocumentRepository {
         return documentRepository
     }
 }

@@ -1,5 +1,7 @@
 package com.linagora.android.linshare.inject
 
+import com.linagora.android.linshare.inject.worker.WorkerBindingModule
+import com.linagora.android.linshare.inject.worker.WorkerFactoryModule
 import com.linagora.android.linshare.view.LinShareApplication
 import dagger.BindsInstance
 import dagger.Component
@@ -15,6 +17,8 @@ import javax.inject.Singleton
         DocumentModule::class,
         ActivityBindingModule::class,
         ViewModelModule::class,
+        WorkerFactoryModule::class,
+        WorkerBindingModule::class,
         NetworkModule::class
     ]
 )
