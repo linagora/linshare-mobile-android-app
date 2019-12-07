@@ -25,6 +25,9 @@ android {
     }
 
     testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
         unitTests.all {
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
@@ -173,6 +176,7 @@ dependencies {
     testImplementation deps.coroutines.test
     testImplementation deps.junit5.api
     testImplementation deps.mockito.core
+    testImplementation deps.robolectric
     testImplementation deps.threeten.bp
     testImplementation deps.truth
 

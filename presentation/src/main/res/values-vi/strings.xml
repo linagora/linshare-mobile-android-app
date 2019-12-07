@@ -39,12 +39,12 @@
     <!--Notification-->
     <string name="upload_channel_name">Thông báo tải lên</string>
     <string name="upload_channel_description">Thông báo về tải lên</string>
-    
+
     <plurals name="uploading_n_file">
-        <item quantity="one">Đang tải lên 1 tệp</item>
+        <item quantity="one">Đang tải tệp lên</item>
         <item quantity="other">Đang tải lên %s tệp</item>
     </plurals>
 
-    <string name="upload_success">Tải lên tệp %s thành công</string>
+    <string name="upload_success">Hoàn thành tải lên</string>
     <string name="upload_failed">Tải lên không thành công</string>
 </resources>

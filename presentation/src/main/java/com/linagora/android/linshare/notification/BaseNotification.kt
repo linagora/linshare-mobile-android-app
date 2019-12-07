@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat.Builder
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
 
 abstract class BaseNotification(private val context: Context) {
@@ -39,8 +40,10 @@ abstract class BaseNotification(private val context: Context) {
         }
 
         return Builder(context, getChannelId().id)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .setPriority(getNotificationPriority().priority)
+            .setColorized(true)
+            .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
     }
 
     fun notify(notificationId: NotificationId, notificationBuilder: Builder.() -> Notification) {

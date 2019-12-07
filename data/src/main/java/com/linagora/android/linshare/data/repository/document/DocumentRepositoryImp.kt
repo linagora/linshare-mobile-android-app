@@ -3,6 +3,7 @@ package com.linagora.android.linshare.data.repository.document
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import javax.inject.Inject
 
@@ -11,8 +12,9 @@ class DocumentRepositoryImp @Inject constructor(
 ) : DocumentRepository {
 
     override suspend fun upload(
-        documentRequest: DocumentRequest
+        documentRequest: DocumentRequest,
+        onTransfer: OnTransfer
     ): Document {
-        return linShareDocumentDataSource.upload(documentRequest)
+        return linShareDocumentDataSource.upload(documentRequest, onTransfer)
     }
 }

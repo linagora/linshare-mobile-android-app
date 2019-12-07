@@ -41,10 +41,10 @@
     <string name="upload_channel_description">Notification for uploading</string>
 
     <plurals name="uploading_n_file">
-        <item quantity="one">Uploading 1 file</item>
-        <item quantity="other">Uploading % files</item>
+        <item quantity="one">Uploading file</item>
+        <item quantity="other">Uploading %s files</item>
     </plurals>
 
-    <string name="upload_success">Upload success</string>
+    <string name="upload_success">Upload completed</string>
     <string name="upload_failed">Upload failed</string>
 </resources>
