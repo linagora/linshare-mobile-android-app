@@ -36,9 +36,15 @@
     <string name="cancel">Cancel</string>
     <string name="remove">Remove</string>
 
-    <string name="uploading_title">Uploading a file to LinShare</string>
-    <string name="upload_finished_title">Linshare upload finished</string>
-    <string name="uploading_file">Uploading file %s</string>
-    <string name="upload_success">Upload succeeded for you file %s</string>
+    <!--Notification-->
+    <string name="upload_channel_name">Upload Notification</string>
+    <string name="upload_channel_description">Notification for uploading</string>
+
+    <plurals name="uploading_n_file">
+        <item quantity="one">Uploading 1 file</item>
+        <item quantity="other">Uploading % files</item>
+    </plurals>
+
+    <string name="upload_success">Upload success</string>
     <string name="upload_failed">Upload failed</string>
 </resources>
