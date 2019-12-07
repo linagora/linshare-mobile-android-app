@@ -5,8 +5,8 @@ import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
-import okhttp3.RequestBody
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
@@ -23,10 +23,17 @@ class LinShareDocumentDataSource @Inject constructor(
         private val LOGGER = LoggerFactory.getLogger(LinShareDocumentDataSource::class.java)
     }
 
-    override suspend fun upload(documentRequest: DocumentRequest): Document {
+    override suspend fun upload(
+        documentRequest: DocumentRequest,
+        onTransfer: OnTransfer
+    ): Document {
         val tempFile = createTempUploadFile(documentRequest)
         try {
-            val fileRequestBody = RequestBody.create(documentRequest.mediaType, tempFile)
+            val fileRequestBody = MeasurableUploadRequestBody(
+                contentType = documentRequest.mediaType,
+                file = tempFile,
+                onTransfer = onTransfer
+            )
             return linshareApi.upload(
                 file = fileRequestBody,
                 fileName = documentRequest.fileName,

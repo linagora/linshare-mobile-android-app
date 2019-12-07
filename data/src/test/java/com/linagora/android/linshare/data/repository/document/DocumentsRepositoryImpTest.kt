@@ -3,6 +3,9 @@ package com.linagora.android.linshare.data.repository.document
 import android.os.Build
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
+import com.linagora.android.linshare.domain.model.upload.OnTransfer
+import com.linagora.android.linshare.domain.model.upload.TotalBytes
+import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_REQUEST
@@ -34,11 +37,16 @@ class DocumentsRepositoryImpTest {
 
     @Test
     fun uploadShouldReturnADocumentWhenSuccess() {
+        val onTransfer = object : OnTransfer {
+            override fun invoke(transferredBytes: TransferredBytes, totalBytes: TotalBytes) {}
+        }
         runBlockingTest {
-            `when`(documentDataSource.upload(DOCUMENT_REQUEST))
-                .thenAnswer { DOCUMENT }
+            `when`(documentDataSource.upload(
+                DOCUMENT_REQUEST,
+                onTransfer
+            )).thenAnswer { DOCUMENT }
 
-            val document = documentRepositoryImp.upload(DOCUMENT_REQUEST)
+            val document = documentRepositoryImp.upload(DOCUMENT_REQUEST, onTransfer)
 
             assertThat(document).isEqualTo(DOCUMENT)
         }
@@ -46,12 +54,19 @@ class DocumentsRepositoryImpTest {
 
     @Test
     fun uploadShouldThrowWhenDataSourceThrow() {
+        val onTransfer = object : OnTransfer {
+            override fun invoke(transferredBytes: TransferredBytes, totalBytes: TotalBytes) {}
+        }
         runBlockingTest {
-            `when`(documentDataSource.upload(DOCUMENT_REQUEST))
-                .thenThrow(UploadException("upload error"))
+            `when`(documentDataSource.upload(
+                DOCUMENT_REQUEST,
+                onTransfer
+            )).thenThrow(UploadException("upload error"))
 
             val exception = assertThrows<UploadException> {
-                runBlockingTest { documentRepositoryImp.upload(DOCUMENT_REQUEST) }
+                runBlockingTest {
+                    documentRepositoryImp.upload(DOCUMENT_REQUEST, onTransfer)
+                }
             }
             assertThat(exception.message).isEqualTo("upload error")
         }

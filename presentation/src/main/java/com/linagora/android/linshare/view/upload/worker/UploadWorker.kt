@@ -9,9 +9,17 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.upload.OnTransfer
+import com.linagora.android.linshare.domain.model.upload.TotalBytes
+import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.inject.worker.ChildWorkerFactory
-import com.linagora.android.linshare.util.pushSystemNotification
+import com.linagora.android.linshare.notification.BaseNotification
+import com.linagora.android.linshare.notification.NotificationId
+import com.linagora.android.linshare.notification.SystemNotifier
+import com.linagora.android.linshare.notification.UploadNotification
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -19,7 +27,10 @@ import javax.inject.Inject
 class UploadWorker(
     private val appContext: Context,
     private val params: WorkerParameters,
-    private val documentRepository: DocumentRepository
+    private val dispatcherProvider: CoroutinesDispatcherProvider,
+    private val documentRepository: DocumentRepository,
+    private val systemNotifier: SystemNotifier,
+    private val uploadNotification: BaseNotification
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
@@ -29,31 +40,38 @@ class UploadWorker(
     }
 
     override suspend fun doWork(): Result {
-        try {
-            val fileUri = Uri.parse(inputData.getString(FILE_URI_INPUT_KEY))
-            queryDocumentFromSystemFile(fileUri)!!
-                .let { document ->
-                    pushSystemNotification(
-                        title = appContext.getString(R.string.uploading_title),
-                        message = String.format(appContext.getString(R.string.uploading_file), document.fileName),
-                        context = appContext
-                    )
-                    documentRepository.upload(document)
-                    pushSystemNotification(
-                        title = appContext.getString(R.string.upload_finished_title),
-                        message = String.format(appContext.getString(R.string.upload_success), document.fileName),
-                        context = appContext
-                    )
-                }
-            return Result.success()
-        } catch (exp: Exception) {
-            LOGGER.error(exp.message, exp)
-            pushSystemNotification(
-                title = appContext.getString(R.string.upload_finished_title),
-                message = String.format(appContext.getString(R.string.upload_failed)),
-                context = appContext
-            )
-            return Result.failure()
+        return withContext(dispatcherProvider.computation) {
+            val notificationId = systemNotifier.generateNotificationId()
+            try {
+                val fileUri = Uri.parse(inputData.getString(FILE_URI_INPUT_KEY))
+                queryDocumentFromSystemFile(fileUri)!!
+                    .let { document ->
+                        notifyUploading(
+                            notificationId = notificationId,
+                            message = document.fileName,
+                            max = 0,
+                            progress = 0,
+                            indeterminate = true
+                        )
+                        documentRepository.upload(document, object : OnTransfer {
+                            override fun invoke(transferredBytes: TransferredBytes, totalBytes: TotalBytes) {
+                                notifyUploading(
+                                    notificationId = notificationId,
+                                    message = document.fileName,
+                                    max = totalBytes,
+                                    progress = transferredBytes,
+                                    indeterminate = false
+                                )
+                            }
+                        })
+                        notifyUploadDone(notificationId, true, document.fileName)
+                    }
+                Result.success()
+            } catch (exp: Exception) {
+                LOGGER.error(exp.message, exp)
+                notifyUploadDone(notificationId, false)
+                Result.failure()
+            }
         }
     }
 
@@ -70,14 +88,53 @@ class UploadWorker(
             }
     }
 
+    private fun notifyUploading(notificationId: NotificationId, message: String, max: TotalBytes, progress: TransferredBytes, indeterminate: Boolean) {
+        val percentage = (progress.value * 1f / max.value) * 100
+        notifyUploading(notificationId, message, 100, percentage.toInt(), indeterminate)
+    }
+
+    private fun notifyUploading(notificationId: NotificationId, message: String, max: Int, progress: Int, indeterminate: Boolean) {
+        uploadNotification.notify(notificationId) {
+            this.setContentTitle(appContext.resources.getQuantityString(R.plurals.uploading_n_file, 1))
+                .setContentText(message)
+                .setProgress(max, progress, indeterminate)
+                .build()
+        }
+    }
+
+    private fun notifyUploadDone(notificationId: NotificationId, isSuccess: Boolean, fileName: String? = null) {
+        uploadNotification.notify(notificationId) {
+            val resTitle = when (isSuccess) {
+                true -> R.string.upload_success
+                else -> R.string.upload_failed
+            }
+            this.setContentTitle(appContext.getString(resTitle))
+                .setProgress(0, 0, false)
+            fileName?.let {
+                this.setContentText(fileName)
+            }
+            this.build()
+        }
+    }
+
     class Factory @Inject constructor(
-        private val documentRepository: DocumentRepository
+        private val dispatcherProvider: CoroutinesDispatcherProvider,
+        private val documentRepository: DocumentRepository,
+        private val systemNotifier: SystemNotifier,
+        private val uploadNotification: UploadNotification
     ) : ChildWorkerFactory {
         override fun create(
             applicationContext: Context,
             params: WorkerParameters
         ): ListenableWorker {
-            return UploadWorker(applicationContext, params, documentRepository)
+            return UploadWorker(
+                applicationContext,
+                params,
+                dispatcherProvider,
+                documentRepository,
+                systemNotifier,
+                uploadNotification
+            )
         }
     }
 }
