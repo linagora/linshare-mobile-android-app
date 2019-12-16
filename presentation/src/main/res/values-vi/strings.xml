@@ -47,4 +47,7 @@
 
     <string name="upload_success">Hoàn thành tải lên</string>
     <string name="upload_failed">Tải lên không thành công</string>
+
+    <string name="upload_file">Tải lên</string>
+    <string name="upload_to_my_space">Tải lên không gian của bạn</string>
 </resources>

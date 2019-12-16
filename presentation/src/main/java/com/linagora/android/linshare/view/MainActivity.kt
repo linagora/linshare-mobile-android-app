@@ -24,7 +24,8 @@ class MainActivity : BaseActivity(), NavigationHost {
         private val EMPTY_DRAWER: DrawerLayout? = null
 
         private val TOP_LEVEL_DESTINATIONS = setOf(
-            R.id.wizardFragment
+            R.id.wizardFragment,
+            R.id.uploadFragment
         )
 
         val INIT_DESTINATIONS = setOf(

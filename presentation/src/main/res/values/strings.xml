@@ -47,4 +47,7 @@
 
     <string name="upload_success">Upload completed</string>
     <string name="upload_failed">Upload failed</string>
+
+    <string name="upload_file">Upload File</string>
+    <string name="upload_to_my_space">Upload to My Space</string>
 </resources>
