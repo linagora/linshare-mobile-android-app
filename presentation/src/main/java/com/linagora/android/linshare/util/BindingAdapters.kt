@@ -3,10 +3,13 @@ package com.linagora.android.linshare.util
 import android.text.format.Formatter
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
+import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
 import timber.log.Timber
@@ -85,9 +88,23 @@ fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDet
     }.getOrNull()
 }
 
-@BindingAdapter("fileSize")
-fun bindingFileSize(textView: TextView, fileSize: Long) {
+@BindingAdapter("uploadSize")
+fun bindingFileSize(textView: TextView, document: DocumentRequest?) {
     textView.text = runCatching {
-        Formatter.formatFileSize(textView.context, fileSize)
+        Formatter.formatFileSize(textView.context, document!!.fileSize)
     }.getOrNull()
+}
+
+@BindingAdapter("uploadInfo")
+fun bindingUploadInfo(textView: TextView, document: DocumentRequest?) {
+    textView.text = document?.fileName
+}
+
+@BindingAdapter("uploadIcon")
+fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?) {
+    GlideApp.with(imageView.context)
+        .load(document?.uri)
+        .placeholder(document?.mediaType?.getDrawableIcon()
+            ?: R.drawable.ic_file)
+        .into(imageView)
 }

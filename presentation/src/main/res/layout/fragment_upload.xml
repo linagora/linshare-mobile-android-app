@@ -2,56 +2,115 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="com.linagora.android.linshare.domain.model.document.DocumentRequest"/>
         <variable
-            name="fileName"
-            type="String" />
-
-        <variable
-            name="fileSize"
-            type="Long" />
+            name="document"
+            type="DocumentRequest" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txtFileNameUpload"
-            android:text="@{fileName}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/upload_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/txtFileSizeUpload"
-            app:fileSize="@{fileSize}"
-            app:layout_constraintTop_toBottomOf="@id/txtFileNameUpload"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/url_name_text_size"
+                    android:textColor="@color/text_with_logo_color"
+                    android:text="@string/upload_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/fileInfoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="@dimen/info_elevation"
+            app:layout_constraintTop_toBottomOf="@id/upload_app_bar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:paddingBottom="@dimen/upload_container_padding_top"
+                android:paddingTop="@dimen/upload_container_padding_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/uploadIcon"
+                    android:layout_width="@dimen/upload_icon_size"
+                    android:layout_height="@dimen/upload_icon_size"
+                    android:layout_marginStart="@dimen/upload_icon_margin_start"
+                    android:scaleType="centerCrop"
+                    app:uploadIcon="@{document}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/uploadInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/item_upload_container_margin_side"
+                    android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:textSize="@dimen/file_name_text_size"
+                    android:textColor="@color/file_name_color"
+                    app:uploadInfo="@{document}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/uploadSize"
+                    app:layout_constraintStart_toEndOf="@+id/uploadIcon" />
+
+                <TextView
+                    android:id="@+id/uploadSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:layout_marginEnd="@dimen/upload_size_margin_end"
+                    android:textSize="@dimen/file_size_text_size"
+                    android:textColor="@color/file_size_color"
+                    app:uploadSize="@{document}"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/uploadInfo"
+                    app:layout_constraintStart_toEndOf="@id/uploadInfo"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnUpload"
-            android:text="Upload"
+            android:layout_marginTop="@dimen/upload_button_margin_top"
+            android:text="@string/upload_to_my_space"
             android:enabled="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/UploadButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtFileSizeUpload"
-            />
+            app:layout_constraintTop_toBottomOf="@id/fileInfoContainer" />
 
-        <ProgressBar
-            android:id="@+id/uploadProgress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:visibility="gone"
+        <View
+            android:background="@color/divide_view"
             app:layout_constraintTop_toBottomOf="@id/btnUpload"
-            />
+            android:layout_marginTop="@dimen/upload_button_margin_top"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

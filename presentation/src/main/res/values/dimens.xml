@@ -43,4 +43,15 @@
     <dimen name="dialog_round_corner">24dp</dimen>
     <dimen name="dialog_button_width">128dp</dimen>
     <dimen name="bottom_dialog_margin_side">5dp</dimen>
+
+    <!-- upload -->
+    <dimen name="upload_button_margin_top">24dp</dimen>
+    <dimen name="button_text_size">18sp</dimen>
+    <dimen name="file_name_text_size">18sp</dimen>
+    <dimen name="file_size_text_size">15sp</dimen>
+    <dimen name="upload_size_margin_end">16dp</dimen>
+    <dimen name="upload_icon_margin_start">20dp</dimen>
+    <dimen name="item_upload_container_margin_side">12dp</dimen>
+    <dimen name="upload_container_padding_top">8dp</dimen>
+    <dimen name="upload_icon_size">56dp</dimen>
 </resources>

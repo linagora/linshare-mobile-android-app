@@ -2,11 +2,12 @@ package com.linagora.android.linshare.view.upload
 
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
+import android.provider.MediaStore.Images.Media
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,8 +19,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentUploadBinding
+import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.MimeType.APPLICATION_DEFAULT
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
@@ -30,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -91,10 +95,14 @@ class UploadFragment : MainNavigationFragment() {
                         moveToFirst()
                         val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
                         val size = getLong(getColumnIndex(OpenableColumns.SIZE))
-                        val mimeType = getString(getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
+                        val mimeType = runCatching {
+                            getString(getColumnIndex(Media.MIME_TYPE))
+                        }.getOrElse { APPLICATION_DEFAULT }
+
                         LOGGER.info("name: $fileName - size: $size - mimeType: $mimeType")
+
                         withContext(dispatcherProvider.main) {
-                            bindingData(fileName, size)
+                            bindingData(DocumentRequest(uri, fileName, size, mimeType.toMediaType()))
                             setUpUploadButton(uri)
                         }
                     }
@@ -102,9 +110,8 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
-    private fun bindingData(fileName: String, size: Long) {
-        binding.fileName = fileName
-        binding.fileSize = size
+    private fun bindingData(documentRequest: DocumentRequest) {
+        binding.document = documentRequest
     }
 
     private fun setUpUploadButton(uri: Uri) {
@@ -123,7 +130,24 @@ class UploadFragment : MainNavigationFragment() {
                 .build()
 
             WorkManager.getInstance(requireContext()).enqueue(uploadRequest)
+
+            alertStartToUpload(1)
+            navigateAfterUpload()
         }
+    }
+
+    private fun alertStartToUpload(uploadFiles: Int) {
+        Toast.makeText(
+            requireContext(),
+            requireContext()
+                .resources
+                .getQuantityString(R.plurals.uploading_n_file, uploadFiles),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun navigateAfterUpload() {
+        requireActivity().onBackPressed()
     }
 
     private fun createInputDataForUploadFile(uri: Uri): Data {
