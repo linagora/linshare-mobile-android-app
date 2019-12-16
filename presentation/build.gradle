@@ -141,6 +141,8 @@ dependencies {
     implementation deps.dagger.android
     implementation deps.dagger.android_support
 
+    implementation deps.glide.core
+
     implementation deps.lifecycle.extensions
 
     implementation deps.kotlin.reflect
@@ -164,6 +166,8 @@ dependencies {
 
     kapt deps.dagger.dagger_compiler
     kapt deps.dagger.android_processor
+
+    kapt deps.glide.compiler
 
     androidTestImplementation deps.truth
 

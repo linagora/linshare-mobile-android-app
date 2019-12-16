@@ -16,6 +16,8 @@ versions.dagger = "2.24"
 
 versions.espresso = "3.1.0"
 
+versions.glide = "4.9.0"
+
 versions.javaxInject = '1'
 versions.junit_ext = "1.1.0"
 versions.junit5 = "5.5.1"
@@ -100,6 +102,12 @@ def espresso = [:]
 espresso.core = "androidx.test.espresso:espresso-core:$versions.espresso"
 
 deps.espresso = espresso
+
+def glide = [:]
+glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
+glide.core = "com.github.bumptech.glide:glide:$versions.glide"
+
+deps.glide = glide
 
 def build_versions = [:]
 build_versions.min_sdk = 21
