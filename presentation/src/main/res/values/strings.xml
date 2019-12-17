@@ -31,6 +31,7 @@
     <string name="last_login_title">Last login:</string>
     <string name="available_space_title">Available space:</string>
     <string name="notification">Notification</string>
+    <string name="available_space">%s on %s</string>
 
     <string name="confirm_remove_account_title">Are you sure you want to remove this account ?</string>
     <string name="cancel">Cancel</string>
