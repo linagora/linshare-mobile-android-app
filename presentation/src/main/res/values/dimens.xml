@@ -32,12 +32,13 @@
     <dimen name="round_corner_login_button">40dp</dimen>
 
     <!--account details-->
-    <dimen name="align_text_account_detail">48dp</dimen>
+    <dimen name="align_text_account_detail">24dp</dimen>
     <dimen name="info_elevation">6dp</dimen>
     <dimen name="info_line_margin">16dp</dimen>
     <dimen name="info_margin_start">8dp</dimen>
     <dimen name="button_margin_end">24dp</dimen>
     <dimen name="url_name_text_size">23sp</dimen>
+    <dimen name="container_padding_right">16dp</dimen>
 
     <!-- dialog -->
     <dimen name="dialog_round_corner">24dp</dimen>
