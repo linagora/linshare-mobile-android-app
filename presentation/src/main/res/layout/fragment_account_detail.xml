@@ -46,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentPaddingLeft="@dimen/align_text_account_detail"
+            app:contentPaddingRight="@dimen/container_padding_right"
             app:cardCornerRadius="0dp"
             app:cardElevation="@dimen/info_elevation"
             app:layout_constraintTop_toBottomOf="@+id/app_bar">
@@ -131,10 +132,12 @@
 
                 <TextView
                     android:id="@+id/txtTitleLastLogin"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/info_line_margin"
                     android:text="@string/last_login_title"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textColor="@color/grey_80"
                     android:textSize="@dimen/guide_text_size"
                     app:layout_constraintStart_toStartOf="parent"
@@ -142,41 +145,47 @@
 
                 <TextView
                     android:id="@+id/txtLastLogin"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/info_line_margin"
                     android:layout_marginBottom="@dimen/info_line_margin"
                     android:layout_marginStart="@dimen/info_margin_start"
                     android:textSize="@dimen/guide_text_size"
                     android:textAllCaps="true"
+                    android:singleLine="true"
+                    android:ellipsize="start"
                     app:lastLogin="@{details}"
-                    app:layout_constraintBaseline_toBaselineOf="@id/txtTitleLastLogin"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/txtTitleLastLogin"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBaseline_toBaselineOf="@id/txtTitleLastLogin"/>
 
                 <TextView
                     android:id="@+id/txtTitleSpace"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/info_line_margin"
                     android:layout_marginBottom="@dimen/info_line_margin"
                     android:text="@string/available_space_title"
                     android:textColor="@color/grey_80"
                     android:textSize="@dimen/guide_text_size"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txtTitleLastLogin" />
 
                 <TextView
                     android:id="@+id/txtSpace"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/info_line_margin"
                     android:layout_marginBottom="@dimen/info_line_margin"
                     android:layout_marginStart="@dimen/info_margin_start"
                     android:textSize="@dimen/guide_text_size"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     app:availableSpace="@{details}"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/txtTitleSpace"
                     app:layout_constraintBaseline_toBaselineOf="@id/txtTitleSpace"
                     app:layout_constraintBottom_toBottomOf="parent"/>
