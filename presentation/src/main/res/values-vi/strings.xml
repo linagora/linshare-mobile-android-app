@@ -31,6 +31,7 @@
     <string name="last_login_title">Lần đăng nhập cuối:</string>
     <string name="available_space_title">Bộ nhớ khả dụng:</string>
     <string name="notification">Thông báo</string>
+    <string name="available_space">%s/%s</string>
 
     <string name="confirm_remove_account_title">Bạn muốn xóa tài khoản này ?</string>
     <string name="cancel">Hủy</string>

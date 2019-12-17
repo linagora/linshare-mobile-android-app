@@ -84,7 +84,7 @@ fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDet
         val accountQuota = accountDetailsViewState.quota!!
         val quotaSize = Formatter.formatFileSize(textView.context, accountQuota.quota.size)
         val usedSize = Formatter.formatFileSize(textView.context, accountQuota.quota.size - accountQuota.usedSpace.size)
-        String.format("%s on %s", usedSize, quotaSize)
+        String.format(textView.context.getString(R.string.available_space), usedSize, quotaSize)
     }.getOrNull()
 }
 
