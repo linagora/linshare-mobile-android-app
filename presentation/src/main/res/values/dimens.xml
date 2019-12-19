@@ -54,4 +54,19 @@
     <dimen name="item_upload_container_margin_side">12dp</dimen>
     <dimen name="upload_container_padding_top">8dp</dimen>
     <dimen name="upload_icon_size">56dp</dimen>
+
+    <!-- permission popup -->
+    <dimen name="request_permission_popup_padding">24dp</dimen>
+    <dimen name="request_permission_popup_text_linespace">8dp</dimen>
+    <dimen name="request_permission_popup_text_size">17sp</dimen>
+    <dimen name="request_permission_popup_permission_bottom_padding">21dp</dimen>
+    <dimen name="request_permission_popup_permission_top_padding">8dp</dimen>
+    <dimen name="request_permission_popup_permission_height">32dp</dimen>
+    <dimen name="request_permission_popup_permission_img_layout_size">32dp</dimen>
+    <dimen name="request_permission_popup_permission_img_size">20dp</dimen>
+    <dimen name="request_permission_popup_permission_text_padding">16dp</dimen>
+    <dimen name="request_permission_popup_permission_text_size">16sp</dimen>
+    <dimen name="explanation_container_margin_top">16dp</dimen>
+    <dimen name="explanation_container_margin_side">24dp</dimen>
+    <dimen name="confirm_container_margin_top">16dp</dimen>
 </resources>

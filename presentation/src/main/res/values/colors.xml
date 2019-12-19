@@ -19,4 +19,6 @@
 
     <color name="file_name_color">#7B7B7B</color>
     <color name="file_size_color">#ACACAC</color>
+
+    <color name="request_permission_popup_image_background_color">#919799</color>
 </resources>

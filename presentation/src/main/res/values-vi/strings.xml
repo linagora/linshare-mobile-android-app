@@ -48,6 +48,10 @@
     <string name="upload_success">Hoàn thành tải lên</string>
     <string name="upload_failed">Tải lên không thành công</string>
 
-    <string name="upload_file">Tải lên</string>
-    <string name="upload_to_my_space">Tải lên không gian của bạn</string>
+    <string name="upload_file">Tải tệp lên</string>
+    <string name="upload_to_my_space">Tải lên không gian của tôi</string>
+
+    <string name="unable_to_upload_explanation">LinShare cần được truy cập vào bộ nhớ để thực hiện tải lên. Bạn hãy cấp quyền truy cập trong cài đặt hệ thống</string>
+    <string name="go_to_setting">Đến cài đặt</string>
+    <string name="permission_refuse">Cấp quyền</string>
 </resources>

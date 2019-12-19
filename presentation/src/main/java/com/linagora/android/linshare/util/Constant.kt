@@ -6,7 +6,5 @@ object Constant {
 
     const val DEFAULT_TIMEOUT_SECONDS = 30L
 
-    const val CONFIRM_DIALOG_HEIGHT_RATIO = 0.4f
-
     const val UPLOAD_URI_BUNDLE_KEY = "uriFile"
 }

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.util.Constant
+import com.linagora.android.linshare.view.dialog.DialogProperties.BottomDialogHeightRatio.ConfirmDialogHeightRatio
 
 abstract class BaseConfirmDialogFragment(
     private val layoutId: Int,
@@ -42,8 +42,8 @@ abstract class BaseConfirmDialogFragment(
         }
     }
 
-    private fun setUpLayoutParams(contentView: View) {
-        contentView.layoutParams.height = (resources.displayMetrics.heightPixels * Constant.CONFIRM_DIALOG_HEIGHT_RATIO)
-            .toInt()
+    open fun setUpLayoutParams(contentView: View) {
+        contentView.layoutParams.height =
+            (resources.displayMetrics.heightPixels * ConfirmDialogHeightRatio.ratio).toInt()
     }
 }
