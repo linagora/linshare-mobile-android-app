@@ -50,4 +50,8 @@
 
     <string name="upload_file">Upload File</string>
     <string name="upload_to_my_space">Upload to My Space</string>
+
+    <string name="unable_to_upload_explanation">To perform upload LinShare application needs to access to your device storage. You can configure access in system preference.</string>
+    <string name="go_to_setting">Go to Setting</string>
+    <string name="permission_refuse">Permission refuse</string>
 </resources>
