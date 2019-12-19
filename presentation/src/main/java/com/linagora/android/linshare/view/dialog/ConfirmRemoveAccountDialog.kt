@@ -1,11 +1,21 @@
 package com.linagora.android.linshare.view.dialog
 
 import android.view.View
+import android.widget.TextView
+import com.linagora.android.linshare.R
 
 class ConfirmRemoveAccountDialog(
-    title: String,
+    private val title: String,
     negativeText: String,
     positiveText: String,
-    onNegative: ((View) -> Unit)? = null,
-    onPositive: ((View) -> Unit)? = null
-) : BaseConfirmDialogFragment(title, negativeText, positiveText, onNegative, onPositive)
+    onNegativeCallback: OnNegativeCallback = NoOpCallback,
+    onPositiveCallback: OnPositiveCallback = NoOpCallback
+) : BaseConfirmDialogFragment(R.layout.dialog_confirm_layout, negativeText, positiveText, onNegativeCallback, onPositiveCallback) {
+
+    override fun setUpContent(contentView: View) {
+        with(contentView) {
+            val titleDialog = findViewById<TextView>(R.id.titleDialog)
+            titleDialog.text = title
+        }
+    }
+}
