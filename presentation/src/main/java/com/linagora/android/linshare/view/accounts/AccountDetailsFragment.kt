@@ -63,7 +63,7 @@ class AccountDetailsFragment : MainNavigationFragment() {
                     title = getString(R.string.confirm_remove_account_title),
                     negativeText = getString(R.string.cancel),
                     positiveText = getString(R.string.remove),
-                    onPositive = {
+                    onPositiveCallback = {
                         accountDetailViewModel.removeAccount(argument.credential.toCredential())
                     }
                 ).show(childFragmentManager, "confirm_remove_account_dialog")
