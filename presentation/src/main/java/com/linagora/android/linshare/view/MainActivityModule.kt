@@ -1,9 +1,12 @@
 package com.linagora.android.linshare.view
 
 import androidx.lifecycle.ViewModel
+import com.linagora.android.linshare.inject.annotation.FragmentScoped
 import com.linagora.android.linshare.inject.annotation.ViewModelKey
+import com.linagora.android.linshare.view.dialog.ReadStorageExplanationPermissionDialog
 import dagger.Binds
 import dagger.Module
+import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 @Module
@@ -14,4 +17,8 @@ abstract class MainActivityModule {
     @IntoMap
     @ViewModelKey(MainActivityViewModel::class)
     abstract fun bindViewModel(viewModel: MainActivityViewModel): ViewModel
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    abstract fun contributeReadStorageExplanationDialog(): ReadStorageExplanationPermissionDialog
 }

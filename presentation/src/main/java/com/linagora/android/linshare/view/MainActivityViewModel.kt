@@ -3,10 +3,8 @@ package com.linagora.android.linshare.view
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import arrow.core.Either
-import arrow.core.getOrElse
-import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionRequest
-import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionRequest.DENIED
+import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory
+import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory.DENIED
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
@@ -22,9 +20,6 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.UNAUTHENTICATED
 import com.linagora.android.linshare.view.base.BaseViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -61,30 +56,32 @@ class MainActivityViewModel @Inject constructor(
     fun shouldShowPermissionRequest(systemStoragePermissionRequest: StoragePermissionRequest) {
         shouldShowPermissionRequest.value = StoragePermissionRequest.INITIAL
         viewModelScope.launch(dispatcherProvider.io) {
-            flowOf(systemStoragePermissionRequest)
-                .zip(
-                    other = flowOf(propertiesRepository.getDeniedStoragePermission()),
-                    transform = { systemShowPermission, deniedStorage ->
-                        transformDeniedStoragePermissionState(deniedStorage, systemShowPermission) }
-                ).collect { shouldShowPermissionRequest.postValue(it) }
+            val userStoragePermissionRequest = propertiesRepository.getDeniedStoragePermission()
+            shouldShowPermissionRequest.postValue(
+                combineStoragePermission(userStoragePermissionRequest, systemStoragePermissionRequest)
+            )
         }
     }
 
-    fun setUserStoragePermissionRequest(userStoragePermissionRequest: UserStoragePermissionRequest) {
+    fun setUserStoragePermissionRequest(userStoragePermissionHistory: UserStoragePermissionHistory) {
         viewModelScope.launch(dispatcherProvider.io) {
-            propertiesRepository.storeDeniedStoragePermission(userStoragePermissionRequest)
+            propertiesRepository.storeDeniedStoragePermission(userStoragePermissionHistory)
         }
     }
 
-    private fun transformDeniedStoragePermissionState(
-        userStoragePermissionRequest: UserStoragePermissionRequest,
+    private fun combineStoragePermission(
+        userStoragePermissionHistory: UserStoragePermissionHistory,
         systemStoragePermissionRequest: StoragePermissionRequest
     ): StoragePermissionRequest {
-        return Either.cond(
-            test = userStoragePermissionRequest != DENIED || systemStoragePermissionRequest == SHOULD_SHOW,
-            ifTrue = { SHOULD_SHOW },
-            ifFalse = { SHOULD_NOT_SHOW }
-        ).getOrElse { SHOULD_NOT_SHOW }
+        if (userStoragePermissionHistory != DENIED) {
+            return SHOULD_SHOW
+        }
+
+        if (systemStoragePermissionRequest == SHOULD_SHOW) {
+            return SHOULD_SHOW
+        }
+
+        return SHOULD_NOT_SHOW
     }
 
     fun setUpAuthenticated(authenticationViewState: AuthenticationViewState) {

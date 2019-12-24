@@ -5,10 +5,11 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.model.resources.LayoutId
 import com.linagora.android.linshare.view.dialog.DialogProperties.BottomDialogHeightRatio.ConfirmDialogHeightRatio
 
 abstract class BaseConfirmDialogFragment(
-    private val layoutId: Int,
+    private val layoutId: LayoutId,
     private val negativeText: String,
     private val positiveText: String,
     private val onNegativeCallback: OnNegativeCallback = NoOpCallback,
@@ -16,7 +17,7 @@ abstract class BaseConfirmDialogFragment(
 ) : DaggerBottomSheetDialogFragment() {
 
     override fun setupDialog(dialog: Dialog, style: Int) {
-        val view = View.inflate(context, layoutId, null)
+        val view = View.inflate(context, layoutId.layoutResId, null)
         (dialog as BottomSheetDialog).setContentView(view)
         setUpContent(view)
         setUpConfirmButton(view)
