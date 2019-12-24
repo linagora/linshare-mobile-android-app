@@ -55,6 +55,7 @@ dependencies {
     implementation deps.androidx.core_ktx
     implementation deps.androidx.preference
     implementation deps.apache.commons_io
+    implementation deps.arrow.core_data
 
     implementation deps.javax.inject
 
