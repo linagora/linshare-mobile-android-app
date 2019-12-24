@@ -9,6 +9,6 @@ typealias OnPositiveCallback = (View) -> Unit
 object NoOpCallback : (View) -> Unit {
 
     override fun invoke(view: View) {
-        //do nothing
+        // do nothing
     }
 }

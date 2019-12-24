@@ -28,7 +28,6 @@ import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.util.afterTextChanged
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
-import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.LoginFlow.DIRECT
 import com.linagora.android.linshare.view.authentication.login.LoginFormState.Companion
@@ -122,7 +121,7 @@ class LoginFragment : MainNavigationFragment() {
             is LoginFormState -> loginFormState.set(success)
             is AuthenticationViewState -> {
                 loginFormState.set(LoginFormState(isLoading = false))
-                mainActivityViewModel.authenticationState.value = AUTHENTICATED
+                mainActivityViewModel.setUpAuthenticated(success)
                 loginSuccess(success.credential)
             }
         }

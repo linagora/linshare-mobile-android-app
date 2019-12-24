@@ -148,6 +148,7 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun navigateAfterUpload() {
         requireActivity().onBackPressed()
+        requireActivity().finish()
     }
 
     private fun createInputDataForUploadFile(uri: Uri): Data {
