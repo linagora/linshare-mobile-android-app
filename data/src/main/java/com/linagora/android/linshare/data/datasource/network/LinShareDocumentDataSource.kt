@@ -47,6 +47,10 @@ class LinShareDocumentDataSource @Inject constructor(
         }
     }
 
+    override suspend fun getAll(): List<Document> {
+        return linshareApi.getAll()
+    }
+
     private fun createTempUploadFile(documentRequest: DocumentRequest): File {
         val tempFile = File.createTempFile(
             "${documentRequest.fileName}_${System.currentTimeMillis()}",

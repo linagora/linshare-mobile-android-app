@@ -60,4 +60,8 @@ interface LinshareApi {
         @Part("filename") fileName: String,
         @Part("filesize") fileSize: Long
     ): Document
+
+    @GET("/documents")
+    @Headers("Accept: application/json")
+    suspend fun getAll(): List<Document>
 }
