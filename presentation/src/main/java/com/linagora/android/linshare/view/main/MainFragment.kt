@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.linagora.android.linshare.databinding.FragmentMainBinding
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
-import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.LoginFlow
@@ -44,7 +43,7 @@ class MainFragment : MainNavigationFragment() {
                 ifLeft = { gotoLoginPage() },
                 ifRight = { success ->
                     success.takeIf { it is AuthenticationViewState }
-                        ?.let { jumpIn(it as AuthenticationViewState) }
+                        ?.let { jumpIn() }
                 }
             )
         })
@@ -55,11 +54,10 @@ class MainFragment : MainNavigationFragment() {
         findNavController().navigate(action)
     }
 
-    private fun jumpIn(authenticationViewState: AuthenticationViewState) {
+    private fun jumpIn() {
+        println("jumpIn")
         val action = MainFragmentDirections
-            .actionMainFragmentToAccountDetailsFragment(
-                credential = authenticationViewState.credential.toParcelable()
-            )
+            .actionMainFragmentToMySpaceFragment()
         findNavController().navigate(action)
     }
 }

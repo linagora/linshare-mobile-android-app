@@ -24,7 +24,6 @@ import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
-import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.util.afterTextChanged
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
@@ -157,10 +156,7 @@ class LoginFragment : MainNavigationFragment() {
 
     private fun loginSuccess(credentials: Credential) {
         when (args.loginFlow) {
-            DIRECT -> {
-                val action = LoginFragmentDirections.toAccountDetailsFragment(credentials.toParcelable())
-                findNavController().navigate(action)
-            }
+            DIRECT -> { findNavController().navigate(R.id.mySpaceFragment) }
             else -> findNavController().popBackStack(R.id.uploadFragment, false)
         }
     }
