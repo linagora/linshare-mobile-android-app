@@ -7,6 +7,7 @@ import com.linagora.android.linshare.view.accounts.AccountDetailModule
 import com.linagora.android.linshare.view.authentication.login.LoginModule
 import com.linagora.android.linshare.view.authentication.wizard.WizardModule
 import com.linagora.android.linshare.view.main.MainFragmentModule
+import com.linagora.android.linshare.view.myspace.MySpaceModule
 import com.linagora.android.linshare.view.splash.SplashActivity
 import com.linagora.android.linshare.view.splash.SplashActivityModule
 import com.linagora.android.linshare.view.upload.UploadFragmentModule
@@ -28,7 +29,8 @@ abstract class ActivityBindingModule {
         WizardModule::class,
         LoginModule::class,
         AccountDetailModule::class,
-        UploadFragmentModule::class
+        UploadFragmentModule::class,
+        MySpaceModule::class
     ])
     internal abstract fun mainActivity(): MainActivity
 }
