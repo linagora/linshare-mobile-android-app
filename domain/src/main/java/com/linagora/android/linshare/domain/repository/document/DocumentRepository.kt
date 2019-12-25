@@ -10,4 +10,6 @@ interface DocumentRepository {
         documentRequest: DocumentRequest,
         onTransfer: OnTransfer
     ): Document
+
+    suspend fun getAll(): List<Document>
 }

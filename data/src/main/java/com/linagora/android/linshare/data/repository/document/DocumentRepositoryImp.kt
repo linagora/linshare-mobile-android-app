@@ -17,4 +17,8 @@ class DocumentRepositoryImp @Inject constructor(
     ): Document {
         return linShareDocumentDataSource.upload(documentRequest, onTransfer)
     }
+
+    override suspend fun getAll(): List<Document> {
+        return linShareDocumentDataSource.getAll()
+    }
 }

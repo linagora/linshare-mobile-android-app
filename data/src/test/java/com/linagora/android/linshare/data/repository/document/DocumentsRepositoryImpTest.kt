@@ -3,11 +3,13 @@ package com.linagora.android.linshare.data.repository.document
 import android.os.Build
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
+import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_REQUEST
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -69,6 +71,28 @@ class DocumentsRepositoryImpTest {
                 }
             }
             assertThat(exception.message).isEqualTo("upload error")
+        }
+    }
+
+    @Test
+    fun getAllShouldReturnAllDocuments() {
+        runBlockingTest {
+            `when`(documentDataSource.getAll())
+                .thenAnswer { listOf(DOCUMENT, DOCUMENT_2) }
+
+            val documents = documentRepositoryImp.getAll()
+            assertThat(documents).containsExactly(DOCUMENT, DOCUMENT_2)
+        }
+    }
+
+    @Test
+    fun getAllShouldReturnEmptyListWhenNoDocumentsExist() {
+        runBlockingTest {
+            `when`(documentRepositoryImp.getAll())
+                .thenAnswer { emptyList<Document>() }
+
+            val documents = documentRepositoryImp.getAll()
+            assertThat(documents).isEmpty()
         }
     }
 }

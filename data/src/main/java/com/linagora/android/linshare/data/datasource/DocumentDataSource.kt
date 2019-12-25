@@ -12,4 +12,6 @@ interface DocumentDataSource {
         documentRequest: DocumentRequest,
         onTransfer: OnTransfer
     ): Document
+
+    suspend fun getAll(): List<Document>
 }
