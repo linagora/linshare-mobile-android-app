@@ -28,12 +28,14 @@ class MySpaceFragment : MainNavigationFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentMySpaceBinding.inflate(inflater, container, false)
-        initViewModel()
+        initViewModel(binding)
         return binding.root
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(binding: FragmentMySpaceBinding) {
         mySpaceViewModel = getViewModel(viewModelFactory)
+        binding.lifecycleOwner = this
+        binding.viewModel = mySpaceViewModel
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
