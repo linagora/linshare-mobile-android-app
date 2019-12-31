@@ -10,6 +10,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.glide.GlideApp
+import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
 import timber.log.Timber
@@ -74,7 +75,7 @@ fun bindingSubjectFromDecodedToken(textView: TextView, accountDetailsViewState: 
 @BindingAdapter("lastLogin")
 fun bindingLastLogin(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
     textView.text = runCatching {
-        TimeUtils.convertToLocalTime(accountDetailsViewState.lastLogin!!.date)
+        TimeUtils.convertToLocalTime(accountDetailsViewState.lastLogin!!.date, LastLoginFormat)
     }.getOrNull()
 }
 

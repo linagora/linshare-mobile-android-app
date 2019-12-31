@@ -9,8 +9,16 @@ object TimeUtils {
 
     private const val LAST_LOGIN_FORMAT = "dd.MM.YYYY hh:mm a"
 
-    fun convertToLocalTime(date: Date): String {
-        val formatter = DateTimeFormatter.ofPattern(LAST_LOGIN_FORMAT)
+    private const val LAST_MODIFIED_FORMAT = "dd MMM YYYY HH:mm"
+
+    sealed class LinShareTimeFormat(val pattern: String) {
+        object LastLoginFormat : LinShareTimeFormat(LAST_LOGIN_FORMAT)
+
+        object LastModifiedFormat : LinShareTimeFormat(LAST_MODIFIED_FORMAT)
+    }
+
+    fun convertToLocalTime(date: Date, format: LinShareTimeFormat): String {
+        val formatter = DateTimeFormatter.ofPattern(format.pattern)
         return DateTimeUtils.toInstant(date)
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
