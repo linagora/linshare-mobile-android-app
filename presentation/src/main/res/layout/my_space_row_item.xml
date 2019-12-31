@@ -22,8 +22,7 @@
             android:layout_height="24dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/ic_photo_48px"
-            android:backgroundTint="@color/colorAccent"
+            app:documentMediaType="@{document}"
             />
 
         <TextView

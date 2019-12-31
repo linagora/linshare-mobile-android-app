@@ -1,18 +1,22 @@
 package com.linagora.android.linshare.adapter.myspace
 
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import arrow.core.Either
+import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.util.TimeUtils
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
+import com.linagora.android.linshare.util.getDrawableIcon
 
 @BindingAdapter("mySpaceState")
 fun bindingMySpaceList(
@@ -73,4 +77,12 @@ fun bindingMySpaceItemLastModified(
     textView.text = runCatching {
         TimeUtils.convertToLocalTime(document.modificationDate, LastModifiedFormat)
     }.getOrNull()
+}
+
+@BindingAdapter("documentMediaType")
+fun bindingDocumentIcon(imageView: ImageView, document: Document) {
+    GlideApp.with(imageView.context)
+        .load(document.type.getDrawableIcon())
+        .placeholder(R.drawable.ic_file)
+        .into(imageView)
 }
