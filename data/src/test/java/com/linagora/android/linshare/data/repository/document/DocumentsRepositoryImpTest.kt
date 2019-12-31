@@ -8,9 +8,9 @@ import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
+import com.linagora.android.testshared.TestFixtures.DocumentRequests.DOCUMENT_REQUEST
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
-import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_REQUEST
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test

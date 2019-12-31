@@ -22,6 +22,7 @@ import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
 import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
+import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
@@ -29,6 +30,8 @@ import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
 import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import okhttp3.MediaType
 import java.net.URL
@@ -182,7 +185,7 @@ object TestFixtures {
         )
     }
 
-    object Documents {
+    object DocumentRequests {
 
         val DOCUMENT_REQUEST = DocumentRequest(
             uri = Uri.parse("content://0@media/external/file/276"),
@@ -190,6 +193,9 @@ object TestFixtures {
             fileSize = 25,
             mediaType = MediaType.get("text/plain")
         )
+    }
+
+    object Documents {
 
         val DOCUMENT = Document(
             uuid = UUID.fromString("21a2901-b120-4111-9b0d-cbd9d493d7f9"),
@@ -222,5 +228,12 @@ object TestFixtures {
             hasThumbnail = true,
             shared = 0
         )
+    }
+
+    object MySpaces {
+
+        private val MY_SPACE_VIEW_STATE = MySpaceViewState(listOf(DOCUMENT, DOCUMENT_2))
+
+        val ALL_DOCUMENTS_STATE = Either.Right(MY_SPACE_VIEW_STATE)
     }
 }
