@@ -59,4 +59,5 @@
     <!--MySpace-->
     <string name="my_space">My Space</string>
     <string name="account_details">Account details</string>
+    <string name="last_modified">Last modified %s</string>
 </resources>
