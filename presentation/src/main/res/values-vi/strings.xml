@@ -59,4 +59,5 @@
     <!--MySpace-->
     <string name="my_space">Không gian của tôi</string>
     <string name="account_details">Thông tin tài khoản</string>
+    <string name="last_modified">Ngày cập nhật %s</string>
 </resources>

@@ -75,7 +75,10 @@ fun bindingMySpaceItemLastModified(
     document: Document
 ) {
     textView.text = runCatching {
-        TimeUtils.convertToLocalTime(document.modificationDate, LastModifiedFormat)
+        textView.context.getString(
+            R.string.last_modified,
+            TimeUtils.convertToLocalTime(document.modificationDate, LastModifiedFormat)
+        )
     }.getOrNull()
 }
 
