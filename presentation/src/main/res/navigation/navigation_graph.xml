@@ -27,12 +27,12 @@
             android:defaultValue="INDIRECT" />
         <action
             android:id="@+id/action_loginFragment_to_mySpaceFragment"
-            app:destination="@id/mySpaceFragment"
+            app:destination="@id/navigation_my_space"
             app:popUpTo="@+id/navigation_graph"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/accountDetailsFragment"
+        android:id="@id/navigation_account_details"
         android:name="com.linagora.android.linshare.view.accounts.AccountDetailsFragment"
         tools:layout="@layout/fragment_account_detail">
         <argument
@@ -50,7 +50,7 @@
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_mainFragment_to_mySpaceFragment"
-            app:destination="@id/mySpaceFragment"
+            app:destination="@id/navigation_my_space"
             app:popUpTo="@+id/navigation_graph"
             app:popUpToInclusive="true" />
     </fragment>
@@ -60,7 +60,7 @@
         tools:layout="@layout/fragment_upload">
     </fragment>
     <fragment
-        android:id="@+id/mySpaceFragment"
+        android:id="@id/navigation_my_space"
         android:name="com.linagora.android.linshare.view.myspace.MySpaceFragment"
         tools:layout="@layout/fragment_my_space" />
 </navigation>
