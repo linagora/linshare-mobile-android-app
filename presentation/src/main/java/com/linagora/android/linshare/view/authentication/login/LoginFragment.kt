@@ -156,7 +156,7 @@ class LoginFragment : MainNavigationFragment() {
 
     private fun loginSuccess(credentials: Credential) {
         when (args.loginFlow) {
-            DIRECT -> { findNavController().navigate(R.id.mySpaceFragment) }
+            DIRECT -> { findNavController().navigate(R.id.navigation_my_space) }
             else -> findNavController().popBackStack(R.id.uploadFragment, false)
         }
     }
