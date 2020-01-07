@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/text_with_logo_color</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
     </style>
 
     <style name="AppTheme" parent="Base.AppTheme"/>
@@ -21,8 +22,9 @@
     </style>
 
     <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/colorPrimaryDark</item>
-        <item name="android:color">@color/colorPrimaryDark</item>
+        <item name="spinBars">true</item>
+        <item name="color">@color/text_with_logo_color</item>
+        <item name="android:color">@color/text_with_logo_color</item>
     </style>
 
     <style name="AppTheme.Launcher.LinShare" parent="NoActionBar">

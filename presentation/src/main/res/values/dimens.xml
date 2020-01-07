@@ -37,7 +37,7 @@
     <dimen name="info_line_margin">16dp</dimen>
     <dimen name="info_margin_start">8dp</dimen>
     <dimen name="button_margin_end">24dp</dimen>
-    <dimen name="url_name_text_size">23sp</dimen>
+    <dimen name="url_name_text_size">21sp</dimen>
     <dimen name="container_padding_right">16dp</dimen>
 
     <!-- dialog -->
@@ -70,4 +70,11 @@
     <dimen name="explanation_container_margin_top">16dp</dimen>
     <dimen name="explanation_container_margin_side">24dp</dimen>
     <dimen name="confirm_container_margin_top">16dp</dimen>
+
+    <!-- side menu header -->
+    <dimen name="side_menu_header_height">120dp</dimen>
+    <dimen name="side_menu_header_padding_start">32dp</dimen>
+    <dimen name="side_menu_header_padding_bottom">24dp</dimen>
+    <dimen name="side_menu_header_title_width">147dp</dimen>
+    <dimen name="side_menu_header_title_height">40dp</dimen>
 </resources>

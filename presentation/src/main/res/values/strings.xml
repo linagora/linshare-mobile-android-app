@@ -55,4 +55,8 @@
     <string name="unable_to_upload_explanation">To perform upload LinShare application needs to access to your device storage. You can configure access in system preference.</string>
     <string name="go_to_setting">Go to Setting</string>
     <string name="permission_refuse">Permission refused</string>
+
+    <!--MySpace-->
+    <string name="my_space">My Space</string>
+    <string name="account_details">Account details</string>
 </resources>
