@@ -17,6 +17,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import arrow.core.Either
+import com.google.android.material.navigation.NavigationView
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory.DENIED
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest
@@ -34,11 +35,9 @@ class MainActivity : BaseActivity(), NavigationHost {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MainActivity::class.java)
 
-        private val EMPTY_DRAWER: DrawerLayout? = null
-
         private val TOP_LEVEL_DESTINATIONS = setOf(
             R.id.wizardFragment,
-            R.id.uploadFragment
+            R.id.navigation_my_space
         )
 
         val INIT_DESTINATIONS = setOf(
@@ -48,6 +47,8 @@ class MainActivity : BaseActivity(), NavigationHost {
 
     private lateinit var navigationController: NavController
     private lateinit var viewModel: MainActivityViewModel
+    private lateinit var navigation: NavigationView
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +59,8 @@ class MainActivity : BaseActivity(), NavigationHost {
         setContentView(R.layout.activity_main)
 
         retrieveNavigationController()
+
+        setUpSideMenu()
 
         handleStoragePermissionRequest()
 
@@ -143,7 +146,7 @@ class MainActivity : BaseActivity(), NavigationHost {
     }
 
     override fun registerToolbarWithNavigation(toolbar: Toolbar) {
-        val appBarConfiguration = AppBarConfiguration(TOP_LEVEL_DESTINATIONS, EMPTY_DRAWER)
+        val appBarConfiguration = AppBarConfiguration(TOP_LEVEL_DESTINATIONS, drawerLayout)
         toolbar.setupWithNavController(navigationController, appBarConfiguration)
     }
 
@@ -190,6 +193,15 @@ class MainActivity : BaseActivity(), NavigationHost {
             startActivity(intent)
         }.getOrElse {
             onBackPressed()
+        }
+    }
+
+    private fun setUpSideMenu() {
+        drawerLayout = findViewById(R.id.drawer_layout)
+
+        navigation = findViewById(R.id.side_menu)
+        navigation.apply {
+            setupWithNavController(navigationController)
         }
     }
 }

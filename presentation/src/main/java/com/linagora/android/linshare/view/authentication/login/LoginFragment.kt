@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ObservableField
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -66,6 +67,10 @@ class LoginFragment : MainNavigationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpView()
+    }
+
+    override fun configureToolbar(toolbar: Toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
     }
 
     private fun setUpView() {
