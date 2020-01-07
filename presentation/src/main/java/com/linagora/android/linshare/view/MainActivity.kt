@@ -9,6 +9,8 @@ import android.provider.Settings
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -20,6 +22,7 @@ import arrow.core.Either
 import com.google.android.material.navigation.NavigationView
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory.DENIED
+import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_NOT_SHOW
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_SHOW
@@ -201,7 +204,25 @@ class MainActivity : BaseActivity(), NavigationHost {
 
         navigation = findViewById(R.id.side_menu)
         navigation.apply {
+            menu.findItem(R.id.navigation_account_details)
+                .setOnMenuItemClickListener {
+                    navigateToAccountDetails()
+                    closeDrawer()
+                    true
+                }
             setupWithNavController(navigationController)
         }
+    }
+
+    private fun navigateToAccountDetails() {
+        viewModel.currentCredential.value
+            ?.let {
+                val bundle = bundleOf("credential" to it.toParcelable())
+                navigationController.navigate(R.id.navigation_account_details, bundle)
+            }
+    }
+
+    private fun closeDrawer() {
+        drawerLayout.closeDrawer(GravityCompat.START)
     }
 }

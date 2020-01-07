@@ -8,5 +8,7 @@ data class Credential(val serverUrl: URL, val userName: Username) {
         fun fromString(serverStr: String, userNameStr: String): Credential {
             return Credential(URL(serverStr), Username(userNameStr))
         }
+
+        val InvalidCredential = Credential(URL("http://invalid"), Username("invalid"))
     }
 }

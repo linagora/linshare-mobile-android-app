@@ -3,6 +3,7 @@ package com.linagora.android.linshare.view
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory
 import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory.DENIED
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
@@ -37,10 +38,13 @@ class MainActivityViewModel @Inject constructor(
         INVALID_AUTHENTICATION
     }
 
-    val authenticationState = MutableLiveData<AuthenticationState>()
+    private val mutableCurrentCredential = MutableLiveData(Credential.InvalidCredential)
+    val currentCredential: LiveData<Credential> = mutableCurrentCredential
 
     private val shouldShowPermissionRequest = MutableLiveData(StoragePermissionRequest.INITIAL)
     val shouldShowPermissionRequestState: LiveData<StoragePermissionRequest> = shouldShowPermissionRequest
+
+    val authenticationState = MutableLiveData<AuthenticationState>()
 
     init {
         authenticationState.value = UNAUTHENTICATED
@@ -86,6 +90,7 @@ class MainActivityViewModel @Inject constructor(
 
     fun setUpAuthenticated(authenticationViewState: AuthenticationViewState) {
         authenticationState.value = AUTHENTICATED
+        mutableCurrentCredential.value = authenticationViewState.credential
         setUpInterceptors(authenticationViewState)
     }
 
@@ -96,6 +101,7 @@ class MainActivityViewModel @Inject constructor(
 
     override fun onFailureDispatched(failure: Failure) {
         authenticationState.value = INVALID_AUTHENTICATION
+        mutableCurrentCredential.value = Credential.InvalidCredential
     }
 
     private fun setUpInterceptors(authenticationViewState: AuthenticationViewState) {
