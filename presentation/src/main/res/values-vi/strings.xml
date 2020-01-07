@@ -55,4 +55,8 @@
     <string name="unable_to_upload_explanation">LinShare cần được truy cập vào bộ nhớ để thực hiện tải lên. Bạn hãy cấp quyền truy cập trong cài đặt hệ thống</string>
     <string name="go_to_setting">Đến cài đặt</string>
     <string name="permission_refuse">Cấp quyền</string>
+
+    <!--MySpace-->
+    <string name="my_space">Không gian của tôi</string>
+    <string name="account_details">Thông tin tài khoản</string>
 </resources>
