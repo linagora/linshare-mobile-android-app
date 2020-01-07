@@ -36,6 +36,11 @@ open class MainNavigationFragment : DaggerFragment() {
         val mainToolbar: Toolbar = view.findViewById(R.id.toolbar) ?: return
         mainToolbar.apply {
             host.registerToolbarWithNavigation(this)
+            configureToolbar(this)
         }
+    }
+
+    open fun configureToolbar(toolbar: Toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_linshare_menu)
     }
 }
