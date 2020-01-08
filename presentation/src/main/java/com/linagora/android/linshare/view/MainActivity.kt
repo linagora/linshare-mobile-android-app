@@ -6,12 +6,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -19,18 +20,22 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import arrow.core.Either
-import com.google.android.material.navigation.NavigationView
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.databinding.ActivityMainBinding
 import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory.DENIED
 import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_NOT_SHOW
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_SHOW
+import com.linagora.android.linshare.model.resources.MenuId
+import com.linagora.android.linshare.model.resources.MenuResource
+import com.linagora.android.linshare.model.resources.ViewId
 import com.linagora.android.linshare.util.Constant.LINSHARE_APPLICATION_ID
 import com.linagora.android.linshare.util.Constant.UPLOAD_URI_BUNDLE_KEY
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.base.BaseActivity
 import com.linagora.android.linshare.view.dialog.ReadStorageExplanationPermissionDialog
+import com.linagora.android.linshare.view.menu.SideMenuDrawer
 import org.slf4j.LoggerFactory
 
 class MainActivity : BaseActivity(), NavigationHost {
@@ -50,8 +55,8 @@ class MainActivity : BaseActivity(), NavigationHost {
 
     private lateinit var navigationController: NavController
     private lateinit var viewModel: MainActivityViewModel
-    private lateinit var navigation: NavigationView
-    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var rootView: View
+    private lateinit var sideMenuDrawer: SideMenuDrawer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +64,11 @@ class MainActivity : BaseActivity(), NavigationHost {
 
         viewModel = getViewModel(viewModelFactory)
 
-        setContentView(R.layout.activity_main)
+        rootView = DataBindingUtil
+            .setContentView<ActivityMainBinding>(
+                this,
+                R.layout.activity_main)
+            .root
 
         retrieveNavigationController()
 
@@ -149,7 +158,7 @@ class MainActivity : BaseActivity(), NavigationHost {
     }
 
     override fun registerToolbarWithNavigation(toolbar: Toolbar) {
-        val appBarConfiguration = AppBarConfiguration(TOP_LEVEL_DESTINATIONS, drawerLayout)
+        val appBarConfiguration = AppBarConfiguration(TOP_LEVEL_DESTINATIONS, sideMenuDrawer.drawerLayout)
         toolbar.setupWithNavController(navigationController, appBarConfiguration)
     }
 
@@ -200,17 +209,24 @@ class MainActivity : BaseActivity(), NavigationHost {
     }
 
     private fun setUpSideMenu() {
-        drawerLayout = findViewById(R.id.drawer_layout)
+        sideMenuDrawer = SideMenuDrawer(
+            rootView = rootView,
+            drawerLayoutId = ViewId(R.id.drawer_layout),
+            navigationViewId = ViewId(R.id.side_menu),
+            sideMenuResource = MenuResource(R.menu.main_side_menu)
+        )
 
-        navigation = findViewById(R.id.side_menu)
-        navigation.apply {
-            menu.findItem(R.id.navigation_account_details)
-                .setOnMenuItemClickListener {
+        sideMenuDrawer.apply {
+            setupWithNavController(navigationController)
+
+            setOnMenuItemClick(
+                menuId = MenuId(R.id.navigation_account_details),
+                menuItemClickListener = MenuItem.OnMenuItemClickListener {
                     navigateToAccountDetails()
                     closeDrawer()
                     true
                 }
-            setupWithNavController(navigationController)
+            )
         }
     }
 
@@ -220,9 +236,5 @@ class MainActivity : BaseActivity(), NavigationHost {
                 val bundle = bundleOf("credential" to it.toParcelable())
                 navigationController.navigate(R.id.navigation_account_details, bundle)
             }
-    }
-
-    private fun closeDrawer() {
-        drawerLayout.closeDrawer(GravityCompat.START)
     }
 }
