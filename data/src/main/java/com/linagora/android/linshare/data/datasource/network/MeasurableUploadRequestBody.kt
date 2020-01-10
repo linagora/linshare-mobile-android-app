@@ -32,12 +32,12 @@ class MeasurableUploadRequestBody(
                     source.read(sink.buffer(), SEGMENT_SIZE)
                         .takeIf { read -> read != -1L }
                         ?.let { read ->
+                            sink.emitCompleteSegments()
                             transfer += read
                             onTransfer(TransferredBytes(transfer), total)
                         }
                         ?: break
                 }
-                sink.flush()
             }
     }
 }

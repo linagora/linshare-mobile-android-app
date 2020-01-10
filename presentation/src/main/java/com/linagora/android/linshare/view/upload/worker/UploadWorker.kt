@@ -9,7 +9,6 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
-import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
@@ -53,17 +52,15 @@ class UploadWorker(
                             progress = 0,
                             indeterminate = true
                         )
-                        documentRepository.upload(document, object : OnTransfer {
-                            override fun invoke(transferredBytes: TransferredBytes, totalBytes: TotalBytes) {
-                                notifyUploading(
-                                    notificationId = notificationId,
-                                    message = document.fileName,
-                                    max = totalBytes,
-                                    progress = transferredBytes,
-                                    indeterminate = false
-                                )
-                            }
-                        })
+                        documentRepository.upload(document) { transferredBytes, totalBytes ->
+                            notifyUploading(
+                                notificationId = notificationId,
+                                message = document.fileName,
+                                max = totalBytes,
+                                progress = transferredBytes,
+                                indeterminate = false
+                            )
+                        }
                         notifyUploadDone(notificationId, true, document.fileName)
                     }
                 Result.success()

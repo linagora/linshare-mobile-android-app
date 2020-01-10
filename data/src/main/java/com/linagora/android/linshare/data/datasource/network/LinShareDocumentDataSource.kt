@@ -37,10 +37,10 @@ class LinShareDocumentDataSource @Inject constructor(
             return linshareApi.upload(
                 file = fileRequestBody,
                 fileName = documentRequest.fileName,
-                fileSize = documentRequest.fileSize
+                fileSize = tempFile.length()
             )
         } catch (exp: Exception) {
-            LOGGER.error("${exp.message} - ${exp.printStackTrace()}")
+            LOGGER.error("$exp - ${exp.printStackTrace()}")
             throw UploadException(exp.message)
         } finally {
             FileUtils.deleteQuietly(tempFile)
