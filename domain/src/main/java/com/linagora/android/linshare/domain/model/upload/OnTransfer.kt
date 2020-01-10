@@ -1,3 +1,3 @@
 package com.linagora.android.linshare.domain.model.upload
 
-interface OnTransfer : (TransferredBytes, TotalBytes) -> Unit
+typealias OnTransfer = (TransferredBytes, TotalBytes) -> Unit
