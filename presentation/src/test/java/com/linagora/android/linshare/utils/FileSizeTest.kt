@@ -356,7 +356,8 @@ class FileSizeTest {
     }
 
     @Nested
-    class KilobyteInShort {
+    inner class KilobyteInShort {
+
         @Test
         fun formatSizeShouldReturnAShortFormat() {
             assertThat(FileSize(6000)
