@@ -10,6 +10,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.glide.GlideApp
+import com.linagora.android.linshare.util.FileSize.SizeFormat.SHORT
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
@@ -83,9 +84,11 @@ fun bindingLastLogin(textView: TextView, accountDetailsViewState: AccountDetails
 fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
     textView.text = runCatching {
         val accountQuota = accountDetailsViewState.quota!!
-        val quotaSize = Formatter.formatFileSize(textView.context, accountQuota.quota.size)
-        val usedSize = Formatter.formatFileSize(textView.context, accountQuota.quota.size - accountQuota.usedSpace.size)
-        String.format(textView.context.getString(R.string.available_space), usedSize, quotaSize)
+        val quotaSize = FileSize(accountQuota.quota.size)
+            .format(SHORT)
+        val availableSize = FileSize(accountQuota.quota - accountQuota.usedSpace)
+            .format(SHORT)
+        String.format(textView.context.getString(R.string.available_space), availableSize, quotaSize)
     }.getOrNull()
 }
 
