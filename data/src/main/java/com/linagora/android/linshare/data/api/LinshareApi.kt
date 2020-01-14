@@ -6,7 +6,7 @@ import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.document.Document
-import okhttp3.RequestBody
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -56,8 +56,7 @@ interface LinshareApi {
     @POST("/documents")
     @Headers("Accept: application/json")
     suspend fun upload(
-        @Part("file") file: RequestBody,
-        @Part("filename") fileName: String,
+        @Part file: MultipartBody.Part,
         @Part("filesize") fileSize: Long
     ): Document
 
