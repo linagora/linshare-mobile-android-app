@@ -22,6 +22,7 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.UNAUTHENTICATED
 import com.linagora.android.linshare.view.base.BaseViewModel
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject constructor(
@@ -31,6 +32,10 @@ class MainActivityViewModel @Inject constructor(
     private val authorizationManager: AuthorizationManager,
     private val propertiesRepository: PropertiesRepository
 ) : BaseViewModel(dispatcherProvider) {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(MainActivityViewModel::class.java)
+    }
 
     enum class AuthenticationState {
         UNAUTHENTICATED,
@@ -51,6 +56,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun checkSignedIn() {
+        LOGGER.info("checkSignedIn()")
         dispatchState(INITIAL_STATE)
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getAuthenticatedInfo())
@@ -105,6 +111,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     private fun setUpInterceptors(authenticationViewState: AuthenticationViewState) {
+        LOGGER.info("setUpInterceptors()")
         dynamicBaseUrlInterceptor.changeBaseUrl(authenticationViewState.credential.serverUrl)
         authorizationManager.updateToken(authenticationViewState.token)
     }
