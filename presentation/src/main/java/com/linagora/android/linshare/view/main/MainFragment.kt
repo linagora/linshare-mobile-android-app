@@ -13,9 +13,14 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewStat
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.LoginFlow
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class MainFragment : MainNavigationFragment() {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(MainFragment::class.java)
+    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -50,12 +55,13 @@ class MainFragment : MainNavigationFragment() {
     }
 
     private fun gotoLoginPage() {
+        LOGGER.info("gotoLoginPage()")
         val action = MainFragmentDirections.actionMainFragmentToWizardFragment(LoginFlow.DIRECT)
         findNavController().navigate(action)
     }
 
     private fun jumpIn() {
-        println("jumpIn")
+        LOGGER.info("jumpIn()")
         val action = MainFragmentDirections
             .actionMainFragmentToMySpaceFragment()
         findNavController().navigate(action)

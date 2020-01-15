@@ -20,6 +20,7 @@ class AccountDetailsViewModel @Inject constructor(
 ) : BaseViewModel(dispatcherProvider) {
 
     fun retrieveAccountDetails(credential: Credential) {
+        dynamicBaseUrlInterceptor.changeBaseUrl(credential.serverUrl)
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getAccountDetails(credential = credential))
         }

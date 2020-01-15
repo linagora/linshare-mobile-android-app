@@ -25,9 +25,14 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.dialog.ConfirmRemoveAccountDialog
 import kotlinx.android.synthetic.main.fragment_account_detail.imgBtnRemoveAcc
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class AccountDetailsFragment : MainNavigationFragment() {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(AccountDetailsFragment::class.java)
+    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -45,6 +50,7 @@ class AccountDetailsFragment : MainNavigationFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        LOGGER.info("onCreateView()")
         val binding = FragmentAccountDetailBinding.inflate(inflater, container, false)
         binding.details = detailsViewState
         binding.lifecycleOwner = this
@@ -53,6 +59,7 @@ class AccountDetailsFragment : MainNavigationFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        LOGGER.info("onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
         initView(view)
     }
@@ -77,6 +84,7 @@ class AccountDetailsFragment : MainNavigationFragment() {
     }
 
     private fun initViewModel() {
+        LOGGER.info("initViewModel()")
         accountDetailViewModel = getViewModel(viewModelFactory)
 
         accountDetailViewModel.viewState.observe(this, Observer {

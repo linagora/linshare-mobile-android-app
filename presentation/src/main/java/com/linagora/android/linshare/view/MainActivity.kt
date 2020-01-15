@@ -147,7 +147,7 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun retrieveNavigationController() {
         navigationController = findNavController(R.id.nav_host_fragment)
         navigationController.addOnDestinationChangedListener { _, destination, _ ->
-            LOGGER.info("onDestinationChagned $destination")
+            LOGGER.info("onDestinationChagned ${destination.id}")
             destination.id.takeIf { needToCheckSignedIn(it) }
                 ?.let { viewModel.checkSignedIn() }
         }
