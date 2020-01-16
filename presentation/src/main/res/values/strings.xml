@@ -27,7 +27,7 @@
     <string name="credential_error_message">Authentication failed, either the email or the password is invalid, please try again</string>
     <string name="wrong_url">Server URL is not valid, please try again</string>
     <string name="unknow_error">Unknown error occurred, please try again</string>
-    <string name="remove_account">Remove account</string>
+    <string name="forget_account">Forget account</string>
     <string name="last_login_title">Last login:</string>
     <string name="available_space_title">Available space:</string>
     <string name="notification">Notification</string>

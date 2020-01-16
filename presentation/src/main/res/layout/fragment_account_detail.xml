@@ -99,7 +99,7 @@
                     android:layout_marginBottom="@dimen/info_line_margin"
                     android:layout_marginStart="@dimen/info_margin_start"
                     android:textSize="@dimen/guide_text_size"
-                    android:text="Doe"
+                    app:firstName="@{details}"
                     app:layout_constraintBaseline_toBaselineOf="@id/txtTitleFirstName"
                     app:layout_constraintStart_toEndOf="@+id/txtTitleFirstName"
                     app:layout_constraintTop_toTopOf="parent"
@@ -124,7 +124,7 @@
                     android:layout_marginBottom="@dimen/info_line_margin"
                     android:layout_marginStart="@dimen/info_margin_start"
                     android:textSize="@dimen/guide_text_size"
-                    android:text="John"
+                    app:lastName="@{details}"
                     app:layout_constraintBaseline_toBaselineOf="@id/txtTitleLastName"
                     app:layout_constraintStart_toEndOf="@+id/txtTitleLastName"
                     app:layout_constraintTop_toTopOf="parent"
@@ -209,7 +209,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:text="@string/notification"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/infoContainer" />
+            app:layout_constraintTop_toBottomOf="@id/infoContainer"
+            android:visibility="gone"/>
 
         <Switch
             android:id="@+id/swNotification"
@@ -218,6 +219,7 @@
             app:layout_constraintStart_toStartOf="@id/guidelineButton"
             app:layout_constraintEnd_toEndOf="@id/guidelineButton"
             app:layout_constraintBaseline_toBaselineOf="@id/txtNotification"
+            android:visibility="gone"
             />
 
         <View
@@ -226,6 +228,7 @@
             app:layout_constraintTop_toBottomOf="@id/txtNotification"
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="0.5dp"/>
 
         <TextView
@@ -234,7 +237,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/align_text_account_detail"
             android:layout_marginTop="@dimen/info_line_margin"
-            android:text="@string/remove_account"
+            android:text="@string/forget_account"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottomNotification" />
 
