@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -41,7 +43,12 @@ class MySpaceFragment : MainNavigationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         LOGGER.info("onViewCreated")
+        setUpSwipeRefreshLayout()
         getAllDocuments()
+    }
+
+    private fun setUpSwipeRefreshLayout() {
+        swipeLayoutMySpace.setColorSchemeResources(R.color.colorPrimary)
     }
 
     private fun getAllDocuments() {

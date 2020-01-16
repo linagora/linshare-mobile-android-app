@@ -17,4 +17,8 @@ class MySpaceViewModel @Inject constructor(
             consumeStates(getAllDocumentsInteractor())
         }
     }
+
+    fun onSwipeRefresh() {
+        getAllDocuments()
+    }
 }

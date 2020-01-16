@@ -1,18 +1,17 @@
 package com.linagora.android.linshare.adapter.myspace
 
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.util.TimeUtils
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
@@ -44,18 +43,15 @@ fun bindingMySpaceList(
 
 @BindingAdapter("mySpaceState")
 fun bindingMySpaceLoading(
-    progressBar: ProgressBar,
+    swipeRefreshLayout: SwipeRefreshLayout,
     mySpaceState: Either<Failure, Success>
 ) {
 
     mySpaceState.fold(
-        ifLeft = { progressBar.isVisible = false },
+        ifLeft = { swipeRefreshLayout.isRefreshing = false },
         ifRight = {
             when (it) {
-                is Loading -> {
-                    progressBar.isVisible = true
-                }
-                else -> progressBar.isVisible = false
+                is MySpaceViewState -> swipeRefreshLayout.isRefreshing = false
             }
         }
     )

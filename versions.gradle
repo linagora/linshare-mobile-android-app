@@ -41,6 +41,7 @@ versions.retrofit = "2.6.2"
 versions.robolectric = "4.3"
 
 versions.slf4j_timber = "3.1"
+versions.swipe_refresh = "1.1.0-alpha03"
 
 versions.test_rules = "1.1.0"
 versions.test_runner = "1.1.0"
@@ -166,6 +167,8 @@ deps.retrofit = retrofit
 deps.robolectric = "org.robolectric:robolectric:$versions.robolectric"
 
 deps.slf4j_timber = "com.arcao:slf4j-timber:$versions.slf4j_timber"
+
+deps.swipe_refresh = "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipe_refresh"
 
 def threeten = [:]
 threeten.abp = "com.jakewharton.threetenabp:threetenabp:$versions.threetenabp"
