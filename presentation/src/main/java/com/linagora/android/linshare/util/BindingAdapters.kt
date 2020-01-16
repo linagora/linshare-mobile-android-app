@@ -68,6 +68,18 @@ fun bindingDomainName(textView: TextView, accountDetailsViewState: AccountDetail
         ?.authority
 }
 
+@BindingAdapter("lastName")
+fun bindingLastName(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
+    textView.text = accountDetailsViewState.user
+        ?.lastName
+}
+
+@BindingAdapter("firstName")
+fun bindingFirstName(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
+    textView.text = accountDetailsViewState.user
+        ?.firstName
+}
+
 @BindingAdapter("subject")
 fun bindingSubjectFromDecodedToken(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
     textView.text = runCatching { JWT(accountDetailsViewState.token!!.token).subject }.getOrNull()

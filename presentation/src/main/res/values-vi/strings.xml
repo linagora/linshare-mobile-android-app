@@ -27,7 +27,7 @@
     <string name="credential_error_message">Lỗi xác thực, email hoặc mật khẩu không đúng, hãy thử lại</string>
     <string name="wrong_url">Địa chỉ máy chủ không chính xác, hãy thử lại</string>
     <string name="unknow_error">Lỗi không xác định, hãy thử lại</string>
-    <string name="remove_account">Xóa tài khoản</string>
+    <string name="forget_account">Quên tài khoản</string>
     <string name="last_login_title">Lần đăng nhập cuối:</string>
     <string name="available_space_title">Bộ nhớ khả dụng:</string>
     <string name="notification">Thông báo</string>
