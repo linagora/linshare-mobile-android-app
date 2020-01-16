@@ -154,6 +154,7 @@ dependencies {
     implementation deps.retrofit.gson
 
     implementation deps.slf4j_timber
+    implementation deps.swipe_refresh
 
     implementation deps.threeten.abp
 
