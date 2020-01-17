@@ -1,5 +1,7 @@
 package com.linagora.android.linshare.data.datasource
 
+import android.content.Context
+import android.provider.Settings
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.model.authentication.PermanentTokenBodyRequest
 import com.linagora.android.linshare.domain.model.AccountQuota
@@ -25,15 +27,17 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class LinshareDataSource @Inject constructor(
+    private val context: Context,
     private val linshareApi: LinshareApi
 ) {
 
     suspend fun retrievePermanentToken(baseUrl: URL, username: Username, password: Password): Token {
         try {
+            val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
             val response = linshareApi.createPermanentToken(
                 authenticateUrl = baseUrl.toString(),
                 basicToken = Credentials.basic(username.username, password.value),
-                permanentToken = PermanentTokenBodyRequest(label = "LinShare-Android-App")
+                permanentToken = PermanentTokenBodyRequest(label = "LinShare-Android-App-$androidId")
             )
             return when (response.isSuccessful) {
                 true -> response.body() ?: throw EmptyToken
