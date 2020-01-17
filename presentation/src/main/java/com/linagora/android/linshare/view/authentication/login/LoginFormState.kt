@@ -15,6 +15,7 @@ data class LoginFormState(
 
 enum class ErrorType {
     WRONG_URL,
+    WRONG_EMAIL,
     WRONG_CREDENTIAL,
     UNKNOWN_ERROR,
     NONE

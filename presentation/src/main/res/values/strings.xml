@@ -25,6 +25,7 @@
     <string name="password">password</string>
     <string name="server_not_found">Authentication failed, server not found, please try again</string>
     <string name="credential_error_message">Authentication failed, either the email or the password is invalid, please try again</string>
+    <string name="email_is_required">Authentication failed, email is invalid, please try again</string>
     <string name="wrong_url">Server URL is not valid, please try again</string>
     <string name="unknow_error">Unknown error occurred, please try again</string>
     <string name="forget_account">Forget account</string>

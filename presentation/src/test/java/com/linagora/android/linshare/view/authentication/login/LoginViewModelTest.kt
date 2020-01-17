@@ -168,8 +168,20 @@ class LoginViewModelTest {
         loginViewModel.authenticate("linsahre.domain", "", PASSWORD_VALUE)
 
         `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
-            errorMessage = R.string.credential_error_message,
-            errorType = ErrorType.WRONG_CREDENTIAL
+            errorMessage = R.string.email_is_required,
+            errorType = ErrorType.WRONG_EMAIL
+        )))
+    }
+
+    @Test
+    fun loginFormChangedShouldNoticeWhenUsernameIsNotEmail() {
+        loginViewModel.viewState.observeForever(viewObserver)
+
+        loginViewModel.authenticate("linsahre.domain", "linshare", PASSWORD_VALUE)
+
+        `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
+            errorMessage = R.string.email_is_required,
+            errorType = ErrorType.WRONG_EMAIL
         )))
     }
 

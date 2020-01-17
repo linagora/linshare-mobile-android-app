@@ -51,6 +51,11 @@ fun bindingInputError(editText: EditText, loginFormState: LoginFormState) {
                     ?.let { R.drawable.round_error_layout }
                     ?: R.drawable.round_layout
             }
+            ErrorType.WRONG_EMAIL -> {
+                editText.id.takeIf { it == R.id.edtLoginUsername }
+                    ?.let { R.drawable.round_error_layout }
+                    ?: R.drawable.round_layout
+            }
             ErrorType.UNKNOWN_ERROR -> R.drawable.round_error_layout
             else -> R.drawable.round_layout
         }
