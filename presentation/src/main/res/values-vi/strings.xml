@@ -25,6 +25,7 @@
     <string name="password">mật khẩu</string>
     <string name="server_not_found">Lỗi xác thực, không tìm thấy máy chủ, hãy thử lại</string>
     <string name="credential_error_message">Lỗi xác thực, email hoặc mật khẩu không đúng, hãy thử lại</string>
+    <string name="email_is_required">Lỗi xác thực, email không đúng, hãy thử lại</string>
     <string name="wrong_url">Địa chỉ máy chủ không chính xác, hãy thử lại</string>
     <string name="unknow_error">Lỗi không xác định, hãy thử lại</string>
     <string name="forget_account">Quên tài khoản</string>

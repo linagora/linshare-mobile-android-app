@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.view.authentication.login
 
+import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.R
@@ -97,11 +98,13 @@ class LoginViewModel @Inject constructor(
 
     private fun parseOrNoticeUsernameError(username: String): Username? {
         return try {
+            require(username.isNotBlank())
+            require(Patterns.EMAIL_ADDRESS.matcher(username).matches())
             Username(username)
         } catch (exp: Exception) {
             dispatchState(Either.Right(LoginFormState(
-                errorMessage = R.string.credential_error_message,
-                errorType = ErrorType.WRONG_CREDENTIAL
+                errorMessage = R.string.email_is_required,
+                errorType = ErrorType.WRONG_EMAIL
             )))
             EMPTY
         }
