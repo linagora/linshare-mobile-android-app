@@ -53,7 +53,7 @@ class LinShareDocumentDataSource @Inject constructor(
     }
 
     override suspend fun getAll(): List<Document> {
-        return linshareApi.getAll()
+        return linshareApi.getAll().sortedByDescending { it.modificationDate }
     }
 
     private fun createTempUploadFile(documentRequest: DocumentRequest): File {
