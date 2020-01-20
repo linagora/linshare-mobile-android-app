@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ObservableField
 import androidx.fragment.app.activityViewModels
@@ -74,6 +75,17 @@ class LoginFragment : MainNavigationFragment() {
     }
 
     private fun setUpView() {
+        edtLoginUrl.setOnFocusChangeListener { loginUrl, hasFocus ->
+            if (hasFocus) {
+                with(loginUrl as EditText) {
+                    if (text.isEmpty()) {
+                        setText(R.string.https)
+                    }
+                    setSelection(text.length)
+                }
+            }
+        }
+
         edtLoginUrl.afterTextChanged {
             loginFormState.set(LoginFormState.INIT_STATE)
         }
