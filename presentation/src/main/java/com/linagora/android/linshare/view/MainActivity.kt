@@ -15,6 +15,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -44,7 +45,6 @@ class MainActivity : BaseActivity(), NavigationHost {
         private val LOGGER = LoggerFactory.getLogger(MainActivity::class.java)
 
         private val TOP_LEVEL_DESTINATIONS = setOf(
-            R.id.wizardFragment,
             R.id.navigation_my_space
         )
 
@@ -148,6 +148,7 @@ class MainActivity : BaseActivity(), NavigationHost {
         navigationController = findNavController(R.id.nav_host_fragment)
         navigationController.addOnDestinationChangedListener { _, destination, _ ->
             LOGGER.info("onDestinationChagned ${destination.id}")
+            setUpSideMenuLockMode(destination)
             destination.id.takeIf { needToCheckSignedIn(it) }
                 ?.let { viewModel.checkSignedIn() }
         }
@@ -226,6 +227,15 @@ class MainActivity : BaseActivity(), NavigationHost {
                     closeDrawer()
                     true
                 }
+            )
+        }
+    }
+
+    private fun setUpSideMenuLockMode(destination: NavDestination) {
+        if (::sideMenuDrawer.isInitialized) {
+            sideMenuDrawer.setSideMenuLockMode(
+                destination = destination,
+                topLevelDestinationIds = TOP_LEVEL_DESTINATIONS
             )
         }
     }

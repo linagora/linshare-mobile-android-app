@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.linagora.android.linshare.model.resources.MenuId
@@ -36,5 +37,11 @@ class SideMenuDrawer(
 
     fun closeDrawer() {
         drawerLayout.closeDrawer(GravityCompat.START)
+    }
+
+    fun setSideMenuLockMode(destination: NavDestination, topLevelDestinationIds: Set<Int>) {
+        topLevelDestinationIds.takeIf { it.contains(destination.id) }
+            ?.let { drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED) }
+            ?: drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 }
