@@ -17,3 +17,12 @@ You will require Android Studio 3.5
 ```
 ./gradlew build
 ```
+
+# Deployed APK file
+
+We are deploying the APK file related to `master` builds.  
+They are available under the `master` environment:  
+```Operations > Environments > master```
+
+then you have to chose the job corresponding of the build you want (last build always first) and 
+click on the `Download` button on the `Job artifacts` section (right side panel). 
