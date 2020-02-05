@@ -23,7 +23,7 @@ class UploadNotification @Inject constructor(
     }
 
     override fun getImportance(): NotificationImportance {
-        return NotificationImportance(NotificationManager.IMPORTANCE_HIGH)
+        return NotificationImportance(NotificationManager.IMPORTANCE_LOW)
     }
 
     override fun getChannelId(): NotificationChannelId = CHANNEL_ID
