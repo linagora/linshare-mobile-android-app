@@ -88,7 +88,10 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun handleIntent(intent: Intent?) {
         LOGGER.info("handleIntent()")
         when (intent?.action) {
-            Intent.ACTION_SEND -> handleSendAction(intent)
+            Intent.ACTION_SEND -> {
+                setIntent(intent)
+                handleSendAction(intent)
+            }
         }
     }
 
