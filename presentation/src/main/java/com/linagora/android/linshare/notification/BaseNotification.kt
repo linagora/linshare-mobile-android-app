@@ -5,12 +5,22 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat.Builder
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.notification.BaseNotification.Companion.DISABLE_PROGRESS_INDETERMINATE
+import com.linagora.android.linshare.notification.BaseNotification.Companion.DISABLE_PROGRESS
+import com.linagora.android.linshare.util.AndroidUtils
 
 abstract class BaseNotification(private val context: Context) {
+
+    companion object {
+        const val DISABLE_PROGRESS = 0
+
+        const val DISABLE_PROGRESS_INDETERMINATE = false
+    }
 
     private val baseBuilder = createNotificationBuilder()
 
@@ -25,16 +35,12 @@ abstract class BaseNotification(private val context: Context) {
     protected abstract fun getNotificationPriority(): NotificationPriority
 
     private fun createNotificationBuilder(): Builder {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (AndroidUtils.supportAndroidO()) {
             with(context) {
                 (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)
                     ?.let {
-                        val name = getString(getNotificationChannelName().resStringId)
-                        val description = getString(getNotificationChannelDescription().resStringId)
-                        val importance = getImportance().importance
-                        val channel = NotificationChannel(getChannelId().id, name, importance)
-                        channel.description = description
-                        it.createNotificationChannel(channel)
+                        val baseChannel = createBaseChannel()
+                        it.createNotificationChannel(baseChannel)
                     }
             }
         }
@@ -46,6 +52,19 @@ abstract class BaseNotification(private val context: Context) {
             .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createBaseChannel(): NotificationChannel {
+        with(context) {
+            val name = getString(getNotificationChannelName().resStringId)
+            val description = getString(getNotificationChannelDescription().resStringId)
+            val importance = getImportance().importance
+
+            val channel = NotificationChannel(getChannelId().id, name, importance)
+            channel.description = description
+            return channel
+        }
+    }
+
     fun notify(notificationId: NotificationId, notificationBuilder: Builder.() -> Notification) {
         NotificationManagerCompat.from(context)
             .notify(
@@ -53,4 +72,9 @@ abstract class BaseNotification(private val context: Context) {
                 notificationBuilder.invoke(baseBuilder)
             )
     }
+}
+
+fun Builder.disableProgressBar(): Builder {
+    this.setProgress(DISABLE_PROGRESS, DISABLE_PROGRESS, DISABLE_PROGRESS_INDETERMINATE)
+    return this
 }

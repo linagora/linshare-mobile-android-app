@@ -17,6 +17,7 @@ import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
 import com.linagora.android.linshare.notification.UploadNotification
+import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -61,12 +62,12 @@ class UploadWorker(
                                 indeterminate = false
                             )
                         }
-                        notifyUploadDone(notificationId, true, document.fileName)
+                        notifyUploadSuccess(notificationId)
                     }
                 Result.success()
             } catch (exp: Exception) {
                 LOGGER.error(exp.message, exp)
-                notifyUploadDone(notificationId, false)
+                notifyUploadFailure(notificationId)
                 Result.failure()
             }
         }
@@ -91,26 +92,36 @@ class UploadWorker(
     }
 
     private fun notifyUploading(notificationId: NotificationId, message: String, max: Int, progress: Int, indeterminate: Boolean) {
-        uploadNotification.notify(notificationId) {
-            this.setContentTitle(appContext.resources.getQuantityString(R.plurals.uploading_n_file, 1))
-                .setContentText(message)
-                .setProgress(max, progress, indeterminate)
-                .build()
+        uploadNotification.apply {
+            notify(
+                notificationId = notificationId,
+                notificationBuilder = {
+                    this.setContentTitle(appContext.resources.getQuantityString(R.plurals.uploading_n_file, 1))
+                        .setContentText(message)
+                        .setProgress(max, progress, indeterminate)
+                        .build()
+                }
+            )
         }
     }
 
-    private fun notifyUploadDone(notificationId: NotificationId, isSuccess: Boolean, fileName: String? = null) {
-        uploadNotification.notify(notificationId) {
-            val resTitle = when (isSuccess) {
-                true -> R.string.upload_success
-                else -> R.string.upload_failed
+    private fun notifyUploadSuccess(notificationId: NotificationId) {
+        uploadNotification.apply {
+            notify(notificationId) {
+                this.setContentTitle(appContext.getString(R.string.upload_success))
+                    .disableProgressBar()
+                this.build()
             }
-            this.setContentTitle(appContext.getString(resTitle))
-                .setProgress(0, 0, false)
-            fileName?.let {
-                this.setContentText(fileName)
+        }
+    }
+
+    private fun notifyUploadFailure(notificationId: NotificationId) {
+        uploadNotification.apply {
+            notify(notificationId) {
+                this.setContentTitle(appContext.getString(R.string.upload_failed))
+                    .disableProgressBar()
+                this.build()
             }
-            this.build()
         }
     }
 
