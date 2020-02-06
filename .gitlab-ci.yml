@@ -11,19 +11,20 @@ cache:
     - presentation
 
 stages:
+  - linter
   - build
   - test
   - publish
 
 lintDebug:
-  stage: build
+  stage: linter
   tags:
     - docker
   script:
     - ./gradlew -Pci --console=plain :presentation:lintDebug -PbuildDir=lint
 
 ktlint:
-  stage: build
+  stage: linter
   tags:
     - docker
   script:
