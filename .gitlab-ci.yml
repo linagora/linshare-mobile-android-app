@@ -8,7 +8,7 @@ cache:
   key: "$CI_PIPELINE_ID"
   paths:
     - .gradle/
-    - presentation
+    - presentation-debug.apk
 
 stages:
   - linter
@@ -36,6 +36,7 @@ assembleDebug:
     - docker
   script:
     - ./gradlew assembleDebug
+    - cp presentation/build/outputs/apk/debug/presentation-debug.apk .
 
 testDebug:
   stage: test
@@ -49,7 +50,7 @@ publishAPK:
   tags:
     - docker
   script:
-    - cp presentation/build/outputs/apk/debug/presentation-debug.apk .
+    - echo "Publishing APK"
   environment:
     name: master
   artifacts:
