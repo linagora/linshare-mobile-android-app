@@ -3,6 +3,8 @@ package com.linagora.android.linshare.data.repository.document
 import android.os.Build
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
+import com.linagora.android.linshare.domain.model.ErrorCode
+import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
@@ -25,6 +27,10 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.P])
 class DocumentsRepositoryImpTest {
+
+    companion object {
+        val ERROR_RESPONSE = ErrorResponse("quota exceed", ErrorCode(123))
+    }
 
     @Mock
     lateinit var documentDataSource: DocumentDataSource
@@ -63,14 +69,14 @@ class DocumentsRepositoryImpTest {
             `when`(documentDataSource.upload(
                 DOCUMENT_REQUEST,
                 onTransfer
-            )).thenThrow(UploadException("upload error"))
+            )).thenThrow(UploadException(ERROR_RESPONSE))
 
             val exception = assertThrows<UploadException> {
                 runBlockingTest {
                     documentRepositoryImp.upload(DOCUMENT_REQUEST, onTransfer)
                 }
             }
-            assertThat(exception.message).isEqualTo("upload error")
+            assertThat(exception.errorResponse).isEqualTo(ERROR_RESPONSE)
         }
     }
 
