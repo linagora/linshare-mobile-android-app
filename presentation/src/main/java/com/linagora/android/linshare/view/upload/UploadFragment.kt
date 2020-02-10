@@ -30,6 +30,7 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.upload.worker.UploadWorker
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_URI_INPUT_KEY
+import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.TAG_UPLOAD_WORKER
 import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -132,6 +133,7 @@ class UploadFragment : MainNavigationFragment() {
             val uploadRequest = OneTimeWorkRequestBuilder<UploadWorker>()
                 .setInputData(inputData)
                 .setConstraints(constraints)
+                .addTag(TAG_UPLOAD_WORKER)
                 .build()
 
             WorkManager.getInstance(requireContext()).enqueue(uploadRequest)

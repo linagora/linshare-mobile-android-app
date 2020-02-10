@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import androidx.core.app.NotificationCompat.Builder
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.linagora.android.linshare.R
@@ -14,11 +16,18 @@ import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.inject.worker.ChildWorkerFactory
 import com.linagora.android.linshare.notification.BaseNotification
+import com.linagora.android.linshare.notification.BaseNotification.Companion.FINISHED_NOTIFICATION
+import com.linagora.android.linshare.notification.BaseNotification.Companion.ONGOING_NOTIFICATION
 import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
 import com.linagora.android.linshare.notification.UploadNotification
+import com.linagora.android.linshare.notification.UploadNotification.Companion.MAX_UPDATE_PROGRESS_COUNT
+import com.linagora.android.linshare.notification.UploadNotification.Companion.REDUCE_RATIO
 import com.linagora.android.linshare.notification.disableProgressBar
+import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
@@ -37,6 +46,8 @@ class UploadWorker(
         private val LOGGER = LoggerFactory.getLogger(UploadWorker::class.java)
 
         const val FILE_URI_INPUT_KEY = "upload_file_uri"
+
+        const val TAG_UPLOAD_WORKER = "upload_worker"
     }
 
     override suspend fun doWork(): Result {
@@ -46,28 +57,14 @@ class UploadWorker(
                 val fileUri = Uri.parse(inputData.getString(FILE_URI_INPUT_KEY))
                 queryDocumentFromSystemFile(fileUri)!!
                     .let { document ->
-                        notifyUploading(
-                            notificationId = notificationId,
-                            message = document.fileName,
-                            max = 0,
-                            progress = 0,
-                            indeterminate = true
-                        )
-                        documentRepository.upload(document) { transferredBytes, totalBytes ->
-                            notifyUploading(
-                                notificationId = notificationId,
-                                message = document.fileName,
-                                max = totalBytes,
-                                progress = transferredBytes,
-                                indeterminate = false
-                            )
-                        }
-                        notifyUploadSuccess(notificationId)
+                        setWaitingForeground(notificationId, document.fileName)
+                        upload(this, document, notificationId)
                     }
+                setUploadSuccessForeground(notificationId)
                 Result.success()
-            } catch (exp: Exception) {
-                LOGGER.error(exp.message, exp)
-                notifyUploadFailure(notificationId)
+            } catch (throwable: Throwable) {
+                LOGGER.error(throwable.message, throwable)
+                setUploadFailureForeground(notificationId)
                 Result.failure()
             }
         }
@@ -86,43 +83,95 @@ class UploadWorker(
             }
     }
 
-    private fun notifyUploading(notificationId: NotificationId, message: String, max: TotalBytes, progress: TransferredBytes, indeterminate: Boolean) {
-        val percentage = (progress.value * 1f / max.value) * 100
-        notifyUploading(notificationId, message, 100, percentage.toInt(), indeterminate)
+    private suspend fun setWaitingForeground(notificationId: NotificationId, message: String) {
+        setForeground(ForegroundInfo(notificationId.value, uploadNotification.create {
+            configUploadingNotificationBuilder(this)
+                .setContentText(message)
+                .showWaitingProgress()
+                .build()
+        }))
     }
 
-    private fun notifyUploading(notificationId: NotificationId, message: String, max: Int, progress: Int, indeterminate: Boolean) {
-        uploadNotification.apply {
-            notify(
-                notificationId = notificationId,
-                notificationBuilder = {
-                    this.setContentTitle(appContext.resources.getQuantityString(R.plurals.uploading_n_file, 1))
-                        .setContentText(message)
-                        .setProgress(max, progress, indeterminate)
-                        .build()
+    private suspend fun upload(
+        coroutineScope: CoroutineScope,
+        document: DocumentRequest,
+        notificationId: NotificationId
+    ) {
+        documentRepository.upload(document) { transferredBytes, totalBytes ->
+            updateUploadingProgress(coroutineScope, document, notificationId, transferredBytes, totalBytes)
+        }
+    }
+
+    private fun configUploadingNotificationBuilder(builder: Builder): Builder {
+        return builder.setContentTitle(appContext.resources.getQuantityString(R.plurals.uploading_n_file, 1))
+    }
+
+    private suspend fun setUploadingForeground(
+        notificationId: NotificationId,
+        message: String,
+        max: TotalBytes,
+        progress: TransferredBytes
+    ) {
+        val percentage = (progress.value / max.value) * 100
+        return setUploadingForeground(notificationId, message, 100, percentage.toInt())
+    }
+
+    private suspend fun setUploadingForeground(
+        notificationId: NotificationId,
+        message: String,
+        max: Int,
+        progress: Int
+    ) {
+        setForeground(ForegroundInfo(notificationId.value, uploadNotification.create {
+            configUploadingNotificationBuilder(this)
+                .setContentText(message)
+                .setProgress(max, progress, BaseNotification.DISABLE_PROGRESS_INDETERMINATE)
+                .setOngoing(ONGOING_NOTIFICATION)
+                .build()
+        }))
+    }
+
+    private fun reduceUpdateProgress(transferredBytes: TransferredBytes): Int {
+        return (transferredBytes.value % REDUCE_RATIO).toInt()
+    }
+
+    private fun updateUploadingProgress(
+        coroutineScope: CoroutineScope,
+        document: DocumentRequest,
+        notificationId: NotificationId,
+        transferredBytes: TransferredBytes,
+        totalBytes: TotalBytes
+    ) {
+        reduceUpdateProgress(transferredBytes)
+            .takeIf { it < MAX_UPDATE_PROGRESS_COUNT }
+            ?.let {
+                coroutineScope.launch {
+                    setUploadingForeground(
+                        notificationId = notificationId,
+                        message = document.fileName,
+                        max = totalBytes,
+                        progress = transferredBytes
+                    )
                 }
-            )
-        }
+            }
     }
 
-    private fun notifyUploadSuccess(notificationId: NotificationId) {
-        uploadNotification.apply {
-            notify(notificationId) {
-                this.setContentTitle(appContext.getString(R.string.upload_success))
-                    .disableProgressBar()
-                this.build()
-            }
-        }
+    private suspend fun setUploadSuccessForeground(notificationId: NotificationId) {
+        setForeground(ForegroundInfo(notificationId.value, uploadNotification.create {
+            this.setContentTitle(appContext.getString(R.string.upload_success))
+                .setOngoing(FINISHED_NOTIFICATION)
+                .disableProgressBar()
+            this.build()
+        }))
     }
 
-    private fun notifyUploadFailure(notificationId: NotificationId) {
-        uploadNotification.apply {
-            notify(notificationId) {
-                this.setContentTitle(appContext.getString(R.string.upload_failed))
-                    .disableProgressBar()
-                this.build()
-            }
-        }
+    private suspend fun setUploadFailureForeground(notificationId: NotificationId) {
+        setForeground(ForegroundInfo(notificationId.value, uploadNotification.create {
+            this.setContentTitle(appContext.getString(R.string.upload_failed))
+                .setOngoing(FINISHED_NOTIFICATION)
+                .disableProgressBar()
+            this.build()
+        }))
     }
 
     class Factory @Inject constructor(
