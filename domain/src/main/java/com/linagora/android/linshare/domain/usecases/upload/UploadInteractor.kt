@@ -40,7 +40,7 @@ class UploadInteractor @Inject constructor(
                     } catch (illegalStateException: java.lang.IllegalStateException) {
                         send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
                     } catch (uploadException: UploadException) {
-                        when (uploadException.errorResponse.errorCode) {
+                        when (uploadException.errorResponse.linShareErrorCode) {
                             QuotaAccountNoMoreSpaceErrorCode -> send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
                             else -> send(State { Either.left(Failure.Error) })
                         }

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
 
-class ErrorCodeTest {
+class LinShareErrorCodeTest {
 
     companion object {
         private val VALID_ERROR_CODES = listOf(100, 1000, 46011, Int.MAX_VALUE)
@@ -16,7 +16,7 @@ class ErrorCodeTest {
     fun validateErrorCode() {
         for (errorCode in VALID_ERROR_CODES) {
             try {
-                ErrorCode(errorCode)
+                LinShareErrorCode(errorCode)
             } catch (throwable: Throwable) {
                 fail(throwable)
             }
@@ -24,7 +24,7 @@ class ErrorCodeTest {
 
         for (invalidErrorCode in INVALID_ERROR_CODES) {
             assertThrows<IllegalArgumentException> {
-                ErrorCode(invalidErrorCode)
+                LinShareErrorCode(invalidErrorCode)
             }
         }
     }

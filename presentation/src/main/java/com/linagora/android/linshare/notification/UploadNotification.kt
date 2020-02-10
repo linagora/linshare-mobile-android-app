@@ -13,9 +13,9 @@ class UploadNotification @Inject constructor(
     companion object {
         val CHANNEL_ID = NotificationChannelId("upload_channel_id")
 
-        const val REDUCE_RATIO = 500
+        const val REDUCE_RATIO = 2301
 
-        const val MAX_UPDATE_PROGRESS_COUNT = 20
+        const val MAX_UPDATE_PROGRESS_COUNT = 96
     }
 
     override fun getNotificationChannelName(): NotificationChannelName {

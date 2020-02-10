@@ -68,9 +68,7 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideLinShareApi(
-        linShareRetrofit: Retrofit
-    ): LinshareApi {
+    fun provideLinShareApi(linShareRetrofit: Retrofit): LinshareApi {
         return linShareRetrofit.create(LinshareApi::class.java)
     }
 }
