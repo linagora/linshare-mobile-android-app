@@ -23,7 +23,9 @@ import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
+import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
+import com.linagora.android.linshare.domain.usecases.utils.Failure.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
@@ -150,6 +152,10 @@ object TestFixtures {
         val ERROR_STATE = Either.Left(Error)
 
         val SUCCESS_REMOVE_ACCOUNT_STATE = Either.right(SuccessRemoveAccount)
+
+        val QUOTA_ACCOUNT_NO_MORE_AVAILABLE_SPACE = Either.left(QuotaAccountNoMoreSpaceAvailable)
+
+        val UPLOAD_SUCCESS_VIEW_STATE = Either.right(UploadSuccessViewState(DOCUMENT))
     }
 
     object Accounts {
@@ -181,6 +187,13 @@ object TestFixtures {
             QuotaSize(6000000),
             QuotaSize(123),
             QuotaSize(6000000),
+            false
+        )
+
+        val LOW_QUOTA = AccountQuota(
+            QuotaSize(6000),
+            QuotaSize(5000),
+            QuotaSize(6000),
             false
         )
     }
