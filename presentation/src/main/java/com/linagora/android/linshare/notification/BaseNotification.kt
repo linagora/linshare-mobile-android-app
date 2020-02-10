@@ -10,8 +10,10 @@ import androidx.core.app.NotificationCompat.Builder
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.notification.BaseNotification.Companion.DISABLE_PROGRESS_INDETERMINATE
 import com.linagora.android.linshare.notification.BaseNotification.Companion.DISABLE_PROGRESS
+import com.linagora.android.linshare.notification.BaseNotification.Companion.DISABLE_PROGRESS_INDETERMINATE
+import com.linagora.android.linshare.notification.BaseNotification.Companion.WAITING_PROGRESS
+import com.linagora.android.linshare.notification.BaseNotification.Companion.WAITING_PROGRESS_INDETERMINATE
 import com.linagora.android.linshare.util.AndroidUtils
 
 abstract class BaseNotification(private val context: Context) {
@@ -19,7 +21,15 @@ abstract class BaseNotification(private val context: Context) {
     companion object {
         const val DISABLE_PROGRESS = 0
 
+        const val WAITING_PROGRESS = 0
+
         const val DISABLE_PROGRESS_INDETERMINATE = false
+
+        const val WAITING_PROGRESS_INDETERMINATE = true
+
+        const val ONGOING_NOTIFICATION = true
+
+        const val FINISHED_NOTIFICATION = false
     }
 
     private val baseBuilder = createNotificationBuilder()
@@ -65,6 +75,10 @@ abstract class BaseNotification(private val context: Context) {
         }
     }
 
+    fun create(notificationBuilder: Builder.() -> Notification): Notification {
+        return notificationBuilder.invoke(baseBuilder)
+    }
+
     fun notify(notificationId: NotificationId, notificationBuilder: Builder.() -> Notification) {
         NotificationManagerCompat.from(context)
             .notify(
@@ -72,6 +86,11 @@ abstract class BaseNotification(private val context: Context) {
                 notificationBuilder.invoke(baseBuilder)
             )
     }
+}
+
+fun Builder.showWaitingProgress(): Builder {
+    this.setProgress(WAITING_PROGRESS, WAITING_PROGRESS, WAITING_PROGRESS_INDETERMINATE)
+    return this
 }
 
 fun Builder.disableProgressBar(): Builder {
