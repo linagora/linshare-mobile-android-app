@@ -3,8 +3,8 @@ package com.linagora.android.linshare.data.repository.document
 import android.os.Build
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
-import com.linagora.android.linshare.domain.model.ErrorCode
 import com.linagora.android.linshare.domain.model.ErrorResponse
+import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
@@ -29,7 +29,7 @@ import org.robolectric.annotation.Config
 class DocumentsRepositoryImpTest {
 
     companion object {
-        val ERROR_RESPONSE = ErrorResponse("quota exceed", ErrorCode(123))
+        val ERROR_RESPONSE = ErrorResponse("quota exceed", LinShareErrorCode(123))
     }
 
     @Mock

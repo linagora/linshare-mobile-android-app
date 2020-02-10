@@ -49,6 +49,8 @@
 
     <string name="upload_success">Hoàn thành tải lên</string>
     <string name="upload_failed">Tải lên không thành công</string>
+    <string name="can_not_perform_upload">Tải lên không thể thực hiện được, hãy thử lại</string>
+    <string name="no_more_space_avalable">Đã hết dung lượng trống, hãy làm sạch bộ nhớ và thử lại</string>
 
     <string name="upload_file">Tải tệp lên</string>
     <string name="upload_to_my_space">Tải lên không gian của tôi</string>

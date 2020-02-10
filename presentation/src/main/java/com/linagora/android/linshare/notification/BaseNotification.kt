@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.notification.BaseNotification.Companion.DISABLE_PROGRESS
 import com.linagora.android.linshare.notification.BaseNotification.Companion.DISABLE_PROGRESS_INDETERMINATE
+import com.linagora.android.linshare.notification.BaseNotification.Companion.ONGOING_NOTIFICATION
 import com.linagora.android.linshare.notification.BaseNotification.Companion.WAITING_PROGRESS
 import com.linagora.android.linshare.notification.BaseNotification.Companion.WAITING_PROGRESS_INDETERMINATE
 import com.linagora.android.linshare.util.AndroidUtils
@@ -90,6 +91,7 @@ abstract class BaseNotification(private val context: Context) {
 
 fun Builder.showWaitingProgress(): Builder {
     this.setProgress(WAITING_PROGRESS, WAITING_PROGRESS, WAITING_PROGRESS_INDETERMINATE)
+        .setOngoing(ONGOING_NOTIFICATION)
     return this
 }
 

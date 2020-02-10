@@ -1,6 +1,6 @@
 package com.linagora.android.linshare.domain.usecases.utils
 
-import com.linagora.android.linshare.domain.model.ErrorCode
+import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode
 
@@ -18,7 +18,7 @@ sealed class Failure {
 
     abstract class QuotaError : Failure()
 
-    abstract class QuotaAccountError(errorCode: ErrorCode) : QuotaError()
+    abstract class QuotaAccountError(linShareErrorCode: LinShareErrorCode) : QuotaError()
 
     object QuotaAccountNoMoreSpaceAvailable :
         QuotaAccountError(BusinessErrorCode.QuotaAccountNoMoreSpaceErrorCode)
