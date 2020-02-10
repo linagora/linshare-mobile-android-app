@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.linagora.android.linshare.BuildConfig
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
+import com.linagora.android.linshare.data.network.adapter.ErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
@@ -51,19 +52,25 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideLinshareApi(
-        clientBuilder: OkHttpClient.Builder
-    ): LinshareApi {
+    fun provideLinShareRetrofit(clientBuilder: OkHttpClient.Builder): Retrofit {
         val gson = GsonBuilder()
             .registerTypeAdapter(Date::class.java, DateLongDeserializer())
             .registerTypeAdapter(QuotaSize::class.java, QuotaSizeDeserializer())
             .registerTypeAdapter(MediaType::class.java, MediaTypeDeserializer())
+            .registerTypeAdapter(ErrorCodeDeserializer::class.java, ErrorCodeDeserializer())
             .create()
         return Retrofit.Builder()
             .baseUrl(DEFAULT_LINSHARE_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(clientBuilder.build())
             .build()
-            .create(LinshareApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLinShareApi(
+        linShareRetrofit: Retrofit
+    ): LinshareApi {
+        return linShareRetrofit.create(LinshareApi::class.java)
     }
 }
