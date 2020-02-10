@@ -3,6 +3,7 @@ package com.linagora.android.linshare.data.datasource.network
 import android.content.Context
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
+import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
@@ -11,12 +12,15 @@ import okhttp3.MultipartBody
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
+import retrofit2.HttpException
+import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
 class LinShareDocumentDataSource @Inject constructor(
     private val context: Context,
+    private val retrofit: Retrofit,
     private val linshareApi: LinshareApi
 ) : DocumentDataSource {
 
@@ -44,9 +48,12 @@ class LinShareDocumentDataSource @Inject constructor(
                     fileRequestBody),
                 fileSize = tempFile.length()
             )
+        } catch (httpExp: HttpException) {
+            val errorResponse = parseErrorResponse(httpExp)
+            throw UploadException(errorResponse)
         } catch (exp: Exception) {
             LOGGER.error("$exp - ${exp.printStackTrace()}")
-            throw UploadException(exp.message)
+            throw UploadException(ErrorResponse.UNKNOWN_RESPONSE)
         } finally {
             FileUtils.deleteQuietly(tempFile)
         }
@@ -64,5 +71,21 @@ class LinShareDocumentDataSource @Inject constructor(
         FileOutputStream(tempFile)
             .use { IOUtils.copy(context.contentResolver.openInputStream(documentRequest.uri), it) }
         return tempFile
+    }
+
+    private fun parseErrorResponse(httpException: HttpException): ErrorResponse {
+        return runCatching {
+            httpException.response()
+                ?.errorBody()
+                .let {
+                    val converter = retrofit.responseBodyConverter<ErrorResponse>(
+                        ErrorResponse::class.java,
+                        arrayOfNulls<Annotation>(0))
+                    converter.convert(it) ?: ErrorResponse.UNKNOWN_RESPONSE
+                }
+        }.getOrElse {
+            LOGGER.error("parseErrorResponse: ${it.printStackTrace()}")
+            ErrorResponse.UNKNOWN_RESPONSE
+        }
     }
 }
