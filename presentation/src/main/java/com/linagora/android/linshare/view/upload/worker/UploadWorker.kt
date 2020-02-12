@@ -14,11 +14,11 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
+import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
 import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
 import com.linagora.android.linshare.domain.usecases.upload.UploadingViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
