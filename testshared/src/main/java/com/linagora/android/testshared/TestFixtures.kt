@@ -23,9 +23,11 @@ import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
+import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
+import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
+import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
 import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
-import com.linagora.android.linshare.domain.usecases.utils.Failure.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
@@ -153,6 +155,10 @@ object TestFixtures {
 
         val SUCCESS_REMOVE_ACCOUNT_STATE = Either.right(SuccessRemoveAccount)
 
+        val VALID_QUOTA_ACCOUNT_STATE = Either.right(ValidAccountQuota)
+
+        val EXCEED_MAX_FILE_SIZE = Either.left(ExceedMaxFileSize)
+
         val QUOTA_ACCOUNT_NO_MORE_AVAILABLE_SPACE = Either.left(QuotaAccountNoMoreSpaceAvailable)
 
         val UPLOAD_SUCCESS_VIEW_STATE = Either.right(UploadSuccessViewState(DOCUMENT))
@@ -185,7 +191,7 @@ object TestFixtures {
 
         val QUOTA = AccountQuota(
             QuotaSize(6000000),
-            QuotaSize(123),
+            QuotaSize(5000005),
             QuotaSize(6000000),
             false
         )
@@ -204,6 +210,13 @@ object TestFixtures {
             uri = Uri.parse("content://0@media/external/file/276"),
             fileName = "document.txt",
             fileSize = 25,
+            mediaType = MediaType.get("text/plain")
+        )
+
+        val DOCUMENT_REQUEST_BIG_SIZE = DocumentRequest(
+            uri = Uri.parse("content://0@media/external/file/276"),
+            fileName = "document.txt",
+            fileSize = 1000000,
             mediaType = MediaType.get("text/plain")
         )
     }
