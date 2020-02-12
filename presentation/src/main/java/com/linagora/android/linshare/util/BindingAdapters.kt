@@ -1,14 +1,21 @@
 package com.linagora.android.linshare.util
 
 import android.text.format.Formatter
+import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
+import arrow.core.Either
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
+import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
+import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.util.FileSize.SizeFormat.SHORT
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
@@ -128,4 +135,35 @@ fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?)
         .placeholder(document?.mediaType?.getDrawableIcon()
             ?: R.drawable.ic_file)
         .into(imageView)
+}
+
+@BindingAdapter("uploadErrorMessage")
+fun bindingUploadError(textView: TextView, uploadErrorState: Either<Failure, Success>) {
+    uploadErrorState.fold(
+        ifLeft = { failure ->
+            when (failure) {
+                QuotaAccountNoMoreSpaceAvailable -> { R.string.no_more_space_avalable }
+                ExceedMaxFileSize -> { R.string.exceed_max_file_size }
+                else -> null
+            }
+        },
+        ifRight = { null }
+    )
+    ?.let {
+        textView.setText(it)
+        textView.visibility = View.VISIBLE
+    } ?: textView.setVisibility(View.GONE)
+}
+
+@BindingAdapter("uploadError")
+fun bindingUploadButton(button: Button, uploadErrorState: Either<Failure, Success>) {
+    uploadErrorState.fold(
+        ifLeft = { failure ->
+            when (failure) {
+                QuotaAccountNoMoreSpaceAvailable, ExceedMaxFileSize -> { button.isEnabled = false }
+                else -> button.isEnabled = true
+            }
+        },
+        ifRight = { button.isEnabled = true }
+    )
 }

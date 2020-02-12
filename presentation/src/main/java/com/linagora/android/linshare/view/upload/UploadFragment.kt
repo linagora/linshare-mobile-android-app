@@ -24,6 +24,7 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.MimeType.APPLICATION_DEFAULT
+import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
@@ -34,7 +35,6 @@ import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.T
 import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -56,6 +56,8 @@ class UploadFragment : MainNavigationFragment() {
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
 
+    private lateinit var uploadFragmentViewModel: UploadFragmentViewModel
+
     private lateinit var binding: FragmentUploadBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,8 +70,9 @@ class UploadFragment : MainNavigationFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        initViewModel()
         binding = FragmentUploadBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        initViewModel()
         return binding.root
     }
 
@@ -84,6 +87,9 @@ class UploadFragment : MainNavigationFragment() {
                 INVALID_AUTHENTICATION -> navigateToWizardLogin()
             }
         })
+
+        uploadFragmentViewModel = getViewModel(viewModelFactory)
+        binding.viewModel = uploadFragmentViewModel
     }
 
     private fun receiveFile() {
@@ -106,22 +112,21 @@ class UploadFragment : MainNavigationFragment() {
                         }.getOrElse { APPLICATION_DEFAULT }
 
                         LOGGER.info("name: $fileName - size: $size - mimeType: $mimeType")
-
-                        withContext(dispatcherProvider.main) {
-                            bindingData(DocumentRequest(uri, fileName, size, mimeType.toMediaType()))
-                            setUpUploadButton(uri)
-                        }
+                        bindingData(uri, DocumentRequest(uri, fileName, size, mimeType.toMediaType()))
                     }
                 }
         }
     }
 
-    private fun bindingData(documentRequest: DocumentRequest) {
-        binding.document = documentRequest
+    private fun bindingData(uri: Uri, documentRequest: DocumentRequest) {
+        uploadScoped.launch(dispatcherProvider.main) {
+            binding.document = documentRequest
+            uploadFragmentViewModel.checkAccountQuota(documentRequest)
+            setUpUploadButton(uri, documentRequest)
+        }
     }
 
-    private fun setUpUploadButton(uri: Uri) {
-        btnUpload.isEnabled = true
+    private fun setUpUploadButton(uri: Uri, documentRequest: DocumentRequest) {
         btnUpload.setOnClickListener {
 
             val inputData = createInputDataForUploadFile(uri)

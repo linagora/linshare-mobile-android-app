@@ -50,7 +50,8 @@
     <string name="upload_success">Upload completed</string>
     <string name="upload_failed">Upload failed</string>
     <string name="can_not_perform_upload">Can not perform uploading. Please try again</string>
-    <string name="no_more_space_avalable">There is no more space available on the server, free space and retry</string>
+    <string name="no_more_space_avalable">You exceeded your storage quota on the LinShare server. Free space and retry your upload.</string>
+    <string name="exceed_max_file_size">Uploaded file size exceeds the allowable limit. Please try another file.</string>
 
     <string name="upload_file">Upload File</string>
     <string name="upload_to_my_space">Upload to My Space</string>

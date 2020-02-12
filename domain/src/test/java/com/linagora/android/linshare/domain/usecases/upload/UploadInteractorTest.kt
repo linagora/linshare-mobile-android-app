@@ -97,7 +97,6 @@ class UploadInteractorTest {
         }
     }
 
-
     @Test
     fun uploadShouldFailedWhenNotEnoughQuota() {
         runBlockingTest {
