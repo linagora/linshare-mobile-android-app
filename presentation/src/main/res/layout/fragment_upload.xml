@@ -6,6 +6,10 @@
         <variable
             name="document"
             type="DocumentRequest" />
+
+        <variable
+            name="viewModel"
+            type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
@@ -45,10 +49,10 @@
             app:layout_constraintTop_toBottomOf="@id/upload_app_bar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:paddingBottom="@dimen/upload_container_padding_top"
-                android:paddingTop="@dimen/upload_container_padding_top"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/upload_container_padding_top"
+                android:paddingBottom="@dimen/upload_container_padding_top">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/uploadIcon"
@@ -56,11 +60,9 @@
                     android:layout_height="@dimen/upload_icon_size"
                     android:layout_marginStart="@dimen/upload_icon_margin_start"
                     android:scaleType="centerCrop"
-                    app:uploadIcon="@{document}"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:uploadIcon="@{document}" />
 
                 <TextView
                     android:id="@+id/uploadInfo"
@@ -70,26 +72,44 @@
                     android:layout_marginEnd="@dimen/item_upload_container_margin_side"
                     android:ellipsize="middle"
                     android:singleLine="true"
-                    android:textSize="@dimen/file_name_text_size"
                     android:textColor="@color/file_name_color"
-                    app:uploadInfo="@{document}"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textSize="@dimen/file_name_text_size"
+                    app:layout_constraintBottom_toBottomOf="@id/uploadIcon"
                     app:layout_constraintEnd_toStartOf="@+id/uploadSize"
-                    app:layout_constraintStart_toEndOf="@+id/uploadIcon" />
+                    app:layout_constraintStart_toEndOf="@+id/uploadIcon"
+                    app:layout_constraintTop_toTopOf="@id/uploadIcon"
+                    app:uploadInfo="@{document}" />
 
                 <TextView
                     android:id="@+id/uploadSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:layout_marginEnd="@dimen/upload_size_margin_end"
-                    android:textSize="@dimen/file_size_text_size"
+                    android:singleLine="true"
                     android:textColor="@color/file_size_color"
-                    app:uploadSize="@{document}"
+                    android:textSize="@dimen/file_size_text_size"
                     app:layout_constraintBaseline_toBaselineOf="@+id/uploadInfo"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/uploadInfo"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:uploadSize="@{document}" />
+
+                <TextView
+                    android:id="@+id/uploadErrorMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:maxLines="2"
+                    android:layout_marginTop="@dimen/upload_container_padding_top"
+                    android:textColor="@color/error_border_color"
+                    android:visibility="gone"
+                    android:textStyle="italic"
+                    android:textSize="@dimen/file_size_text_size"
+                    app:uploadErrorMessage="@{viewModel.viewState}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/uploadIcon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -101,6 +121,7 @@
             android:text="@string/upload_to_my_space"
             android:enabled="false"
             style="@style/UploadButton"
+            app:uploadError="@{viewModel.viewState}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fileInfoContainer" />
