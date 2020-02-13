@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.view.upload
 
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore.Images.Media
@@ -7,6 +8,7 @@ import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -18,9 +20,11 @@ import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentUploadBinding
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.MimeType.APPLICATION_DEFAULT
@@ -35,6 +39,8 @@ import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.T
 import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -93,28 +99,30 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun receiveFile() {
-        LOGGER.info("receiveFile()")
-        val bundle = requireArguments()
-        val uriFile = bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
-        extractFileInfo(uriFile!!)
+        uploadScoped.launch(dispatcherProvider.io) {
+            LOGGER.info("receiveFile()")
+            val bundle = requireArguments()
+            bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
+                ?.let { uri ->
+                    extractFileInfo(uri)
+                        ?.let { documentRequest -> bindingData(uri, documentRequest) }
+                        ?: handleExtractInfoFailed()
+                }
+                ?: handleExtractInfoFailed()
+        }
     }
 
-    private fun extractFileInfo(uri: Uri) {
-        uploadScoped.launch(dispatcherProvider.io) {
-            requireContext().contentResolver.query(uri, null, null, null, null)
-                ?.use { cursor ->
-                    with(cursor) {
-                        moveToFirst()
-                        val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                        val size = getLong(getColumnIndex(OpenableColumns.SIZE))
-                        val mimeType = runCatching {
-                            getString(getColumnIndex(Media.MIME_TYPE))
-                        }.getOrElse { APPLICATION_DEFAULT }
+    private fun handleExtractInfoFailed() {
+        uploadScoped.launch(dispatcherProvider.main) {
+            uploadFragmentViewModel.dispatchState(Either.left(ExtractInfoFailed))
+        }
+    }
 
-                        LOGGER.info("name: $fileName - size: $size - mimeType: $mimeType")
-                        bindingData(uri, DocumentRequest(uri, fileName, size, mimeType.toMediaType()))
-                    }
-                }
+    private suspend fun extractFileInfo(uri: Uri): DocumentRequest? {
+        return withContext(uploadScoped.coroutineContext + dispatcherProvider.io) {
+            requireContext().contentResolver
+                .query(uri, null, null, null, null)
+                ?.use { cursor -> getDocument(uri, cursor) }
         }
     }
 
@@ -122,11 +130,11 @@ class UploadFragment : MainNavigationFragment() {
         uploadScoped.launch(dispatcherProvider.main) {
             binding.document = documentRequest
             uploadFragmentViewModel.checkAccountQuota(documentRequest)
-            setUpUploadButton(uri, documentRequest)
+            setUpUploadButton(uri)
         }
     }
 
-    private fun setUpUploadButton(uri: Uri, documentRequest: DocumentRequest) {
+    private fun setUpUploadButton(uri: Uri) {
         btnUpload.setOnClickListener {
 
             val inputData = createInputDataForUploadFile(uri)
@@ -146,6 +154,30 @@ class UploadFragment : MainNavigationFragment() {
             alertStartToUpload(1)
             navigateAfterUpload()
         }
+    }
+
+    private fun getDocument(uri: Uri, cursor: Cursor): DocumentRequest? {
+        return with(cursor) {
+            moveToFirst()
+            val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            val size = getLong(getColumnIndex(OpenableColumns.SIZE))
+            val mediaType = getMediaType(getString(getColumnIndex(Media.MIME_TYPE)), fileName)
+
+            LOGGER.info("name: $fileName - size: $size - mimeType: $mediaType")
+            DocumentRequest(uri, fileName, size, mediaType)
+        }
+    }
+
+    private fun getMediaType(defaultMimeType: String, fileName: String): MediaType {
+        return runCatching { defaultMimeType.toMediaType() }
+            .getOrElse { getMediaTypeFromExtension(fileName) }
+    }
+
+    private fun getMediaTypeFromExtension(fileName: String): MediaType {
+        return MimeTypeMap.getFileExtensionFromUrl(fileName)
+            ?.let { extensions -> MimeTypeMap.getSingleton().getMimeTypeFromExtension(extensions) }
+            ?.let { mediaType -> mediaType.toMediaType() }
+            ?: APPLICATION_DEFAULT.toMediaType()
     }
 
     private fun alertStartToUpload(uploadFiles: Int) {
