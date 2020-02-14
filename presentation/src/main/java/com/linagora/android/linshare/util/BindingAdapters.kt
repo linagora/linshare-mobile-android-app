@@ -13,6 +13,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
+import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -133,7 +134,7 @@ fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?)
     GlideApp.with(imageView.context)
         .load(document?.uri)
         .placeholder(document?.mediaType?.getDrawableIcon()
-            ?: R.drawable.ic_file)
+            ?: R.drawable.ic_warning)
         .into(imageView)
 }
 
@@ -144,6 +145,7 @@ fun bindingUploadError(textView: TextView, uploadErrorState: Either<Failure, Suc
             when (failure) {
                 QuotaAccountNoMoreSpaceAvailable -> { R.string.no_more_space_avalable }
                 ExceedMaxFileSize -> { R.string.exceed_max_file_size }
+                ExtractInfoFailed -> { R.string.extrac_info_failed }
                 else -> null
             }
         },
@@ -160,7 +162,11 @@ fun bindingUploadButton(button: Button, uploadErrorState: Either<Failure, Succes
     uploadErrorState.fold(
         ifLeft = { failure ->
             when (failure) {
-                QuotaAccountNoMoreSpaceAvailable, ExceedMaxFileSize -> { button.isEnabled = false }
+                QuotaAccountNoMoreSpaceAvailable, ExceedMaxFileSize, ExtractInfoFailed
+                -> {
+                    button.isEnabled = false
+                    button.setTextColor(button.context.resources.getColor(R.color.white))
+                }
                 else -> button.isEnabled = true
             }
         },

@@ -49,6 +49,14 @@ class UploadFragment : MainNavigationFragment() {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(UploadFragment::class.java)
+
+        private val ALL_ROWS_SELECTION = null
+
+        private val EMPTY_SELECTION_ARGS = null
+
+        private val DEFAULT_SORT_ORDER = null
+
+        private val EMPTY_DOCUMENT_REQUEST = null
     }
 
     @Inject
@@ -104,25 +112,31 @@ class UploadFragment : MainNavigationFragment() {
             val bundle = requireArguments()
             bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
                 ?.let { uri ->
-                    extractFileInfo(uri)
+                    buildDocumentRequest(uri)
                         ?.let { documentRequest -> bindingData(uri, documentRequest) }
-                        ?: handleExtractInfoFailed()
+                        ?: handleBuildDocumentRequestFailed()
                 }
-                ?: handleExtractInfoFailed()
+                ?: handleBuildDocumentRequestFailed()
         }
     }
 
-    private fun handleExtractInfoFailed() {
+    private fun handleBuildDocumentRequestFailed() {
         uploadScoped.launch(dispatcherProvider.main) {
             uploadFragmentViewModel.dispatchState(Either.left(ExtractInfoFailed))
         }
     }
 
-    private suspend fun extractFileInfo(uri: Uri): DocumentRequest? {
-        return withContext(uploadScoped.coroutineContext + dispatcherProvider.io) {
-            requireContext().contentResolver
-                .query(uri, null, null, null, null)
-                ?.use { cursor -> getDocument(uri, cursor) }
+    private suspend fun buildDocumentRequest(uri: Uri): DocumentRequest? {
+        return try {
+            withContext(uploadScoped.coroutineContext + dispatcherProvider.io) {
+                val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, Media.MIME_TYPE)
+                requireContext().contentResolver
+                    .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
+                    ?.use { cursor -> getDocumentRequest(uri, cursor) }
+            }
+        } catch (exp: Exception) {
+            LOGGER.error("$exp - ${exp.printStackTrace()}")
+            EMPTY_DOCUMENT_REQUEST
         }
     }
 
@@ -156,7 +170,7 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
-    private fun getDocument(uri: Uri, cursor: Cursor): DocumentRequest? {
+    private fun getDocumentRequest(uri: Uri, cursor: Cursor): DocumentRequest? {
         return with(cursor) {
             moveToFirst()
             val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))

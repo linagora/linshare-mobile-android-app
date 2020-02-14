@@ -9,3 +9,4 @@ object ValidAccountQuota : ViewState()
 object ExceedMaxFileSize : FeatureFailure()
 object QuotaAccountNoMoreSpaceAvailable :
     QuotaAccountError(BusinessErrorCode.QuotaAccountNoMoreSpaceErrorCode)
+object ExtractInfoFailed : FeatureFailure()
