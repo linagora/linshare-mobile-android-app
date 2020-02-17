@@ -1,22 +1,22 @@
 package com.linagora.android.linshare.view
 
+import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
-import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.InitialReadStorage
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadStorage
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadStorage
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
+import com.linagora.android.linshare.permission.ReadStoragePermission
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
@@ -31,7 +31,7 @@ class MainActivityViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
     private val authorizationManager: AuthorizationManager,
-    private val propertiesRepository: PropertiesRepository
+    private val readStoragePermission: ReadStoragePermission
 ) : BaseViewModel(dispatcherProvider) {
 
     companion object {
@@ -47,7 +47,7 @@ class MainActivityViewModel @Inject constructor(
     private val mutableCurrentCredential = MutableLiveData(Credential.InvalidCredential)
     val currentCredential: LiveData<Credential> = mutableCurrentCredential
 
-    private val shouldShowPermissionRequest = MutableLiveData<RuntimePermissionRequest>(InitialReadStorage)
+    private val shouldShowPermissionRequest = MutableLiveData<RuntimePermissionRequest>(Initial)
     val shouldShowPermissionRequestState: LiveData<RuntimePermissionRequest> = shouldShowPermissionRequest
 
     val authenticationState = MutableLiveData<AuthenticationState>()
@@ -64,35 +64,27 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun shouldShowReadStoragePermissionRequest(systemRuntimePermissionRequest: RuntimePermissionRequest) {
-        shouldShowPermissionRequest.value = InitialReadStorage
+    fun shouldShowReadStoragePermissionRequest(activity: Activity) {
+        shouldShowPermissionRequest.value = Initial
         viewModelScope.launch(dispatcherProvider.io) {
-            val userStoragePermissionRequest = propertiesRepository.getRecentActionForReadStoragePermission()
-            shouldShowPermissionRequest.postValue(
-                combineReadStoragePermission(userStoragePermissionRequest, systemRuntimePermissionRequest)
-            )
+            val shouldShow = readStoragePermission.shouldShowPermissionRequest(
+                readStoragePermission.systemShouldShowPermissionRequest(activity))
+            shouldShowPermissionRequest.postValue(shouldShow)
         }
     }
 
     fun setActionForReadStoragePermissionRequest(recentUserPermissionAction: RecentUserPermissionAction) {
         viewModelScope.launch(dispatcherProvider.io) {
-            propertiesRepository.storeRecentActionForReadStoragePermission(recentUserPermissionAction)
+            readStoragePermission.setActionForPermissionRequest(recentUserPermissionAction)
         }
     }
 
-    private fun combineReadStoragePermission(
-        recentUserPermissionAction: RecentUserPermissionAction,
-        systemRuntimePermissionRequest: RuntimePermissionRequest
-    ): RuntimePermissionRequest {
-        if (recentUserPermissionAction != DENIED) {
-            return ShouldShowReadStorage
-        }
+    fun checkReadStoragePermission(context: Context): PermissionResult {
+        return readStoragePermission.checkSelfPermission(context)
+    }
 
-        if (systemRuntimePermissionRequest == ShouldShowReadStorage) {
-            return ShouldShowReadStorage
-        }
-
-        return ShouldNotShowReadStorage
+    fun requestReadStoragePermission(activity: Activity) {
+        readStoragePermission.requestPermission(activity)
     }
 
     fun setUpAuthenticated(authenticationViewState: AuthenticationViewState) {

@@ -4,19 +4,14 @@ import androidx.lifecycle.Observer
 import arrow.core.Either
 import com.linagora.android.linshare.CoroutinesExtension
 import com.linagora.android.linshare.InstantExecutorExtension
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
-import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadStorage
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadStorage
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
+import com.linagora.android.linshare.permission.ReadStoragePermission
 import com.linagora.android.linshare.runBlockingTest
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.testshared.TestFixtures
@@ -51,10 +46,7 @@ class MainActivityViewModelTest {
     lateinit var viewObserver: Observer<Either<Failure, Success>>
 
     @Mock
-    lateinit var propertiesRepository: PropertiesRepository
-
-    @Mock
-    lateinit var shouldShowRuntimePermissionRequestObserver: Observer<RuntimePermissionRequest>
+    lateinit var readStoragePermission: ReadStoragePermission
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -67,7 +59,7 @@ class MainActivityViewModelTest {
                 dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher),
                 dynamicBaseUrlInterceptor = dynamicBaseUrlInterceptor,
                 authorizationManager = authorizationManager,
-                propertiesRepository = propertiesRepository
+                readStoragePermission = readStoragePermission
             )
     }
 
@@ -123,66 +115,6 @@ class MainActivityViewModelTest {
             viewModel.checkSignedIn()
             Mockito.verify(viewObserver).onChanged(TestFixtures.State.LOADING_STATE)
             Mockito.verify(viewObserver).onChanged(TestFixtures.State.EMPTY_TOKEN_STATE)
-        }
-    }
-
-    @Test
-    fun shouldShowReadStoragePermissionRequestShouldReturnShouldShowWhenSystemShouldShow() {
-        coroutinesExtension.runBlockingTest {
-            Mockito.`when`(propertiesRepository.getRecentActionForReadStoragePermission())
-                .thenAnswer { RecentUserPermissionAction.NONE }
-
-            viewModel.shouldShowPermissionRequestState
-                .observeForever(shouldShowRuntimePermissionRequestObserver)
-
-            viewModel.shouldShowReadStoragePermissionRequest(ShouldShowReadStorage)
-            Mockito.verify(shouldShowRuntimePermissionRequestObserver)
-                .onChanged(ShouldShowReadStorage)
-        }
-    }
-
-    @Test
-    fun shouldShowReadStoragePermissionRequestShouldReturnShouldShowWhenSystemShouldBeNotShow() {
-        coroutinesExtension.runBlockingTest {
-            Mockito.`when`(propertiesRepository.getRecentActionForReadStoragePermission())
-                .thenAnswer { RecentUserPermissionAction.NONE }
-
-            viewModel.shouldShowPermissionRequestState
-                .observeForever(shouldShowRuntimePermissionRequestObserver)
-
-            viewModel.shouldShowReadStoragePermissionRequest(ShouldNotShowReadStorage)
-            Mockito.verify(shouldShowRuntimePermissionRequestObserver)
-                .onChanged(ShouldShowReadStorage)
-        }
-    }
-
-    @Test
-    fun shouldShowReadStoragePermissionRequestShouldReturnShouldShowWhenSystemShouldShowAndUserDenied() {
-        coroutinesExtension.runBlockingTest {
-            Mockito.`when`(propertiesRepository.getRecentActionForReadStoragePermission())
-                .thenAnswer { RecentUserPermissionAction.DENIED }
-
-            viewModel.shouldShowPermissionRequestState
-                .observeForever(shouldShowRuntimePermissionRequestObserver)
-
-            viewModel.shouldShowReadStoragePermissionRequest(ShouldShowReadStorage)
-            Mockito.verify(shouldShowRuntimePermissionRequestObserver)
-                .onChanged(ShouldShowReadStorage)
-        }
-    }
-
-    @Test
-    fun shouldShowReadStoragePermissionRequestShouldReturnShouldNotShowWhenSystemShouldNotShowAndUserDenied() {
-        coroutinesExtension.runBlockingTest {
-            Mockito.`when`(propertiesRepository.getRecentActionForReadStoragePermission())
-                .thenAnswer { DENIED }
-
-            viewModel.shouldShowPermissionRequestState
-                .observeForever(shouldShowRuntimePermissionRequestObserver)
-
-            viewModel.shouldShowReadStoragePermissionRequest(ShouldNotShowReadStorage)
-            Mockito.verify(shouldShowRuntimePermissionRequestObserver)
-                .onChanged(ShouldNotShowReadStorage)
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.linagora.android.linshare.view
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -9,8 +8,6 @@ import android.provider.Settings
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -25,7 +22,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.ActivityMainBinding
 import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
 import com.linagora.android.linshare.model.mapper.toParcelable
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
+import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadStorage
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadStorage
 import com.linagora.android.linshare.model.resources.MenuId
@@ -96,8 +93,8 @@ class MainActivity : BaseActivity(), NavigationHost {
     }
 
     private fun handleSendAction(intent: Intent) {
-        when (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            PackageManager.PERMISSION_GRANTED -> { extractSendAction(intent) }
+        when (viewModel.checkReadStoragePermission(this)) {
+            PermissionResult.PermissionGranted -> { extractSendAction(intent) }
             else -> { requestReadStoragePermission() }
         }
     }
@@ -105,31 +102,15 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun handleStoragePermissionRequest() {
         viewModel.shouldShowPermissionRequestState.observe(this, Observer {
             when (it) {
-                ShouldShowReadStorage -> {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                        ReadExternalPermissionRequestCode.code
-                    )
-                }
-                ShouldNotShowReadStorage -> {
-                    showExplanationMessage()
-                }
+                ShouldShowReadStorage -> { viewModel.requestReadStoragePermission(this) }
+                ShouldNotShowReadStorage -> { showExplanationMessage() }
             }
         })
     }
 
     private fun requestReadStoragePermission() {
         LOGGER.info("requestReadStoragePermission")
-        viewModel.shouldShowReadStoragePermissionRequest(
-            systemShouldShowReadExternalRequestPermissionRationale())
-    }
-
-    private fun systemShouldShowReadExternalRequestPermissionRationale(): RuntimePermissionRequest {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            return ShouldShowReadStorage
-        }
-        return ShouldNotShowReadStorage
+        viewModel.shouldShowReadStoragePermissionRequest(this)
     }
 
     private fun extractSendAction(intent: Intent) {
@@ -176,7 +157,10 @@ class MainActivity : BaseActivity(), NavigationHost {
                 Either.cond(
                     test = grantResults.all { grantResult -> grantResult == PackageManager.PERMISSION_GRANTED },
                     ifTrue = { handleIntent(intent) },
-                    ifFalse = { handleUserDenied() }
+                    ifFalse = {
+                        handleUserDenied()
+                        exit()
+                    }
                 )
             }
         }
@@ -184,6 +168,9 @@ class MainActivity : BaseActivity(), NavigationHost {
 
     private fun handleUserDenied() {
         viewModel.setActionForReadStoragePermissionRequest(DENIED)
+    }
+
+    private fun exit() {
         onBackPressed()
         finish()
     }
@@ -192,10 +179,7 @@ class MainActivity : BaseActivity(), NavigationHost {
         ReadStorageExplanationPermissionDialog(
             negativeText = getString(R.string.cancel),
             positiveText = getString(R.string.go_to_setting),
-            onNegativeCallback = {
-                onBackPressed()
-                finish()
-            },
+            onNegativeCallback = { exit() },
             onPositiveCallback = { gotoSystemSettings() }
         ).show(supportFragmentManager, "read_storage_permission_explanation")
     }
