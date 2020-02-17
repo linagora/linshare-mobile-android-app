@@ -29,7 +29,7 @@ class PreferencePropertiesRepositoryTest {
     }
 
     @Test
-    fun storeDeniedPermissionStorageShouldSuccess() {
+    fun storeRecentActionForReadStoragePermissionShouldSuccess() {
         runBlockingTest {
             propertiesRepository.storeRecentActionForReadStoragePermission(DENIED)
 
@@ -38,9 +38,25 @@ class PreferencePropertiesRepositoryTest {
     }
 
     @Test
-    fun getDeniedStoragePermissionShouldReturnNoneWithoutStorePreviously() {
+    fun getRecentActionForReadStoragePermissionShouldReturnNoneWithoutStorePreviously() {
         runBlockingTest {
             assertThat(propertiesRepository.getRecentActionForReadStoragePermission()).isEqualTo(NONE)
+        }
+    }
+
+    @Test
+    fun storeRecentActionForWriteStoragePermissionShouldSuccess() {
+        runBlockingTest {
+            propertiesRepository.storeRecentActionForWriteStoragePermission(DENIED)
+
+            assertThat(propertiesRepository.getRecentActionForWriteStoragePermission()).isEqualTo(DENIED)
+        }
+    }
+
+    @Test
+    fun getRecentActionForWriteStoragePermissionShouldReturnNoneWithoutStorePreviously() {
+        runBlockingTest {
+            assertThat(propertiesRepository.getRecentActionForWriteStoragePermission()).isEqualTo(NONE)
         }
     }
 
