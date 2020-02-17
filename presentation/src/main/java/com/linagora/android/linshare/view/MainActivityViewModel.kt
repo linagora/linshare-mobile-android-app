@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.model.Credential
-import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory
-import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory.DENIED
+import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
+import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
@@ -66,24 +66,24 @@ class MainActivityViewModel @Inject constructor(
     fun shouldShowPermissionRequest(systemStoragePermissionRequest: StoragePermissionRequest) {
         shouldShowPermissionRequest.value = StoragePermissionRequest.INITIAL
         viewModelScope.launch(dispatcherProvider.io) {
-            val userStoragePermissionRequest = propertiesRepository.getDeniedStoragePermission()
+            val userStoragePermissionRequest = propertiesRepository.getRecentActionForReadStoragePermission()
             shouldShowPermissionRequest.postValue(
                 combineStoragePermission(userStoragePermissionRequest, systemStoragePermissionRequest)
             )
         }
     }
 
-    fun setUserStoragePermissionRequest(userStoragePermissionHistory: UserStoragePermissionHistory) {
+    fun setUserStoragePermissionRequest(recentUserPermissionAction: RecentUserPermissionAction) {
         viewModelScope.launch(dispatcherProvider.io) {
-            propertiesRepository.storeDeniedStoragePermission(userStoragePermissionHistory)
+            propertiesRepository.storeRecentActionForReadStoragePermission(recentUserPermissionAction)
         }
     }
 
     private fun combineStoragePermission(
-        userStoragePermissionHistory: UserStoragePermissionHistory,
+        recentUserPermissionAction: RecentUserPermissionAction,
         systemStoragePermissionRequest: StoragePermissionRequest
     ): StoragePermissionRequest {
-        if (userStoragePermissionHistory != DENIED) {
+        if (recentUserPermissionAction != DENIED) {
             return SHOULD_SHOW
         }
 

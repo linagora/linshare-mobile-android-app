@@ -1,6 +1,6 @@
 package com.linagora.android.linshare.domain.model.properties
 
-enum class UserStoragePermissionHistory {
+enum class RecentUserPermissionAction {
     DENIED,
     NONE
 }
