@@ -12,9 +12,10 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewStat
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.model.properties.StoragePermissionRequest
-import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_NOT_SHOW
-import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_SHOW
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.InitialReadStorage
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadStorage
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadStorage
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
@@ -46,8 +47,8 @@ class MainActivityViewModel @Inject constructor(
     private val mutableCurrentCredential = MutableLiveData(Credential.InvalidCredential)
     val currentCredential: LiveData<Credential> = mutableCurrentCredential
 
-    private val shouldShowPermissionRequest = MutableLiveData(StoragePermissionRequest.INITIAL)
-    val shouldShowPermissionRequestState: LiveData<StoragePermissionRequest> = shouldShowPermissionRequest
+    private val shouldShowPermissionRequest = MutableLiveData<RuntimePermissionRequest>(InitialReadStorage)
+    val shouldShowPermissionRequestState: LiveData<RuntimePermissionRequest> = shouldShowPermissionRequest
 
     val authenticationState = MutableLiveData<AuthenticationState>()
 
@@ -63,35 +64,35 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun shouldShowPermissionRequest(systemStoragePermissionRequest: StoragePermissionRequest) {
-        shouldShowPermissionRequest.value = StoragePermissionRequest.INITIAL
+    fun shouldShowReadStoragePermissionRequest(systemRuntimePermissionRequest: RuntimePermissionRequest) {
+        shouldShowPermissionRequest.value = InitialReadStorage
         viewModelScope.launch(dispatcherProvider.io) {
             val userStoragePermissionRequest = propertiesRepository.getRecentActionForReadStoragePermission()
             shouldShowPermissionRequest.postValue(
-                combineStoragePermission(userStoragePermissionRequest, systemStoragePermissionRequest)
+                combineReadStoragePermission(userStoragePermissionRequest, systemRuntimePermissionRequest)
             )
         }
     }
 
-    fun setUserStoragePermissionRequest(recentUserPermissionAction: RecentUserPermissionAction) {
+    fun setActionForReadStoragePermissionRequest(recentUserPermissionAction: RecentUserPermissionAction) {
         viewModelScope.launch(dispatcherProvider.io) {
             propertiesRepository.storeRecentActionForReadStoragePermission(recentUserPermissionAction)
         }
     }
 
-    private fun combineStoragePermission(
+    private fun combineReadStoragePermission(
         recentUserPermissionAction: RecentUserPermissionAction,
-        systemStoragePermissionRequest: StoragePermissionRequest
-    ): StoragePermissionRequest {
+        systemRuntimePermissionRequest: RuntimePermissionRequest
+    ): RuntimePermissionRequest {
         if (recentUserPermissionAction != DENIED) {
-            return SHOULD_SHOW
+            return ShouldShowReadStorage
         }
 
-        if (systemStoragePermissionRequest == SHOULD_SHOW) {
-            return SHOULD_SHOW
+        if (systemRuntimePermissionRequest == ShouldShowReadStorage) {
+            return ShouldShowReadStorage
         }
 
-        return SHOULD_NOT_SHOW
+        return ShouldNotShowReadStorage
     }
 
     fun setUpAuthenticated(authenticationViewState: AuthenticationViewState) {
