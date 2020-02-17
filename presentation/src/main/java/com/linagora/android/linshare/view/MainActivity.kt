@@ -23,7 +23,7 @@ import androidx.navigation.ui.setupWithNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.ActivityMainBinding
-import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory.DENIED
+import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
 import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest
 import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_NOT_SHOW

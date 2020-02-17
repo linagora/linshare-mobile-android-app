@@ -1,10 +1,10 @@
 package com.linagora.android.linshare.domain.repository
 
-import com.linagora.android.linshare.domain.model.properties.UserStoragePermissionHistory
+import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
 
 interface PropertiesRepository {
 
-    suspend fun storeDeniedStoragePermission(userStoragePermissionHistory: UserStoragePermissionHistory)
+    suspend fun storeRecentActionForReadStoragePermission(recentUserPermissionAction: RecentUserPermissionAction)
 
-    suspend fun getDeniedStoragePermission(): UserStoragePermissionHistory
+    suspend fun getRecentActionForReadStoragePermission(): RecentUserPermissionAction
 }
