@@ -25,9 +25,9 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.ActivityMainBinding
 import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
 import com.linagora.android.linshare.model.mapper.toParcelable
-import com.linagora.android.linshare.model.properties.StoragePermissionRequest
-import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_NOT_SHOW
-import com.linagora.android.linshare.model.properties.StoragePermissionRequest.SHOULD_SHOW
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadStorage
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadStorage
 import com.linagora.android.linshare.model.resources.MenuId
 import com.linagora.android.linshare.model.resources.MenuResource
 import com.linagora.android.linshare.model.resources.ViewId
@@ -105,14 +105,14 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun handleStoragePermissionRequest() {
         viewModel.shouldShowPermissionRequestState.observe(this, Observer {
             when (it) {
-                SHOULD_SHOW -> {
+                ShouldShowReadStorage -> {
                     ActivityCompat.requestPermissions(
                         this,
                         arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                         ReadExternalPermissionRequestCode.code
                     )
                 }
-                SHOULD_NOT_SHOW -> {
+                ShouldNotShowReadStorage -> {
                     showExplanationMessage()
                 }
             }
@@ -121,15 +121,15 @@ class MainActivity : BaseActivity(), NavigationHost {
 
     private fun requestReadStoragePermission() {
         LOGGER.info("requestReadStoragePermission")
-        viewModel.shouldShowPermissionRequest(
-            systemShouldShowRequestPermissionRationale())
+        viewModel.shouldShowReadStoragePermissionRequest(
+            systemShouldShowReadExternalRequestPermissionRationale())
     }
 
-    private fun systemShouldShowRequestPermissionRationale(): StoragePermissionRequest {
+    private fun systemShouldShowReadExternalRequestPermissionRationale(): RuntimePermissionRequest {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            return SHOULD_SHOW
+            return ShouldShowReadStorage
         }
-        return SHOULD_NOT_SHOW
+        return ShouldNotShowReadStorage
     }
 
     private fun extractSendAction(intent: Intent) {
@@ -183,7 +183,7 @@ class MainActivity : BaseActivity(), NavigationHost {
     }
 
     private fun handleUserDenied() {
-        viewModel.setUserStoragePermissionRequest(DENIED)
+        viewModel.setActionForReadStoragePermissionRequest(DENIED)
         onBackPressed()
         finish()
     }
