@@ -38,7 +38,6 @@ fun bindingMySpaceList(
                     recyclerView.isVisible = true
                     (recyclerView.adapter as MySpaceAdapter).submitList(it.documents)
                 }
-                else -> recyclerView.isVisible = false
             }
         })
 }

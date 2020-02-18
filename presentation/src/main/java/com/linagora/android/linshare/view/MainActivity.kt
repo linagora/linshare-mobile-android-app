@@ -20,10 +20,11 @@ import androidx.navigation.ui.setupWithNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.ActivityMainBinding
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadStorage
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowWriteStorage
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadStorage
 import com.linagora.android.linshare.model.resources.MenuId
 import com.linagora.android.linshare.model.resources.MenuResource
@@ -33,6 +34,7 @@ import com.linagora.android.linshare.util.Constant.UPLOAD_URI_BUNDLE_KEY
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.base.BaseActivity
 import com.linagora.android.linshare.view.dialog.ReadStorageExplanationPermissionDialog
+import com.linagora.android.linshare.view.dialog.WriteStorageExplanationPermissionDialog
 import com.linagora.android.linshare.view.menu.SideMenuDrawer
 import org.slf4j.LoggerFactory
 
@@ -102,8 +104,9 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun handleStoragePermissionRequest() {
         viewModel.shouldShowPermissionRequestState.observe(this, Observer {
             when (it) {
-                ShouldShowReadStorage -> { viewModel.requestReadStoragePermission(this) }
-                ShouldNotShowReadStorage -> { showExplanationMessage() }
+                ShouldShowReadStorage -> viewModel.requestReadStoragePermission(this)
+                ShouldNotShowReadStorage -> showExplanationMessage()
+                ShouldNotShowWriteStorage -> showWriteStoragePermissionExplanation()
             }
         })
     }
@@ -164,6 +167,7 @@ class MainActivity : BaseActivity(), NavigationHost {
                 )
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun handleUserDenied() {
@@ -182,6 +186,14 @@ class MainActivity : BaseActivity(), NavigationHost {
             onNegativeCallback = { exit() },
             onPositiveCallback = { gotoSystemSettings() }
         ).show(supportFragmentManager, "read_storage_permission_explanation")
+    }
+
+    private fun showWriteStoragePermissionExplanation() {
+        WriteStorageExplanationPermissionDialog(
+            negativeText = getString(R.string.cancel),
+            positiveText = getString(R.string.go_to_setting),
+            onPositiveCallback = { gotoSystemSettings() }
+        ).show(supportFragmentManager, "write_storage_permission_explanation")
     }
 
     private fun gotoSystemSettings() {

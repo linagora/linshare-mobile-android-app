@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.model.Credential
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
@@ -17,6 +17,7 @@ import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.permission.ReadStoragePermission
+import com.linagora.android.linshare.permission.WriteStoragePermission
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
@@ -31,7 +32,8 @@ class MainActivityViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
     private val authorizationManager: AuthorizationManager,
-    private val readStoragePermission: ReadStoragePermission
+    private val readStoragePermission: ReadStoragePermission,
+    private val writeStoragePermission: WriteStoragePermission
 ) : BaseViewModel(dispatcherProvider) {
 
     companion object {
@@ -64,6 +66,29 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
+    fun shouldShowWriteStoragePermissionRequest(activity: Activity) {
+        shouldShowPermissionRequest.value = Initial
+        viewModelScope.launch(dispatcherProvider.io) {
+            val shouldShow = writeStoragePermission.shouldShowPermissionRequest(
+                writeStoragePermission.systemShouldShowPermissionRequest(activity))
+            shouldShowPermissionRequest.postValue(shouldShow)
+        }
+    }
+
+    fun setActionForWriteStoragePermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            writeStoragePermission.setActionForPermissionRequest(previousUserPermissionAction)
+        }
+    }
+
+    fun checkWriteStoragePermission(context: Context): PermissionResult {
+        return writeStoragePermission.checkSelfPermission(context)
+    }
+
+    fun requestWriteStoragePermission(activity: Activity) {
+        writeStoragePermission.requestPermission(activity)
+    }
+
     fun shouldShowReadStoragePermissionRequest(activity: Activity) {
         shouldShowPermissionRequest.value = Initial
         viewModelScope.launch(dispatcherProvider.io) {
@@ -73,9 +98,9 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun setActionForReadStoragePermissionRequest(recentUserPermissionAction: RecentUserPermissionAction) {
+    fun setActionForReadStoragePermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction) {
         viewModelScope.launch(dispatcherProvider.io) {
-            readStoragePermission.setActionForPermissionRequest(recentUserPermissionAction)
+            readStoragePermission.setActionForPermissionRequest(previousUserPermissionAction)
         }
     }
 

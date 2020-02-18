@@ -3,7 +3,7 @@ package com.linagora.android.linshare.data.repository.properties
 import android.content.SharedPreferences
 import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository.Key.RECENT_ACTION_READ_STORAGE_PERMISSION_KEY
 import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository.Key.RECENT_ACTION_WRITE_STORAGE_PERMISSION_KEY
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import javax.inject.Inject
 
@@ -18,10 +18,10 @@ class PreferencePropertiesRepository @Inject constructor(
         const val RECENT_ACTION_WRITE_STORAGE_PERMISSION_KEY = "recent_action_write_storage_permission"
     }
 
-    override suspend fun storeRecentActionForReadStoragePermission(recentUserPermissionAction: RecentUserPermissionAction) {
+    override suspend fun storeRecentActionForReadStoragePermission(previousUserPermissionAction: PreviousUserPermissionAction) {
         with(sharedPreferences.edit()) {
-            val denied = when (recentUserPermissionAction) {
-                RecentUserPermissionAction.DENIED -> true
+            val denied = when (previousUserPermissionAction) {
+                PreviousUserPermissionAction.DENIED -> true
                 else -> false
             }
             putBoolean(RECENT_ACTION_READ_STORAGE_PERMISSION_KEY, denied)
@@ -29,17 +29,17 @@ class PreferencePropertiesRepository @Inject constructor(
         }
     }
 
-    override suspend fun getRecentActionForReadStoragePermission(): RecentUserPermissionAction {
+    override suspend fun getRecentActionForReadStoragePermission(): PreviousUserPermissionAction {
         if (sharedPreferences.getBoolean(RECENT_ACTION_READ_STORAGE_PERMISSION_KEY, false)) {
-            return RecentUserPermissionAction.DENIED
+            return PreviousUserPermissionAction.DENIED
         }
-        return RecentUserPermissionAction.NONE
+        return PreviousUserPermissionAction.NONE
     }
 
-    override suspend fun storeRecentActionForWriteStoragePermission(recentUserPermissionAction: RecentUserPermissionAction) {
+    override suspend fun storeRecentActionForWriteStoragePermission(previousUserPermissionAction: PreviousUserPermissionAction) {
         with(sharedPreferences.edit()) {
-            val denied = when (recentUserPermissionAction) {
-                RecentUserPermissionAction.DENIED -> true
+            val denied = when (previousUserPermissionAction) {
+                PreviousUserPermissionAction.DENIED -> true
                 else -> false
             }
             putBoolean(RECENT_ACTION_WRITE_STORAGE_PERMISSION_KEY, denied)
@@ -47,10 +47,10 @@ class PreferencePropertiesRepository @Inject constructor(
         }
     }
 
-    override suspend fun getRecentActionForWriteStoragePermission(): RecentUserPermissionAction {
+    override suspend fun getRecentActionForWriteStoragePermission(): PreviousUserPermissionAction {
         if (sharedPreferences.getBoolean(RECENT_ACTION_WRITE_STORAGE_PERMISSION_KEY, false)) {
-            return RecentUserPermissionAction.DENIED
+            return PreviousUserPermissionAction.DENIED
         }
-        return RecentUserPermissionAction.NONE
+        return PreviousUserPermissionAction.NONE
     }
 }

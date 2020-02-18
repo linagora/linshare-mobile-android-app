@@ -63,4 +63,6 @@
     <!--MySpace-->
     <string name="my_space">Không gian của tôi</string>
     <string name="account_details">Thông tin tài khoản</string>
+
+    <string name="unable_to_perform_download">LinShare cần được truy cập vào bộ nhớ để thực hiện tải xuống. Bạn hãy cấp quyền truy cập trong cài đặt hệ thống</string>
 </resources>

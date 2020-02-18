@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/explanation_container_margin_top">
+
+    <TextView
+        android:id="@+id/titleDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/explanation_container_margin_side"
+        android:layout_marginTop="@dimen/explanation_container_margin_top"
+        android:text="@string/permission_refuse"
+        android:textColor="@color/file_name_color"
+        android:textSize="@dimen/slogan_text_size"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/request_permission_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/explanation_container_margin_top"
+        android:paddingStart="@dimen/explanation_container_margin_side"
+        android:paddingEnd="@dimen/explanation_container_margin_top"
+        android:lineSpacingExtra="@dimen/request_permission_popup_text_linespace"
+        android:text="@string/unable_to_perform_download"
+        android:textColor="@color/file_name_color"
+        android:textSize="@dimen/request_permission_popup_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleDialog" />
+
+    <View
+        android:id="@+id/bottomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="0.5dp"
+        android:layout_marginEnd="0.5dp"
+        android:layout_marginTop="@dimen/info_line_margin"
+        android:background="@color/grey_20"
+        app:layout_constraintTop_toBottomOf="@id/request_permission_msg" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/explanation_container_margin_top"
+        android:background="@drawable/button_transparent_background"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/guide_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/confirmBtn"
+        app:layout_constraintTop_toBottomOf="@+id/bottomContainer" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirmBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/explanation_container_margin_top"
+        android:background="@drawable/button_transparent_background"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/guide_text_size"
+        app:layout_constraintBaseline_toBaselineOf="@id/cancelBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

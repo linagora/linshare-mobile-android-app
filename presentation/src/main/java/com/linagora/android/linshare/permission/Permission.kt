@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.model.permission.PermissionName
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
@@ -26,9 +26,9 @@ interface Permission {
 
     fun systemShouldShowPermissionRequest(activity: Activity): RuntimePermissionRequest
 
-    suspend fun setActionForPermissionRequest(recentUserPermissionAction: RecentUserPermissionAction)
+    suspend fun setActionForPermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction)
 
-    suspend fun getActionForPermissionRequest(): RecentUserPermissionAction
+    suspend fun getActionForPermissionRequest(): PreviousUserPermissionAction
 
     suspend fun shouldShowPermissionRequest(systemShouldShow: RuntimePermissionRequest): RuntimePermissionRequest
 
