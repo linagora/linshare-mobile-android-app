@@ -4,6 +4,10 @@
 
     <data>
         <variable
+            name="viewModel"
+            type="com.linagora.android.linshare.view.myspace.MySpaceViewModel" />
+
+        <variable
             name="document"
             type="com.linagora.android.linshare.domain.model.document.Document" />
     </data>
@@ -94,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/my_space_item_context_menu_height"
                 android:background="@drawable/ic_three_dot"
+                android:onClick="@{() -> viewModel.onContextMenuClick(document)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
