@@ -52,7 +52,7 @@
     <string name="can_not_perform_upload">Tải lên không thể thực hiện được, hãy thử lại</string>
     <string name="no_more_space_avalable">Bộ nhớ LinShare của bạn đã vượt quá giới hạn, hãy làm trống và thử lại</string>
     <string name="exceed_max_file_size">Dung lượng tải lên vượt quá giới hạn, hãy thử với tệp khác</string>
-    <string name="extrac_info_failed">Không thể truy cập tài liệu này.</string>
+    <string name="extrac_info_failed">Lỗi không mong muốn trong khi cố gắng truy cập tài liệu này thông qua ứng dụng của bên thứ ba.</string>
 
     <string name="upload_file">Tải tệp lên</string>
     <string name="upload_to_my_space">Tải lên không gian của tôi</string>

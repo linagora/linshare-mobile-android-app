@@ -2,8 +2,6 @@ package com.linagora.android.linshare.view.upload.worker
 
 import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
-import android.provider.OpenableColumns
 import androidx.core.app.NotificationCompat.Builder
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -36,9 +34,9 @@ import com.linagora.android.linshare.notification.UploadAndDownloadNotification.
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.getDocumentRequest
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -85,15 +83,7 @@ class UploadWorker(
 
     private fun queryDocumentFromSystemFile(uri: Uri): DocumentRequest? {
         return appContext.contentResolver.query(uri, null, null, null, null)
-            ?.use { cursor ->
-                with(cursor) {
-                    moveToFirst()
-                    val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    val size = getLong(getColumnIndex(OpenableColumns.SIZE))
-                    val mimeType = getString(getColumnIndex(MediaStore.MediaColumns.MIME_TYPE))
-                    DocumentRequest(uri, fileName, size, mimeType.toMediaType())
-                }
-            }
+            ?.use { cursor -> cursor.getDocumentRequest(uri) }
     }
 
     private suspend fun setWaitingForeground(notificationId: NotificationId, message: String) {

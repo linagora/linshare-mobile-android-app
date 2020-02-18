@@ -10,6 +10,7 @@ data class DocumentRequest(
     val mediaType: MediaType
 ) {
     init {
+        require(fileName.isNotBlank()) { "file name must not be blank" }
         require(fileSize >= 0) { "fileSize must not be negative" }
     }
 }

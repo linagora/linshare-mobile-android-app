@@ -1,6 +1,5 @@
 package com.linagora.android.linshare.view.upload
 
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore.Images.Media
@@ -8,7 +7,6 @@ import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -27,7 +25,7 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
-import com.linagora.android.linshare.util.MimeType.APPLICATION_DEFAULT
+import com.linagora.android.linshare.util.getDocumentRequest
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
@@ -40,8 +38,6 @@ import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -132,7 +128,7 @@ class UploadFragment : MainNavigationFragment() {
                 val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, Media.MIME_TYPE)
                 requireContext().contentResolver
                     .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
-                    ?.use { cursor -> getDocumentRequest(uri, cursor) }
+                    ?.use { cursor -> cursor.getDocumentRequest(uri) }
             }
         } catch (exp: Exception) {
             LOGGER.error("$exp - ${exp.printStackTrace()}")
@@ -168,30 +164,6 @@ class UploadFragment : MainNavigationFragment() {
             alertStartToUpload(1)
             navigateAfterUpload()
         }
-    }
-
-    private fun getDocumentRequest(uri: Uri, cursor: Cursor): DocumentRequest? {
-        return with(cursor) {
-            moveToFirst()
-            val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
-            val size = getLong(getColumnIndex(OpenableColumns.SIZE))
-            val mediaType = getMediaType(getString(getColumnIndex(Media.MIME_TYPE)), fileName)
-
-            LOGGER.info("name: $fileName - size: $size - mimeType: $mediaType")
-            DocumentRequest(uri, fileName, size, mediaType)
-        }
-    }
-
-    private fun getMediaType(defaultMimeType: String, fileName: String): MediaType {
-        return runCatching { defaultMimeType.toMediaType() }
-            .getOrElse { getMediaTypeFromExtension(fileName) }
-    }
-
-    private fun getMediaTypeFromExtension(fileName: String): MediaType {
-        return MimeTypeMap.getFileExtensionFromUrl(fileName)
-            ?.let { extensions -> MimeTypeMap.getSingleton().getMimeTypeFromExtension(extensions) }
-            ?.let { mediaType -> mediaType.toMediaType() }
-            ?: APPLICATION_DEFAULT.toMediaType()
     }
 
     private fun alertStartToUpload(uploadFiles: Int) {
