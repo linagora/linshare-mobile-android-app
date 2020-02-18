@@ -35,7 +35,6 @@ class MySpaceViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(document: Document) {
-        println("bind $document")
         binding.document = document
         binding.viewModel = mySpaceViewModel
         binding.executePendingBindings()

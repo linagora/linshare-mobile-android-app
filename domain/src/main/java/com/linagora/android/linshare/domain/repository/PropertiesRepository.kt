@@ -1,14 +1,14 @@
 package com.linagora.android.linshare.domain.repository
 
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 
 interface PropertiesRepository {
 
-    suspend fun storeRecentActionForReadStoragePermission(recentUserPermissionAction: RecentUserPermissionAction)
+    suspend fun storeRecentActionForReadStoragePermission(previousUserPermissionAction: PreviousUserPermissionAction)
 
-    suspend fun getRecentActionForReadStoragePermission(): RecentUserPermissionAction
+    suspend fun getRecentActionForReadStoragePermission(): PreviousUserPermissionAction
 
-    suspend fun storeRecentActionForWriteStoragePermission(recentUserPermissionAction: RecentUserPermissionAction)
+    suspend fun storeRecentActionForWriteStoragePermission(previousUserPermissionAction: PreviousUserPermissionAction)
 
-    suspend fun getRecentActionForWriteStoragePermission(): RecentUserPermissionAction
+    suspend fun getRecentActionForWriteStoragePermission(): PreviousUserPermissionAction
 }

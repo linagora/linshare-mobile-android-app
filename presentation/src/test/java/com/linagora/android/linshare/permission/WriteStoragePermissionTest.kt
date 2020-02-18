@@ -1,8 +1,8 @@
 package com.linagora.android.linshare.permission
 
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.NONE
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.NONE
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowWriteStorage
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage

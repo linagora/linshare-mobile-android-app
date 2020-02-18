@@ -6,8 +6,8 @@ import androidx.preference.PreferenceManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.NONE
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.NONE
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before

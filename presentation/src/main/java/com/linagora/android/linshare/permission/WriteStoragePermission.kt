@@ -3,8 +3,8 @@ package com.linagora.android.linshare.permission
 import android.Manifest
 import android.app.Activity
 import androidx.core.app.ActivityCompat
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.model.permission.PermissionName
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
@@ -29,11 +29,11 @@ class WriteStoragePermission @Inject constructor(
         return ShouldNotShowWriteStorage
     }
 
-    override suspend fun setActionForPermissionRequest(recentUserPermissionAction: RecentUserPermissionAction) {
-        propertiesRepository.storeRecentActionForWriteStoragePermission(recentUserPermissionAction)
+    override suspend fun setActionForPermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction) {
+        propertiesRepository.storeRecentActionForWriteStoragePermission(previousUserPermissionAction)
     }
 
-    override suspend fun getActionForPermissionRequest(): RecentUserPermissionAction {
+    override suspend fun getActionForPermissionRequest(): PreviousUserPermissionAction {
         return propertiesRepository.getRecentActionForWriteStoragePermission()
     }
 
@@ -43,10 +43,10 @@ class WriteStoragePermission @Inject constructor(
     }
 
     private fun combineWriteStoragePermission(
-        recentUserPermissionAction: RecentUserPermissionAction,
+        previousUserPermissionAction: PreviousUserPermissionAction,
         systemRuntimePermissionRequest: RuntimePermissionRequest
     ): RuntimePermissionRequest {
-        if (recentUserPermissionAction != DENIED) {
+        if (previousUserPermissionAction != DENIED) {
             return ShouldShowWriteStorage
         }
 

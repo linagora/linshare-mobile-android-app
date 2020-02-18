@@ -3,8 +3,8 @@ package com.linagora.android.linshare.permission
 import android.Manifest
 import android.app.Activity
 import androidx.core.app.ActivityCompat
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction
-import com.linagora.android.linshare.domain.model.properties.RecentUserPermissionAction.DENIED
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.model.permission.PermissionName
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
@@ -30,11 +30,11 @@ class ReadStoragePermission @Inject constructor(
         return ShouldNotShowReadStorage
     }
 
-    override suspend fun setActionForPermissionRequest(recentUserPermissionAction: RecentUserPermissionAction) {
-        propertiesRepository.storeRecentActionForReadStoragePermission(recentUserPermissionAction)
+    override suspend fun setActionForPermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction) {
+        propertiesRepository.storeRecentActionForReadStoragePermission(previousUserPermissionAction)
     }
 
-    override suspend fun getActionForPermissionRequest(): RecentUserPermissionAction {
+    override suspend fun getActionForPermissionRequest(): PreviousUserPermissionAction {
         return propertiesRepository.getRecentActionForReadStoragePermission()
     }
 
@@ -44,10 +44,10 @@ class ReadStoragePermission @Inject constructor(
     }
 
     private fun combineReadStoragePermission(
-        recentUserPermissionAction: RecentUserPermissionAction,
+        previousUserPermissionAction: PreviousUserPermissionAction,
         systemRuntimePermissionRequest: RuntimePermissionRequest
     ): RuntimePermissionRequest {
-        if (recentUserPermissionAction != DENIED) {
+        if (previousUserPermissionAction != DENIED) {
             return ShouldShowReadStorage
         }
 
