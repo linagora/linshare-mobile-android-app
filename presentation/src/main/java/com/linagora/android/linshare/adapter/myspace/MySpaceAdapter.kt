@@ -7,32 +7,37 @@ import androidx.recyclerview.widget.RecyclerView
 import com.linagora.android.linshare.adapter.myspace.diff.DocumentDiffCallback
 import com.linagora.android.linshare.databinding.MySpaceRowItemBinding
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.view.myspace.MySpaceViewModel
 
-class MySpaceAdapter : ListAdapter<Document, MySpaceViewHolder>(DocumentDiffCallback) {
+class MySpaceAdapter(
+    private val mySpaceViewModel: MySpaceViewModel
+) : ListAdapter<Document, MySpaceViewHolder>(DocumentDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySpaceViewHolder {
-        println("onCreateViewHolder")
         return MySpaceViewHolder(
             MySpaceRowItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ))
+            ),
+            mySpaceViewModel
+        )
     }
 
     override fun onBindViewHolder(holder: MySpaceViewHolder, position: Int) {
-        println("onBindViewHolder $position")
         holder.bind(getItem(position))
     }
 }
 
 class MySpaceViewHolder(
-    private val binding: MySpaceRowItemBinding
+    private val binding: MySpaceRowItemBinding,
+    private val mySpaceViewModel: MySpaceViewModel
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(document: Document) {
         println("bind $document")
         binding.document = document
+        binding.viewModel = mySpaceViewModel
         binding.executePendingBindings()
     }
 }
