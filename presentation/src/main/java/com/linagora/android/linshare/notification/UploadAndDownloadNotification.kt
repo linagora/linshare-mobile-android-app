@@ -6,7 +6,7 @@ import androidx.core.app.NotificationCompat
 import com.linagora.android.linshare.R
 import javax.inject.Inject
 
-class UploadNotification @Inject constructor(
+class UploadAndDownloadNotification @Inject constructor(
     private val context: Context
 ) : BaseNotification(context) {
 
@@ -19,11 +19,11 @@ class UploadNotification @Inject constructor(
     }
 
     override fun getNotificationChannelName(): NotificationChannelName {
-        return NotificationChannelName(R.string.upload_channel_name)
+        return NotificationChannelName(R.string.upload_and_download_channel_name)
     }
 
     override fun getNotificationChannelDescription(): NotificationChannelDescription {
-        return NotificationChannelDescription(R.string.upload_channel_description)
+        return NotificationChannelDescription(R.string.upload_and_download_channel_description)
     }
 
     override fun getImportance(): NotificationImportance {

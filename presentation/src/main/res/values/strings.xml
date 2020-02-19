@@ -39,8 +39,8 @@
     <string name="remove">Remove</string>
 
     <!--Notification-->
-    <string name="upload_channel_name">Upload Notification</string>
-    <string name="upload_channel_description">Notification for uploading</string>
+    <string name="upload_and_download_channel_name">Uploads and Downloads</string>
+    <string name="upload_and_download_channel_description">Notification for uploading and downloading</string>
 
     <plurals name="uploading_n_file">
         <item quantity="one">Uploading file</item>

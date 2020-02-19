@@ -30,9 +30,9 @@ import com.linagora.android.linshare.notification.BaseNotification.Companion.FIN
 import com.linagora.android.linshare.notification.BaseNotification.Companion.ONGOING_NOTIFICATION
 import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
-import com.linagora.android.linshare.notification.UploadNotification
-import com.linagora.android.linshare.notification.UploadNotification.Companion.MAX_UPDATE_PROGRESS_COUNT
-import com.linagora.android.linshare.notification.UploadNotification.Companion.REDUCE_RATIO
+import com.linagora.android.linshare.notification.UploadAndDownloadNotification
+import com.linagora.android.linshare.notification.UploadAndDownloadNotification.Companion.MAX_UPDATE_PROGRESS_COUNT
+import com.linagora.android.linshare.notification.UploadAndDownloadNotification.Companion.REDUCE_RATIO
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
@@ -235,7 +235,7 @@ class UploadWorker(
         private val dispatcherProvider: CoroutinesDispatcherProvider,
         private val uploadInteractor: UploadInteractor,
         private val systemNotifier: SystemNotifier,
-        private val uploadNotification: UploadNotification
+        private val uploadAndDownloadNotification: UploadAndDownloadNotification
     ) : ChildWorkerFactory {
         override fun create(
             applicationContext: Context,
@@ -247,7 +247,7 @@ class UploadWorker(
                 dispatcherProvider,
                 uploadInteractor,
                 systemNotifier,
-                uploadNotification
+                uploadAndDownloadNotification
             )
         }
     }

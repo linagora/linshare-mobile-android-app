@@ -22,7 +22,7 @@ import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.linshare.network.AuthorizationManagerImp
 import com.linagora.android.linshare.notification.BaseNotification
-import com.linagora.android.linshare.notification.UploadNotification
+import com.linagora.android.linshare.notification.UploadAndDownloadNotification
 import com.linagora.android.linshare.view.LinShareApplication
 import dagger.Module
 import dagger.Provides
@@ -92,8 +92,8 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideUploadNotification(uploadNotification: UploadNotification): BaseNotification {
-        return uploadNotification
+    fun provideUploadNotification(uploadAndDownloadNotification: UploadAndDownloadNotification): BaseNotification {
+        return uploadAndDownloadNotification
     }
 
     @Provides
