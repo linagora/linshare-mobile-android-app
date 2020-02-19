@@ -39,8 +39,8 @@
     <string name="remove">Xóa</string>
 
     <!--Notification-->
-    <string name="upload_channel_name">Thông báo tải lên</string>
-    <string name="upload_channel_description">Thông báo về tải lên</string>
+    <string name="upload_and_download_channel_name">Thông báo tải lên và tải xuống</string>
+    <string name="upload_and_download_channel_description">Thông báo tải lên và tải xuống</string>
 
     <plurals name="uploading_n_file">
         <item quantity="one">Đang tải tệp lên</item>
