@@ -65,4 +65,5 @@
     <string name="account_details">Thông tin tài khoản</string>
 
     <string name="unable_to_perform_download">LinShare cần được truy cập vào bộ nhớ để thực hiện tải xuống. Bạn hãy cấp quyền truy cập trong cài đặt hệ thống</string>
+    <string name="download_failed">Tải xuống không thành công</string>
 </resources>
