@@ -240,9 +240,9 @@ class MainActivity : BaseActivity(), NavigationHost {
     }
 
     private fun navigateToAccountDetails() {
-        viewModel.currentCredential.value
-            ?.let {
-                val bundle = bundleOf("credential" to it.toParcelable())
+        viewModel.currentAuthentication.value
+            ?.let { authenticationInfo ->
+                val bundle = bundleOf("credential" to authenticationInfo.credential.toParcelable())
                 navigationController.navigate(R.id.navigation_account_details, bundle)
             }
     }

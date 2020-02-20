@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
@@ -38,6 +37,8 @@ class MainActivityViewModel @Inject constructor(
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MainActivityViewModel::class.java)
+
+        private val EMPTY_AUTHENTICATION = null
     }
 
     enum class AuthenticationState {
@@ -46,8 +47,8 @@ class MainActivityViewModel @Inject constructor(
         INVALID_AUTHENTICATION
     }
 
-    private val mutableCurrentCredential = MutableLiveData(Credential.InvalidCredential)
-    val currentCredential: LiveData<Credential> = mutableCurrentCredential
+    private val mutableCurrentAuthentication = MutableLiveData<AuthenticationViewState>()
+    val currentAuthentication: LiveData<AuthenticationViewState> = mutableCurrentAuthentication
 
     private val shouldShowPermissionRequest = MutableLiveData<RuntimePermissionRequest>(Initial)
     val shouldShowPermissionRequestState: LiveData<RuntimePermissionRequest> = shouldShowPermissionRequest
@@ -85,10 +86,6 @@ class MainActivityViewModel @Inject constructor(
         return writeStoragePermission.checkSelfPermission(context)
     }
 
-    fun requestWriteStoragePermission(activity: Activity) {
-        writeStoragePermission.requestPermission(activity)
-    }
-
     fun shouldShowReadStoragePermissionRequest(activity: Activity) {
         shouldShowPermissionRequest.value = Initial
         viewModelScope.launch(dispatcherProvider.io) {
@@ -114,7 +111,7 @@ class MainActivityViewModel @Inject constructor(
 
     fun setUpAuthenticated(authenticationViewState: AuthenticationViewState) {
         authenticationState.value = AUTHENTICATED
-        mutableCurrentCredential.value = authenticationViewState.credential
+        mutableCurrentAuthentication.value = authenticationViewState
         setUpInterceptors(authenticationViewState)
     }
 
@@ -125,7 +122,7 @@ class MainActivityViewModel @Inject constructor(
 
     override fun onFailureDispatched(failure: Failure) {
         authenticationState.value = INVALID_AUTHENTICATION
-        mutableCurrentCredential.value = Credential.InvalidCredential
+        mutableCurrentAuthentication.value = EMPTY_AUTHENTICATION
     }
 
     private fun setUpInterceptors(authenticationViewState: AuthenticationViewState) {

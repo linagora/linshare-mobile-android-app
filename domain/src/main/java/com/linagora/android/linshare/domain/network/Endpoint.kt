@@ -6,5 +6,7 @@ object Endpoint {
 
     const val AUTHENTICATION_PATH = "$ROOT_PATH/jwt"
 
+    const val DOCUMENT_PATH = "$ROOT_PATH/documents"
+
     val AUTHENTICAION = ServicePath(AUTHENTICATION_PATH)
 }

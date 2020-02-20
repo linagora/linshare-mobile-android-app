@@ -103,7 +103,10 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun download(document: Document) {
-        LOGGER.info("download $document")
+        mainActivityViewModel.currentAuthentication.value
+            ?.let { authentication ->
+                mySpaceViewModel.downloadDocument(authentication.credential, authentication.token, document)
+            }
     }
 
     private fun shouldRequestWriteStoragePermission() {
