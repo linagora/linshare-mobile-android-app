@@ -14,6 +14,8 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.network.ServicePath
 import com.linagora.android.linshare.domain.network.withServicePath
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
+import com.linagora.android.linshare.domain.usecases.myspace.DismissDialogClick
+import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.NotificationId
@@ -52,9 +54,17 @@ class MySpaceViewModel @Inject constructor(
     }
 
     fun onContextMenuClick(document: Document) {
+        dispatchState(Either.right(ContextMenuClick(document)))
+    }
+
+    fun onDissmissDialogClick() {
+        dispatchState(Either.right(DismissDialogClick))
+    }
+
+    fun onDownloadClick(document: Document) {
         LOGGER.info("onContextMenuClick() $document")
         setProcessingDocument(document)
-        dispatchState(Either.right(ContextMenuClick(document)))
+        dispatchState(Either.right(DownloadClick(document)))
     }
 
     private fun setProcessingDocument(document: Document) {

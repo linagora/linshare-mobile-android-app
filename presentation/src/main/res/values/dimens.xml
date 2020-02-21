@@ -87,4 +87,10 @@
     <dimen name="my_space_item_user_share_icon_width">22dp</dimen>
     <dimen name="my_space_item_user_share_icon_height">14dp</dimen>
     <dimen name="my_space_item_context_menu_height">18dp</dimen>
+
+    <!--bottom sheet-->
+    <dimen name="padding_vertical_row_bottom_sheet">8dp</dimen>
+    <dimen name="padding_horizontal_row_bottom_sheet">24dp</dimen>
+    <dimen name="size_icon">21dp</dimen>
+
 </resources>
