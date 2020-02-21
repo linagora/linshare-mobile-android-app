@@ -15,6 +15,8 @@ import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
+import com.linagora.android.linshare.domain.usecases.myspace.DismissDialogClick
+import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.getViewModel
@@ -34,6 +36,8 @@ class MySpaceFragment : MainNavigationFragment() {
             by activityViewModels { viewModelFactory }
 
     private lateinit var mySpaceViewModel: MySpaceViewModel
+
+    private lateinit var infoDocumentDialog: InfoDocumentDialog
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceFragment::class.java)
@@ -61,8 +65,13 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun observeViewState() {
         mySpaceViewModel.viewState.observe(this, Observer {
             it.map { success ->
-                if (success is ContextMenuClick) {
-                    handleDownloadDocument(success.document)
+                when (success) {
+                    is ContextMenuClick -> {
+                        infoDocumentDialog = InfoDocumentDialog(success.document)
+                        infoDocumentDialog.show(childFragmentManager, infoDocumentDialog.tag)
+                    }
+                    is DownloadClick -> handleDownloadDocument(success.document)
+                    is DismissDialogClick -> infoDocumentDialog.dismiss()
                 }
             }
         })
@@ -96,6 +105,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun handleDownloadDocument(document: Document) {
+        infoDocumentDialog.dismiss()
         when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
             PermissionResult.PermissionGranted -> { download(document) }
             else -> { shouldRequestWriteStoragePermission() }

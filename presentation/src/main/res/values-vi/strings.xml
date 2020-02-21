@@ -67,4 +67,13 @@
 
     <string name="unable_to_perform_download">LinShare cần được truy cập vào bộ nhớ để thực hiện tải xuống. Bạn hãy cấp quyền truy cập trong cài đặt hệ thống</string>
     <string name="download_failed">Tải xuống không thành công</string>
+
+    <string name="view">Xem</string>
+    <string name="share">Chia sẻ</string>
+    <string name="copy_to_a_workspace">Sao chép vào không gian làm việc</string>
+    <string name="download_to_device">Tải xuống thiết bị</string>
+    <string name="make_avaiable_offline">Thực hiện ngoại tuyến có sẵn</string>
+    <string name="rename">Sửa tên</string>
+    <string name="detail">Chi tiết</string>
+    <string name="delete">Xóa</string>
 </resources>

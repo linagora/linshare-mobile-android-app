@@ -7,3 +7,5 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 data class MySpaceViewState(val documents: List<Document>) : Success.ViewState()
 data class MySpaceFailure(val throwable: Throwable) : FeatureFailure()
 data class ContextMenuClick(val document: Document) : Success.ViewEvent()
+data class DownloadClick(val document: Document) : Success.ViewEvent()
+object DismissDialogClick : Success.ViewEvent()
