@@ -152,6 +152,7 @@ dependencies {
 
     implementation deps.retrofit.core
     implementation deps.retrofit.gson
+    implementation deps.room.runtime
 
     implementation deps.slf4j_timber
     implementation deps.swipe_refresh

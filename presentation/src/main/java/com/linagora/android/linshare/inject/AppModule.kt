@@ -7,6 +7,7 @@ import com.linagora.android.linshare.data.repository.authentication.LinshareAuth
 import com.linagora.android.linshare.data.repository.credential.PreferenceCredentialRepository
 import com.linagora.android.linshare.data.repository.credential.PreferenceTokenRepository
 import com.linagora.android.linshare.data.repository.document.DocumentRepositoryImp
+import com.linagora.android.linshare.data.repository.download.RoomDownloadingRepository
 import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository
 import com.linagora.android.linshare.data.repository.user.LinshareAuditUserRepository
 import com.linagora.android.linshare.data.repository.user.LinshareQuotaRepository
@@ -17,6 +18,7 @@ import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.domain.repository.TokenRepository
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
+import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
 import com.linagora.android.linshare.domain.repository.user.AuditUserRepository
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
@@ -100,5 +102,11 @@ open class AppModule {
     @Singleton
     fun providePropertiesRepository(propertiesRepository: PreferencePropertiesRepository): PropertiesRepository {
         return propertiesRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomDownloadingRepository(downloadingRepository: RoomDownloadingRepository): DownloadingRepository {
+        return downloadingRepository
     }
 }
