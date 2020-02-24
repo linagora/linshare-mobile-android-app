@@ -2,6 +2,7 @@ package com.linagora.android.testshared
 
 import android.net.Uri
 import arrow.core.Either
+import com.linagora.android.linshare.data.database.downloading.DownloadingTaskEntity
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.LastLogin
@@ -11,6 +12,7 @@ import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
@@ -261,5 +263,35 @@ object TestFixtures {
         private val MY_SPACE_VIEW_STATE = MySpaceViewState(listOf(DOCUMENT, DOCUMENT_2))
 
         val ALL_DOCUMENTS_STATE = Either.Right(MY_SPACE_VIEW_STATE)
+    }
+
+    object DownloadingTasks {
+
+        private val ENQUEUED_DOWNLOAD_ID = EnqueuedDownloadId(2911)
+        private val ENQUEUED_DOWNLOAD_ID_2 = EnqueuedDownloadId(1006)
+
+        val DOWNLOADING_TASK_ENTITY = DownloadingTaskEntity(
+            ENQUEUED_DOWNLOAD_ID,
+            UUID.fromString("21a2901-b120-4111-9b0d-cbd7d493d7f8"),
+            "documents.txt",
+            25,
+            MediaType.get("text/plain")
+        )
+
+        val CONFLICT_DOWNLOADING_TASK_ENTITY = DownloadingTaskEntity(
+            ENQUEUED_DOWNLOAD_ID,
+            UUID.fromString("21a2901-b120-4111-9b0d-cbd7d493d7f8"),
+            "documents.txt",
+            3000,
+            MediaType.get("text/plain")
+        )
+
+        val DOWNLOADING_TASK_ENTITY_2 = DownloadingTaskEntity(
+            ENQUEUED_DOWNLOAD_ID_2,
+            UUID.fromString("21a2901-b120-4111-9b0d-cbd7d493d7f8"),
+            "documents.txt",
+            25,
+            MediaType.get("text/plain")
+        )
     }
 }

@@ -50,6 +50,7 @@ dependencies {
     implementation deps.truth
     implementation deps.retrofit.core
     implementation project(":domain")
+    implementation project(":data")
 
     ktlint deps.ktlint
 }
