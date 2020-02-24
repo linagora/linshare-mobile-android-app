@@ -39,6 +39,7 @@ versions.preference = "1.1.0"
 
 versions.retrofit = "2.6.2"
 versions.robolectric = "4.3"
+versions.room = "2.2.4"
 
 versions.slf4j_timber = "3.1"
 versions.swipe_refresh = "1.1.0-alpha03"
@@ -169,6 +170,13 @@ deps.robolectric = "org.robolectric:robolectric:$versions.robolectric"
 deps.slf4j_timber = "com.arcao:slf4j-timber:$versions.slf4j_timber"
 
 deps.swipe_refresh = "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipe_refresh"
+
+def room = [:]
+room.compiler = "androidx.room:room-compiler:$versions.room"
+room.extensions = "androidx.room:room-ktx:$versions.room"
+room.runtime = "androidx.room:room-runtime:$versions.room"
+
+deps.room = room
 
 def threeten = [:]
 threeten.abp = "com.jakewharton.threetenabp:threetenabp:$versions.threetenabp"

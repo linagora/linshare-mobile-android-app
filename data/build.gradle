@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 
 android {
@@ -64,12 +65,16 @@ dependencies {
 
     implementation deps.retrofit.core
     implementation deps.retrofit.gson
+    implementation deps.room.extensions
+    implementation deps.room.runtime
 
     implementation deps.coroutines.core
 
     implementation deps.slf4j_timber
 
     implementation project(":domain")
+
+    kapt deps.room.compiler
 
     androidTestImplementation deps.coroutines.test
     androidTestImplementation deps.espresso.core

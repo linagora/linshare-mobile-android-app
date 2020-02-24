@@ -6,7 +6,7 @@ import org.junit.jupiter.api.fail
 
 class EnqueuedDownloadIdTest {
 
-    private val GOOD_IDS = listOf(
+    private val GOOD_IDS = listOf<Long>(
         1,
         8080,
         28080,
@@ -15,7 +15,7 @@ class EnqueuedDownloadIdTest {
         65535
     )
 
-    private val BAD_IDS = listOf(
+    private val BAD_IDS = listOf<Long>(
         -1,
         -65536,
         -80800
