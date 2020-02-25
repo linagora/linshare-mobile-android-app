@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.linagora.android.linshare.view.myspace.MySpaceViewModel" />
+
+        <variable
+            name="document"
+            type="com.linagora.android.linshare.domain.model.document.Document" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/padding_horizontal_row_bottom_sheet"
+        android:paddingBottom="@dimen/padding_horizontal_row_bottom_sheet">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="@dimen/size_icon"
+                android:layout_height="@dimen/size_icon"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/padding_horizontal_row_bottom_sheet"
+                android:onClick="@{() -> viewModel.onDissmissDialogClick()}"
+                android:src="@drawable/ic_close" />
+        </RelativeLayout>
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> viewModel.onDownloadClick(document)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_download" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/download_to_device" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

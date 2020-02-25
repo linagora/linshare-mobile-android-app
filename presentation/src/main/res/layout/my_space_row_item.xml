@@ -95,13 +95,14 @@
 
             <ImageView
                 android:id="@+id/documentContextMenu"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/my_space_item_offline_icon_size"
                 android:layout_height="@dimen/my_space_item_context_menu_height"
-                android:background="@drawable/ic_three_dot"
                 android:onClick="@{() -> viewModel.onContextMenuClick(document)}"
+                android:scaleType="fitEnd"
+                android:src="@drawable/ic_three_dot"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

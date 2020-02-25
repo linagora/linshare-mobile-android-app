@@ -17,7 +17,7 @@ internal abstract class MySpaceModule {
 
     @FragmentScoped
     @ContributesAndroidInjector
-    internal abstract fun contributeBottomSheetInfoDocumentFragment(): InfoDocumentDialog
+    internal abstract fun contributeBottomSheetInfoDocumentFragment(): MySpaceContextMenuDialog
 
     @Binds
     @IntoMap

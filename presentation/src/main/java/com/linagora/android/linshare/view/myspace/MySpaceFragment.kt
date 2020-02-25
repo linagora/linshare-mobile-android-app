@@ -37,7 +37,7 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private lateinit var mySpaceViewModel: MySpaceViewModel
 
-    private lateinit var infoDocumentDialog: InfoDocumentDialog
+    private lateinit var mySpaceContextMenuDialog: MySpaceContextMenuDialog
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceFragment::class.java)
@@ -67,11 +67,11 @@ class MySpaceFragment : MainNavigationFragment() {
             it.map { success ->
                 when (success) {
                     is ContextMenuClick -> {
-                        infoDocumentDialog = InfoDocumentDialog(success.document)
-                        infoDocumentDialog.show(childFragmentManager, infoDocumentDialog.tag)
+                        mySpaceContextMenuDialog = MySpaceContextMenuDialog(success.document)
+                        mySpaceContextMenuDialog.show(childFragmentManager, mySpaceContextMenuDialog.tag)
                     }
                     is DownloadClick -> handleDownloadDocument(success.document)
-                    is DismissDialogClick -> infoDocumentDialog.dismiss()
+                    is DismissDialogClick -> mySpaceContextMenuDialog.dismiss()
                 }
             }
         })
@@ -105,7 +105,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun handleDownloadDocument(document: Document) {
-        infoDocumentDialog.dismiss()
+        mySpaceContextMenuDialog.dismiss()
         when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
             PermissionResult.PermissionGranted -> { download(document) }
             else -> { shouldRequestWriteStoragePermission() }
