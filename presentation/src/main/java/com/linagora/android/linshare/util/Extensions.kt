@@ -13,3 +13,7 @@ inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(
 inline fun <reified VM : ViewModel> Fragment.getViewModel(
     provider: ViewModelProvider.Factory
 ) = ViewModelProviders.of(this, provider).get(VM::class.java)
+
+inline fun <reified VM : ViewModel> Fragment.getParentViewModel(
+    provider: ViewModelProvider.Factory
+) = ViewModelProviders.of(this.parentFragment!!, provider).get(VM::class.java)

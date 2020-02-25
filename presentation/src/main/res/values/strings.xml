@@ -68,12 +68,6 @@
     <string name="unable_to_perform_download">To perform download LinShare application needs to access to your device storage. You can configure access in system preference.</string>
     <string name="download_failed">Download failed</string>
 
-    <string name="view">View</string>
-    <string name="share">Share</string>
-    <string name="copy_to_a_workspace">Copy to a workspace</string>
     <string name="download_to_device">Download to device</string>
-    <string name="make_avaiable_offline">Make avaiable offline</string>
-    <string name="rename">Rename</string>
-    <string name="detail">Detail</string>
-    <string name="delete">Delete</string>
+
 </resources>
