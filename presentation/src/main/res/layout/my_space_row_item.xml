@@ -22,6 +22,7 @@
 
         <ImageView
             android:id="@+id/documentIcon"
+            android:scaleType="fitCenter"
             android:layout_width="@dimen/my_space_item_icon_size"
             android:layout_height="@dimen/my_space_item_icon_size"
             app:layout_constraintTop_toTopOf="@id/documentName"

@@ -80,7 +80,7 @@
 
     <!--my space item-->
     <dimen name="my_space_item_padding">16dp</dimen>
-    <dimen name="my_space_item_icon_size">18dp</dimen>
+    <dimen name="my_space_item_icon_size">24dp</dimen>
     <dimen name="my_space_item_line_spacing">8dp</dimen>
     <dimen name="my_space_item_menu_container_width">72dp</dimen>
     <dimen name="my_space_item_offline_icon_size">18dp</dimen>

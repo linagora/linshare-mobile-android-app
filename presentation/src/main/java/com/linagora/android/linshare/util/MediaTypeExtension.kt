@@ -15,13 +15,26 @@ fun MediaType.getDrawableIcon(): Int {
         "image" -> R.drawable.ic_picture
         "audio" -> R.drawable.ic_audiotrack_48px
         "application" -> getApplicationIconBaseOnSubType()
+        "text" -> getTextIconBaseOnSubType()
         else -> R.drawable.ic_file
     }
 }
 
 fun MediaType.getApplicationIconBaseOnSubType(): Int {
+    require(type == "application") { "Type is not application" }
     return when (subtype) {
         "pdf" -> R.drawable.ic_pdf
+        "vnd.openxmlformats-officedocument.wordprocessingml.document", "msword", "vnd.oasis.opendocument.text" -> R.drawable.ic_doc
+        "vnd.oasis.opendocument.spreadsheet", "vnd.openxmlformats-officedocument.spreadsheetml.sheet", "vnd.ms-excel" -> R.drawable.ic_sheets
+        "vnd.ms-powerpoint", "vnd.openxmlformats-officedocument.presentationml.presentation", "octet-stream", "vnd.oasis.opendocument.presentation" -> R.drawable.ic_slide
+        else -> R.drawable.ic_file
+    }
+}
+
+fun MediaType.getTextIconBaseOnSubType(): Int {
+    require(type == "text") { "Type is not text" }
+    return when (subtype) {
+        "plain", "comma-separated-values" -> R.drawable.ic_sheets
         else -> R.drawable.ic_file
     }
 }
