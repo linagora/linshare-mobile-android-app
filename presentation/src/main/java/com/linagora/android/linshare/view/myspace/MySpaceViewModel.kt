@@ -11,8 +11,11 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.download.DownloadingTask
+import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.network.ServicePath
 import com.linagora.android.linshare.domain.network.withServicePath
+import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DismissDialogClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
@@ -34,7 +37,8 @@ class MySpaceViewModel @Inject constructor(
     private val getAllDocumentsInteractor: GetAllDocumentsInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val uploadAndDownloadNotification: UploadAndDownloadNotification,
-    private val systemNotifier: SystemNotifier
+    private val systemNotifier: SystemNotifier,
+    private val downloadingRepository: DownloadingRepository
 ) : LinShareViewModel(application, dispatcherProvider) {
 
     companion object {
@@ -89,6 +93,8 @@ class MySpaceViewModel @Inject constructor(
 
             (application.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
                 .enqueue(request)
+                .let(::EnqueuedDownloadId)
+                .also { storeDownloadTask(it, document) }
         } catch (exp: Exception) {
             LOGGER.error("downloadDocument() $exp - ${exp.printStackTrace()}")
             notifyDownloadFailure(
@@ -96,6 +102,18 @@ class MySpaceViewModel @Inject constructor(
                 title = document.name,
                 message = application.getString(R.string.download_failed)
             )
+        }
+    }
+
+    private fun storeDownloadTask(enqueuedDownloadId: EnqueuedDownloadId, document: Document) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            downloadingRepository.storeTask(DownloadingTask(
+                enqueuedDownloadId = enqueuedDownloadId,
+                documentName = document.name,
+                documentSize = document.size,
+                documentUUID = document.uuid,
+                mediaType = document.type
+            ))
         }
     }
 
