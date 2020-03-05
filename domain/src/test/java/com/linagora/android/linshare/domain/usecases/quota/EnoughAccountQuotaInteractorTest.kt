@@ -2,13 +2,13 @@ package com.linagora.android.linshare.domain.usecases.quota
 
 import android.os.Build
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST
+import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST_BIG_SIZE
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
 import com.linagora.android.testshared.TestFixtures.Accounts.LOW_QUOTA
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
-import com.linagora.android.testshared.TestFixtures.DocumentRequests.DOCUMENT_REQUEST
-import com.linagora.android.testshared.TestFixtures.DocumentRequests.DOCUMENT_REQUEST_BIG_SIZE
 import com.linagora.android.testshared.TestFixtures.State.EXCEED_MAX_FILE_SIZE
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
 import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE

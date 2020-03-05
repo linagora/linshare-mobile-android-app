@@ -58,10 +58,10 @@ class EnoughAccountQuotaInteractor @Inject constructor(
     }
 
     private fun enoughAccountQuota(quota: AccountQuota, document: DocumentRequest): Boolean {
-        return document.fileSize < (quota.quota - quota.usedSpace)
+        return document.file.length() < (quota.quota - quota.usedSpace)
     }
 
     private fun validMaxFileSize(quota: AccountQuota, document: DocumentRequest): Boolean {
-        return document.fileSize < quota.maxFileSize.size
+        return document.file.length() < quota.maxFileSize.size
     }
 }
