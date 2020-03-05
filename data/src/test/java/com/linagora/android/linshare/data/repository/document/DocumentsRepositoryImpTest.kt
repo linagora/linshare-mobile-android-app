@@ -2,6 +2,7 @@ package com.linagora.android.linshare.data.repository.document
 
 import android.os.Build
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.data.DataFixtures.DOCUMENT_REQUEST
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
@@ -10,7 +11,6 @@ import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
-import com.linagora.android.testshared.TestFixtures.DocumentRequests.DOCUMENT_REQUEST
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
 import kotlinx.coroutines.test.runBlockingTest

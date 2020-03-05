@@ -3,6 +3,8 @@ package com.linagora.android.linshare.domain.usecases.upload
 import android.os.Build
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST
+import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST_BIG_SIZE
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
@@ -11,8 +13,6 @@ import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode
 import com.linagora.android.linshare.domain.utils.emitState
-import com.linagora.android.testshared.TestFixtures.DocumentRequests.DOCUMENT_REQUEST
-import com.linagora.android.testshared.TestFixtures.DocumentRequests.DOCUMENT_REQUEST_BIG_SIZE
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.State.EXCEED_MAX_FILE_SIZE
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
