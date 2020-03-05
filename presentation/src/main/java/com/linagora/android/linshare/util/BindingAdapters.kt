@@ -120,19 +120,19 @@ fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDet
 @BindingAdapter("uploadSize")
 fun bindingFileSize(textView: TextView, document: DocumentRequest?) {
     textView.text = runCatching {
-        Formatter.formatFileSize(textView.context, document!!.fileSize)
+        Formatter.formatFileSize(textView.context, document!!.file.length())
     }.getOrNull()
 }
 
 @BindingAdapter("uploadInfo")
 fun bindingUploadInfo(textView: TextView, document: DocumentRequest?) {
-    textView.text = document?.fileName
+    textView.text = document?.uploadFileName
 }
 
 @BindingAdapter("uploadIcon")
 fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?) {
     GlideApp.with(imageView.context)
-        .load(document?.uri)
+        .load(document?.file)
         .placeholder(document?.mediaType?.getDrawableIcon()
             ?: R.drawable.ic_warning)
         .into(imageView)
