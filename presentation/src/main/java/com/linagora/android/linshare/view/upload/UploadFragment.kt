@@ -27,6 +27,7 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.createTempFile
 import com.linagora.android.linshare.util.getDocumentRequest
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
@@ -35,7 +36,9 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.upload.worker.UploadWorker
-import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_URI_INPUT_KEY
+import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_MIME_TYPE_INPUT_KEY
+import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_NAME_INPUT_KEY
+import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_PATH_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.TAG_UPLOAD_WORKER
 import com.linagora.android.linshare.view.widget.makeCustomToast
 import kotlinx.android.synthetic.main.fragment_upload.btnUpload
@@ -115,7 +118,7 @@ class UploadFragment : MainNavigationFragment() {
             bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
                 ?.let { uri ->
                     buildDocumentRequest(uri)
-                        ?.let { documentRequest -> bindingData(uri, documentRequest) }
+                        ?.let { documentRequest -> bindingData(documentRequest) }
                         ?: handleBuildDocumentRequestFailed()
                 }
                 ?: handleBuildDocumentRequestFailed()
@@ -131,10 +134,10 @@ class UploadFragment : MainNavigationFragment() {
     private suspend fun buildDocumentRequest(uri: Uri): DocumentRequest? {
         return try {
             withContext(uploadScoped.coroutineContext + dispatcherProvider.io) {
-                val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, Media.MIME_TYPE)
+                val projection = arrayOf(OpenableColumns.DISPLAY_NAME, Media.MIME_TYPE)
                 requireContext().contentResolver
                     .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
-                    ?.use { cursor -> extractCursor(cursor, uri) }
+                    ?.use { cursor -> extractCursor(uri, cursor) }
             }
         } catch (exp: Exception) {
             LOGGER.error("$exp - ${exp.printStackTrace()}")
@@ -142,23 +145,23 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
-    private fun extractCursor(cursor: Cursor, uri: Uri): DocumentRequest? {
+    private fun extractCursor(uri: Uri, cursor: Cursor): DocumentRequest? {
         return takeIf { cursor.moveToFirst() }
-            ?.let { cursor.getDocumentRequest(uri) }
+            ?.let { cursor.getDocumentRequest(uri.createTempFile(requireContext())) }
     }
 
-    private fun bindingData(uri: Uri, documentRequest: DocumentRequest) {
+    private fun bindingData(documentRequest: DocumentRequest) {
         uploadScoped.launch(dispatcherProvider.main) {
             binding.document = documentRequest
             uploadFragmentViewModel.checkAccountQuota(documentRequest)
-            setUpUploadButton(uri)
+            setUpUploadButton(documentRequest)
         }
     }
 
-    private fun setUpUploadButton(uri: Uri) {
+    private fun setUpUploadButton(documentRequest: DocumentRequest) {
         btnUpload.setOnClickListener {
 
-            val inputData = createInputDataForUploadFile(uri)
+            val inputData = createInputDataForUploadFile(documentRequest)
 
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -196,9 +199,11 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
-    private fun createInputDataForUploadFile(uri: Uri): Data {
+    private fun createInputDataForUploadFile(documentRequest: DocumentRequest): Data {
         return Data.Builder()
-            .putString(FILE_URI_INPUT_KEY, uri.toString())
+            .putString(FILE_PATH_INPUT_KEY, documentRequest.file.absolutePath)
+            .putString(FILE_NAME_INPUT_KEY, documentRequest.uploadFileName)
+            .putString(FILE_MIME_TYPE_INPUT_KEY, documentRequest.mediaType.toString())
             .build()
     }
 

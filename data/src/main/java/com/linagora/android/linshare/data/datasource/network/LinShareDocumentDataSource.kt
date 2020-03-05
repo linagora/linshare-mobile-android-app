@@ -1,6 +1,5 @@
 package com.linagora.android.linshare.data.datasource.network
 
-import android.content.Context
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.ErrorResponse
@@ -9,18 +8,13 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import okhttp3.MultipartBody
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
-import java.io.File
-import java.io.FileOutputStream
 import java.net.SocketException
 import javax.inject.Inject
 
 class LinShareDocumentDataSource @Inject constructor(
-    private val context: Context,
     private val retrofit: Retrofit,
     private val linshareApi: LinshareApi
 ) : DocumentDataSource {
@@ -35,19 +29,18 @@ class LinShareDocumentDataSource @Inject constructor(
         documentRequest: DocumentRequest,
         onTransfer: OnTransfer
     ): Document {
-        val tempFile = createTempUploadFile(documentRequest)
         try {
             val fileRequestBody = MeasurableUploadRequestBody(
                 contentType = documentRequest.mediaType,
-                file = tempFile,
+                file = documentRequest.file,
                 onTransfer = onTransfer
             )
             return linshareApi.upload(
                 file = MultipartBody.Part.createFormData(
                     FILE_PARAMETER_FIELD,
-                    documentRequest.fileName,
+                    documentRequest.uploadFileName,
                     fileRequestBody),
-                fileSize = tempFile.length()
+                fileSize = documentRequest.file.length()
             )
         } catch (httpExp: HttpException) {
             val errorResponse = parseErrorResponse(httpExp)
@@ -58,23 +51,11 @@ class LinShareDocumentDataSource @Inject constructor(
                 is SocketException -> throw UploadException(ErrorResponse.INTERNET_NOT_AVAILABLE)
                 else -> throw UploadException(ErrorResponse.UNKNOWN_RESPONSE)
             }
-        } finally {
-            FileUtils.deleteQuietly(tempFile)
         }
     }
 
     override suspend fun getAll(): List<Document> {
         return linshareApi.getAll().sortedByDescending { it.modificationDate }
-    }
-
-    private fun createTempUploadFile(documentRequest: DocumentRequest): File {
-        val tempFile = File.createTempFile(
-            "${documentRequest.fileName}_${System.currentTimeMillis()}",
-            ".temp"
-        )
-        FileOutputStream(tempFile)
-            .use { IOUtils.copy(context.contentResolver.openInputStream(documentRequest.uri), it) }
-        return tempFile
     }
 
     private fun parseErrorResponse(httpException: HttpException): ErrorResponse {

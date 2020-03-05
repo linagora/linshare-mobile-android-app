@@ -1,8 +1,6 @@
 package com.linagora.android.linshare.view.upload.worker
 
 import android.content.Context
-import android.database.Cursor
-import android.net.Uri
 import android.widget.Toast
 import androidx.core.app.NotificationCompat.Builder
 import androidx.work.CoroutineWorker
@@ -39,11 +37,13 @@ import com.linagora.android.linshare.notification.UploadAndDownloadNotification.
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
-import com.linagora.android.linshare.util.getDocumentRequest
 import com.linagora.android.linshare.view.widget.makeCustomToast
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
+import java.io.File
 import javax.inject.Inject
 
 class UploadWorker(
@@ -58,7 +58,11 @@ class UploadWorker(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(UploadWorker::class.java)
 
-        const val FILE_URI_INPUT_KEY = "upload_file_uri"
+        const val FILE_PATH_INPUT_KEY = "upload_file_path"
+
+        const val FILE_NAME_INPUT_KEY = "upload_file_name"
+
+        const val FILE_MIME_TYPE_INPUT_KEY = "upload_file_mime_type"
 
         const val TAG_UPLOAD_WORKER = "upload_worker"
     }
@@ -68,12 +72,10 @@ class UploadWorker(
     override suspend fun doWork(): Result {
         return withContext(dispatcherProvider.computation) {
             val notificationId = systemNotifier.generateNotificationId()
+            var tempUploadFile: File? = null
             try {
-                val fileUri = Uri.parse(inputData.getString(FILE_URI_INPUT_KEY))
-                queryDocumentFromSystemFile(fileUri)!!
-                    .let { document ->
-                        upload(document, notificationId)
-                    }
+                tempUploadFile = File(inputData.getString(FILE_PATH_INPUT_KEY))
+                upload(buildDocumentFromInputData(tempUploadFile), notificationId)
                 Result.success()
             } catch (throwable: Throwable) {
                 LOGGER.error(throwable.message, throwable)
@@ -86,6 +88,8 @@ class UploadWorker(
                     }
                 )
                 Result.failure()
+            } finally {
+                tempUploadFile?.let { FileUtils.deleteQuietly(it) }
             }
         }
     }
@@ -97,16 +101,22 @@ class UploadWorker(
         }
     }
 
-    private fun queryDocumentFromSystemFile(uri: Uri): DocumentRequest? {
-        return appContext.contentResolver.query(uri, null, null, null, null)
-            ?.use { cursor -> extractCursor(cursor, uri)
-                ?: throw UploadException(ErrorResponse.FILE_NOT_FOUND)
-            }
-    }
+//    private fun queryDocumentFromSystemFile(uri: Uri): DocumentRequest? {
+//        return appContext.contentResolver.query(uri, null, null, null, null)
+//            ?.use { cursor -> extractCursor(cursor, uri)
+//                ?: throw UploadException(ErrorResponse.FILE_NOT_FOUND)
+//            }
+//    }
 
-    private fun extractCursor(cursor: Cursor, uri: Uri): DocumentRequest? {
-        return takeIf { cursor.moveToFirst() }
-            ?.let { cursor.getDocumentRequest(uri) }
+//    private fun extractCursor(cursor: Cursor, uri: Uri): DocumentRequest? {
+//        return takeIf { cursor.moveToFirst() }
+//            ?.let { cursor.getDocumentRequest(uri) }
+    private fun buildDocumentFromInputData(file: File): DocumentRequest {
+        return DocumentRequest(
+            file = file,
+            uploadFileName = inputData.getString(FILE_NAME_INPUT_KEY)!!,
+            mediaType = inputData.getString(FILE_MIME_TYPE_INPUT_KEY)!!.toMediaType()
+        )
     }
 
     private suspend fun setWaitingForeground(notificationId: NotificationId, message: String) {
@@ -139,18 +149,18 @@ class UploadWorker(
         when (failure) {
             QuotaAccountNoMoreSpaceAvailable -> notifyUploadFailure(
                 notificationId = notificationId,
-                title = document.fileName,
+                title = document.uploadFileName,
                 message = appContext.getString(R.string.no_more_space_avalable)
             )
             InternetNotAvailable -> notifyUploadFailure(
                 notificationId = notificationId,
                 title = appContext.getString(R.string.you_are_offline),
-                message = String.format(appContext.getString(R.string.internet_not_available), document.fileName)
+                message = String.format(appContext.getString(R.string.internet_not_available), document.uploadFileName)
             )
             else -> notifyUploadFailure(
                 notificationId = notificationId,
                 title = appContext.getString(R.string.upload_failed),
-                message = document.fileName
+                message = document.uploadFileName
             )
         }
     }
@@ -158,14 +168,14 @@ class UploadWorker(
     private suspend fun notifyOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {
         when (success) {
             Loading -> {
-                alertDownLoading(document.fileName)
-                setWaitingForeground(notificationId, document.fileName)
+                alertDownLoading(document.uploadFileName)
+                setWaitingForeground(notificationId, document.uploadFileName)
             }
             is UploadingViewState -> {
                 updateUploadingProgress(document, notificationId, success.transferredBytes, success.totalBytes)
             }
             is UploadSuccessViewState -> {
-                notifyUploadSuccess(systemNotifier.generateNotificationId(), document.fileName)
+                notifyUploadSuccess(systemNotifier.generateNotificationId(), document.uploadFileName)
             }
         }
     }
@@ -221,7 +231,7 @@ class UploadWorker(
                 withContext(dispatcherProvider.main) {
                     setUploadingForeground(
                         notificationId = notificationId,
-                        message = document.fileName,
+                        message = document.uploadFileName,
                         max = totalBytes,
                         progress = transferredBytes
                     )
