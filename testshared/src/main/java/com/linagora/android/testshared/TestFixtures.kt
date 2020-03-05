@@ -1,6 +1,5 @@
 package com.linagora.android.testshared
 
-import android.net.Uri
 import arrow.core.Either
 import com.linagora.android.linshare.data.database.downloading.DownloadingTaskEntity
 import com.linagora.android.linshare.domain.model.AccountQuota
@@ -11,7 +10,6 @@ import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
@@ -206,23 +204,6 @@ object TestFixtures {
             QuotaSize(5000),
             QuotaSize(6000),
             false
-        )
-    }
-
-    object DocumentRequests {
-
-        val DOCUMENT_REQUEST = DocumentRequest(
-            uri = Uri.parse("content://0@media/external/file/276"),
-            fileName = "document.txt",
-            fileSize = 25,
-            mediaType = MediaType.get("text/plain")
-        )
-
-        val DOCUMENT_REQUEST_BIG_SIZE = DocumentRequest(
-            uri = Uri.parse("content://0@media/external/file/276"),
-            fileName = "document.txt",
-            fileSize = 1000000,
-            mediaType = MediaType.get("text/plain")
         )
     }
 

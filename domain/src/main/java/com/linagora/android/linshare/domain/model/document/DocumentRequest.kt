@@ -1,16 +1,14 @@
 package com.linagora.android.linshare.domain.model.document
 
-import android.net.Uri
 import okhttp3.MediaType
+import java.io.File
 
 data class DocumentRequest(
-    val uri: Uri,
-    val fileName: String,
-    val fileSize: Long,
+    val file: File,
+    val uploadFileName: String,
     val mediaType: MediaType
 ) {
     init {
-        require(fileName.isNotBlank()) { "file name must not be blank" }
-        require(fileSize >= 0) { "fileSize must not be negative" }
+        require(uploadFileName.isNotBlank()) { "file name must not be blank" }
     }
 }
