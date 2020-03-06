@@ -19,7 +19,6 @@ import org.robolectric.fakes.RoboCursor
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.P])
-
 class CusorExtensionTest {
 
     @Test
@@ -30,6 +29,7 @@ class CusorExtensionTest {
         val cursor = RoboCursor()
         cursor.setResults(arrayOf(arrayOf(DOCUMENT_REQUEST.fileName, DOCUMENT_REQUEST.fileSize, DOCUMENT_REQUEST.mediaType)))
         cursor.setColumnNames(listOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.Images.Media.MIME_TYPE))
+        cursor.moveToFirst()
 
         assertThat(cursor.getDocumentRequest(uri)).isEqualTo(DOCUMENT_REQUEST)
     }
@@ -44,6 +44,7 @@ class CusorExtensionTest {
         val cursor = RoboCursor()
         cursor.setResults(arrayOf(arrayOf(DOCUMENT_REQUEST.fileName, DOCUMENT_REQUEST.fileSize, null)))
         cursor.setColumnNames(listOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.Images.Media.MIME_TYPE))
+        cursor.moveToFirst()
 
         assertThat(cursor.getDocumentRequest(uri)).isEqualTo(documentRequestExpect)
     }
@@ -58,6 +59,7 @@ class CusorExtensionTest {
         val cursor = RoboCursor()
         cursor.setResults(arrayOf(arrayOf(DOCUMENT_REQUEST.fileName, DOCUMENT_REQUEST.fileSize, "")))
         cursor.setColumnNames(listOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.Images.Media.MIME_TYPE))
+        cursor.moveToFirst()
 
         assertThat(cursor.getDocumentRequest(uri)).isEqualTo(documentRequestExpect)
     }
@@ -72,6 +74,7 @@ class CusorExtensionTest {
         val cursor = RoboCursor()
         cursor.setResults(arrayOf(arrayOf(DOCUMENT_REQUEST.fileName, DOCUMENT_REQUEST.fileSize, "asdasfdsdg")))
         cursor.setColumnNames(listOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.Images.Media.MIME_TYPE))
+        cursor.moveToFirst()
 
         assertThat(cursor.getDocumentRequest(uri)).isEqualTo(documentRequestExpect)
     }
@@ -83,6 +86,7 @@ class CusorExtensionTest {
         cursor.setResults(arrayOf(arrayOf(null, DOCUMENT_REQUEST.fileSize, DOCUMENT_REQUEST.mediaType)))
         cursor.setColumnNames(
             listOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.Images.Media.MIME_TYPE))
+        cursor.moveToFirst()
 
         assertThrows<IllegalStateException> { (cursor.getDocumentRequest(DOCUMENT_REQUEST.uri)) }
     }
@@ -95,6 +99,7 @@ class CusorExtensionTest {
         val cursor = RoboCursor()
         cursor.setResults(arrayOf(arrayOf(DOCUMENT_REQUEST.fileName, null, DOCUMENT_REQUEST.mediaType)))
         cursor.setColumnNames(listOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.Images.Media.MIME_TYPE))
+        cursor.moveToFirst()
 
         assertThat(cursor.getDocumentRequest(DOCUMENT_REQUEST.uri)).isEqualTo(documentRequestExpect)
     }
@@ -105,6 +110,7 @@ class CusorExtensionTest {
         val cursor = RoboCursor()
         cursor.setResults(arrayOf(arrayOf(DOCUMENT_REQUEST.fileName, -9999, DOCUMENT_REQUEST.mediaType)))
         cursor.setColumnNames(listOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.Images.Media.MIME_TYPE))
+        cursor.moveToFirst()
 
         assertThrows<IllegalArgumentException> { (cursor.getDocumentRequest(DOCUMENT_REQUEST.uri)) }
     }

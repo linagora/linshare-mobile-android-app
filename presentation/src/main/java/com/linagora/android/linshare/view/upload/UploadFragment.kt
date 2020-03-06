@@ -35,6 +35,7 @@ import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.upload.worker.UploadWorker
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_URI_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.TAG_UPLOAD_WORKER
+import com.linagora.android.linshare.view.widget.makeCustomToast
 import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -129,7 +130,7 @@ class UploadFragment : MainNavigationFragment() {
                 val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, Media.MIME_TYPE)
                 requireContext().contentResolver
                     .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
-                    ?.use { cursor -> moveCursorAndGetDocumentRequest(cursor, uri) }
+                    ?.use { cursor -> extractCursor(cursor, uri) }
             }
         } catch (exp: Exception) {
             LOGGER.error("$exp - ${exp.printStackTrace()}")
@@ -137,7 +138,7 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
-    private fun moveCursorAndGetDocumentRequest(cursor: Cursor, uri: Uri): DocumentRequest? {
+    private fun extractCursor(cursor: Cursor, uri: Uri): DocumentRequest? {
         return takeIf { cursor.moveToFirst() }
             ?.let { cursor.getDocumentRequest(uri) }
     }
@@ -173,13 +174,7 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun alertStartToUpload(uploadFiles: Int) {
-        Toast.makeText(
-            requireContext(),
-            requireContext()
-                .resources
-                .getQuantityString(R.plurals.uploading_n_file, uploadFiles),
-            Toast.LENGTH_SHORT
-        ).show()
+        Toast(context).makeCustomToast(requireContext(), requireContext().resources.getQuantityString(R.plurals.file_in_waiting_list, uploadFiles), Toast.LENGTH_LONG).show()
     }
 
     private fun navigateAfterUpload() {
