@@ -1,14 +1,15 @@
 package com.linagora.android.linshare.domain.usecases.upload
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.BaseErrorCode
+import com.linagora.android.linshare.domain.model.ClientErrorCode
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
-import com.linagora.android.linshare.domain.model.SystemErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
-import com.linagora.android.linshare.domain.usecases.system.SystemState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -64,10 +65,7 @@ class UploadInteractor @Inject constructor(
         }
     }
 
-    private suspend fun upload(
-        producerScope: ProducerScope<State<Either<Failure, Success>>>,
-        documentRequest: DocumentRequest
-    ) {
+    private suspend fun upload(producerScope: ProducerScope<State<Either<Failure, Success>>>, documentRequest: DocumentRequest) {
         try {
             val document =
                 documentRepository.upload(documentRequest) { transferredBytes, totalBytes ->
@@ -76,18 +74,22 @@ class UploadInteractor @Inject constructor(
             producerScope.send(State { Either.right(UploadSuccessViewState(document)) })
         } catch (uploadException: UploadException) {
             when (val uploadErrorCode = uploadException.errorResponse.errCode) {
-                is SystemErrorCode -> {
-                    when (uploadErrorCode) {
-                        BusinessErrorCode.InternetNotAvailableErrorCode -> producerScope.send(State { Either.left(SystemState.InternetNotAvailable) })
-                    }
-                }
-                is LinShareErrorCode -> {
-                    when (uploadErrorCode) {
-                        QuotaAccountNoMoreSpaceErrorCode -> producerScope.send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
-                    }
-                }
+                is ClientErrorCode -> { handleStateClientErrorCode(producerScope, uploadErrorCode) }
+                is LinShareErrorCode -> { handleStateLinShareErrorCode(producerScope, uploadErrorCode) }
                 else -> producerScope.send(State { Either.left(Failure.Error) })
             }
+        }
+    }
+
+    private suspend fun handleStateClientErrorCode(producerScope: ProducerScope<State<Either<Failure, Success>>>, uploadErrorCode: BaseErrorCode) {
+        when (uploadErrorCode) {
+            BusinessErrorCode.InternetNotAvailableErrorCode -> producerScope.send(State { Either.left(InternetNotAvailable) })
+        }
+    }
+
+    private suspend fun handleStateLinShareErrorCode(producerScope: ProducerScope<State<Either<Failure, Success>>>, uploadErrorCode: BaseErrorCode) {
+        when (uploadErrorCode) {
+            QuotaAccountNoMoreSpaceErrorCode -> producerScope.send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
         }
     }
 }

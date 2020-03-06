@@ -16,6 +16,7 @@ import com.linagora.android.testshared.TestFixtures.DocumentRequests.DOCUMENT_RE
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.State.EXCEED_MAX_FILE_SIZE
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
+import com.linagora.android.testshared.TestFixtures.State.INTERNET_NOT_AVAILABLE
 import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
 import com.linagora.android.testshared.TestFixtures.State.QUOTA_ACCOUNT_NO_MORE_AVAILABLE_SPACE
 import com.linagora.android.testshared.TestFixtures.State.UPLOAD_SUCCESS_VIEW_STATE
@@ -49,6 +50,29 @@ class UploadInteractorTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         uploadInteractor = UploadInteractor(enoughAccountQuotaInteractor, documentRepository)
+    }
+
+    @Test
+    fun uploadShouldFailedWhenInternetNotAvailable() {
+        runBlockingTest {
+            `when`(enoughAccountQuotaInteractor(DOCUMENT_REQUEST))
+                .then {
+                    flow<State<Either<Failure, Success>>> {
+                        emitState { LOADING_STATE }
+                        emitState { INTERNET_NOT_AVAILABLE }
+                    }
+                }
+
+            val states = uploadInteractor(DOCUMENT_REQUEST)
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(2)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(LOADING_STATE)
+
+            assertThat(states[1](LOADING_STATE))
+                .isEqualTo(INTERNET_NOT_AVAILABLE)
+        }
     }
 
     @Test

@@ -42,7 +42,12 @@
     <string name="upload_and_download_channel_name">Thông báo tải lên và tải xuống</string>
     <string name="upload_and_download_channel_description">Thông báo tải lên và tải xuống</string>
 
-    <plurals name="uploading_n_file">
+    <plurals name="file_in_waiting_list">
+        <item quantity="one">Tệp đã được thêm vào danh sách chờ.</item>
+        <item quantity="other"> %s tệp đã được thêm vào danh sách chờ.</item>
+    </plurals>
+
+    <plurals name="notify_count_file_upload">
         <item quantity="one">Đang tải tệp lên</item>
         <item quantity="other">Đang tải lên %s tệp</item>
     </plurals>
@@ -78,4 +83,6 @@
     <string name="file_not_found">Không tìm thấy tệp để tải lên.</string>
     <string name="you_are_offline">Mất kết nối</string>
     <string name="internet_not_available">Tệp %s sẽ được tải lên khi có kết nối.</string>
+    <string name="file_ready_to_upload">Tệp %s đã sẵn sàng để tải lên.</string>
+    <string name="file_added_to_waiting_list">Tệp %s đã được thêm vào danh sách chờ.</string>
 </resources>

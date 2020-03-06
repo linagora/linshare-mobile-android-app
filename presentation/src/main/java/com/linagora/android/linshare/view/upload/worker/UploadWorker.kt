@@ -3,6 +3,7 @@ package com.linagora.android.linshare.view.upload.worker
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.widget.Toast
 import androidx.core.app.NotificationCompat.Builder
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -14,8 +15,8 @@ import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
+import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
-import com.linagora.android.linshare.domain.usecases.system.SystemState
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
 import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
@@ -39,6 +40,7 @@ import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.getDocumentRequest
+import com.linagora.android.linshare.view.widget.makeCustomToast
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
@@ -79,27 +81,30 @@ class UploadWorker(
                     notificationId = notificationId,
                     title = StringId(R.string.upload_failed),
                     message = when (throwable) {
-                        is UploadException -> {
-                            when (throwable.errorResponse) {
-                                ErrorResponse.FILE_NOT_FOUND -> StringId(R.string.file_not_found)
-                                else -> StringId(R.string.can_not_perform_upload)
-                            }
-                        }
+                        is UploadException -> handleMessageUploadException(throwable.errorResponse)
                         else -> StringId(R.string.can_not_perform_upload)
-                    }                )
+                    }
+                )
                 Result.failure()
             }
         }
     }
 
+    private fun handleMessageUploadException(errorResponse: ErrorResponse): StringId {
+        return when (errorResponse) {
+            ErrorResponse.FILE_NOT_FOUND -> StringId(R.string.file_not_found)
+            else -> StringId(R.string.can_not_perform_upload)
+        }
+    }
+
     private fun queryDocumentFromSystemFile(uri: Uri): DocumentRequest? {
         return appContext.contentResolver.query(uri, null, null, null, null)
-            ?.use { cursor -> moveCursorAndGetDocumentRequest(cursor, uri)
+            ?.use { cursor -> extractCursor(cursor, uri)
                 ?: throw UploadException(ErrorResponse.FILE_NOT_FOUND)
             }
     }
 
-    private fun moveCursorAndGetDocumentRequest(cursor: Cursor, uri: Uri): DocumentRequest? {
+    private fun extractCursor(cursor: Cursor, uri: Uri): DocumentRequest? {
         return takeIf { cursor.moveToFirst() }
             ?.let { cursor.getDocumentRequest(uri) }
     }
@@ -137,7 +142,7 @@ class UploadWorker(
                 title = document.fileName,
                 message = appContext.getString(R.string.no_more_space_avalable)
             )
-            SystemState.InternetNotAvailable -> notifyUploadFailure(
+            InternetNotAvailable -> notifyUploadFailure(
                 notificationId = notificationId,
                 title = appContext.getString(R.string.you_are_offline),
                 message = String.format(appContext.getString(R.string.internet_not_available), document.fileName)
@@ -153,6 +158,7 @@ class UploadWorker(
     private suspend fun notifyOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {
         when (success) {
             Loading -> {
+                alertDownLoading(document.fileName)
                 setWaitingForeground(notificationId, document.fileName)
             }
             is UploadingViewState -> {
@@ -164,8 +170,14 @@ class UploadWorker(
         }
     }
 
+    private suspend fun alertDownLoading(fileName: String) {
+        withContext(dispatcherProvider.main) {
+            Toast(appContext).makeCustomToast(appContext, String.format(appContext.resources.getString(R.string.file_ready_to_upload), fileName), Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun configUploadingNotificationBuilder(builder: Builder): Builder {
-        return builder.setContentTitle(appContext.resources.getQuantityString(R.plurals.uploading_n_file, 1))
+        return builder.setContentTitle(appContext.resources.getQuantityString(R.plurals.notify_count_file_upload, 1))
     }
 
     private suspend fun setUploadingForeground(

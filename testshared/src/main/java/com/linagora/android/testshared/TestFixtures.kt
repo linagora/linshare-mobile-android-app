@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
+import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
@@ -164,6 +165,8 @@ object TestFixtures {
         val QUOTA_ACCOUNT_NO_MORE_AVAILABLE_SPACE = Either.left(QuotaAccountNoMoreSpaceAvailable)
 
         val UPLOAD_SUCCESS_VIEW_STATE = Either.right(UploadSuccessViewState(DOCUMENT))
+
+        val INTERNET_NOT_AVAILABLE = Either.left(InternetNotAvailable)
     }
 
     object Accounts {

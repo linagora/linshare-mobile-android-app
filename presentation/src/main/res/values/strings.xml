@@ -42,7 +42,12 @@
     <string name="upload_and_download_channel_name">Uploads and Downloads</string>
     <string name="upload_and_download_channel_description">Notification for uploading and downloading</string>
 
-    <plurals name="uploading_n_file">
+    <plurals name="file_in_waiting_list">
+        <item quantity="one">File are added to the waiting list.</item>
+        <item quantity="other"> %s files are added to the waiting list.</item>
+    </plurals>
+
+    <plurals name="notify_count_file_upload">
         <item quantity="one">Uploading file</item>
         <item quantity="other">Uploading %s files</item>
     </plurals>
@@ -78,4 +83,6 @@
     <string name="file_not_found">File is not found to upload.</string>
     <string name="you_are_offline">You\'re Offline</string>
     <string name="internet_not_available">File %s will be uploaded once you\'re online again.</string>
+    <string name="file_ready_to_upload">File %s is ready to be uploaded.</string>
+    <string name="file_added_to_waiting_list">File %s is added to the waiting list.</string>
 </resources>
