@@ -6,8 +6,7 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 
-fun Cursor.getDocumentRequest(uri: Uri): DocumentRequest? {
-    moveToFirst()
+fun Cursor.getDocumentRequest(uri: Uri): DocumentRequest {
     val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
     val size = getLong(getColumnIndex(OpenableColumns.SIZE))
     val mediaType = getColumnIndex(MediaStore.Images.Media.MIME_TYPE)

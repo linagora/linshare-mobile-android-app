@@ -74,4 +74,7 @@
     <string name="error_can_not_resume_download">Can not resume download</string>
     <string name="error_insufficient_space">Device has insufficient space. Free space and retry</string>
     <string name="downloaded">Downloaded: %s</string>
+
+    <string name="file_not_found">File is not found to upload.</string>
+
 </resources>

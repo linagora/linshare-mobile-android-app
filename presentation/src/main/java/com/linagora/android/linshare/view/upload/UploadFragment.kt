@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.view.upload
 
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore.Images.Media
@@ -128,12 +129,17 @@ class UploadFragment : MainNavigationFragment() {
                 val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, Media.MIME_TYPE)
                 requireContext().contentResolver
                     .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
-                    ?.use { cursor -> cursor.getDocumentRequest(uri) }
+                    ?.use { cursor -> moveCursorAndGetDocumentRequest(cursor, uri) }
             }
         } catch (exp: Exception) {
             LOGGER.error("$exp - ${exp.printStackTrace()}")
             EMPTY_DOCUMENT_REQUEST
         }
+    }
+
+    private fun moveCursorAndGetDocumentRequest(cursor: Cursor, uri: Uri): DocumentRequest? {
+        return takeIf { cursor.moveToFirst() }
+            ?.let { cursor.getDocumentRequest(uri) }
     }
 
     private fun bindingData(uri: Uri, documentRequest: DocumentRequest) {

@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.view.upload.worker
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import androidx.core.app.NotificationCompat.Builder
 import androidx.work.CoroutineWorker
@@ -9,10 +10,12 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import arrow.core.Either
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
+import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
 import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
 import com.linagora.android.linshare.domain.usecases.upload.UploadingViewState
@@ -74,8 +77,15 @@ class UploadWorker(
                 notifyUploadFailure(
                     notificationId = notificationId,
                     title = StringId(R.string.upload_failed),
-                    message = StringId(R.string.can_not_perform_upload)
-                )
+                    message = when (throwable) {
+                        is UploadException -> {
+                            when (throwable.errorResponse) {
+                                ErrorResponse.FILE_NOT_FOUND -> StringId(R.string.file_not_found)
+                                else -> StringId(R.string.can_not_perform_upload)
+                            }
+                        }
+                        else -> StringId(R.string.can_not_perform_upload)
+                    }                )
                 Result.failure()
             }
         }
@@ -83,7 +93,14 @@ class UploadWorker(
 
     private fun queryDocumentFromSystemFile(uri: Uri): DocumentRequest? {
         return appContext.contentResolver.query(uri, null, null, null, null)
-            ?.use { cursor -> cursor.getDocumentRequest(uri) }
+            ?.use { cursor -> moveCursorAndGetDocumentRequest(cursor, uri)
+                ?: throw UploadException(ErrorResponse.FILE_NOT_FOUND)
+            }
+    }
+
+    private fun moveCursorAndGetDocumentRequest(cursor: Cursor, uri: Uri): DocumentRequest? {
+        return takeIf { cursor.moveToFirst() }
+            ?.let { cursor.getDocumentRequest(uri) }
     }
 
     private suspend fun setWaitingForeground(notificationId: NotificationId, message: String) {

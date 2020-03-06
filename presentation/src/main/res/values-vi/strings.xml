@@ -74,4 +74,6 @@
     <string name="error_can_not_resume_download">Không thể tiếp tục thực hiện tải xuống</string>
     <string name="error_insufficient_space">Thiết bị đã hết dung lượng. Hãy làm trống và thử lại</string>
     <string name="downloaded">Tải xuống: %s</string>
+
+    <string name="file_not_found">Không tìm thấy tệp để tải lên.</string>
 </resources>
