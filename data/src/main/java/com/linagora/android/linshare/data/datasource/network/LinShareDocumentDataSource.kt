@@ -16,6 +16,7 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
+import java.net.SocketException
 import javax.inject.Inject
 
 class LinShareDocumentDataSource @Inject constructor(
@@ -53,7 +54,10 @@ class LinShareDocumentDataSource @Inject constructor(
             throw UploadException(errorResponse)
         } catch (exp: Exception) {
             LOGGER.error("$exp - ${exp.printStackTrace()}")
-            throw UploadException(ErrorResponse.UNKNOWN_RESPONSE)
+            when (exp) {
+                is SocketException -> throw UploadException(ErrorResponse.INTERNET_NOT_AVAILABLE)
+                else -> throw UploadException(ErrorResponse.UNKNOWN_RESPONSE)
+            }
         } finally {
             FileUtils.deleteQuietly(tempFile)
         }

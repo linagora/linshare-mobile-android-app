@@ -15,6 +15,7 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
+import com.linagora.android.linshare.domain.usecases.system.SystemState
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
 import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
@@ -135,6 +136,11 @@ class UploadWorker(
                 notificationId = notificationId,
                 title = document.fileName,
                 message = appContext.getString(R.string.no_more_space_avalable)
+            )
+            SystemState.InternetNotAvailable -> notifyUploadFailure(
+                notificationId = notificationId,
+                title = appContext.getString(R.string.you_are_offline),
+                message = String.format(appContext.getString(R.string.internet_not_available), document.fileName)
             )
             else -> notifyUploadFailure(
                 notificationId = notificationId,
