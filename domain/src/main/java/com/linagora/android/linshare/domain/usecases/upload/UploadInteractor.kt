@@ -6,7 +6,11 @@ import com.linagora.android.linshare.domain.model.ClientErrorCode
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
+import com.linagora.android.linshare.domain.model.upload.TotalBytes
+import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
+import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
@@ -17,25 +21,58 @@ import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode.QuotaAccountNoMoreSpaceErrorCode
 import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
 class UploadInteractor @Inject constructor(
+    private val getAuthenticatedInfo: GetAuthenticatedInfoInteractor,
     private val enoughAccountQuotaInteractor: EnoughAccountQuotaInteractor,
     private val documentRepository: DocumentRepository
 ) {
 
     private val currentState = AtomicReference<Either<Failure, Success>>(Either.right(Idle))
 
-    operator fun invoke(documentRequest: DocumentRequest): Flow<State<Either<Failure, Success>>> {
-        return enoughAccountQuotaInteractor.invoke(documentRequest)
+    operator fun invoke(documentRequest: DocumentRequest) = channelFlow {
+        getAuthenticatedInfo()
             .map { dispatchState(it) }
-            .flatMapConcat { reactState(documentRequest, it) }
+            .collect { authenticationState ->
+                send(State<Either<Failure, Success>> { authenticationState })
+                consumeAuthenticationState(this, documentRequest, authenticationState)
+            }
+    }
+
+    private fun consumeAuthenticationState(
+        producerScope: ProducerScope<State<Either<Failure, Success>>>,
+        documentRequest: DocumentRequest,
+        authenticationState: Either<Failure, Success>
+    ) {
+        authenticationState.map { success ->
+            if (success is AuthenticationViewState) {
+                checkAccountQuota(producerScope, documentRequest)
+            }
+        }
+    }
+
+    private fun checkAccountQuota(
+        producerScope: ProducerScope<State<Either<Failure, Success>>>,
+        documentRequest: DocumentRequest
+    ) = producerScope.launch {
+        enoughAccountQuotaInteractor.invoke(documentRequest)
+            .onStart { delay(500) }
+            .map { dispatchState(it) }
+            .filterNot { invalidState(it) }
+            .collect { reactQuotaState(producerScope, documentRequest, it) }
+    }
+
+    private fun invalidState(eitherState: Either<Failure, Success>): Boolean {
+        return eitherState.exists { success -> success is Success.Loading }
     }
 
     private fun dispatchState(state: State<Either<Failure, Success>>): Either<Failure, Success> {
@@ -44,13 +81,14 @@ class UploadInteractor @Inject constructor(
         return newState
     }
 
-    private fun reactState(
+    private suspend fun reactQuotaState(
+        producerScope: ProducerScope<State<Either<Failure, Success>>>,
         documentRequest: DocumentRequest,
         eitherState: Either<Failure, Success>
-    ) = channelFlow {
+    ) {
         eitherState.fold(
-            ifLeft = { send(State<Either<Failure, Success>> { eitherState }) },
-            ifRight = { success -> doWithSuccessState(this, documentRequest, success) }
+            ifLeft = { producerScope.send(State { eitherState }) },
+            ifRight = { success -> doWithSuccessState(producerScope, documentRequest, success) }
         )
     }
 
@@ -67,10 +105,9 @@ class UploadInteractor @Inject constructor(
 
     private suspend fun upload(producerScope: ProducerScope<State<Either<Failure, Success>>>, documentRequest: DocumentRequest) {
         try {
-            val document =
-                documentRepository.upload(documentRequest) { transferredBytes, totalBytes ->
-                    producerScope.launch { producerScope.send(State { Either.right(UploadingViewState(transferredBytes, totalBytes)) }) }
-                }
+            val document = documentRepository.upload(documentRequest) { transferredBytes, totalBytes ->
+                sendUploadingState(producerScope, transferredBytes, totalBytes)
+            }
             producerScope.send(State { Either.right(UploadSuccessViewState(document)) })
         } catch (uploadException: UploadException) {
             when (val uploadErrorCode = uploadException.errorResponse.errCode) {
@@ -91,5 +128,15 @@ class UploadInteractor @Inject constructor(
         when (uploadErrorCode) {
             QuotaAccountNoMoreSpaceErrorCode -> producerScope.send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
         }
+    }
+
+    private fun sendUploadingState(
+        producerScope: ProducerScope<State<Either<Failure, Success>>>,
+        transferredBytes: TransferredBytes,
+        totalBytes: TotalBytes
+    ) {
+        producerScope.launch { producerScope.send(State {
+            Either.right(UploadingViewState(transferredBytes, totalBytes))
+        }) }
     }
 }

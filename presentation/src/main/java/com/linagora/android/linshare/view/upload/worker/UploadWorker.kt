@@ -14,6 +14,8 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
+import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
@@ -26,6 +28,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.linshare.inject.worker.ChildWorkerFactory
 import com.linagora.android.linshare.model.resources.StringId
+import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.BaseNotification.Companion.FINISHED_NOTIFICATION
 import com.linagora.android.linshare.notification.BaseNotification.Companion.ONGOING_NOTIFICATION
@@ -52,7 +55,9 @@ class UploadWorker(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val uploadInteractor: UploadInteractor,
     private val systemNotifier: SystemNotifier,
-    private val uploadNotification: BaseNotification
+    private val uploadNotification: BaseNotification,
+    private val authorizationManager: AuthorizationManager,
+    private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
@@ -74,7 +79,7 @@ class UploadWorker(
             val notificationId = systemNotifier.generateNotificationId()
             var tempUploadFile: File? = null
             try {
-                tempUploadFile = File(inputData.getString(FILE_PATH_INPUT_KEY))
+                tempUploadFile = File(inputData.getString(FILE_PATH_INPUT_KEY)!!)
                 upload(buildDocumentFromInputData(tempUploadFile), notificationId)
                 Result.success()
             } catch (throwable: Throwable) {
@@ -101,16 +106,6 @@ class UploadWorker(
         }
     }
 
-//    private fun queryDocumentFromSystemFile(uri: Uri): DocumentRequest? {
-//        return appContext.contentResolver.query(uri, null, null, null, null)
-//            ?.use { cursor -> extractCursor(cursor, uri)
-//                ?: throw UploadException(ErrorResponse.FILE_NOT_FOUND)
-//            }
-//    }
-
-//    private fun extractCursor(cursor: Cursor, uri: Uri): DocumentRequest? {
-//        return takeIf { cursor.moveToFirst() }
-//            ?.let { cursor.getDocumentRequest(uri) }
     private fun buildDocumentFromInputData(file: File): DocumentRequest {
         return DocumentRequest(
             file = file,
@@ -133,15 +128,13 @@ class UploadWorker(
         notificationId: NotificationId
     ) {
         uploadInteractor(document)
-            .collect { state ->
-                collectUploadState(notificationId, document, state)
-            }
+            .collect { state -> collectUploadState(notificationId, document, state) }
     }
 
     private suspend fun collectUploadState(notificationId: NotificationId, document: DocumentRequest, state: State<Either<Failure, Success>>) {
         state(currentState).fold(
             ifLeft = { failure -> notifyOnFailureState(systemNotifier.generateNotificationId(), document, failure) },
-            ifRight = { success -> notifyOnSuccessState(notificationId, document, success) }
+            ifRight = { success -> reactOnSuccessState(notificationId, document, success) }
         )
     }
 
@@ -165,18 +158,15 @@ class UploadWorker(
         }
     }
 
-    private suspend fun notifyOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {
+    private suspend fun reactOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {
         when (success) {
+            is AuthenticationViewState -> setUpInterceptors(success)
             Loading -> {
                 alertDownLoading(document.uploadFileName)
                 setWaitingForeground(notificationId, document.uploadFileName)
             }
-            is UploadingViewState -> {
-                updateUploadingProgress(document, notificationId, success.transferredBytes, success.totalBytes)
-            }
-            is UploadSuccessViewState -> {
-                notifyUploadSuccess(systemNotifier.generateNotificationId(), document.uploadFileName)
-            }
+            is UploadingViewState -> updateUploadingProgress(document, notificationId, success.transferredBytes, success.totalBytes)
+            is UploadSuccessViewState -> notifyUploadSuccess(systemNotifier.generateNotificationId(), document.uploadFileName)
         }
     }
 
@@ -184,6 +174,12 @@ class UploadWorker(
         withContext(dispatcherProvider.main) {
             Toast(appContext).makeCustomToast(appContext, String.format(appContext.resources.getString(R.string.file_ready_to_upload), fileName), Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun setUpInterceptors(authenticationViewState: AuthenticationViewState) {
+        LOGGER.info("setUpInterceptors()")
+        dynamicBaseUrlInterceptor.changeBaseUrl(authenticationViewState.credential.serverUrl)
+        authorizationManager.updateToken(authenticationViewState.token)
     }
 
     private fun configUploadingNotificationBuilder(builder: Builder): Builder {
@@ -270,7 +266,9 @@ class UploadWorker(
         private val dispatcherProvider: CoroutinesDispatcherProvider,
         private val uploadInteractor: UploadInteractor,
         private val systemNotifier: SystemNotifier,
-        private val uploadAndDownloadNotification: UploadAndDownloadNotification
+        private val uploadAndDownloadNotification: UploadAndDownloadNotification,
+        private val authorizationManager: AuthorizationManager,
+        private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor
     ) : ChildWorkerFactory {
         override fun create(
             applicationContext: Context,
@@ -282,7 +280,9 @@ class UploadWorker(
                 dispatcherProvider,
                 uploadInteractor,
                 systemNotifier,
-                uploadAndDownloadNotification
+                uploadAndDownloadNotification,
+                authorizationManager,
+                dynamicBaseUrlInterceptor
             )
         }
     }
