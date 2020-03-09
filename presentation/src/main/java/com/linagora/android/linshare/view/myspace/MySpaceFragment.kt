@@ -17,6 +17,8 @@ import com.linagora.android.linshare.domain.model.properties.PreviousUserPermiss
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DismissDialogClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.getViewModel
@@ -64,17 +66,24 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private fun observeViewState() {
         mySpaceViewModel.viewState.observe(this, Observer {
-            it.map { success ->
-                when (success) {
-                    is ContextMenuClick -> {
-                        mySpaceContextMenuDialog = MySpaceContextMenuDialog(success.document)
-                        mySpaceContextMenuDialog.show(childFragmentManager, mySpaceContextMenuDialog.tag)
-                    }
-                    is DownloadClick -> handleDownloadDocument(success.document)
-                    is DismissDialogClick -> mySpaceContextMenuDialog.dismiss()
-                }
-            }
+            it.map { success -> when (success) {
+                is Success.ViewEvent -> reactViewEvent(success)
+            } }
         })
+    }
+
+    private fun reactViewEvent(viewEvent: Success.ViewEvent) {
+        when (viewEvent) {
+            is ContextMenuClick -> showContextMenu(viewEvent.document)
+            is DownloadClick -> handleDownloadDocument(viewEvent.document)
+            is DismissDialogClick -> mySpaceContextMenuDialog.dismiss()
+        }
+        mySpaceViewModel.dispatchState(Either.right(Idle))
+    }
+
+    private fun showContextMenu(document: Document) {
+        mySpaceContextMenuDialog = MySpaceContextMenuDialog(document)
+        mySpaceContextMenuDialog.show(childFragmentManager, mySpaceContextMenuDialog.tag)
     }
 
     private fun observeRequestPermission() {
@@ -113,8 +122,10 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun download(document: Document) {
+        LOGGER.info("download() $document")
         mainActivityViewModel.currentAuthentication.value
             ?.let { authentication ->
+                LOGGER.info("download() currentAuthentication $document")
                 mySpaceViewModel.downloadDocument(authentication.credential, authentication.token, document)
             }
     }
