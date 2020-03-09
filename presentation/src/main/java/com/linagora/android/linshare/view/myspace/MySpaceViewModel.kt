@@ -58,15 +58,17 @@ class MySpaceViewModel @Inject constructor(
     }
 
     fun onContextMenuClick(document: Document) {
+        LOGGER.info("onContextMenuClick() $document")
         dispatchState(Either.right(ContextMenuClick(document)))
     }
 
-    fun onDissmissDialogClick() {
+    fun onDismissDialogClick() {
+        LOGGER.info("onDismissDialogClick()")
         dispatchState(Either.right(DismissDialogClick))
     }
 
     fun onDownloadClick(document: Document) {
-        LOGGER.info("onContextMenuClick() $document")
+        LOGGER.info("onDownloadClick() $document")
         setProcessingDocument(document)
         dispatchState(Either.right(DownloadClick(document)))
     }
