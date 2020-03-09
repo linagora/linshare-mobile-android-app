@@ -58,6 +58,9 @@
         android:id="@+id/uploadFragment"
         android:name="com.linagora.android.linshare.view.upload.UploadFragment"
         tools:layout="@layout/fragment_upload">
+        <argument
+            android:name="uploadType"
+            app:argType="com.linagora.android.linshare.view.Navigation$UploadType" />
     </fragment>
     <fragment
         android:id="@id/navigation_my_space"

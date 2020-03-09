@@ -19,6 +19,7 @@ import com.linagora.android.linshare.domain.repository.download.DownloadingRepos
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
+import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
@@ -65,6 +66,11 @@ class MySpaceViewModel @Inject constructor(
         LOGGER.info("onDownloadClick() $document")
         setProcessingDocument(document)
         dispatchState(Either.right(DownloadClick(document)))
+    }
+
+    fun onUploadBottomBarClick() {
+        LOGGER.info("onUploadBottomBarClick()")
+        dispatchState(Either.right(UploadButtonBottomBarClick))
     }
 
     private fun setProcessingDocument(document: Document) {

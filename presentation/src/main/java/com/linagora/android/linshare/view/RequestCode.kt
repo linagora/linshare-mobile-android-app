@@ -8,3 +8,5 @@ object ReadExternalPermissionRequestCode : PermissionRequestCode(1000)
 object WriteExternalPermissionRequestCode : PermissionRequestCode(1010)
 
 object OpenDownloadViewRequestCode : PermissionRequestCode(2000)
+
+object OpenFilePickerRequestCode : RequestCode(3000)

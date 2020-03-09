@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
@@ -32,6 +33,7 @@ import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.upload.worker.UploadWorker
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_URI_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.TAG_UPLOAD_WORKER
@@ -71,6 +73,8 @@ class UploadFragment : MainNavigationFragment() {
     private lateinit var uploadFragmentViewModel: UploadFragmentViewModel
 
     private lateinit var binding: FragmentUploadBinding
+
+    private val args: UploadFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,12 +178,22 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun alertStartToUpload(uploadFiles: Int) {
-        Toast(context).makeCustomToast(requireContext(), requireContext().resources.getQuantityString(R.plurals.file_in_waiting_list, uploadFiles), Toast.LENGTH_LONG).show()
+        Toast(context).makeCustomToast(
+                requireContext(),
+                requireContext().resources
+                    .getQuantityString(R.plurals.file_in_waiting_list,
+                uploadFiles), Toast.LENGTH_LONG)
+            .show()
     }
 
     private fun navigateAfterUpload() {
-        requireActivity().onBackPressed()
-        requireActivity().finish()
+        when (args.uploadType) {
+            Navigation.UploadType.OUTSIDE_APP -> {
+                requireActivity().onBackPressed()
+                requireActivity().finish()
+            }
+            Navigation.UploadType.INSIDE_APP -> findNavController().popBackStack()
+        }
     }
 
     private fun createInputDataForUploadFile(uri: Uri): Data {

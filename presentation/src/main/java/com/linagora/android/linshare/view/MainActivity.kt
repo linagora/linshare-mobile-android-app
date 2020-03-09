@@ -36,6 +36,7 @@ import com.linagora.android.linshare.view.base.BaseActivity
 import com.linagora.android.linshare.view.dialog.ReadStorageExplanationPermissionDialog
 import com.linagora.android.linshare.view.dialog.WriteStorageExplanationPermissionDialog
 import com.linagora.android.linshare.view.menu.SideMenuDrawer
+import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import org.slf4j.LoggerFactory
 
 class MainActivity : BaseActivity(), NavigationHost {
@@ -119,7 +120,8 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun extractSendAction(intent: Intent) {
         intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             ?.let {
-                val bundle = Bundle()
+                val bundle = UploadFragmentArgs(Navigation.UploadType.OUTSIDE_APP)
+                    .toBundle()
                 bundle.putParcelable(UPLOAD_URI_BUNDLE_KEY, it)
                 navigationController.navigate(
                     R.id.uploadFragment,
