@@ -17,7 +17,6 @@ import com.linagora.android.linshare.domain.network.ServicePath
 import com.linagora.android.linshare.domain.network.withServicePath
 import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
-import com.linagora.android.linshare.domain.usecases.myspace.DismissDialogClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
 import com.linagora.android.linshare.notification.BaseNotification
@@ -60,11 +59,6 @@ class MySpaceViewModel @Inject constructor(
     fun onContextMenuClick(document: Document) {
         LOGGER.info("onContextMenuClick() $document")
         dispatchState(Either.right(ContextMenuClick(document)))
-    }
-
-    fun onDismissDialogClick() {
-        LOGGER.info("onDismissDialogClick()")
-        dispatchState(Either.right(DismissDialogClick))
     }
 
     fun onDownloadClick(document: Document) {

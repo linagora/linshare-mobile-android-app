@@ -15,7 +15,6 @@ import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
-import com.linagora.android.linshare.domain.usecases.myspace.DismissDialogClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
@@ -67,16 +66,15 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun observeViewState() {
         mySpaceViewModel.viewState.observe(this, Observer {
             it.map { success -> when (success) {
-                is Success.ViewEvent -> reactViewEvent(success)
+                is Success.ViewEvent -> reactToViewEvent(success)
             } }
         })
     }
 
-    private fun reactViewEvent(viewEvent: Success.ViewEvent) {
+    private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is ContextMenuClick -> showContextMenu(viewEvent.document)
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
-            is DismissDialogClick -> mySpaceContextMenuDialog.dismiss()
         }
         mySpaceViewModel.dispatchState(Either.right(Idle))
     }
