@@ -7,6 +7,8 @@ import okhttp3.MediaType.Companion.toMediaType
 
 object MimeType {
     const val APPLICATION_DEFAULT = "application/octet-stream"
+
+    const val ALL_TYPE = "*/*"
 }
 
 fun MediaType.getDrawableIcon(): Int {

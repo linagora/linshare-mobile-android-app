@@ -6,4 +6,9 @@ class Navigation {
         DIRECT,
         INDIRECT
     }
+
+    enum class UploadType {
+        OUTSIDE_APP,
+        INSIDE_APP
+    }
 }

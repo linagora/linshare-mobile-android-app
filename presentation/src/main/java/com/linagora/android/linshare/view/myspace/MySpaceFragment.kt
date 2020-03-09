@@ -1,7 +1,9 @@
 package com.linagora.android.linshare.view.myspace
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
@@ -16,14 +19,20 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
+import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
+import com.linagora.android.linshare.util.Constant
+import com.linagora.android.linshare.util.MimeType
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP
+import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -75,6 +84,7 @@ class MySpaceFragment : MainNavigationFragment() {
         when (viewEvent) {
             is ContextMenuClick -> showContextMenu(viewEvent.document)
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
+            is UploadButtonBottomBarClick -> openFilePicker()
         }
         mySpaceViewModel.dispatchState(Either.right(Idle))
     }
@@ -123,7 +133,6 @@ class MySpaceFragment : MainNavigationFragment() {
         LOGGER.info("download() $document")
         mainActivityViewModel.currentAuthentication.value
             ?.let { authentication ->
-                LOGGER.info("download() currentAuthentication $document")
                 mySpaceViewModel.downloadDocument(authentication.credential, authentication.token, document)
             }
     }
@@ -147,5 +156,24 @@ class MySpaceFragment : MainNavigationFragment() {
                 )
             }
         }
+    }
+
+    private fun openFilePicker() {
+        val getDocumentIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        getDocumentIntent.type = MimeType.ALL_TYPE
+        startActivityForResult(getDocumentIntent, OpenFilePickerRequestCode.code)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        LOGGER.info("onActivityResult() $requestCode - $data")
+        requestCode.takeIf { it == OpenFilePickerRequestCode.code }
+            ?.let { data?.data }
+            ?.let(this@MySpaceFragment::navigateToUpload)
+    }
+
+    private fun navigateToUpload(uri: Uri) {
+        val bundle = UploadFragmentArgs(INSIDE_APP).toBundle()
+        bundle.putParcelable(Constant.UPLOAD_URI_BUNDLE_KEY, uri)
+        findNavController().navigate(R.id.uploadFragment, bundle)
     }
 }
