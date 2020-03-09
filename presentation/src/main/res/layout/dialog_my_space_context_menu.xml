@@ -20,19 +20,6 @@
         android:paddingTop="@dimen/padding_horizontal_row_bottom_sheet"
         android:paddingBottom="@dimen/padding_horizontal_row_bottom_sheet">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="@dimen/size_icon"
-                android:layout_height="@dimen/size_icon"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/padding_horizontal_row_bottom_sheet"
-                android:onClick="@{() -> viewModel.onDismissDialogClick()}"
-                android:src="@drawable/ic_close" />
-        </RelativeLayout>
-
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
             android:onClick="@{() -> viewModel.onDownloadClick(document)}">
