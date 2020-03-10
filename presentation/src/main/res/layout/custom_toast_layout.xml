@@ -2,7 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:gravity="center"
-    android:padding="@dimen/margin_toast"
+    android:paddingStart="@dimen/margin_toast"
+    android:paddingEnd="@dimen/margin_toast"
+    android:paddingTop="@dimen/margin_toast"
+    android:paddingBottom="100dp"
     android:layout_height="wrap_content">
 
     <TextView

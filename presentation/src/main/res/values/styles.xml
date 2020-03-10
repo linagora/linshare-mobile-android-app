@@ -88,4 +88,8 @@
         <item name="android:textSize">@dimen/request_permission_popup_permission_text_size</item>
         <item name="android:textAllCaps">false</item>
     </style>
+
+    <style name="FloatingUploadButton" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 </resources>
