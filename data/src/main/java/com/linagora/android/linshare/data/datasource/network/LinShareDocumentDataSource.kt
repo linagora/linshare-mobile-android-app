@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.net.SocketException
+import java.util.UUID
 import javax.inject.Inject
 
 class LinShareDocumentDataSource @Inject constructor(
@@ -52,6 +53,10 @@ class LinShareDocumentDataSource @Inject constructor(
                 else -> throw UploadException(ErrorResponse.UNKNOWN_RESPONSE)
             }
         }
+    }
+
+    override suspend fun remove(uuid: UUID): Document {
+        return linshareApi.removeDocument(uuid.toString())
     }
 
     override suspend fun getAll(): List<Document> {

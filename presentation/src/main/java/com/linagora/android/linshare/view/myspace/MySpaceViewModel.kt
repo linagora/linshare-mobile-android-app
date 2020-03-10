@@ -30,6 +30,7 @@ import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
+import java.util.UUID
 import javax.inject.Inject
 
 class MySpaceViewModel @Inject constructor(
@@ -79,6 +80,12 @@ class MySpaceViewModel @Inject constructor(
 
     fun getDownloadingDocument(): Document? {
         return downloadingDocument.value
+    }
+
+    fun removeDocument(uuid: UUID) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(removeDocumentInteractor(uuid))
+        }
     }
 
     fun downloadDocument(credential: Credential, token: Token, document: Document) {

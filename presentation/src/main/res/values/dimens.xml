@@ -91,7 +91,7 @@
     <!--bottom sheet-->
     <dimen name="padding_vertical_row_bottom_sheet">8dp</dimen>
     <dimen name="padding_horizontal_row_bottom_sheet">24dp</dimen>
-    <dimen name="size_icon">21dp</dimen>
+    <dimen name="size_icon_bottom_sheet">20dp</dimen>
 
     <!--custom toast-->
     <dimen name="margin_toast">16dp</dimen>

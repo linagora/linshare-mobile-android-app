@@ -73,8 +73,9 @@
 
     <style name="ImageInRowLinerBottomSheetStyle">
         <item name="android:tint">@color/file_name_color</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:layout_width">@dimen/size_icon_bottom_sheet</item>
+        <item name="android:layout_height">@dimen/size_icon_bottom_sheet</item>
         <item name="android:layout_marginRight">@dimen/page_indicator_margin_top</item>
         <item name="android:textAllCaps">false</item>
     </style>

@@ -24,6 +24,7 @@ import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
@@ -247,6 +248,8 @@ object TestFixtures {
         private val MY_SPACE_VIEW_STATE = MySpaceViewState(listOf(DOCUMENT, DOCUMENT_2))
 
         val ALL_DOCUMENTS_STATE = Either.Right(MY_SPACE_VIEW_STATE)
+
+        val REMOVE_DOCUMENT_SUCCESS_VIEW_STATE = Either.Right(RemoveDocumentSuccessViewState(DOCUMENT))
     }
 
     object DownloadingTasks {
