@@ -95,5 +95,10 @@
 
     <!--custom toast-->
     <dimen name="margin_toast">16dp</dimen>
+    <dimen name="margin_bottom_toast">128dp</dimen>
+
+    <!--bottom bar-->
+    <dimen name="bottom_bar_inset">16dp</dimen>
+    <dimen name="elevation">6dp</dimen>
 
 </resources>
