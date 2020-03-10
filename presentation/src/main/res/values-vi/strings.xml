@@ -74,6 +74,7 @@
     <string name="download_failed">Tải xuống không thành công</string>
 
     <string name="download_to_device">Tải xuống thiết bị</string>
+    <string name="delete">Xóa</string>
 
     <string name="download_success">Tải xuống thành công</string>
     <string name="error_can_not_resume_download">Không thể tiếp tục thực hiện tải xuống</string>

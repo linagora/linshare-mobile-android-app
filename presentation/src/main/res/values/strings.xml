@@ -74,6 +74,7 @@
     <string name="download_failed">Download failed</string>
 
     <string name="download_to_device">Download to device</string>
+    <string name="delete">Delete</string>
 
     <string name="download_success">Download completed</string>
     <string name="error_can_not_resume_download">Can not resume download</string>
