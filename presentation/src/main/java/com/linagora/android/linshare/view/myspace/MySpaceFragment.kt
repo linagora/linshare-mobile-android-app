@@ -22,6 +22,8 @@ import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.Constant
@@ -77,6 +79,7 @@ class MySpaceFragment : MainNavigationFragment() {
         mySpaceViewModel.viewState.observe(this, Observer {
             it.map { success -> when (success) {
                 is Success.ViewEvent -> reactToViewEvent(success)
+                is RemoveDocumentSuccessViewState -> getAllDocuments()
             } }
         })
     }
@@ -86,6 +89,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is ContextMenuClick -> showContextMenu(viewEvent.document)
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
             is UploadButtonBottomBarClick -> openFilePicker()
+            is RemoveClick -> handleRemoveDocument(viewEvent.uuid)
         }
         mySpaceViewModel.dispatchState(Either.right(Idle))
     }

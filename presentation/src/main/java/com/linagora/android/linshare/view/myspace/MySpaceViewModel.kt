@@ -20,6 +20,8 @@ import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentInteractor
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
@@ -39,7 +41,8 @@ class MySpaceViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val uploadAndDownloadNotification: UploadAndDownloadNotification,
     private val systemNotifier: SystemNotifier,
-    private val downloadingRepository: DownloadingRepository
+    private val downloadingRepository: DownloadingRepository,
+    private val removeDocumentInteractor: RemoveDocumentInteractor
 ) : LinShareViewModel(application, dispatcherProvider) {
 
     companion object {
@@ -74,6 +77,10 @@ class MySpaceViewModel @Inject constructor(
         dispatchState(Either.right(UploadButtonBottomBarClick))
     }
 
+    fun onRemoveClick(uuid: String) {
+        dispatchState(Either.right(RemoveClick(uuid)))
+    }
+
     private fun setProcessingDocument(document: Document) {
         downloadingDocument.value = document
     }
@@ -92,8 +99,8 @@ class MySpaceViewModel @Inject constructor(
         LOGGER.info("downloadDocument() $document")
         try {
             val downloadUri = Uri.parse(credential.serverUrl
-                    .withServicePath(ServicePath.buildDownloadPath(document.uuid))
-                    .toString())
+                .withServicePath(ServicePath.buildDownloadPath(document.uuid))
+                .toString())
             val request = DownloadManager.Request(downloadUri)
                 .addRequestHeader("Authorization", "Bearer ${token.token}")
                 .setTitle(document.name)

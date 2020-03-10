@@ -36,7 +36,6 @@
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
             android:onClick="@{() -> viewModel.onRemoveClick(document.uuid)}">
-
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
                 android:src="@drawable/ic_delete" />
