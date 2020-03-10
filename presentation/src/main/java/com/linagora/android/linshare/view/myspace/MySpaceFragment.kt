@@ -35,6 +35,7 @@ import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
+import java.util.UUID
 import javax.inject.Inject
 
 class MySpaceFragment : MainNavigationFragment() {
@@ -92,6 +93,11 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun showContextMenu(document: Document) {
         mySpaceContextMenuDialog = MySpaceContextMenuDialog(document)
         mySpaceContextMenuDialog.show(childFragmentManager, mySpaceContextMenuDialog.tag)
+    }
+
+    private fun handleRemoveDocument(uuid: UUID) {
+        mySpaceContextMenuDialog.dismiss()
+        mySpaceViewModel.removeDocument(uuid)
     }
 
     private fun observeRequestPermission() {

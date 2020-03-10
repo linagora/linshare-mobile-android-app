@@ -32,5 +32,18 @@
                 style="@style/TextInRowLinerBottomSheetStyle"
                 android:text="@string/download_to_device" />
         </LinearLayout>
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> viewModel.onRemoveClick(document.uuid)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_delete" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/delete" />
+        </LinearLayout>
     </LinearLayout>
 </layout>
