@@ -25,3 +25,7 @@ data class Document(
         require(shared >= 0) { "shared must not be negative" }
     }
 }
+
+fun Document.nameContains(query: String): Boolean {
+    return name.toLowerCase().contains(query.toLowerCase())
+}

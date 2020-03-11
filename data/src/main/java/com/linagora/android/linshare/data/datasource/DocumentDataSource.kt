@@ -17,4 +17,6 @@ interface DocumentDataSource {
     suspend fun getAll(): List<Document>
 
     suspend fun remove(documentId: DocumentId): Document
+
+    suspend fun search(query: String): List<Document>
 }

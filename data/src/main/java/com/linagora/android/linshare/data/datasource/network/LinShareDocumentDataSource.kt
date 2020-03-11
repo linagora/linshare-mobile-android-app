@@ -6,6 +6,7 @@ import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.document.nameContains
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
@@ -83,5 +84,10 @@ class LinShareDocumentDataSource @Inject constructor(
             LOGGER.error("parseErrorResponse: ${it.printStackTrace()}")
             ErrorResponse.UNKNOWN_RESPONSE
         }
+    }
+
+    override suspend fun search(query: String): List<Document> {
+        return getAll()
+            .filter { document -> document.nameContains(query) }
     }
 }
