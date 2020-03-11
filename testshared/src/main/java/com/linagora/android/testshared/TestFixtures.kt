@@ -29,6 +29,8 @@ import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSucce
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
+import com.linagora.android.linshare.domain.usecases.search.NoResults
+import com.linagora.android.linshare.domain.usecases.search.SearchViewState
 import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
@@ -281,5 +283,13 @@ object TestFixtures {
             25,
             MediaType.get("text/plain")
         )
+    }
+
+    object Searchs {
+        const val QUERY_STRING = "query_string"
+
+        val SEARCH_SUCCESS_STATE = Either.right(SearchViewState(listOf(DOCUMENT, DOCUMENT_2)))
+
+        val NOT_FOUND_STATE = Either.left(NoResults)
     }
 }

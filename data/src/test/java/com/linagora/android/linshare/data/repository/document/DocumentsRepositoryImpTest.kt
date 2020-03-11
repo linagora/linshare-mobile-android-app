@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentExcept
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
+import com.linagora.android.testshared.TestFixtures.Searchs.QUERY_STRING
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -96,7 +97,7 @@ class DocumentsRepositoryImpTest {
     @Test
     fun getAllShouldReturnEmptyListWhenNoDocumentsExist() {
         runBlockingTest {
-            `when`(documentRepositoryImp.getAll())
+            `when`(documentDataSource.getAll())
                 .thenAnswer { emptyList<Document>() }
 
             val documents = documentRepositoryImp.getAll()
@@ -126,6 +127,28 @@ class DocumentsRepositoryImpTest {
                     documentRepositoryImp.remove(DOCUMENT.documentId)
                 }
             }
+        }
+    }
+
+    @Test
+    fun searchShouldReturnResultList() {
+        runBlockingTest {
+            `when`(documentDataSource.search(QUERY_STRING))
+                .thenAnswer { listOf(DOCUMENT, DOCUMENT_2) }
+
+            val documents = documentRepositoryImp.search(QUERY_STRING)
+            assertThat(documents).containsExactly(DOCUMENT, DOCUMENT_2)
+        }
+    }
+
+    @Test
+    fun searchShouldReturnResultEmptyList() {
+        runBlockingTest {
+            `when`(documentDataSource.search(QUERY_STRING))
+                .thenAnswer { emptyList<Document>() }
+
+            val documents = documentRepositoryImp.search(QUERY_STRING)
+            assertThat(documents).isEmpty()
         }
     }
 }

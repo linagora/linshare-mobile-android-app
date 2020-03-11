@@ -26,4 +26,8 @@ class DocumentRepositoryImp @Inject constructor(
     override suspend fun remove(documentId: DocumentId): Document {
         return linShareDocumentDataSource.remove(documentId)
     }
+
+    override suspend fun search(query: String): List<Document> {
+        return linShareDocumentDataSource.search(query)
+    }
 }
