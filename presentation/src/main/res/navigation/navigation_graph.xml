@@ -66,4 +66,8 @@
         android:id="@id/navigation_my_space"
         android:name="com.linagora.android.linshare.view.myspace.MySpaceFragment"
         tools:layout="@layout/fragment_my_space" />
+    <fragment
+        android:id="@+id/navigationSearch"
+        android:name="com.linagora.android.linshare.view.search.SearchFragment"
+        tools:layout="@layout/fragment_search" />
 </navigation>

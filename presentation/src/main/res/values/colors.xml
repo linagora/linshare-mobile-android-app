@@ -24,4 +24,6 @@
     <color name="bottom_app_bar_background">#F2F2F2</color>
 
     <color name="request_permission_popup_image_background_color">#919799</color>
+
+    <color name="transparent">#0fff</color>
 </resources>
