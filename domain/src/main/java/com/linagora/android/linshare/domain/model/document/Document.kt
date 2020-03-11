@@ -1,11 +1,12 @@
 package com.linagora.android.linshare.domain.model.document
 
+import com.google.gson.annotations.SerializedName
 import okhttp3.MediaType
 import java.util.Date
-import java.util.UUID
 
 data class Document(
-    val uuid: UUID,
+    @SerializedName("uuid")
+    val documentId: DocumentId,
     val description: String? = null,
     val creationDate: Date,
     val modificationDate: Date,

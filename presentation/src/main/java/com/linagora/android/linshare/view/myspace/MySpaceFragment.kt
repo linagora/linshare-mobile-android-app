@@ -16,6 +16,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
@@ -37,7 +38,6 @@ import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
-import java.util.UUID
 import javax.inject.Inject
 
 class MySpaceFragment : MainNavigationFragment() {
@@ -89,7 +89,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is ContextMenuClick -> showContextMenu(viewEvent.document)
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
             is UploadButtonBottomBarClick -> openFilePicker()
-            is RemoveClick -> handleRemoveDocument(viewEvent.uuid)
+            is RemoveClick -> handleRemoveDocument(viewEvent.documentId)
         }
         mySpaceViewModel.dispatchState(Either.right(Idle))
     }
@@ -99,9 +99,9 @@ class MySpaceFragment : MainNavigationFragment() {
         mySpaceContextMenuDialog.show(childFragmentManager, mySpaceContextMenuDialog.tag)
     }
 
-    private fun handleRemoveDocument(uuid: UUID) {
+    private fun handleRemoveDocument(documentId: DocumentId) {
         mySpaceContextMenuDialog.dismiss()
-        mySpaceViewModel.removeDocument(uuid)
+        mySpaceViewModel.removeDocument(documentId)
     }
 
     private fun observeRequestPermission() {

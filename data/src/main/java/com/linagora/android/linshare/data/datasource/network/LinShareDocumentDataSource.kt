@@ -4,15 +4,16 @@ import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
+import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import okhttp3.MultipartBody
 import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.net.SocketException
-import java.util.UUID
 import javax.inject.Inject
 
 class LinShareDocumentDataSource @Inject constructor(
@@ -55,8 +56,13 @@ class LinShareDocumentDataSource @Inject constructor(
         }
     }
 
-    override suspend fun remove(uuid: UUID): Document {
-        return linshareApi.removeDocument(uuid.toString())
+    override suspend fun remove(documentId: DocumentId): Document {
+        try {
+            return linshareApi.removeDocument(documentId.uuid.toString())
+        } catch (throwable: Throwable) {
+            LOGGER.error("remove() ${throwable.printStackTrace()}")
+            throw RemoveDocumentException(throwable)
+        }
     }
 
     override suspend fun getAll(): List<Document> {

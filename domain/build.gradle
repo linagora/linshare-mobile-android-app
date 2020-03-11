@@ -54,6 +54,7 @@ dependencies {
     implementation deps.kotlin.stdlib
     implementation deps.slf4j_timber
     implementation deps.retrofit.core
+    implementation deps.retrofit.gson
 
     testImplementation deps.coroutines.test
     testImplementation deps.junit5.api

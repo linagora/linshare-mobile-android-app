@@ -2,10 +2,10 @@ package com.linagora.android.linshare.data.repository.document
 
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
-import java.util.UUID
 import javax.inject.Inject
 
 class DocumentRepositoryImp @Inject constructor(
@@ -23,7 +23,7 @@ class DocumentRepositoryImp @Inject constructor(
         return linShareDocumentDataSource.getAll()
     }
 
-    override suspend fun remove(uuid: UUID): Document {
-        return linShareDocumentDataSource.remove(uuid)
+    override suspend fun remove(documentId: DocumentId): Document {
+        return linShareDocumentDataSource.remove(documentId)
     }
 }

@@ -3,6 +3,7 @@ package com.linagora.android.linshare.domain.usecases.myspace
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
+import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.MySpaces.REMOVE_DOCUMENT_SUCCESS_VIEW_STATE
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
@@ -32,10 +33,10 @@ class RemoveDocumentInteractorTest {
     @Test
     fun removeDocumentsShouldSuccess() {
         runBlockingTest {
-            `when`(documentRepository.remove(DOCUMENT.uuid))
+            `when`(documentRepository.remove(DOCUMENT.documentId))
                 .thenAnswer { DOCUMENT }
 
-            assertThat(removeDocumentInteractor(DOCUMENT.uuid)
+            assertThat(removeDocumentInteractor(DOCUMENT.documentId)
                 .map { it(INIT_STATE) }
                 .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, REMOVE_DOCUMENT_SUCCESS_VIEW_STATE)
@@ -45,12 +46,12 @@ class RemoveDocumentInteractorTest {
     @Test
     fun removeDocumentsShouldFailed() {
         runBlockingTest {
-            val exception = RuntimeException("get list documents failed")
+            val exception = RuntimeException("remove document failed")
 
-            `when`(documentRepository.remove(DOCUMENT.uuid))
+            `when`(documentRepository.remove(DOCUMENT.documentId))
                 .thenThrow(exception)
 
-            assertThat(removeDocumentInteractor(DOCUMENT.uuid)
+            assertThat(removeDocumentInteractor(DOCUMENT.documentId)
                 .map { it(INIT_STATE) }
                 .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, Either.Left(RemoveDocumentFailure(exception)))

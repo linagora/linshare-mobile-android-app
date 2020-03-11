@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
@@ -211,7 +212,7 @@ object TestFixtures {
     object Documents {
 
         val DOCUMENT = Document(
-            uuid = UUID.fromString("21a2901-b120-4111-9b0d-cbd9d493d7f9"),
+            documentId = DocumentId(UUID.fromString("21a2901-b120-4111-9b0d-cbd9d493d7f9")),
             description = "",
             name = "document.txt",
             creationDate = Date(1574837876965),
@@ -227,7 +228,7 @@ object TestFixtures {
         )
 
         val DOCUMENT_2 = Document(
-            uuid = UUID.fromString("21a2901-b120-4111-9b0d-cbd8d493d7f9"),
+            documentId = DocumentId(UUID.fromString("21a2901-b120-4111-9b0d-cbd8d493d7f9")),
             description = "",
             name = "documents.txt",
             creationDate = Date(1574837876965),
