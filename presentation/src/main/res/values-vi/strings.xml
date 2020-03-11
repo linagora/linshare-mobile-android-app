@@ -87,4 +87,6 @@
     <string name="file_ready_to_upload">Tệp %s đã sẵn sàng để tải lên.</string>
     <string name="file_added_to_waiting_list">Tệp %s đã được thêm vào danh sách chờ.</string>
     <string name="confirm_delete_file">Bạn có chắc chắn muốn xóa tệp này?</string>
+
+    <string name="search_in_my_space">Tìm kiếm</string>
 </resources>
