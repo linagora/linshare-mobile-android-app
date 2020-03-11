@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.linagora.android.linshare.adapter.myspace.diff.DocumentDiffCallback
+import com.linagora.android.linshare.adapter.diff.DocumentDiffCallback
 import com.linagora.android.linshare.databinding.MySpaceRowItemBinding
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.view.myspace.MySpaceViewModel

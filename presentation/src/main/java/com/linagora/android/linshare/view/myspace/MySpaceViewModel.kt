@@ -11,6 +11,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.download.DownloadingTask
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.network.ServicePath
@@ -19,9 +20,9 @@ import com.linagora.android.linshare.domain.repository.download.DownloadingRepos
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
-import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
-import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentInteractor
+import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
@@ -32,7 +33,6 @@ import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
-import java.util.UUID
 import javax.inject.Inject
 
 class MySpaceViewModel @Inject constructor(
@@ -77,8 +77,8 @@ class MySpaceViewModel @Inject constructor(
         dispatchState(Either.right(UploadButtonBottomBarClick))
     }
 
-    fun onRemoveClick(uuid: String) {
-        dispatchState(Either.right(RemoveClick(uuid)))
+    fun onRemoveClick(document: Document) {
+        dispatchState(Either.right(RemoveClick(document.documentId)))
     }
 
     private fun setProcessingDocument(document: Document) {
@@ -89,9 +89,9 @@ class MySpaceViewModel @Inject constructor(
         return downloadingDocument.value
     }
 
-    fun removeDocument(uuid: UUID) {
+    fun removeDocument(documentId: DocumentId) {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(removeDocumentInteractor(uuid))
+            consumeStates(removeDocumentInteractor(documentId))
         }
     }
 
@@ -99,7 +99,7 @@ class MySpaceViewModel @Inject constructor(
         LOGGER.info("downloadDocument() $document")
         try {
             val downloadUri = Uri.parse(credential.serverUrl
-                .withServicePath(ServicePath.buildDownloadPath(document.uuid))
+                .withServicePath(ServicePath.buildDownloadPath(document.documentId))
                 .toString())
             val request = DownloadManager.Request(downloadUri)
                 .addRequestHeader("Authorization", "Bearer ${token.token}")
@@ -127,7 +127,7 @@ class MySpaceViewModel @Inject constructor(
                 enqueuedDownloadId = enqueuedDownloadId,
                 documentName = document.name,
                 documentSize = document.size,
-                documentUUID = document.uuid,
+                documentId = document.documentId,
                 mediaType = document.type
             ))
         }

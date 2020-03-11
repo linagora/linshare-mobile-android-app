@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.domain.usecases.myspace
 
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 
@@ -11,4 +12,4 @@ data class DownloadClick(val document: Document) : Success.ViewEvent()
 object UploadButtonBottomBarClick : Success.ViewEvent()
 data class RemoveDocumentSuccessViewState(val document: Document) : Success.ViewState()
 data class RemoveDocumentFailure(val throwable: Throwable) : FeatureFailure()
-data class RemoveClick(val uuid: String) : Success.ViewEvent()
+data class RemoveClick(val documentId: DocumentId) : Success.ViewEvent()

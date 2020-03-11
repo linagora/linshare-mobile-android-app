@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
+import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
@@ -23,6 +24,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.lang.RuntimeException
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.P])
@@ -99,6 +101,31 @@ class DocumentsRepositoryImpTest {
 
             val documents = documentRepositoryImp.getAll()
             assertThat(documents).isEmpty()
+        }
+    }
+
+    @Test
+    fun removeDocumentSuccess() {
+        runBlockingTest {
+            `when`(documentRepositoryImp.remove(DOCUMENT.documentId))
+                .thenAnswer { DOCUMENT }
+
+            val document = documentRepositoryImp.remove(DOCUMENT.documentId)
+            assertThat(document).isEqualTo(DOCUMENT)
+        }
+    }
+
+    @Test
+    fun removeShouldThrowWhenRemoveDocumentFailure() {
+        runBlockingTest {
+            `when`(documentDataSource.remove(DOCUMENT.documentId))
+                .thenThrow(RemoveDocumentException(RuntimeException()))
+
+            assertThrows<RemoveDocumentException> {
+                runBlockingTest {
+                    documentRepositoryImp.remove(DOCUMENT.documentId)
+                }
+            }
         }
     }
 }

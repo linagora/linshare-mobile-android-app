@@ -1,6 +1,6 @@
 package com.linagora.android.linshare.domain.network
 
-import java.util.UUID
+import com.linagora.android.linshare.domain.model.document.DocumentId
 
 data class ServicePath(val path: String) {
     init {
@@ -8,8 +8,8 @@ data class ServicePath(val path: String) {
     }
 
     companion object {
-        fun buildDownloadPath(documentUuid: UUID): ServicePath {
-            return ServicePath("${Endpoint.DOCUMENT_PATH}/$documentUuid/download")
+        fun buildDownloadPath(documentId: DocumentId): ServicePath {
+            return ServicePath("${Endpoint.DOCUMENT_PATH}/${documentId.uuid}/download")
         }
     }
 }

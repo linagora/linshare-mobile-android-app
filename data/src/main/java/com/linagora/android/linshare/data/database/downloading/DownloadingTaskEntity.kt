@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.linagora.android.linshare.data.database.LinShareDatabase.Table
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.download.DownloadingTask
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import okhttp3.MediaType
@@ -28,7 +29,7 @@ data class DownloadingTaskEntity(
 fun DownloadingTask.toEntity(): DownloadingTaskEntity {
     return DownloadingTaskEntity(
         enqueuedDownloadId,
-        documentUUID,
+        documentId.uuid,
         documentName,
         documentSize,
         mediaType
@@ -38,7 +39,7 @@ fun DownloadingTask.toEntity(): DownloadingTaskEntity {
 fun DownloadingTaskEntity.toDownloadingTask(): DownloadingTask {
     return DownloadingTask(
         enqueuedDownloadId,
-        documentUUID,
+        DocumentId(documentUUID),
         documentName,
         documentSize,
         mediaType
