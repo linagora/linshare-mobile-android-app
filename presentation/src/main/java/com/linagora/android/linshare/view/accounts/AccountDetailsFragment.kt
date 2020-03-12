@@ -87,7 +87,7 @@ class AccountDetailsFragment : MainNavigationFragment() {
         LOGGER.info("initViewModel()")
         accountDetailViewModel = getViewModel(viewModelFactory)
 
-        accountDetailViewModel.viewState.observe(this, Observer {
+        accountDetailViewModel.viewState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Either.Right -> reactToSuccess(it.b)
                 is Either.Left -> return@Observer

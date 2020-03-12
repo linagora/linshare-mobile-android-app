@@ -76,7 +76,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun observeViewState() {
-        mySpaceViewModel.viewState.observe(this, Observer {
+        mySpaceViewModel.viewState.observe(viewLifecycleOwner, Observer {
             it.map { success -> when (success) {
                 is Success.ViewEvent -> reactToViewEvent(success)
                 is RemoveDocumentSuccessViewState -> getAllDocuments()
@@ -116,7 +116,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun observeRequestPermission() {
-        mainActivityViewModel.shouldShowPermissionRequestState.observe(this, Observer {
+        mainActivityViewModel.shouldShowPermissionRequestState.observe(viewLifecycleOwner, Observer {
             if (it is ShouldShowWriteStorage) {
                 requestPermissions(
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
