@@ -20,6 +20,7 @@ import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
+import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.notification.BaseNotification
@@ -78,6 +79,11 @@ class MySpaceViewModel @Inject constructor(
 
     fun onRemoveClick(document: Document) {
         dispatchState(Either.right(RemoveClick(document)))
+    }
+
+    fun onSearchButtonClick() {
+        LOGGER.info("onSearchButtonClick()")
+        dispatchState(Either.right(SearchButtonClick))
     }
 
     private fun setProcessingDocument(document: Document) {
