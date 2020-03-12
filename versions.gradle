@@ -27,7 +27,7 @@ versions.jwt_decode = "1.4.0"
 versions.kotlin_stdlib = "1.3.50"
 versions.ktlint = "0.34.2"
 
-versions.lifecycle = "2.1.0"
+versions.lifecycle = "2.2.0"
 
 versions.mockito = "3.1.0"
 
@@ -146,7 +146,8 @@ deps.ktlint = "com.pinterest:ktlint:$versions.ktlint"
 
 def lifecycle = [:]
 lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
-lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime:$versions.lifecycle"
+lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
+lifecycle.live_data = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
 deps.lifecycle = lifecycle
 
 def mockito = [:]
