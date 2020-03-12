@@ -115,7 +115,7 @@ class LoginFragment : MainNavigationFragment() {
     private fun initViewModel() {
         loginViewModel = getViewModel(viewModelFactory)
 
-        loginViewModel.viewState.observe(this, Observer {
+        loginViewModel.viewState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Either.Right -> reactToSuccess(it.b)
                 is Either.Left -> reactToFailure(it.a)

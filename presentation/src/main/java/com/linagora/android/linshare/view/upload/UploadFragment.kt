@@ -100,7 +100,7 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun initViewModel() {
-        mainActivityViewModel.authenticationState.observe(this, Observer { authenticateState ->
+        mainActivityViewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticateState ->
             when (authenticateState) {
                 AUTHENTICATED -> receiveFile()
                 INVALID_AUTHENTICATION -> navigateToWizardLogin()

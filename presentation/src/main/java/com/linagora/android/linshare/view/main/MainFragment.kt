@@ -28,22 +28,18 @@ class MainFragment : MainNavigationFragment() {
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentMainBinding.inflate(inflater, container, false)
+        initViewModel()
         return binding.root
     }
 
     private fun initViewModel() {
-        mainActivityViewModel.viewState.observe(this, Observer { state ->
+        mainActivityViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             state.fold(
                 ifLeft = { gotoLoginPage() },
                 ifRight = { success ->
