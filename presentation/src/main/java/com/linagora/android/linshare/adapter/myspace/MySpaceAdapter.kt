@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.linagora.android.linshare.adapter.diff.DocumentDiffCallback
 import com.linagora.android.linshare.databinding.MySpaceRowItemBinding
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.view.myspace.MySpaceViewModel
+import com.linagora.android.linshare.view.base.ListItemBehavior
 
 class MySpaceAdapter(
-    private val mySpaceViewModel: MySpaceViewModel
+    private val itemBehavior: ListItemBehavior<Document>
 ) : ListAdapter<Document, MySpaceViewHolder>(DocumentDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySpaceViewHolder {
@@ -20,7 +20,7 @@ class MySpaceAdapter(
                 parent,
                 false
             ),
-            mySpaceViewModel
+            itemBehavior
         )
     }
 
@@ -31,12 +31,12 @@ class MySpaceAdapter(
 
 class MySpaceViewHolder(
     private val binding: MySpaceRowItemBinding,
-    private val mySpaceViewModel: MySpaceViewModel
+    private val itemBehavior: ListItemBehavior<Document>
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(document: Document) {
         binding.document = document
-        binding.viewModel = mySpaceViewModel
+        binding.itemBehavior = itemBehavior
         binding.executePendingBindings()
     }
 }

@@ -31,6 +31,7 @@ import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.base.LinShareViewModel
+import com.linagora.android.linshare.view.base.ListItemBehavior
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -43,7 +44,7 @@ class MySpaceViewModel @Inject constructor(
     private val systemNotifier: SystemNotifier,
     private val downloadingRepository: DownloadingRepository,
     private val removeDocumentInteractor: RemoveDocumentInteractor
-) : LinShareViewModel(application, dispatcherProvider) {
+) : LinShareViewModel(application, dispatcherProvider), ListItemBehavior<Document> {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceViewModel::class.java)
@@ -61,7 +62,7 @@ class MySpaceViewModel @Inject constructor(
         getAllDocuments()
     }
 
-    fun onContextMenuClick(document: Document) {
+    override fun onContextMenuClick(document: Document) {
         LOGGER.info("onContextMenuClick() $document")
         dispatchState(Either.right(ContextMenuClick(document)))
     }
