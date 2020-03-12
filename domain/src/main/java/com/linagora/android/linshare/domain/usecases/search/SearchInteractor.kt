@@ -8,6 +8,7 @@ import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,13 +18,23 @@ class SearchInteractor @Inject constructor(private val documentRepository: Docum
 
     operator fun invoke(query: String): Flow<State<Either<Failure, Success>>> {
         return flow<State<Either<Failure, Success>>> {
+            query.takeIf { it.length > 2 }
+                ?.let { performSearch(this, query) }
+                ?: emitState { Either.right(SearchInitial) }
+        }
+    }
+
+    private suspend fun performSearch(
+        flowCollector: FlowCollector<State<Either<Failure, Success>>>,
+        query: String
+    ) {
+        flowCollector.apply {
             emitState { Either.right(Success.Loading) }
 
             val state = Either.catch { documentRepository.search(query) }
                 .fold(
                     ifLeft = { Either.left(SearchFailure(it)) },
-                    ifRight = this@SearchInteractor::generateSearchState
-                )
+                    ifRight = this@SearchInteractor::generateSearchState)
 
             emitState { state }
         }

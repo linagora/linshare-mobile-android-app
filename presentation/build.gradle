@@ -144,6 +144,8 @@ dependencies {
     implementation deps.glide.core
 
     implementation deps.lifecycle.extensions
+    implementation deps.lifecycle.live_data
+    implementation deps.lifecycle.runtime
 
     implementation deps.kotlin.reflect
 

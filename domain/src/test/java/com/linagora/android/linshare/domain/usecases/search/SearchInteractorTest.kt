@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.domain.usecases.search
 
+import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
@@ -45,6 +46,18 @@ class SearchInteractorTest {
                 .isEqualTo(LOADING_STATE)
             assertThat(states[1](LOADING_STATE))
                 .isEqualTo(SEARCH_SUCCESS_STATE)
+        }
+    }
+
+    @Test
+    fun searchShouldReturnSearchInitialWhileQueryLengthIsLowerThanThree() {
+        runBlockingTest {
+            val states = searchInteractor("te")
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(1)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(Either.right(SearchInitial))
         }
     }
 
