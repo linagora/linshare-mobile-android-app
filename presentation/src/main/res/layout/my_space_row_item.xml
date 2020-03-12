@@ -3,13 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="com.linagora.android.linshare.domain.model.document.Document"/>
+        <import type="com.linagora.android.linshare.view.base.ListItemBehavior"/>
         <variable
-            name="viewModel"
-            type="com.linagora.android.linshare.view.myspace.MySpaceViewModel" />
+            name="itemBehavior"
+            type="ListItemBehavior&lt;Document&gt;" />
 
         <variable
             name="document"
-            type="com.linagora.android.linshare.domain.model.document.Document" />
+            type="Document" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +100,7 @@
                 android:id="@+id/documentContextMenu"
                 android:layout_width="@dimen/my_space_item_offline_icon_size"
                 android:layout_height="@dimen/my_space_item_context_menu_height"
-                android:onClick="@{() -> viewModel.onContextMenuClick(document)}"
+                android:onClick="@{() -> itemBehavior.onContextMenuClick(document)}"
                 android:scaleType="fitEnd"
                 android:src="@drawable/ic_three_dot"
                 app:layout_constraintBottom_toBottomOf="parent"

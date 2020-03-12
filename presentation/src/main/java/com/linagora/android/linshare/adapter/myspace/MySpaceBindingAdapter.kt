@@ -16,16 +16,16 @@ import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.util.TimeUtils
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
 import com.linagora.android.linshare.util.getDrawableIcon
-import com.linagora.android.linshare.view.myspace.MySpaceViewModel
+import com.linagora.android.linshare.view.base.ListItemBehavior
 
-@BindingAdapter("mySpaceState", "viewModel", requireAll = true)
+@BindingAdapter("mySpaceState", "itemBehavior", requireAll = true)
 fun bindingMySpaceList(
     recyclerView: RecyclerView,
     mySpaceState: Either<Failure, Success>,
-    viewModel: MySpaceViewModel
+    itemBehavior: ListItemBehavior<Document>
 ) {
     if (recyclerView.adapter == null) {
-        recyclerView.adapter = MySpaceAdapter(viewModel)
+        recyclerView.adapter = MySpaceAdapter(itemBehavior)
     }
 
     mySpaceState.fold(
