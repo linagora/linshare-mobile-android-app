@@ -89,4 +89,5 @@
     <string name="confirm_delete_file">Bạn có chắc chắn muốn xóa tệp này?</string>
 
     <string name="search_in_my_space">Tìm kiếm</string>
+    <string name="search_no_results">Không tìm thấy kết quả nào</string>
 </resources>

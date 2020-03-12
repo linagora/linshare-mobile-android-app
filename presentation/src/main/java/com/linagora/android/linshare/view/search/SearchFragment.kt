@@ -8,20 +8,30 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSearchBinding
+import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.android.synthetic.main.fragment_search.view.searchView
+import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
 class SearchFragment : MainNavigationFragment() {
-
-    private lateinit var binding: FragmentSearchBinding
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SearchFragment::class.java)
     }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var binding: FragmentSearchBinding
+
+    private lateinit var searchViewModel: SearchViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +39,14 @@ class SearchFragment : MainNavigationFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
+        initViewModel(binding)
         return binding.root
+    }
+
+    private fun initViewModel(searchBinding: FragmentSearchBinding) {
+        searchViewModel = getViewModel(viewModelFactory)
+        searchBinding.lifecycleOwner = this
+        searchBinding.searchViewModel = searchViewModel
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,6 +58,7 @@ class SearchFragment : MainNavigationFragment() {
 
     private fun setUpSearchView() {
         binding.toolbar.searchView.apply {
+
             setOnQueryTextListener(object : OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     dismissKeyboard(this@apply)
@@ -48,6 +66,8 @@ class SearchFragment : MainNavigationFragment() {
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
+                    LOGGER.info("onQueryTextChange() $newText")
+                    sendQueryString(newText)
                     return true
                 }
             })
@@ -58,6 +78,12 @@ class SearchFragment : MainNavigationFragment() {
                 }
             }
             requestFocus()
+        }
+    }
+
+    private fun sendQueryString(query: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchViewModel.queryChannel.send(query)
         }
     }
 

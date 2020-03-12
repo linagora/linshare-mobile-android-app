@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.view.search.SearchViewModel"/>
+        <variable
+            name="searchViewModel"
+            type="SearchViewModel" />
+
+    </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -28,10 +37,32 @@
                     android:queryHint="@string/search_in_my_space"
                     android:closeIcon="@drawable/ic_close"
                     android:searchIcon="@null"
-                    android:searchHintIcon="@null"
-                    tools:targetApi="lollipop_mr1">
+                    android:searchHintIcon="@null">
                 </SearchView>
             </androidx.appcompat.widget.Toolbar>
+
         </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchResults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:searchState="@{searchViewModel.searchResult}"
+            app:itemBehavior="@{searchViewModel}" />
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/search_no_results"
+            android:textAlignment="center"
+            android:textSize="@dimen/no_results_text_size"
+            android:textColor="@color/divide_view"
+            app:visible="@{searchViewModel.searchResult}"
+            tools:visibility="visible" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
