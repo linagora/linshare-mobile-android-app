@@ -101,4 +101,7 @@
     <dimen name="bottom_bar_inset">16dp</dimen>
     <dimen name="elevation">6dp</dimen>
 
+    <!--search -->
+    <dimen name="no_results_text_size">26dp</dimen>
+
 </resources>

@@ -43,6 +43,6 @@ class SearchInteractor @Inject constructor(private val documentRepository: Docum
     private fun generateSearchState(documents: List<Document>): Either<Failure, Success> {
         return documents.takeIf { it.isNotEmpty() }
             ?.let { Either.right(SearchViewState(it)) }
-            ?:let { Either.left(NoResults) }
+            ?: let { Either.left(NoResults) }
     }
 }
