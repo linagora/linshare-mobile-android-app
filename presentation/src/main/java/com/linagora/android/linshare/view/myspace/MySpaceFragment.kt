@@ -21,6 +21,7 @@ import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
+import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
@@ -89,6 +90,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
             is UploadButtonBottomBarClick -> openFilePicker()
             is RemoveClick -> confirmRemoveDocument(viewEvent.document)
+            is SearchButtonClick -> openSearch()
         }
         mySpaceViewModel.dispatchState(Either.right(Idle))
     }
@@ -194,5 +196,9 @@ class MySpaceFragment : MainNavigationFragment() {
         val bundle = UploadFragmentArgs(INSIDE_APP).toBundle()
         bundle.putParcelable(Constant.UPLOAD_URI_BUNDLE_KEY, uri)
         findNavController().navigate(R.id.uploadFragment, bundle)
+    }
+
+    private fun openSearch() {
+        findNavController().navigate(R.id.navigationSearch)
     }
 }
