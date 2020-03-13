@@ -16,10 +16,12 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSearchBinding
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
@@ -29,6 +31,7 @@ import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.myspace.ConfirmRemoveDocumentDialog
 import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.android.synthetic.main.fragment_search.view.searchView
 import kotlinx.coroutines.launch
@@ -76,8 +79,15 @@ class SearchFragment : MainNavigationFragment() {
         searchViewModel.viewState.observe(viewLifecycleOwner, Observer {
             it.map { success -> when (success) {
                 is Success.ViewEvent -> reactToViewEvent(success)
+                is Success.ViewState -> reactToViewState(success)
             } }
         })
+    }
+
+    private fun reactToViewState(viewState: Success.ViewState) {
+        when (viewState) {
+            is RemoveDocumentSuccessViewState -> search(searchView.query.toString())
+        }
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
@@ -87,6 +97,7 @@ class SearchFragment : MainNavigationFragment() {
                 showContextMenu(viewEvent.document)
             }
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
+            is RemoveClick -> confirmRemoveDocument(viewEvent.document)
         }
         searchViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -109,9 +120,7 @@ class SearchFragment : MainNavigationFragment() {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     LOGGER.info("onQueryTextChange() $newText")
-                    newText.takeIf { it.isNotBlank() }
-                        ?.let(::QueryString)
-                        ?.let(this@SearchFragment::sendQueryString)
+                    search(newText)
                     return true
                 }
             })
@@ -123,6 +132,12 @@ class SearchFragment : MainNavigationFragment() {
             }
             requestFocus()
         }
+    }
+
+    private fun search(query: String) {
+        query.takeIf { it.isNotBlank() }
+            ?.let(::QueryString)
+            ?.let(this@SearchFragment::sendQueryString)
     }
 
     private fun sendQueryString(query: QueryString) {
@@ -194,5 +209,20 @@ class SearchFragment : MainNavigationFragment() {
 
     private fun shouldRequestWriteStoragePermission() {
         mainActivityViewModel.shouldShowWriteStoragePermissionRequest(requireActivity())
+    }
+
+    private fun confirmRemoveDocument(document: Document) {
+        searchContextMenuDialog.dismiss()
+        ConfirmRemoveDocumentDialog(
+            document = document,
+            title = getString(R.string.confirm_delete_file),
+            negativeText = getString(R.string.cancel),
+            positiveText = getString(R.string.remove),
+            onPositiveCallback = { handleRemoveDocument(document) }
+        ).show(childFragmentManager, "confirm_remove_document_dialog")
+    }
+
+    private fun handleRemoveDocument(document: Document) {
+        searchViewModel.removeDocument(document)
     }
 }

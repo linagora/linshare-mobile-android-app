@@ -10,6 +10,8 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
+import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.search.SearchInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -33,7 +35,8 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchInteractor: SearchInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
-    private val downloadOperator: DownloadOperator
+    private val downloadOperator: DownloadOperator,
+    private val removeDocumentInteractor: RemoveDocumentInteractor
 ) : BaseViewModel(dispatcherProvider),
     ListItemBehavior<Document>,
     ItemContextMenu<Document> {
@@ -76,6 +79,13 @@ class SearchViewModel @Inject constructor(
 
     override fun onRemoveClick(data: Document) {
         LOGGER.info("onRemoveClick() $data")
+        dispatchState(Either.right(RemoveClick(data)))
+    }
+
+    fun removeDocument(document: Document) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(removeDocumentInteractor(document.documentId))
+        }
     }
 
     private fun setProcessingDocument(document: Document?) {
