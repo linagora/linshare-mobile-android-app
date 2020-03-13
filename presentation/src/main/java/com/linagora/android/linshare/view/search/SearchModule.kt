@@ -19,4 +19,8 @@ internal abstract class SearchModule {
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
     internal abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeSearchContextMenuDialog(): SearchContextMenuDialog
 }

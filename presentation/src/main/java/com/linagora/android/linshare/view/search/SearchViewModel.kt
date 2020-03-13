@@ -5,12 +5,14 @@ import androidx.lifecycle.asLiveData
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.search.SearchInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.ItemContextMenu
 import com.linagora.android.linshare.view.base.ListItemBehavior
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -23,8 +25,10 @@ import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     private val searchInteractor: SearchInteractor,
-    dispatcherProvider: CoroutinesDispatcherProvider
-) : BaseViewModel(dispatcherProvider), ListItemBehavior<Document> {
+    private val dispatcherProvider: CoroutinesDispatcherProvider
+) : BaseViewModel(dispatcherProvider),
+    ListItemBehavior<Document>,
+    ItemContextMenu<Document> {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SearchViewModel::class.java)
@@ -49,7 +53,16 @@ class SearchViewModel @Inject constructor(
         return newState
     }
 
-    override fun onContextMenuClick(document: Document) {
-        LOGGER.info("onContextMenuClick() $document")
+    override fun onContextMenuClick(data: Document) {
+        LOGGER.info("onContextMenuClick() $data")
+        dispatchState(Either.right(ContextMenuClick(data)))
+    }
+
+    override fun onDownloadClick(data: Document) {
+        LOGGER.info("onDownloadClick() $data")
+    }
+
+    override fun onRemoveClick(data: Document) {
+        LOGGER.info("onRemoveClick() $data")
     }
 }
