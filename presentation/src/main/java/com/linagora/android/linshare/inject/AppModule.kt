@@ -25,6 +25,8 @@ import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.linshare.network.AuthorizationManagerImp
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification
+import com.linagora.android.linshare.operator.download.DownloadManagerOperator
+import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.view.LinShareApplication
 import dagger.Module
 import dagger.Provides
@@ -108,5 +110,11 @@ open class AppModule {
     @Singleton
     fun provideRoomDownloadingRepository(downloadingRepository: RoomDownloadingRepository): DownloadingRepository {
         return downloadingRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideDownloadManagerOperator(downloadManagerOperator: DownloadManagerOperator): DownloadOperator {
+        return downloadManagerOperator
     }
 }
