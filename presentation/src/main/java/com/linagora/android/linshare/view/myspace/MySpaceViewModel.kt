@@ -36,7 +36,7 @@ class MySpaceViewModel @Inject constructor(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceViewModel::class.java)
 
-        private val NO_DOWNLOADING_DOCUMENT = null
+        val NO_DOWNLOADING_DOCUMENT = null
     }
 
     private val downloadingDocument = MutableLiveData<Document>()
