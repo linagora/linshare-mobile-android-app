@@ -26,7 +26,7 @@ class DownloadManagerOperator @Inject constructor(
     private val uploadAndDownloadNotification: UploadAndDownloadNotification,
     private val systemNotifier: SystemNotifier,
     private val downloadingRepository: DownloadingRepository
-): DownloadOperator {
+) : DownloadOperator {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(DownloadManagerOperator::class.java)

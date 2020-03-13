@@ -6,11 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSearchBinding
+import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.showKeyboard
@@ -34,6 +39,8 @@ class SearchFragment : MainNavigationFragment() {
 
     private lateinit var searchViewModel: SearchViewModel
 
+    private lateinit var searchContextMenuDialog: SearchContextMenuDialog
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +55,23 @@ class SearchFragment : MainNavigationFragment() {
         searchViewModel = getViewModel(viewModelFactory)
         searchBinding.lifecycleOwner = this
         searchBinding.searchViewModel = searchViewModel
+
+        observeViewState()
+    }
+
+    private fun observeViewState() {
+        searchViewModel.viewState.observe(viewLifecycleOwner, Observer {
+            it.map { success -> when (success) {
+                is Success.ViewEvent -> reactToViewEvent(success)
+            } }
+        })
+    }
+
+    private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (viewEvent) {
+            is ContextMenuClick -> showContextMenu(viewEvent.document)
+        }
+        searchViewModel.dispatchState(Either.right(Success.Idle))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,5 +121,11 @@ class SearchFragment : MainNavigationFragment() {
     override fun onPause() {
         searchView.dismissKeyboard()
         super.onPause()
+    }
+
+    private fun showContextMenu(document: Document) {
+        searchView.dismissKeyboard()
+        searchContextMenuDialog = SearchContextMenuDialog(document)
+        searchContextMenuDialog.show(childFragmentManager, "search context menu dialog")
     }
 }
