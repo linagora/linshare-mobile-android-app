@@ -21,7 +21,7 @@ class RemoveDocumentInteractor @Inject constructor(
 ) {
 
     operator fun invoke(documentId: DocumentId): Flow<State<Either<Failure, Success>>> {
-        return flow {
+        return flow<State<Either<Failure, Success>>> {
             emitState { Either.right(Loading) }
 
             val state = Either.catch { documentRepository.remove(documentId) }
