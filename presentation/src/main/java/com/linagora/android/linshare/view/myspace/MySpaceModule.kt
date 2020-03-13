@@ -23,4 +23,8 @@ internal abstract class MySpaceModule {
     @IntoMap
     @ViewModelKey(MySpaceViewModel::class)
     internal abstract fun bindViewModel(viewModel: MySpaceViewModel): ViewModel
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeConfirmRemoveDocumentDialogFragment(): ConfirmRemoveDocumentDialog
 }

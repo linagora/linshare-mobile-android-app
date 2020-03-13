@@ -86,4 +86,5 @@
     <string name="internet_not_available">Tệp %s sẽ được tải lên khi có kết nối.</string>
     <string name="file_ready_to_upload">Tệp %s đã sẵn sàng để tải lên.</string>
     <string name="file_added_to_waiting_list">Tệp %s đã được thêm vào danh sách chờ.</string>
+    <string name="confirm_delete_file">Bạn có chắc chắn muốn xóa tệp này?</string>
 </resources>

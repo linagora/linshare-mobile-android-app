@@ -16,15 +16,14 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
+import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
-import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
-import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.Constant
@@ -89,9 +88,20 @@ class MySpaceFragment : MainNavigationFragment() {
             is ContextMenuClick -> showContextMenu(viewEvent.document)
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
             is UploadButtonBottomBarClick -> openFilePicker()
-            is RemoveClick -> handleRemoveDocument(viewEvent.documentId)
+            is RemoveClick -> confirmRemoveDocument(viewEvent.document)
         }
         mySpaceViewModel.dispatchState(Either.right(Idle))
+    }
+
+    private fun confirmRemoveDocument(document: Document) {
+        mySpaceContextMenuDialog.dismiss()
+        ConfirmRemoveDocumentDialog(
+            document = document,
+            title = getString(R.string.confirm_delete_file),
+            negativeText = getString(R.string.cancel),
+            positiveText = getString(R.string.remove),
+            onPositiveCallback = { handleRemoveDocument(document) }
+        ).show(childFragmentManager, "confirm_remove_document_dialog")
     }
 
     private fun showContextMenu(document: Document) {
@@ -99,9 +109,8 @@ class MySpaceFragment : MainNavigationFragment() {
         mySpaceContextMenuDialog.show(childFragmentManager, mySpaceContextMenuDialog.tag)
     }
 
-    private fun handleRemoveDocument(documentId: DocumentId) {
-        mySpaceContextMenuDialog.dismiss()
-        mySpaceViewModel.removeDocument(documentId)
+    private fun handleRemoveDocument(document: Document) {
+        mySpaceViewModel.removeDocument(document)
     }
 
     private fun observeRequestPermission() {
