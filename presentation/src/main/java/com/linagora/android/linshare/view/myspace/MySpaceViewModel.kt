@@ -11,7 +11,6 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.download.DownloadingTask
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.network.ServicePath
@@ -78,7 +77,7 @@ class MySpaceViewModel @Inject constructor(
     }
 
     fun onRemoveClick(document: Document) {
-        dispatchState(Either.right(RemoveClick(document.documentId)))
+        dispatchState(Either.right(RemoveClick(document)))
     }
 
     private fun setProcessingDocument(document: Document) {
@@ -89,9 +88,9 @@ class MySpaceViewModel @Inject constructor(
         return downloadingDocument.value
     }
 
-    fun removeDocument(documentId: DocumentId) {
+    fun removeDocument(document: Document) {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(removeDocumentInteractor(documentId))
+            consumeStates(removeDocumentInteractor(document.documentId))
         }
     }
 
