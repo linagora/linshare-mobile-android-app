@@ -8,7 +8,6 @@
         <variable
             name="searchViewModel"
             type="SearchViewModel" />
-
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -16,53 +15,90 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar"
-            style="@style/Search.AppBar"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:fitsSystemWindows="true"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
+                style="@style/Search.AppBar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
+                android:fitsSystemWindows="true"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <SearchView
-                    android:id="@+id/searchView"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:iconifiedByDefault="false"
-                    android:queryBackground="@color/transparent"
-                    android:queryHint="@string/search_in_my_space"
-                    android:closeIcon="@drawable/ic_close"
-                    android:searchIcon="@null"
-                    android:searchHintIcon="@null">
-                </SearchView>
-            </androidx.appcompat.widget.Toolbar>
+                    android:layout_height="?attr/actionBarSize">
 
-        </com.google.android.material.appbar.AppBarLayout>
+                    <SearchView
+                        android:id="@+id/searchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:iconifiedByDefault="false"
+                        android:queryBackground="@color/transparent"
+                        android:queryHint="@string/search_in_my_space"
+                        android:closeIcon="@drawable/ic_close"
+                        android:searchIcon="@null"
+                        android:searchHintIcon="@null">
+                    </SearchView>
+                </androidx.appcompat.widget.Toolbar>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchResults"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            app:layoutManager="LinearLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:searchState="@{searchViewModel.searchResult}"
-            app:itemBehavior="@{searchViewModel}" />
+            </com.google.android.material.appbar.AppBarLayout>
 
-        <TextView
-            android:id="@+id/empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/search_no_results"
-            android:textAlignment="center"
-            android:textSize="@dimen/no_results_text_size"
-            android:textColor="@color/divide_view"
-            app:visible="@{searchViewModel.searchResult}"
-            tools:visibility="visible" />
+            <LinearLayout
+                android:id="@+id/resultsCountContainer"
+                app:layout_constraintTop_toBottomOf="@+id/app_bar"
+                android:background="@color/search_result_container_background_color"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:resultsCountContainer="@{searchViewModel.searchResult}">
+
+                <TextView
+                    android:id="@+id/resultsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:singleLine="true"
+                    android:textColor="@color/search_result_total_text_color"
+                    tools:text="3 results"
+                    android:textSize="18dp"
+                    android:background="@color/search_result_container_background_color"
+                    android:textStyle="bold"
+                    app:resultsCount="@{searchViewModel.searchResult}"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layoutManager="LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintTop_toBottomOf="@+id/resultsCountContainer"
+                app:searchState="@{searchViewModel.searchResult}"
+                app:itemBehavior="@{searchViewModel}" />
+
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/search_no_results"
+                android:textAlignment="center"
+                android:textSize="@dimen/no_results_text_size"
+                android:textColor="@color/file_name_color"
+                app:visible="@{searchViewModel.searchResult}"
+                tools:visibility="visible"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

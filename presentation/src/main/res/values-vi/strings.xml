@@ -90,4 +90,8 @@
 
     <string name="search_in_my_space">Tìm kiếm</string>
     <string name="search_no_results">Không tìm thấy kết quả nào</string>
+    <plurals name="search_total_results">
+        <item quantity="one">%d kết quả</item>
+        <item quantity="other">%d kết quả</item>
+    </plurals>
 </resources>
