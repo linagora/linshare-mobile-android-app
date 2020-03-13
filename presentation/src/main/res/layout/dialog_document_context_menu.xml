@@ -3,10 +3,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
+        <import type="com.linagora.android.linshare.domain.model.document.Document"/>
 
         <variable
-            name="viewModel"
-            type="com.linagora.android.linshare.view.myspace.MySpaceViewModel" />
+            name="contextMenu"
+            type="ItemContextMenu&lt;Document&gt;" />
 
         <variable
             name="document"
@@ -22,7 +24,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> viewModel.onDownloadClick(document)}">
+            android:onClick="@{() -> contextMenu.onDownloadClick(document)}">
 
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
@@ -35,7 +37,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> viewModel.onRemoveClick(document)}">
+            android:onClick="@{() -> contextMenu.onRemoveClick(document)}">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
                 android:src="@drawable/ic_delete" />

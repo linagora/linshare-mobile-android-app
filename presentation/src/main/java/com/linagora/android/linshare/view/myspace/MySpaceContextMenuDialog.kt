@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.linagora.android.linshare.databinding.DialogMySpaceContextMenuBinding
+import com.linagora.android.linshare.databinding.DialogDocumentContextMenuBinding
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.util.getParentViewModel
 import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
@@ -18,20 +18,20 @@ class MySpaceContextMenuDialog(private val document: Document) : DaggerBottomShe
     @Inject
     lateinit var mySpaceViewModel: MySpaceViewModel
 
-    private fun initViewModel(binding: DialogMySpaceContextMenuBinding) {
-        mySpaceViewModel = getParentViewModel(viewModelFactory)
-
-        binding.document = document
-        binding.viewModel = mySpaceViewModel
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DialogMySpaceContextMenuBinding.inflate(inflater, container, false)
+        val binding = DialogDocumentContextMenuBinding.inflate(inflater, container, false)
         initViewModel(binding)
         return binding.root
+    }
+
+    private fun initViewModel(binding: DialogDocumentContextMenuBinding) {
+        mySpaceViewModel = getParentViewModel(viewModelFactory)
+
+        binding.document = document
+        binding.contextMenu = mySpaceViewModel
     }
 }

@@ -30,6 +30,7 @@ import com.linagora.android.linshare.notification.UploadAndDownloadNotification
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
+import com.linagora.android.linshare.view.base.ItemContextMenu
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
 import kotlinx.coroutines.launch
@@ -44,7 +45,9 @@ class MySpaceViewModel @Inject constructor(
     private val systemNotifier: SystemNotifier,
     private val downloadingRepository: DownloadingRepository,
     private val removeDocumentInteractor: RemoveDocumentInteractor
-) : LinShareViewModel(application, dispatcherProvider), ListItemBehavior<Document> {
+) : LinShareViewModel(application, dispatcherProvider),
+    ListItemBehavior<Document>,
+    ItemContextMenu<Document> {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceViewModel::class.java)
@@ -67,7 +70,7 @@ class MySpaceViewModel @Inject constructor(
         dispatchState(Either.right(ContextMenuClick(document)))
     }
 
-    fun onDownloadClick(document: Document) {
+    override fun onDownloadClick(document: Document) {
         LOGGER.info("onDownloadClick() $document")
         setProcessingDocument(document)
         dispatchState(Either.right(DownloadClick(document)))
@@ -78,7 +81,7 @@ class MySpaceViewModel @Inject constructor(
         dispatchState(Either.right(UploadButtonBottomBarClick))
     }
 
-    fun onRemoveClick(document: Document) {
+    override fun onRemoveClick(document: Document) {
         dispatchState(Either.right(RemoveClick(document)))
     }
 
