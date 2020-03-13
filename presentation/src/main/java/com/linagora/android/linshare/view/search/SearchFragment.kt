@@ -1,11 +1,14 @@
 package com.linagora.android.linshare.view.search
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -14,12 +17,18 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSearchBinding
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
+import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.permission.PermissionResult
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.showKeyboard
+import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.android.synthetic.main.fragment_search.view.searchView
 import kotlinx.coroutines.launch
@@ -34,6 +43,9 @@ class SearchFragment : MainNavigationFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val mainActivityViewModel: MainActivityViewModel
+            by activityViewModels { viewModelFactory }
 
     private lateinit var binding: FragmentSearchBinding
 
@@ -57,6 +69,7 @@ class SearchFragment : MainNavigationFragment() {
         searchBinding.searchViewModel = searchViewModel
 
         observeViewState()
+        observeRequestPermission()
     }
 
     private fun observeViewState() {
@@ -69,7 +82,11 @@ class SearchFragment : MainNavigationFragment() {
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
-            is ContextMenuClick -> showContextMenu(viewEvent.document)
+            is ContextMenuClick -> {
+                clearSearchFocus()
+                showContextMenu(viewEvent.document)
+            }
+            is DownloadClick -> handleDownloadDocument(viewEvent.document)
         }
         searchViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -124,8 +141,58 @@ class SearchFragment : MainNavigationFragment() {
     }
 
     private fun showContextMenu(document: Document) {
-        searchView.dismissKeyboard()
         searchContextMenuDialog = SearchContextMenuDialog(document)
         searchContextMenuDialog.show(childFragmentManager, "search context menu dialog")
+    }
+
+    private fun clearSearchFocus() {
+        searchView.dismissKeyboard()
+        searchView.clearFocus()
+    }
+
+    private fun observeRequestPermission() {
+        mainActivityViewModel.shouldShowPermissionRequestState.observe(viewLifecycleOwner, Observer {
+            if (it is RuntimePermissionRequest.ShouldShowWriteStorage) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    WriteExternalPermissionRequestCode.code
+                )
+            }
+        })
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        LOGGER.info("onRequestPermissionsResult() $requestCode")
+        when (requestCode) {
+            WriteExternalPermissionRequestCode.code -> { Either.cond(
+                test = grantResults.all { grantResult -> grantResult == PackageManager.PERMISSION_GRANTED },
+                ifTrue = { searchViewModel.getDownloadingDocument()?.let { download(it) } },
+                ifFalse = { mainActivityViewModel.setActionForWriteStoragePermissionRequest(DENIED) })
+            }
+        }
+    }
+
+    private fun handleDownloadDocument(document: Document) {
+        searchContextMenuDialog.dismiss()
+        when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
+            PermissionResult.PermissionGranted -> { download(document) }
+            else -> { shouldRequestWriteStoragePermission() }
+        }
+    }
+
+    private fun download(document: Document) {
+        LOGGER.info("download() $document")
+        mainActivityViewModel.currentAuthentication.value
+            ?.let { authentication ->
+                searchViewModel.downloadDocument(authentication.credential, authentication.token, document)
+            }
+    }
+
+    private fun shouldRequestWriteStoragePermission() {
+        mainActivityViewModel.shouldShowWriteStoragePermissionRequest(requireActivity())
     }
 }
