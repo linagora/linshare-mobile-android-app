@@ -90,4 +90,8 @@
 
     <string name="search_in_my_space">Search in My Space</string>
     <string name="search_no_results">No results found</string>
+    <plurals name="search_total_results">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
 </resources>

@@ -1,18 +1,19 @@
 package com.linagora.android.linshare.view.search
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSearchBinding
+import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.MainNavigationFragment
 import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.android.synthetic.main.fragment_search.view.searchView
@@ -61,27 +62,29 @@ class SearchFragment : MainNavigationFragment() {
 
             setOnQueryTextListener(object : OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    dismissKeyboard(this@apply)
+                    this@apply.dismissKeyboard()
                     return true
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     LOGGER.info("onQueryTextChange() $newText")
-                    sendQueryString(newText)
+                    newText.takeIf { it.isNotBlank() }
+                        ?.let(::QueryString)
+                        ?.let(this@SearchFragment::sendQueryString)
                     return true
                 }
             })
 
             setOnQueryTextFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
-                    showKeyboard(view.findFocus())
+                    view.findFocus().showKeyboard()
                 }
             }
             requestFocus()
         }
     }
 
-    private fun sendQueryString(query: String) {
+    private fun sendQueryString(query: QueryString) {
         viewLifecycleOwner.lifecycleScope.launch {
             searchViewModel.queryChannel.send(query)
         }
@@ -92,17 +95,7 @@ class SearchFragment : MainNavigationFragment() {
     }
 
     override fun onPause() {
-        dismissKeyboard(searchView)
+        searchView.dismissKeyboard()
         super.onPause()
-    }
-
-    private fun showKeyboard(view: View) {
-        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED)
-    }
-
-    private fun dismissKeyboard(view: View) {
-        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

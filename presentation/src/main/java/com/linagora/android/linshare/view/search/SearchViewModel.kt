@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.usecases.search.SearchInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -33,7 +34,7 @@ class SearchViewModel @Inject constructor(
     private val searchState = MutableLiveData<Either<Failure, Success>>()
         .apply { value = INITIAL_STATE }
 
-    val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)
+    val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 
     private val resultState = queryChannel.asFlow()
         .debounce(QUERY_INTERVAL_MS)

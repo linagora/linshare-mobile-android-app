@@ -26,4 +26,6 @@
     <color name="request_permission_popup_image_background_color">#919799</color>
 
     <color name="transparent">#0fff</color>
+    <color name="search_result_total_text_color">#ACACAC</color>
+    <color name="search_result_container_background_color">#F7F7F7</color>
 </resources>

@@ -89,9 +89,9 @@
 
                 <ImageButton
                     android:id="@+id/mySpaceSearch"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_width="@dimen/search_icon_size"
+                    android:layout_height="@dimen/search_icon_size"
+                    android:layout_marginEnd="@dimen/search_icon_margin_end"
                     android:src="@drawable/ic_search"
                     android:background="@null"
                     app:layout_constraintBottom_toBottomOf="parent"

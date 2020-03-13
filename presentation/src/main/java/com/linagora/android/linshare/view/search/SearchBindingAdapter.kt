@@ -1,10 +1,12 @@
 package com.linagora.android.linshare.view.search
 
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import arrow.core.Either
+import com.linagora.android.linshare.R
 import com.linagora.android.linshare.adapter.myspace.MySpaceAdapter
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.usecases.search.NoResults
@@ -41,6 +43,34 @@ fun bindingSearchResult(
 fun bindingEmptyMessage(textView: TextView, searchState: Either<Failure, Success>?) {
     val visible = searchState
         ?.fold(ifLeft = { it is NoResults }, ifRight = { false })
-        ?: false
-    textView.isVisible = visible
+    textView.isVisible = visible ?: false
+}
+
+@BindingAdapter("resultsCount")
+fun bindingSearchResultCount(
+    textView: TextView,
+    searchState: Either<Failure, Success>?
+) {
+    val count = searchState?.fold(
+        ifLeft = { 0 },
+        ifRight = { when (it) {
+            is SearchViewState -> it.documents.size
+            else -> 0 } }
+    )
+    textView.text = textView.context.resources
+        .getQuantityString(R.plurals.search_total_results, count ?: 0, count ?: 0)
+}
+
+@BindingAdapter("resultsCountContainer")
+fun bindingSearchResultCountContainer(
+    linearLayout: LinearLayout,
+    searchState: Either<Failure, Success>?
+) {
+    val visible = searchState?.fold(
+        ifLeft = { false },
+        ifRight = { when (it) {
+            is SearchViewState -> true
+            else -> false } }
+    )
+    linearLayout.isVisible = visible ?: false
 }

@@ -104,4 +104,9 @@
     <!--search -->
     <dimen name="no_results_text_size">26dp</dimen>
 
+
+    <!--bottom bar-->
+    <dimen name="search_icon_size">40dp</dimen>
+    <dimen name="search_icon_margin_end">16dp</dimen>
+
 </resources>

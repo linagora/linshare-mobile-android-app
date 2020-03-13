@@ -13,6 +13,7 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
@@ -286,7 +287,7 @@ object TestFixtures {
     }
 
     object Searchs {
-        const val QUERY_STRING = "query_string"
+        val QUERY_STRING = QueryString("query_string")
 
         val SEARCH_SUCCESS_STATE = Either.right(SearchViewState(listOf(DOCUMENT, DOCUMENT_2)))
 

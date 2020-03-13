@@ -3,6 +3,7 @@ package com.linagora.android.linshare.domain.usecases.search
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
@@ -52,7 +53,7 @@ class SearchInteractorTest {
     @Test
     fun searchShouldReturnSearchInitialWhileQueryLengthIsLowerThanThree() {
         runBlockingTest {
-            val states = searchInteractor("te")
+            val states = searchInteractor(QueryString("qu"))
                 .toList(ArrayList())
 
             assertThat(states).hasSize(1)

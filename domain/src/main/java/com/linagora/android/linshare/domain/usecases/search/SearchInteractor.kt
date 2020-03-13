@@ -2,6 +2,7 @@ package com.linagora.android.linshare.domain.usecases.search
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -16,9 +17,9 @@ import javax.inject.Singleton
 @Singleton
 class SearchInteractor @Inject constructor(private val documentRepository: DocumentRepository) {
 
-    operator fun invoke(query: String): Flow<State<Either<Failure, Success>>> {
+    operator fun invoke(query: QueryString): Flow<State<Either<Failure, Success>>> {
         return flow<State<Either<Failure, Success>>> {
-            query.takeIf { it.length > 2 }
+            query.takeIf { it.value.length > 2 }
                 ?.let { performSearch(this, query) }
                 ?: emitState { Either.right(SearchInitial) }
         }
@@ -26,7 +27,7 @@ class SearchInteractor @Inject constructor(private val documentRepository: Docum
 
     private suspend fun performSearch(
         flowCollector: FlowCollector<State<Either<Failure, Success>>>,
-        query: String
+        query: QueryString
     ) {
         flowCollector.apply {
             emitState { Either.right(Success.Loading) }
