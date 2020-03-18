@@ -1,19 +1,23 @@
 package com.linagora.android.linshare.util
 
+import android.graphics.drawable.AnimationDrawable
 import android.text.format.Formatter
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import arrow.core.Either
+import arrow.core.orNull
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
+import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -32,12 +36,12 @@ fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {
             ?.let {
                 textView.apply {
                     setText(it)
-                    setTextColor(resources.getColor(R.color.error_border_color))
+                    setTextColor(ContextCompat.getColor(textView.context, R.color.error_border_color))
                 }
             }
             ?: textView.apply {
                 setText(R.string.please_enter_credential)
-                setTextColor(resources.getColor(R.color.text_with_logo_color))
+                setTextColor(ContextCompat.getColor(textView.context, R.color.text_with_logo_color))
             }
     } catch (exp: Exception) {
         Timber.w("bindLoginGuide() ignore this exception: ${exp.message}")
@@ -124,18 +128,32 @@ fun bindingFileSize(textView: TextView, document: DocumentRequest?) {
     }.getOrNull()
 }
 
-@BindingAdapter("uploadInfo")
-fun bindingUploadInfo(textView: TextView, document: DocumentRequest?) {
-    textView.text = document?.uploadFileName
+@BindingAdapter("uploadInfo", "uploadErrorStateInfo")
+fun bindingUploadInfo(textView: TextView, document: DocumentRequest?, uploadErrorState: Either<Failure, Success>) {
+    textView.text = uploadErrorState.map { success ->
+        when (success) {
+            PreUploadExecuting -> textView.context.resources.getString(R.string.executing)
+            else -> document?.uploadFileName
+        }
+    }.orNull()
 }
 
-@BindingAdapter("uploadIcon")
-fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?) {
-    GlideApp.with(imageView.context)
-        .load(document?.file)
-        .placeholder(document?.mediaType?.getDrawableIcon()
-            ?: R.drawable.ic_warning)
-        .into(imageView)
+@BindingAdapter("documentIcon", "uploadErrorStateIcon")
+fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?, uploadErrorState: Either<Failure, Success>) {
+    val animationDrawable = imageView.background as AnimationDrawable
+    uploadErrorState.map { success ->
+        when (success) {
+            PreUploadExecuting -> animationDrawable.start()
+            else -> {
+                animationDrawable.stop()
+                GlideApp.with(imageView.context)
+                    .load(document?.file)
+                    .placeholder(document?.mediaType?.getDrawableIcon()
+                        ?: android.R.drawable.screen_background_light_transparent)
+                    .into(imageView)
+            }
+        }
+    }
 }
 
 @BindingAdapter("uploadErrorMessage")
@@ -160,16 +178,32 @@ fun bindingUploadError(textView: TextView, uploadErrorState: Either<Failure, Suc
 @BindingAdapter("uploadError")
 fun bindingUploadButton(button: Button, uploadErrorState: Either<Failure, Success>) {
     uploadErrorState.fold(
-        ifLeft = { failure ->
-            when (failure) {
-                QuotaAccountNoMoreSpaceAvailable, ExceedMaxFileSize, ExtractInfoFailed
-                -> {
-                    button.isEnabled = false
-                    button.setTextColor(button.context.resources.getColor(R.color.white))
-                }
-                else -> button.isEnabled = true
-            }
-        },
-        ifRight = { button.isEnabled = true }
+        ifLeft = { disableButtonUpload(button) },
+        ifRight = { success -> bindingUploadButtonWhenSuccess(success, button) }
     )
+}
+
+private fun bindingUploadButtonWhenSuccess(success: Success, button: Button) {
+    when (success) {
+        PreUploadExecuting -> disableButtonPreUploadExecuting(button)
+        else -> enableButtonUpload(button)
+    }
+}
+
+private fun disableButtonPreUploadExecuting(button: Button) {
+    button.isEnabled = false
+    button.setTextColor(ContextCompat.getColor(button.context, R.color.disable_state_color))
+    button.setBackgroundResource(R.drawable.round_with_border_loading_button_layout)
+}
+
+private fun enableButtonUpload(button: Button) {
+    button.isEnabled = true
+    button.setTextColor(ContextCompat.getColor(button.context, R.color.colorPrimary))
+    button.setBackgroundResource(R.drawable.round_with_border_button_layout)
+}
+
+private fun disableButtonUpload(button: Button) {
+    button.isEnabled = false
+    button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
+    button.setBackgroundResource(R.drawable.round_with_border_disable_button_layout)
 }

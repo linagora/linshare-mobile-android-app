@@ -58,6 +58,7 @@
     <string name="no_more_space_avalable">You exceeded your storage quota on the LinShare server. Free space and retry your upload.</string>
     <string name="exceed_max_file_size">Uploaded file size exceeds the allowable limit. Please try another file.</string>
     <string name="extrac_info_failed">Unexpected error while trying to access this document through a third party application.</string>
+    <string name="executing">Prepare to upload</string>
 
     <string name="upload_file">Upload File</string>
     <string name="upload_to_my_space">Upload to My Space</string>

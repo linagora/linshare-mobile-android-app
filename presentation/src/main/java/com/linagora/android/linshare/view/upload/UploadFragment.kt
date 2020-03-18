@@ -25,6 +25,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentUploadBinding
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
+import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.createTempFile
@@ -112,6 +113,9 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun receiveFile() {
+
+        uploadFragmentViewModel.dispatchState(Either.right(PreUploadExecuting))
+
         uploadScoped.launch(dispatcherProvider.io) {
             LOGGER.info("receiveFile()")
             val bundle = requireArguments()
