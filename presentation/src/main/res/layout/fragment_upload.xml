@@ -62,7 +62,9 @@
                     android:scaleType="centerCrop"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:uploadIcon="@{document}" />
+                    android:background="@drawable/progress_animation"
+                    app:documentIcon="@{document}"
+                    app:uploadErrorStateIcon="@{viewModel.viewState}"/>
 
                 <TextView
                     android:id="@+id/uploadInfo"
@@ -78,7 +80,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/uploadSize"
                     app:layout_constraintStart_toEndOf="@+id/uploadIcon"
                     app:layout_constraintTop_toTopOf="@id/uploadIcon"
-                    app:uploadInfo="@{document}" />
+                    app:uploadInfo="@{document}"
+                    app:uploadErrorStateInfo="@{viewModel.viewState}"/>
 
                 <TextView
                     android:id="@+id/uploadSize"
