@@ -5,9 +5,9 @@ import com.linagora.android.linshare.domain.model.BaseErrorCode
 import com.linagora.android.linshare.domain.model.ClientErrorCode
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
-import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
+import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
