@@ -18,6 +18,7 @@ import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.permission.ReadStoragePermission
 import com.linagora.android.linshare.permission.WriteStoragePermission
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.NetworkConnectivity
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.UNAUTHENTICATED
@@ -54,6 +55,8 @@ class MainActivityViewModel @Inject constructor(
     val shouldShowPermissionRequestState: LiveData<RuntimePermissionRequest> = shouldShowPermissionRequest
 
     val authenticationState = MutableLiveData<AuthenticationState>()
+
+    val internetAvailable = MutableLiveData<NetworkConnectivity>()
 
     init {
         authenticationState.value = UNAUTHENTICATED
