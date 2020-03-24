@@ -95,4 +95,6 @@
         <item quantity="one">%d kết quả</item>
         <item quantity="other">%d kết quả</item>
     </plurals>
+
+    <string name="preparing">Đang chuẩn bị ...</string>
 </resources>

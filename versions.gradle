@@ -53,7 +53,7 @@ versions.truth = "1.0"
 
 versions.view_pager2 = "1.0.0-beta05"
 
-versions.work = "2.3.1"
+versions.work = "2.3.3"
 
 ext.versions = versions
 

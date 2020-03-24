@@ -95,4 +95,6 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
+
+    <string name="preparing">Preparing ...</string>
 </resources>
