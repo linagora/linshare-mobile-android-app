@@ -31,7 +31,6 @@ import com.linagora.android.linshare.model.resources.StringId
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.BaseNotification.Companion.FINISHED_NOTIFICATION
-import com.linagora.android.linshare.notification.BaseNotification.Companion.ONGOING_NOTIFICATION
 import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification
@@ -75,12 +74,16 @@ class UploadWorker(
     private val currentState = Either.right(Idle)
 
     override suspend fun doWork(): Result {
+        val notificationId = systemNotifier.generateNotificationId()
+        setWaitingForeground(notificationId, appContext.getString(R.string.preparing))
         return withContext(dispatcherProvider.computation) {
-            val notificationId = systemNotifier.generateNotificationId()
             var tempUploadFile: File? = null
             try {
                 tempUploadFile = File(inputData.getString(FILE_PATH_INPUT_KEY)!!)
-                upload(buildDocumentFromInputData(tempUploadFile), notificationId)
+
+                buildDocumentFromInputData(tempUploadFile)
+                    .also { upload(it, notificationId) }
+
                 Result.success()
             } catch (throwable: Throwable) {
                 LOGGER.error(throwable.message, throwable)
@@ -161,10 +164,7 @@ class UploadWorker(
     private suspend fun reactOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {
         when (success) {
             is AuthenticationViewState -> setUpInterceptors(success)
-            Loading -> {
-                alertDownLoading(document.uploadFileName)
-                setWaitingForeground(notificationId, document.uploadFileName)
-            }
+            Loading -> alertDownLoading(document.uploadFileName)
             is UploadingViewState -> updateUploadingProgress(document, notificationId, success.transferredBytes, success.totalBytes)
             is UploadSuccessViewState -> notifyUploadSuccess(systemNotifier.generateNotificationId(), document.uploadFileName)
         }
@@ -186,36 +186,20 @@ class UploadWorker(
         return builder.setContentTitle(appContext.resources.getQuantityString(R.plurals.notify_count_file_upload, 1))
     }
 
-    private suspend fun setUploadingForeground(
-        notificationId: NotificationId,
-        message: String,
-        max: TotalBytes,
-        progress: TransferredBytes
-    ) {
+    private fun notifyUploading(notificationId: NotificationId, message: String, max: TotalBytes, progress: TransferredBytes) {
         val percentage = (progress.value * 1f / max.value) * 100
-        return setUploadingForeground(notificationId, message, 100, percentage.toInt())
-    }
-
-    private suspend fun setUploadingForeground(
-        notificationId: NotificationId,
-        message: String,
-        max: Int,
-        progress: Int
-    ) {
-        setForeground(ForegroundInfo(notificationId.value, uploadNotification.create {
-            configUploadingNotificationBuilder(this)
-                .setContentText(message)
-                .setProgress(max, progress, BaseNotification.DISABLE_PROGRESS_INDETERMINATE)
-                .setOngoing(ONGOING_NOTIFICATION)
+        uploadNotification.notify(notificationId) {
+            this.setContentText(message)
+                .setProgress(100, percentage.toInt(), BaseNotification.DISABLE_PROGRESS_INDETERMINATE)
                 .build()
-        }))
+        }
     }
 
     private fun reduceUpdateProgress(transferredBytes: TransferredBytes): Int {
         return (transferredBytes.value % REDUCE_RATIO).toInt()
     }
 
-    private suspend fun updateUploadingProgress(
+    private fun updateUploadingProgress(
         document: DocumentRequest,
         notificationId: NotificationId,
         transferredBytes: TransferredBytes,
@@ -223,16 +207,7 @@ class UploadWorker(
     ) {
         reduceUpdateProgress(transferredBytes)
             .takeIf { it < MAX_UPDATE_PROGRESS_COUNT }
-            ?.let {
-                withContext(dispatcherProvider.main) {
-                    setUploadingForeground(
-                        notificationId = notificationId,
-                        message = document.uploadFileName,
-                        max = totalBytes,
-                        progress = transferredBytes
-                    )
-                }
-            }
+            ?.let { notifyUploading(notificationId, document.uploadFileName, totalBytes, transferredBytes) }
     }
 
     private fun notifyUploadSuccess(notificationId: NotificationId, message: String) {
