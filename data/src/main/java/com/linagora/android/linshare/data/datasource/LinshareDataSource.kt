@@ -82,19 +82,10 @@ class LinshareDataSource @Inject constructor(
         }.getOrNull()
     }
 
-    suspend fun isAuthorized(): User? {
-        try {
-            return linshareApi.isAuthorized()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-            when (exception) {
-                is UnknownHostException -> throw ConnectError
-                is SocketTimeoutException -> throw ConnectError
-                is SocketException -> throw ConnectError
-                is TimeoutCancellationException -> throw ConnectError
-                else -> throw UnknownError
-            }
-        }
+    suspend fun getAuthorizedUser(): User? {
+        return runCatching {
+            linshareApi.getAuthorizedUser()
+        }.getOrNull()
     }
 
     suspend fun findQuota(quotaUuid: String): AccountQuota? {

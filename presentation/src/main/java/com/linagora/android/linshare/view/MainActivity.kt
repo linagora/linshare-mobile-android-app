@@ -79,6 +79,10 @@ class MainActivity : BaseActivity(), NavigationHost {
 
         handleIntent(intent)
 
+        observeConnectionState()
+    }
+
+    private fun observeConnectionState() {
         val connectionLiveData = ConnectionLiveData(this)
         connectionLiveData.observe(this, Observer { networkConnectivity ->
             networkConnectivity?.let {

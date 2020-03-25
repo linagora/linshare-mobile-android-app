@@ -10,6 +10,6 @@ class LinshareUserRepository @Inject constructor(
 ) : UserRepository {
 
     override suspend fun getAuthorizedUser(): User? {
-        return linshareDataSource.isAuthorized()
+        return linshareDataSource.getAuthorizedUser()
     }
 }
