@@ -13,7 +13,6 @@ import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 class EnoughAccountQuotaInteractor @Inject constructor(
@@ -24,15 +23,9 @@ class EnoughAccountQuotaInteractor @Inject constructor(
     operator fun invoke(document: DocumentRequest): Flow<State<Either<Failure, Success>>> {
         return channelFlow<State<Either<Failure, Success>>> {
             send(State { Either.right(Loading) })
-            try {
                 userRepository.getAuthorizedUser()
                     ?.let { user -> enoughQuota(this, user, document) }
                     ?: send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
-            } catch (exception: Exception) {
-                when (exception) {
-                    is UnknownHostException -> send(State { Either.right(ValidAccountQuota) })
-                }
-            }
         }
     }
 
