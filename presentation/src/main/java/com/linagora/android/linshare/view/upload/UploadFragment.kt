@@ -28,6 +28,7 @@ import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.NetworkConnectivity
 import com.linagora.android.linshare.util.createTempFile
 import com.linagora.android.linshare.util.getDocumentRequest
 import com.linagora.android.linshare.util.getViewModel
@@ -157,7 +158,8 @@ class UploadFragment : MainNavigationFragment() {
     private fun bindingData(documentRequest: DocumentRequest) {
         uploadScoped.launch(dispatcherProvider.main) {
             binding.document = documentRequest
-            uploadFragmentViewModel.checkAccountQuota(documentRequest)
+            if (mainActivityViewModel.internetAvailable == NetworkConnectivity.CONNECTED)
+                uploadFragmentViewModel.checkAccountQuota(documentRequest)
             setUpUploadButton(documentRequest)
         }
     }
