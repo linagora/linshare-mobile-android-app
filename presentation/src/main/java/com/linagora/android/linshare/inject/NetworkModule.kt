@@ -15,6 +15,7 @@ import com.linagora.android.linshare.network.AuthorizationInterceptor
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
 import com.linagora.android.linshare.util.Constant.DEFAULT_TIMEOUT_SECONDS
+import com.linagora.android.linshare.util.Constant.NO_TIMEOUT
 import dagger.Module
 import dagger.Provides
 import okhttp3.MediaType
@@ -40,7 +41,7 @@ class NetworkModule {
         builder.addInterceptor(dynamicBaseUrlInterceptor)
             .addInterceptor(authorizationInterceptor)
             .connectTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)
-            .readTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)
+            .readTimeout(NO_TIMEOUT, SECONDS)
             .writeTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)
 
         if (BuildConfig.DEBUG) {

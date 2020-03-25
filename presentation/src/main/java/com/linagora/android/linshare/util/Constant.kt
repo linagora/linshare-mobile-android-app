@@ -9,4 +9,6 @@ object Constant {
     const val DEFAULT_TIMEOUT_SECONDS = 30L
 
     const val UPLOAD_URI_BUNDLE_KEY = "uriFile"
+
+    const val NO_TIMEOUT = 0L
 }
