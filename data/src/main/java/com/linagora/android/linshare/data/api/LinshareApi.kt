@@ -46,7 +46,7 @@ interface LinshareApi {
 
     @GET("/authentication/authorized")
     @Headers("Accept: application/json")
-    suspend fun isAuthorized(): User
+    suspend fun getAuthorizedUser(): User
 
     @GET("/quota/{uuid}")
     @Headers("Accept: application/json")

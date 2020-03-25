@@ -23,9 +23,9 @@ class EnoughAccountQuotaInteractor @Inject constructor(
     operator fun invoke(document: DocumentRequest): Flow<State<Either<Failure, Success>>> {
         return channelFlow<State<Either<Failure, Success>>> {
             send(State { Either.right(Loading) })
-                userRepository.getAuthorizedUser()
-                    ?.let { user -> enoughQuota(this, user, document) }
-                    ?: send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
+            userRepository.getAuthorizedUser()
+                ?.let { user -> enoughQuota(this, user, document) }
+                ?: send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
         }
     }
 
