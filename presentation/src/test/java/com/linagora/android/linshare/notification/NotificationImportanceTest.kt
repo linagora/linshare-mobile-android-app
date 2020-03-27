@@ -19,10 +19,10 @@ class NotificationImportanceTest {
             NotificationManager.IMPORTANCE_LOW,
             NotificationManager.IMPORTANCE_DEFAULT,
             NotificationManager.IMPORTANCE_HIGH,
-            NotificationManager.IMPORTANCE_MAX, 100
+            NotificationManager.IMPORTANCE_MAX
         )
 
-        private val INVALID_IMPORTANCES = listOf(-1, 0, 6, 100, 1000, 3)
+        private val INVALID_IMPORTANCES = listOf(-1, 0, 6, 100, 1000)
     }
 
     @Test
