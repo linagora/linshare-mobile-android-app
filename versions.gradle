@@ -31,7 +31,7 @@ versions.lifecycle = "2.2.0"
 
 versions.mockito = "3.1.0"
 
-versions.navigation = "2.1.0"
+versions.navigation = "2.2.1"
 
 versions.okhttp = "4.2.1"
 
