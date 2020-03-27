@@ -133,6 +133,7 @@ deps.junit5_plugin = "de.mannodermaus.gradle.plugins:android-junit5:$versions.ju
 def junit5 = [:]
 junit5.api = "org.junit.jupiter:junit-jupiter-api:$versions.junit5"
 junit5.engine = "org.junit.jupiter:junit-jupiter-engine:$versions.junit5"
+junit5.vintage_engine = "org.junit.vintage:junit-vintage-engine:$versions.junit5"
 deps.junit5 = junit5
 
 def kotlin = [:]
