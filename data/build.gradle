@@ -95,6 +95,7 @@ dependencies {
     testImplementation project(":testshared")
 
     testRuntimeOnly deps.junit5.engine
+    testRuntimeOnly deps.junit5.vintage_engine
 
     ktlint deps.ktlint
 }
