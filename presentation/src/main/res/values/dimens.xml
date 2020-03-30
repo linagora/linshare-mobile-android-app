@@ -43,7 +43,6 @@
     <!-- dialog -->
     <dimen name="dialog_round_corner">24dp</dimen>
     <dimen name="dialog_button_width">128dp</dimen>
-    <dimen name="bottom_dialog_margin_side">5dp</dimen>
 
     <!-- upload -->
     <dimen name="upload_button_margin_top">24dp</dimen>
