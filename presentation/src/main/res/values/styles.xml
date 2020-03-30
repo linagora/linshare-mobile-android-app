@@ -58,7 +58,7 @@
     <style name="RowLinerBottomSheetStyle">
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/height_bottom_sheet</item>
         <item name="android:clickable">true</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:orientation">horizontal</item>
@@ -69,13 +69,16 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="ImageInRowLinerBottomSheetStyle">
-        <item name="android:tint">@color/file_name_color</item>
+    <style name="ImageInRowBottomSheet">
         <item name="android:scaleType">center</item>
         <item name="android:layout_width">@dimen/size_icon_bottom_sheet</item>
         <item name="android:layout_height">@dimen/size_icon_bottom_sheet</item>
         <item name="android:layout_marginRight">@dimen/page_indicator_margin_top</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="ImageInRowLinerBottomSheetStyle" parent="ImageInRowBottomSheet">
+        <item name="android:tint">@color/file_name_color</item>
     </style>
 
     <style name="TextInRowLinerBottomSheetStyle">
@@ -100,5 +103,25 @@
         <item name="android:textColor">@color/cancel_color_text</item>
         <item name="android:background">@drawable/round_button_cancel</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DocumentInfoHeader" parent="Widget.AppCompat.TextView">
+        <item name="android:ellipsize">middle</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/file_name_color</item>
+        <item name="android:textSize">@dimen/request_permission_popup_permission_text_size</item>
+    </style>
+
+    <style name="DocumentSizeHeader" parent="Widget.AppCompat.TextView">
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/file_size_color</item>
+        <item name="android:textSize">@dimen/file_size_text_size</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="DivideView">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/divide_view</item>
     </style>
 </resources>
