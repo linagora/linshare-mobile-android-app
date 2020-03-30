@@ -95,4 +95,10 @@
         <item name="android:background">@color/white</item>
         <item name="android:elevation">8dp</item>
     </style>
+
+    <style name="CancelButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/cancel_color_text</item>
+        <item name="android:background">@drawable/round_button_cancel</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>
