@@ -99,7 +99,7 @@ class MySpaceFragment : MainNavigationFragment() {
         mySpaceContextMenuDialog.dismiss()
         ConfirmRemoveDocumentDialog(
             document = document,
-            title = getString(R.string.confirm_delete_file),
+            title = getString(R.string.confirm_delete_file, document.name),
             negativeText = getString(R.string.cancel),
             positiveText = getString(R.string.remove),
             onPositiveCallback = { handleRemoveDocument(document) }
