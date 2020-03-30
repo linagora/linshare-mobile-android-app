@@ -158,7 +158,7 @@ class UploadFragment : MainNavigationFragment() {
     private fun bindingData(documentRequest: DocumentRequest) {
         uploadScoped.launch(dispatcherProvider.main) {
             binding.document = documentRequest
-            if (mainActivityViewModel.internetAvailable == NetworkConnectivity.CONNECTED)
+            if (mainActivityViewModel.internetAvailable.value == NetworkConnectivity.CONNECTED)
                 uploadFragmentViewModel.checkAccountQuota(documentRequest)
             setUpUploadButton(documentRequest)
         }

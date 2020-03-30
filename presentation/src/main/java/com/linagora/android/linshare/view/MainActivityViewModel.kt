@@ -15,7 +15,6 @@ import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
-import com.linagora.android.linshare.permission.ReadStoragePermission
 import com.linagora.android.linshare.permission.WriteStoragePermission
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
@@ -32,7 +31,6 @@ class MainActivityViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
     private val authorizationManager: AuthorizationManager,
-    private val readStoragePermission: ReadStoragePermission,
     private val writeStoragePermission: WriteStoragePermission
 ) : BaseViewModel(dispatcherProvider) {
 
@@ -87,29 +85,6 @@ class MainActivityViewModel @Inject constructor(
 
     fun checkWriteStoragePermission(context: Context): PermissionResult {
         return writeStoragePermission.checkSelfPermission(context)
-    }
-
-    fun shouldShowReadStoragePermissionRequest(activity: Activity) {
-        shouldShowPermissionRequest.value = Initial
-        viewModelScope.launch(dispatcherProvider.io) {
-            val shouldShow = readStoragePermission.shouldShowPermissionRequest(
-                readStoragePermission.systemShouldShowPermissionRequest(activity))
-            shouldShowPermissionRequest.postValue(shouldShow)
-        }
-    }
-
-    fun setActionForReadStoragePermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction) {
-        viewModelScope.launch(dispatcherProvider.io) {
-            readStoragePermission.setActionForPermissionRequest(previousUserPermissionAction)
-        }
-    }
-
-    fun checkReadStoragePermission(context: Context): PermissionResult {
-        return readStoragePermission.checkSelfPermission(context)
-    }
-
-    fun requestReadStoragePermission(activity: Activity) {
-        readStoragePermission.requestPermission(activity)
     }
 
     fun setUpAuthenticated(authenticationViewState: AuthenticationViewState) {
