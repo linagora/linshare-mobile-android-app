@@ -1,7 +1,6 @@
 package com.linagora.android.linshare.view
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -17,15 +16,10 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.ActivityMainBinding
-import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.model.mapper.toParcelable
-import com.linagora.android.linshare.model.permission.PermissionResult
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadStorage
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowWriteStorage
-import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadStorage
 import com.linagora.android.linshare.model.resources.MenuId
 import com.linagora.android.linshare.model.resources.MenuResource
 import com.linagora.android.linshare.model.resources.ViewId
@@ -34,7 +28,6 @@ import com.linagora.android.linshare.util.Constant.LINSHARE_APPLICATION_ID
 import com.linagora.android.linshare.util.Constant.UPLOAD_URI_BUNDLE_KEY
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.base.BaseActivity
-import com.linagora.android.linshare.view.dialog.ReadStorageExplanationPermissionDialog
 import com.linagora.android.linshare.view.dialog.WriteStorageExplanationPermissionDialog
 import com.linagora.android.linshare.view.menu.SideMenuDrawer
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
@@ -108,25 +101,16 @@ class MainActivity : BaseActivity(), NavigationHost {
     }
 
     private fun handleSendAction(intent: Intent) {
-        when (viewModel.checkReadStoragePermission(this)) {
-            PermissionResult.PermissionGranted -> { extractSendAction(intent) }
-            else -> { requestReadStoragePermission() }
-        }
+        extractSendAction(intent)
     }
 
     private fun handleStoragePermissionRequest() {
         viewModel.shouldShowPermissionRequestState.observe(this, Observer {
             when (it) {
-                ShouldShowReadStorage -> viewModel.requestReadStoragePermission(this)
-                ShouldNotShowReadStorage -> showExplanationMessage()
                 ShouldNotShowWriteStorage -> showWriteStoragePermissionExplanation()
+                else -> handleIntent(intent)
             }
         })
-    }
-
-    private fun requestReadStoragePermission() {
-        LOGGER.info("requestReadStoragePermission")
-        viewModel.shouldShowReadStoragePermissionRequest(this)
     }
 
     private fun extractSendAction(intent: Intent) {
@@ -162,44 +146,6 @@ class MainActivity : BaseActivity(), NavigationHost {
     override fun registerToolbarWithNavigation(toolbar: Toolbar) {
         val appBarConfiguration = AppBarConfiguration(TOP_LEVEL_DESTINATIONS, sideMenuDrawer.drawerLayout)
         toolbar.setupWithNavController(navigationController, appBarConfiguration)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            ReadExternalPermissionRequestCode.code -> {
-                Either.cond(
-                    test = grantResults.all { grantResult -> grantResult == PackageManager.PERMISSION_GRANTED },
-                    ifTrue = { handleIntent(intent) },
-                    ifFalse = {
-                        handleUserDenied()
-                        exit()
-                    }
-                )
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    private fun handleUserDenied() {
-        viewModel.setActionForReadStoragePermissionRequest(DENIED)
-    }
-
-    private fun exit() {
-        onBackPressed()
-        finish()
-    }
-
-    private fun showExplanationMessage() {
-        ReadStorageExplanationPermissionDialog(
-            negativeText = getString(R.string.cancel),
-            positiveText = getString(R.string.go_to_setting),
-            onNegativeCallback = { exit() },
-            onPositiveCallback = { gotoSystemSettings() }
-        ).show(supportFragmentManager, "read_storage_permission_explanation")
     }
 
     private fun showWriteStoragePermissionExplanation() {

@@ -11,7 +11,6 @@ import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
-import com.linagora.android.linshare.permission.ReadStoragePermission
 import com.linagora.android.linshare.permission.WriteStoragePermission
 import com.linagora.android.linshare.runBlockingTest
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
@@ -47,9 +46,6 @@ class MainActivityViewModelTest {
     lateinit var viewObserver: Observer<Either<Failure, Success>>
 
     @Mock
-    lateinit var readStoragePermission: ReadStoragePermission
-
-    @Mock
     lateinit var writeStoragePermission: WriteStoragePermission
 
     private lateinit var viewModel: MainActivityViewModel
@@ -63,7 +59,6 @@ class MainActivityViewModelTest {
                 dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher),
                 dynamicBaseUrlInterceptor = dynamicBaseUrlInterceptor,
                 authorizationManager = authorizationManager,
-                readStoragePermission = readStoragePermission,
                 writeStoragePermission = writeStoragePermission
             )
     }
