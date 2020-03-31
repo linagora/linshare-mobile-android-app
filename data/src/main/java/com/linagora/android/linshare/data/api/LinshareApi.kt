@@ -6,6 +6,8 @@ import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.model.share.ShareCreation
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -67,4 +69,8 @@ interface LinshareApi {
     @DELETE("/documents/{uuid}")
     @Headers("Accept: application/json")
     suspend fun removeDocument(@Path("uuid") uuid: String): Document
+
+    @POST("/shares")
+    @Headers("Accept: application/json")
+    suspend fun share(@Body shareCreation: ShareCreation): List<Share>
 }
