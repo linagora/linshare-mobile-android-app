@@ -19,8 +19,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/my_space_item_padding"
         android:paddingBottom="@dimen/my_space_item_padding"
-        android:paddingStart="@dimen/my_space_item_padding"
-        android:paddingEnd="@dimen/my_space_item_padding">
+        android:paddingStart="@dimen/my_space_item_padding">
 
         <ImageView
             android:id="@+id/documentIcon"
@@ -64,47 +63,26 @@
             app:layout_constraintTop_toBottomOf="@id/documentName"
             app:layout_constraintStart_toEndOf="@id/documentIcon"
             app:layout_constraintEnd_toStartOf="@id/documentMenuContainer"
-            app:mySpaceItemLastModified="@{document}"
-            />
+            app:mySpaceItemLastModified="@{document}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/documentMenuContainer"
             android:layout_width="@dimen/my_space_item_menu_container_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/my_space_item_menu_container_width"
+            android:onClick="@{() -> itemBehavior.onContextMenuClick(document)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
-                android:id="@+id/offlineIcon"
-                android:layout_width="@dimen/my_space_item_offline_icon_size"
-                android:layout_height="@dimen/my_space_item_offline_icon_size"
-                android:background="@drawable/ic_offline"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/userShareIcon"
-                android:layout_width="@dimen/my_space_item_user_share_icon_width"
-                android:layout_height="@dimen/my_space_item_user_share_icon_height"
-                android:background="@drawable/ic_user_share"
-                app:layout_constraintStart_toEndOf="@id/offlineIcon"
-                app:layout_constraintEnd_toStartOf="@id/documentContextMenu"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:visibility="gone" />
-
-            <ImageView
                 android:id="@+id/documentContextMenu"
                 android:layout_width="@dimen/my_space_item_offline_icon_size"
                 android:layout_height="@dimen/my_space_item_context_menu_height"
-                android:onClick="@{() -> itemBehavior.onContextMenuClick(document)}"
-                android:scaleType="fitEnd"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_three_dot"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

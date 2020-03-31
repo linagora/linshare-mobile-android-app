@@ -26,8 +26,8 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="false"
             app:headerLayout="@layout/side_menu_header"
-            app:itemIconTint="@color/divide_view"
-            app:itemTextColor="@color/divide_view" />
+            app:itemIconTint="@color/grey_40"
+            app:itemTextColor="@color/grey_40" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>
