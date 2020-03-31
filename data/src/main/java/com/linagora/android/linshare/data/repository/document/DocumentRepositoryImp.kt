@@ -5,6 +5,8 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.model.share.ShareCreation
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import javax.inject.Inject
@@ -30,5 +32,9 @@ class DocumentRepositoryImp @Inject constructor(
 
     override suspend fun search(query: QueryString): List<Document> {
         return linShareDocumentDataSource.search(query)
+    }
+
+    override suspend fun share(shareCreation: ShareCreation): List<Share> {
+        return linShareDocumentDataSource.share(shareCreation)
     }
 }
