@@ -12,6 +12,10 @@ import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
+import com.linagora.android.testshared.ShareFixtures.SHARE_1
+import com.linagora.android.testshared.ShareFixtures.SHARE_2
+import com.linagora.android.testshared.ShareFixtures.SHARE_CREATION_1
+import com.linagora.android.testshared.ShareFixtures.SHARE_CREATION_2
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
 import com.linagora.android.testshared.TestFixtures.Searchs.QUERY_STRING
@@ -25,7 +29,6 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.lang.RuntimeException
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.P])
@@ -149,6 +152,30 @@ class DocumentsRepositoryImpTest {
 
             val documents = documentRepositoryImp.search(QUERY_STRING)
             assertThat(documents).isEmpty()
+        }
+    }
+
+    @Test
+    fun shareShouldReturnShareWithOneRecipient() {
+        runBlockingTest {
+            `when`(documentDataSource.share(SHARE_CREATION_1))
+                .thenAnswer { listOf(SHARE_1) }
+
+            val shares = documentRepositoryImp.share(SHARE_CREATION_1)
+            assertThat(shares).hasSize(1)
+            assertThat(shares[0]).isEqualTo(SHARE_1)
+        }
+    }
+
+    @Test
+    fun shareShouldReturnSharesWithMultiRecipient() {
+        runBlockingTest {
+            `when`(documentDataSource.share(SHARE_CREATION_2))
+                .thenAnswer { listOf(SHARE_1, SHARE_2) }
+
+            val shares = documentRepositoryImp.share(SHARE_CREATION_2)
+            assertThat(shares).hasSize(2)
+            assertThat(shares).containsExactly(SHARE_1, SHARE_2)
         }
     }
 }

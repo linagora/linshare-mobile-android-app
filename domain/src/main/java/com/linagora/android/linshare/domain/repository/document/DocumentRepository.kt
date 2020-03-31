@@ -4,6 +4,8 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.model.share.ShareCreation
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 
 interface DocumentRepository {
@@ -18,4 +20,6 @@ interface DocumentRepository {
     suspend fun remove(documentId: DocumentId): Document
 
     suspend fun search(query: QueryString): List<Document>
+
+    suspend fun share(shareCreation: ShareCreation): List<Share>
 }
