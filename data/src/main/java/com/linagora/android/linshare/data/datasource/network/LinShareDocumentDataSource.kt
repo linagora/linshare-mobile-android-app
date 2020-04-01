@@ -9,7 +9,7 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.document.nameContains
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.domain.model.share.ShareCreation
+import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
@@ -94,7 +94,7 @@ class LinShareDocumentDataSource @Inject constructor(
             .filter { document -> document.nameContains(query.value) }
     }
 
-    override suspend fun share(shareCreation: ShareCreation): List<Share> {
-        return linshareApi.share(shareCreation)
+    override suspend fun share(shareRequest: ShareRequest): List<Share> {
+        return linshareApi.share(shareRequest)
     }
 }

@@ -1,8 +1,10 @@
 package com.linagora.android.testshared
 
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.domain.model.share.ShareCreation
+import com.linagora.android.linshare.domain.model.share.ShareRequest
+import com.linagora.android.linshare.domain.usecases.share.ShareViewState
 import java.util.Date
 import java.util.UUID
 
@@ -15,12 +17,12 @@ object ShareFixtures {
         mail = "user2@linshare.org"
     )
 
-    val SHARE_CREATION_1 = ShareCreation(
+    val SHARE_CREATION_1 = ShareRequest(
         recipients = listOf(RECIPIENT_1),
         documents = listOf(TestFixtures.Documents.DOCUMENT_ID)
     )
 
-    val SHARE_CREATION_2 = ShareCreation(
+    val SHARE_CREATION_2 = ShareRequest(
         recipients = listOf(RECIPIENT_1, RECIPIENT_2),
         documents = listOf(TestFixtures.Documents.DOCUMENT_ID)
     )
@@ -48,4 +50,8 @@ object ShareFixtures {
         document = TestFixtures.Documents.DOCUMENT,
         recipient = RECIPIENT_2
     )
+
+    val SHARE_STATE_WITH_ONE_SHARE = Either.right(ShareViewState(listOf(SHARE_1)))
+
+    val SHARE_STATE_WITH_MULTIPLE_SHARES = Either.right(ShareViewState(listOf(SHARE_1, SHARE_2)))
 }
