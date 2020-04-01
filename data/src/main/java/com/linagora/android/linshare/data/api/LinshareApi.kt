@@ -5,6 +5,7 @@ import com.linagora.android.linshare.data.model.authentication.PermanentTokenBod
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
+import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
@@ -77,4 +78,10 @@ interface LinshareApi {
     @GET("/received_shares")
     @Headers("Accept: application/json")
     suspend fun getReceivedShares(): List<Share>
+
+    @GET("/autocomplete/{pattern}?type=SHARING")
+    @Headers("Accept: application/json")
+    suspend fun getSharingAutoComplete(
+        @Path("pattern") pattern: String
+    ): List<UserAutoCompleteResult>
 }
