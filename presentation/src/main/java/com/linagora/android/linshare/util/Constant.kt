@@ -11,4 +11,6 @@ object Constant {
     const val UPLOAD_URI_BUNDLE_KEY = "uriFile"
 
     const val NO_TIMEOUT = 0L
+
+    const val QUERY_INTERVAL_MS = 500L
 }
