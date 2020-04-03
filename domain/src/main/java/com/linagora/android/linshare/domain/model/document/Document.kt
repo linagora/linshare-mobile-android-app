@@ -10,7 +10,7 @@ data class Document(
     val description: String? = null,
     val creationDate: Date,
     val modificationDate: Date,
-    val expirationDate: Date,
+    val expirationDate: Date? = null,
     val ciphered: Boolean,
     val name: String,
     val size: Long,
