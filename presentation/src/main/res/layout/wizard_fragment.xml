@@ -50,7 +50,7 @@
             android:layout_width="@dimen/login_button_width"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top_wizard"
-            android:background="@drawable/round_button_primary_solid"
+            android:background="@drawable/round_button_accent_solid"
             android:text="@string/login"
             style="@style/LoginButton"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -110,4 +110,6 @@
     <dimen name="search_icon_size">40dp</dimen>
     <dimen name="search_icon_margin_end">16dp</dimen>
 
+    <!--share -->
+    <dimen name="share_margin_bottom">24dp</dimen>
 </resources>

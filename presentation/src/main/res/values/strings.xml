@@ -97,4 +97,7 @@
     </plurals>
 
     <string name="preparing">Preparing ...</string>
+
+    <string name="quick_share">Quick Share</string>
+    <string name="share">Share</string>
 </resources>

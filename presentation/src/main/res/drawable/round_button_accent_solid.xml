@@ -4,5 +4,5 @@
         android:topRightRadius="@dimen/round_corner_login_button"
         android:bottomLeftRadius="@dimen/round_corner_login_button"
         android:bottomRightRadius="@dimen/round_corner_login_button"/>
-    <solid android:color="@color/colorPrimary"/>
+    <solid android:color="@color/colorAccent"/>
 </shape>
