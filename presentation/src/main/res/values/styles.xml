@@ -129,4 +129,17 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/divide_view</item>
     </style>
+
+    <style name="Label">
+        <item name="android:textColor">@color/file_name_color</item>
+        <item name="android:textSize">@dimen/file_name_text_size</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="AddRecipientsStyle">
+        <item name="android:drawableStart">@drawable/ic_add_person</item>
+        <item name="android:drawablePadding">@dimen/share_add_recipients_drawer_padding</item>
+        <item name="android:textColor">@color/add_recipient_text</item>
+        <item name="android:backgroundTint">@color/add_recipient_gray</item>
+    </style>
 </resources>

@@ -70,4 +70,8 @@
         android:id="@+id/navigationSearch"
         android:name="com.linagora.android.linshare.view.search.SearchFragment"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/navigationShare"
+        android:name="com.linagora.android.linshare.view.share.ShareFragment"
+        tools:layout="@layout/fragment_share" />
 </navigation>

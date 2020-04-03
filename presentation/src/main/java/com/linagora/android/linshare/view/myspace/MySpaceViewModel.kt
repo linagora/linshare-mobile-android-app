@@ -16,6 +16,7 @@ import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentIntera
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
+import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.base.ItemContextMenu
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
@@ -38,6 +39,8 @@ class MySpaceViewModel @Inject constructor(
 
         val NO_DOWNLOADING_DOCUMENT = null
     }
+
+    val mySpaceItemAction = MySpaceItemActionImp(this)
 
     private val downloadingDocument = MutableLiveData<Document>()
 

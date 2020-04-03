@@ -50,11 +50,36 @@
             app:layout_constraintTop_toBottomOf="@id/shareAppBAr">
 
             <include
+                android:layout_height="@dimen/share_info_container_height"
+                android:layout_width="match_parent"
                 android:id="@+id/documentInfoContainer"
                 layout="@layout/header_file_info_container"
                 bind:document="@{document}"/>
 
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/addRecipientLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Label"
+            android:layout_marginTop="@dimen/share_label_margin_top"
+            android:layout_marginStart="@dimen/share_label_margin_start"
+            android:text="@string/add_recipients"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fileInfoContainer"/>
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/addRecipients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/share_add_recipients_margin_top"
+            android:layout_marginStart="@dimen/share_add_recipients_margin_side"
+            android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
+            style="@style/AddRecipientsStyle"
+            app:layout_constraintTop_toBottomOf="@id/addRecipientLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/shareButton"
