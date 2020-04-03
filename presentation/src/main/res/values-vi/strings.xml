@@ -97,4 +97,7 @@
     </plurals>
 
     <string name="preparing">Đang chuẩn bị ...</string>
+
+    <string name="quick_share">Chia sẻ nhanh</string>
+    <string name="share">Chia sẻ</string>
 </resources>
