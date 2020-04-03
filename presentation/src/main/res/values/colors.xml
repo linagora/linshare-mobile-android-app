@@ -33,4 +33,6 @@
     <color name="cancel_color_border">#D3D3D3</color>
 
     <color name="available_offline_tag_background">#1B7EC7</color>
+    <color name="add_recipient_gray">#D3D3D3</color>
+    <color name="add_recipient_text">#7B7B7B</color>
 </resources>

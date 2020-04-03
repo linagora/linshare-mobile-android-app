@@ -13,3 +13,4 @@ data class RemoveDocumentSuccessViewState(val document: Document) : Success.View
 data class RemoveDocumentFailure(val throwable: Throwable) : FeatureFailure()
 data class RemoveClick(val document: Document) : Success.ViewEvent()
 object SearchButtonClick : Success.ViewEvent()
+data class ShareItemClick(val document: Document) : Success.ViewEvent()

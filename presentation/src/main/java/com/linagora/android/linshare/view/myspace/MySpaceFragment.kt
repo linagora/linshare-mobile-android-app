@@ -22,9 +22,11 @@ import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
+import com.linagora.android.linshare.domain.usecases.myspace.ShareItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
+import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.Constant
@@ -35,6 +37,7 @@ import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.share.ShareFragment.Companion.SHARE_DOCUMENT_BUNDLE_KEY
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
@@ -91,6 +94,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is UploadButtonBottomBarClick -> openFilePicker()
             is RemoveClick -> confirmRemoveDocument(viewEvent.document)
             is SearchButtonClick -> openSearch()
+            is ShareItemClick -> navigateToShare(viewEvent.document)
         }
         mySpaceViewModel.dispatchState(Either.right(Idle))
     }
@@ -200,5 +204,12 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private fun openSearch() {
         findNavController().navigate(R.id.navigationSearch)
+    }
+
+    private fun navigateToShare(document: Document) {
+        mySpaceContextMenuDialog.dismiss()
+        val bundle = Bundle()
+        bundle.putParcelable(SHARE_DOCUMENT_BUNDLE_KEY, document.toParcelable())
+        findNavController().navigate(R.id.navigationShare, bundle)
     }
 }

@@ -5,8 +5,13 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.view.action.MySpaceItemAction"/>
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.document.Document"/>
+
+        <variable
+            name="mySpaceItemAction"
+            type="MySpaceItemAction&lt;Document&gt;" />
 
         <variable
             name="contextMenu"
@@ -33,6 +38,18 @@
             android:layout_marginTop="@dimen/padding_top_bottom_sheet"
             style="@style/DivideView"
             app:layout_constraintTop_toBottomOf="@id/documentInfoContainer" />
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> mySpaceItemAction.onShareClick(document)}">
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_share" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/share" />
+        </LinearLayout>
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"

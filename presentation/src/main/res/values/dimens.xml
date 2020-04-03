@@ -112,4 +112,10 @@
 
     <!--share -->
     <dimen name="share_margin_bottom">24dp</dimen>
+    <dimen name="share_info_container_height">56dp</dimen>
+    <dimen name="share_label_margin_start">20dp</dimen>
+    <dimen name="share_label_margin_top">24dp</dimen>
+    <dimen name="share_add_recipients_margin_top">8dp</dimen>
+    <dimen name="share_add_recipients_margin_side">16dp</dimen>
+    <dimen name="share_add_recipients_drawer_padding">4dp</dimen>
 </resources>
