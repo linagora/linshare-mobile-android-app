@@ -101,4 +101,6 @@
     <string name="quick_share">Quick Share</string>
     <string name="share">Share</string>
     <string name="add_recipients">Add recipients</string>
+    <string name="share_failed">File is not shared successfully.</string>
+    <string name="share_success">Your file was successfully shared.</string>
 </resources>
