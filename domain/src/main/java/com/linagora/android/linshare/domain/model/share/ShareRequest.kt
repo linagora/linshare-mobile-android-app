@@ -1,9 +1,11 @@
 package com.linagora.android.linshare.domain.model.share
 
+import com.google.gson.annotations.SerializedName
 import com.linagora.android.linshare.domain.model.GenericUser
-import com.linagora.android.linshare.domain.model.document.DocumentId
+import java.util.UUID
 
 data class ShareRequest(
     val recipients: List<GenericUser>,
-    val documents: List<DocumentId>
+    @SerializedName("documents")
+    val documentIds: List<UUID>
 )

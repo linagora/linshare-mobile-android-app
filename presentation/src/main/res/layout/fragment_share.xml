@@ -87,6 +87,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/share"
+            android:enabled="false"
             style="@style/ShareButton"
             android:layout_marginBottom="@dimen/share_margin_bottom"/>
 

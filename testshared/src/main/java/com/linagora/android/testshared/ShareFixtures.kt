@@ -19,12 +19,12 @@ object ShareFixtures {
 
     val SHARE_CREATION_1 = ShareRequest(
         recipients = listOf(RECIPIENT_1),
-        documents = listOf(TestFixtures.Documents.DOCUMENT_ID)
+        documentIds = listOf(TestFixtures.Documents.DOCUMENT_ID.uuid)
     )
 
     val SHARE_CREATION_2 = ShareRequest(
         recipients = listOf(RECIPIENT_1, RECIPIENT_2),
-        documents = listOf(TestFixtures.Documents.DOCUMENT_ID)
+        documentIds = listOf(TestFixtures.Documents.DOCUMENT_ID.uuid)
     )
 
     val SHARE_1 = Share(

@@ -101,4 +101,6 @@
     <string name="quick_share">Chia sẻ nhanh</string>
     <string name="share">Chia sẻ</string>
     <string name="add_recipients">Thêm người nhận</string>
+    <string name="share_failed">Chia sẻ tệp không thành công.</string>
+    <string name="share_success">Tệp đã được chia sẻ thành công.</string>
 </resources>
