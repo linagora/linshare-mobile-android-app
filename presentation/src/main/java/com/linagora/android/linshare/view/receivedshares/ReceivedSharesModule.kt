@@ -19,4 +19,8 @@ internal abstract class ReceivedSharesModule {
     @IntoMap
     @ViewModelKey(ReceivedSharesViewModel::class)
     abstract fun bindAccountReceivedSharesModel(receivedSharesViewModel: ReceivedSharesViewModel): ViewModel
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeReceivedShareContextMenuDialog(): ReceivedShareContextMenuDialog
 }
