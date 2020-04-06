@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.share.Share"/>
+
+        <variable
+            name="share"
+            type="Share" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/RowLinerBottomSheetStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/previewShareIcon"
+            style="@style/ImageInRowBottomSheet"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shareIcon="@{share}"
+            />
+
+        <TextView
+            android:id="@+id/shareName"
+            style="@style/DocumentInfoHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/shareSize"
+            app:layout_constraintStart_toEndOf="@+id/previewShareIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{share.sender.firstName + ` ` + share.sender.lastName}"
+            />
+
+        <TextView
+            android:id="@+id/shareSize"
+            style="@style/DocumentSizeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@id/shareName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/shareName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shareSize="@{share}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
