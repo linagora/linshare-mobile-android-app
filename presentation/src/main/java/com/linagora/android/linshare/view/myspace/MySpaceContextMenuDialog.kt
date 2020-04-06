@@ -32,7 +32,8 @@ class MySpaceContextMenuDialog(private val document: Document) : DaggerBottomShe
         mySpaceViewModel = getParentViewModel(viewModelFactory)
 
         binding.document = document
-        binding.contextMenu = mySpaceViewModel
         binding.mySpaceItemAction = mySpaceViewModel.mySpaceItemAction
+        binding.contextMenu = mySpaceViewModel.itemContextMenu
+        binding.personalContextMenu = mySpaceViewModel.personalItemContextMenu
     }
 }
