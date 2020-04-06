@@ -31,6 +31,7 @@ class SearchContextMenuDialog(private val document: Document) : DaggerBottomShee
     private fun initViewModel(documentContextMenuBinding: DialogDocumentContextMenuBinding) {
         searchViewModel = getParentViewModel(viewModelFactory)
         documentContextMenuBinding.document = document
-        documentContextMenuBinding.contextMenu = searchViewModel
+        documentContextMenuBinding.contextMenu = searchViewModel.itemContextMenu
+        documentContextMenuBinding.personalContextMenu = searchViewModel.personalItemContextMenu
     }
 }

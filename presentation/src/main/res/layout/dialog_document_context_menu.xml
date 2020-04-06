@@ -7,6 +7,7 @@
     <data>
         <import type="com.linagora.android.linshare.view.action.MySpaceItemAction"/>
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
+        <import type="com.linagora.android.linshare.view.action.PersonalItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.document.Document"/>
 
         <variable
@@ -16,6 +17,10 @@
         <variable
             name="contextMenu"
             type="ItemContextMenu&lt;Document&gt;" />
+
+        <variable
+            name="personalContextMenu"
+            type="PersonalItemContextMenu&lt;Document&gt;" />
 
         <variable
             name="document"
@@ -54,7 +59,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> contextMenu.onDownloadClick(document)}">
+            android:onClick="@{() -> personalContextMenu.download(document)}">
 
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
@@ -68,7 +73,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> contextMenu.onRemoveClick(document)}">
+            android:onClick="@{() -> contextMenu.remove(document)}">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
                 android:src="@drawable/ic_delete" />
