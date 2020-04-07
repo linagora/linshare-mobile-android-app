@@ -39,7 +39,7 @@ class MainActivity : BaseActivity(), NavigationHost {
         private val LOGGER = LoggerFactory.getLogger(MainActivity::class.java)
 
         private val TOP_LEVEL_DESTINATIONS = setOf(
-            R.id.navigation_my_space
+            R.id.navigation_my_space, R.id.navigation_received_shares
         )
 
         val INIT_DESTINATIONS = setOf(

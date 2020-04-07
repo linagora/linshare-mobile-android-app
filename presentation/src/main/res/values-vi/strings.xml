@@ -103,4 +103,7 @@
     <string name="add_recipients">Thêm người nhận</string>
     <string name="share_failed">Chia sẻ tệp không thành công.</string>
     <string name="share_success">Tệp đã được chia sẻ thành công.</string>
+    <string name="created">Ngày tạo %s</string>
+    <string name="received">Đã nhận</string>
+    <string name="received_shares">Chia sẻ với tôi</string>
 </resources>

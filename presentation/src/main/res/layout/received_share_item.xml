@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.linagora.android.linshare.domain.model.share.Share" />
+
+        <import type="com.linagora.android.linshare.view.base.ListItemBehavior" />
+
+        <variable
+            name="itemBehavior"
+            type="ListItemBehavior&lt;Share&gt;" />
+
+        <variable
+            name="share"
+            type="Share" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/my_space_item_padding">
+
+        <ImageView
+            android:id="@+id/receivedIcon"
+            android:layout_width="@dimen/my_space_item_icon_size"
+            android:layout_height="@dimen/my_space_item_icon_size"
+            android:layout_marginStart="@dimen/my_space_item_padding"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@id/receivedName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/receivedName"
+            app:receivedMediaType="@{share}" />
+
+        <TextView
+            android:id="@+id/receivedName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textColor="@color/file_name_color"
+            android:textSize="@dimen/file_name_text_size"
+            app:layout_constraintBaseline_toBaselineOf="@id/receivedIcon"
+            app:layout_constraintStart_toEndOf="@id/receivedIcon"
+            app:layout_constraintEnd_toStartOf="@+id/receivedMenuContainer"
+            app:layout_constraintTop_toTopOf="parent"
+            app:receivedName="@{share}" />
+
+        <TextView
+            android:id="@+id/receivedUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textColor="@color/file_name_color"
+            android:textSize="@dimen/file_size_text_size"
+            app:layout_constraintStart_toEndOf="@id/receivedIcon"
+            app:layout_constraintTop_toBottomOf="@id/receivedName"
+            app:receivedUserName="@{share}" />
+
+        <TextView
+            android:id="@+id/receivedCreationDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textColor="@color/file_size_color"
+            android:textSize="@dimen/file_size_text_size"
+            app:layout_constraintStart_toEndOf="@id/receivedIcon"
+            app:layout_constraintTop_toBottomOf="@id/receivedUserName"
+            app:receivedCreationDate="@{share}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/receivedMenuContainer"
+            android:layout_width="@dimen/my_space_item_menu_container_width"
+            android:layout_height="@dimen/my_space_item_menu_container_width"
+            android:onClick="@{() -> itemBehavior.onContextMenuClick(share)}"
+            android:layout_marginBottom="@dimen/my_space_item_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/receivedContextMenu"
+                android:layout_width="@dimen/my_space_item_offline_icon_size"
+                android:layout_height="@dimen/my_space_item_context_menu_height"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_three_dot"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1sp"
+            android:layout_marginTop="@dimen/my_space_item_padding"
+            android:background="@color/disable_state_color"
+            app:layout_constraintTop_toBottomOf="@+id/receivedCreationDate" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
