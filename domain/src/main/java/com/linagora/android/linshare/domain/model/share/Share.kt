@@ -1,7 +1,9 @@
 package com.linagora.android.linshare.domain.model.share
 
 import com.linagora.android.linshare.domain.model.GenericUser
+import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.document.Document
+import okhttp3.MediaType
 import java.util.Date
 import java.util.UUID
 
@@ -14,5 +16,16 @@ data class Share(
     val downloaded: Long,
     val document: Document,
     val recipient: GenericUser,
-    val description: String
-)
+    val description: String,
+    val type: MediaType,
+    val size: Long,
+    val message: String,
+    val hasThumbnail: Boolean,
+    val ciphered: Boolean,
+    val sender: User
+) {
+    init {
+        require(size >= 0) { "size must not be negative" }
+        require(downloaded >= 0) { "downloaded must not be negative" }
+    }
+}
