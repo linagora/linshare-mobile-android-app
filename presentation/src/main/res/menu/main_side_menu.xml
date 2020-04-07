@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/navigation_received_group"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@id/navigation_received_shares"
+            android:icon="@drawable/ic_received_share"
+            android:title="@string/received_shares"/>
+    </group>
+
     <group
         android:id="@+id/navigation_my_space_group"
         android:checkableBehavior="single">

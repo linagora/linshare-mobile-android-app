@@ -103,4 +103,7 @@
     <string name="add_recipients">Add recipients</string>
     <string name="share_failed">File is not shared successfully.</string>
     <string name="share_success">Your file was successfully shared.</string>
+    <string name="created">Created %s</string>
+    <string name="received">Received</string>
+    <string name="received_shares">Received shares</string>
 </resources>
