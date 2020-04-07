@@ -72,8 +72,11 @@ fun bindingMySpaceItemLastModified(
     textView: TextView,
     document: Document
 ) {
-    textView.text = runCatching { TimeUtils.convertToLocalTime(document.modificationDate, LastModifiedFormat) }
-        .getOrNull()
+    textView.text = runCatching {
+        textView.context.getString(
+            R.string.last_modified,
+            TimeUtils.convertToLocalTime(document.modificationDate, LastModifiedFormat))
+    }.getOrNull()
 }
 
 @BindingAdapter("documentMediaType")

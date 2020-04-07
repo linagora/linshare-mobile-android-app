@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View"/>
         <import type="com.linagora.android.linshare.domain.model.document.Document"/>
         <import type="com.linagora.android.linshare.view.base.ListItemBehavior"/>
         <variable
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/my_space_item_padding"
         android:paddingBottom="@dimen/my_space_item_padding"
-        android:paddingStart="@dimen/my_space_item_padding">
+        android:paddingStart="@dimen/my_space_item_padding_start">
 
         <ImageView
             android:id="@+id/documentIcon"
@@ -40,29 +41,27 @@
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:textSize="@dimen/file_name_text_size"
+            android:textSize="@dimen/my_space_item_primary_text_size"
             android:textColor="@color/file_name_color"
             app:mySpaceItemName="@{document}"
             app:layout_constraintStart_toEndOf="@id/documentIcon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBaseline_toBaselineOf="@id/documentIcon"
-            app:layout_constraintEnd_toStartOf="@id/documentMenuContainer"
-            />
+            app:layout_constraintEnd_toStartOf="@id/documentMenuContainer" />
 
         <TextView
             android:id="@+id/documentLastModified"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:ellipsize="middle"
             android:layout_marginTop="@dimen/my_space_item_line_spacing"
-            android:textSize="@dimen/file_size_text_size"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
             android:textColor="@color/file_size_color"
             android:layout_marginStart="@dimen/item_upload_container_margin_side"
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             app:layout_constraintTop_toBottomOf="@id/documentName"
             app:layout_constraintStart_toEndOf="@id/documentIcon"
-            app:layout_constraintEnd_toStartOf="@id/documentMenuContainer"
             app:mySpaceItemLastModified="@{document}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -86,6 +85,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            style="@style/ShareIconInRowItem"
+            app:layout_constraintTop_toBottomOf="@id/documentName"
+            app:layout_constraintStart_toEndOf="@id/documentLastModified"
+            android:baselineAlignBottom="true"
+            android:tint="@color/colorPrimary"
+            app:layout_constraintBaseline_toBaselineOf="@id/documentLastModified"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:visibility="@{document.shared > 0 ? View.VISIBLE : View.GONE}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
