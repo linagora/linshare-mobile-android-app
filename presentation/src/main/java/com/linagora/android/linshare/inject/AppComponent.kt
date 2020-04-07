@@ -21,7 +21,8 @@ import javax.inject.Singleton
         ViewModelModule::class,
         WorkerFactoryModule::class,
         WorkerBindingModule::class,
-        NetworkModule::class
+        NetworkModule::class,
+        ShareModule::class
     ]
 )
 interface AppComponent : AndroidInjector<LinShareApplication> {

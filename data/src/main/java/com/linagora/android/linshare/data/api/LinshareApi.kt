@@ -73,4 +73,8 @@ interface LinshareApi {
     @POST("/shares")
     @Headers("Accept: application/json")
     suspend fun share(@Body shareRequest: ShareRequest): List<Share>
+
+    @GET("/received_shares")
+    @Headers("Accept: application/json")
+    suspend fun getReceivedShares(): List<Share>
 }

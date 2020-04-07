@@ -4,7 +4,9 @@ import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
+import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesViewState
 import com.linagora.android.linshare.domain.usecases.share.ShareViewState
+import okhttp3.MediaType
 import java.util.Date
 import java.util.UUID
 
@@ -36,7 +38,13 @@ object ShareFixtures {
         expirationDate = Date(1582786676962),
         downloaded = 0,
         document = TestFixtures.Documents.DOCUMENT,
-        recipient = RECIPIENT_1
+        recipient = RECIPIENT_1,
+        type = MediaType.get("text/plain"),
+        size = 25,
+        message = "",
+        hasThumbnail = false,
+        ciphered = false,
+        sender = TestFixtures.Accounts.LINSHARE_USER
     )
 
     val SHARE_2 = Share(
@@ -48,10 +56,20 @@ object ShareFixtures {
         expirationDate = Date(1582786676962),
         downloaded = 0,
         document = TestFixtures.Documents.DOCUMENT,
-        recipient = RECIPIENT_2
+        recipient = RECIPIENT_2,
+        type = MediaType.get("text/plain"),
+        size = 25,
+        message = "",
+        hasThumbnail = false,
+        ciphered = false,
+        sender = TestFixtures.Accounts.LINSHARE_USER
     )
 
     val SHARE_STATE_WITH_ONE_SHARE = Either.right(ShareViewState(listOf(SHARE_1)))
 
     val SHARE_STATE_WITH_MULTIPLE_SHARES = Either.right(ShareViewState(listOf(SHARE_1, SHARE_2)))
+
+    private val RECEIVED_LIST_VIEW_STATE = ReceivedSharesViewState(listOf(SHARE_1, SHARE_2))
+
+    val ALL_RECEIVED_STATE = Either.Right(RECEIVED_LIST_VIEW_STATE)
 }
