@@ -41,13 +41,13 @@
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             android:ellipsize="middle"
             android:singleLine="true"
+            android:text="@{share.name}"
             android:textColor="@color/file_name_color"
             android:textSize="@dimen/file_name_text_size"
             app:layout_constraintBaseline_toBaselineOf="@id/receivedIcon"
-            app:layout_constraintStart_toEndOf="@id/receivedIcon"
             app:layout_constraintEnd_toStartOf="@+id/receivedMenuContainer"
-            app:layout_constraintTop_toTopOf="parent"
-            app:receivedName="@{share}" />
+            app:layout_constraintStart_toEndOf="@id/receivedIcon"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/receivedUserName"
@@ -58,11 +58,11 @@
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:textColor="@color/file_name_color"
+            android:textColor="@color/file_size_color"
             android:textSize="@dimen/file_size_text_size"
             app:layout_constraintStart_toEndOf="@id/receivedIcon"
             app:layout_constraintTop_toBottomOf="@id/receivedName"
-            app:receivedUserName="@{share}" />
+            android:text="@{share.sender.firstName + ` ` + share.sender.lastName}" />
 
         <TextView
             android:id="@+id/receivedCreationDate"
@@ -83,11 +83,11 @@
             android:id="@+id/receivedMenuContainer"
             android:layout_width="@dimen/my_space_item_menu_container_width"
             android:layout_height="@dimen/my_space_item_menu_container_width"
-            android:onClick="@{() -> itemBehavior.onContextMenuClick(share)}"
             android:layout_marginBottom="@dimen/my_space_item_padding"
+            android:onClick="@{() -> itemBehavior.onContextMenuClick(share)}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/receivedContextMenu"
@@ -100,12 +100,5 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1sp"
-            android:layout_marginTop="@dimen/my_space_item_padding"
-            android:background="@color/disable_state_color"
-            app:layout_constraintTop_toBottomOf="@+id/receivedCreationDate" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -9,6 +9,7 @@ import com.linagora.android.linshare.data.repository.credential.PreferenceTokenR
 import com.linagora.android.linshare.data.repository.document.DocumentRepositoryImp
 import com.linagora.android.linshare.data.repository.download.RoomDownloadingRepository
 import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository
+import com.linagora.android.linshare.data.repository.share.ReceivedSharesRepositoryImp
 import com.linagora.android.linshare.data.repository.user.LinshareAuditUserRepository
 import com.linagora.android.linshare.data.repository.user.LinshareQuotaRepository
 import com.linagora.android.linshare.data.repository.user.LinshareUserRepository
@@ -19,6 +20,7 @@ import com.linagora.android.linshare.domain.repository.TokenRepository
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
+import com.linagora.android.linshare.domain.repository.share.ReceivedShareRepository
 import com.linagora.android.linshare.domain.repository.user.AuditUserRepository
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
@@ -116,5 +118,11 @@ open class AppModule {
     @Singleton
     fun provideDownloadManagerOperator(downloadManagerOperator: DownloadManagerOperator): DownloadOperator {
         return downloadManagerOperator
+    }
+
+    @Provides
+    @Singleton
+    fun provideReceivedSharesRepository(receivedSharesRepository: ReceivedSharesRepositoryImp): ReceivedShareRepository {
+        return receivedSharesRepository
     }
 }

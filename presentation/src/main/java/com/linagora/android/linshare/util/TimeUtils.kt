@@ -9,7 +9,7 @@ object TimeUtils {
 
     private const val LAST_LOGIN_FORMAT = "dd.MM.YYYY hh:mm a"
 
-    private const val LAST_MODIFIED_FORMAT = "dd MMM YYYY HH:mm"
+    private const val LAST_MODIFIED_FORMAT = "MMM dd, YYYY"
 
     sealed class LinShareTimeFormat(val pattern: String) {
         object LastLoginFormat : LinShareTimeFormat(LAST_LOGIN_FORMAT)

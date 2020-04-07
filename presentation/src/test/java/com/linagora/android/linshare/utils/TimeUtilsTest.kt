@@ -21,7 +21,7 @@ class TimeUtilsTest {
     fun convertToLocalTimeShouldFollowLastModifiedFormat() {
         val dateTime = TimeUtils.convertToLocalTime(LAST_LOGIN_DATE, LastModifiedFormat)
 
-        assertThat(isValidFormat("dd MMM YYYY HH:mm", dateTime)).isTrue()
+        assertThat(isValidFormat("MMM dd, YYYY", dateTime)).isTrue()
     }
 
     private fun isValidFormat(format: String, value: String): Boolean {
