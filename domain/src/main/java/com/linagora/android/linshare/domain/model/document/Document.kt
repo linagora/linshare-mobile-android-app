@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.domain.model.document
 
 import com.google.gson.annotations.SerializedName
+import com.linagora.android.linshare.domain.model.share.Share
 import okhttp3.MediaType
 import java.util.Date
 
@@ -18,7 +19,8 @@ data class Document(
     val metaData: String? = null,
     val sha256sum: String,
     val hasThumbnail: Boolean,
-    val shared: Int = 0
+    val shared: Int = 0,
+    val shares: List<Share>? = emptyList()
 ) {
     init {
         require(size >= 0) { "size must not be negative" }

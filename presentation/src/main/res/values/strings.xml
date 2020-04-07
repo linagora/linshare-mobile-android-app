@@ -89,6 +89,8 @@
     <string name="file_added_to_waiting_list">File %s is added to the waiting list.</string>
     <string name="confirm_delete_file">Are you sure to delete \"%s\"?</string>
 
+    <string name="last_modified">Modified %s</string>
+
     <string name="search_in_my_space">Search in My Space</string>
     <string name="search_no_results">No results found</string>
     <plurals name="search_total_results">

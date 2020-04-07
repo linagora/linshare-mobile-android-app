@@ -142,4 +142,12 @@
         <item name="android:textColor">@color/add_recipient_text</item>
         <item name="android:backgroundTint">@color/add_recipient_gray</item>
     </style>
+
+    <style name="ShareIconInRowItem">
+        <item name="android:layout_width">@dimen/my_space_item_user_share_icon_width</item>
+        <item name="android:layout_height">@dimen/my_space_item_user_share_icon_height</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:src">@drawable/ic_user_share</item>
+        <item name="android:tint">@color/colorPrimary</item>
+    </style>
 </resources>

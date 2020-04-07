@@ -78,14 +78,17 @@
     <dimen name="side_menu_header_title_height">40dp</dimen>
 
     <!--my space item-->
-    <dimen name="my_space_item_padding">16dp</dimen>
+    <dimen name="my_space_item_padding">12dp</dimen>
+    <dimen name="my_space_item_padding_start">16dp</dimen>
     <dimen name="my_space_item_icon_size">24dp</dimen>
-    <dimen name="my_space_item_line_spacing">8dp</dimen>
-    <dimen name="my_space_item_menu_container_width">48dp</dimen>
+    <dimen name="my_space_item_line_spacing">4dp</dimen>
+    <dimen name="my_space_item_menu_container_width">40dp</dimen>
     <dimen name="my_space_item_offline_icon_size">18dp</dimen>
-    <dimen name="my_space_item_user_share_icon_width">22dp</dimen>
-    <dimen name="my_space_item_user_share_icon_height">14dp</dimen>
+    <dimen name="my_space_item_user_share_icon_width">15dp</dimen>
+    <dimen name="my_space_item_user_share_icon_height">10dp</dimen>
     <dimen name="my_space_item_context_menu_height">18dp</dimen>
+    <dimen name="my_space_item_primary_text_size">16sp</dimen>
+    <dimen name="my_space_item_secondary_text_size">13sp</dimen>
 
     <!--bottom sheet-->
     <dimen name="padding_vertical_row_bottom_sheet">8dp</dimen>
