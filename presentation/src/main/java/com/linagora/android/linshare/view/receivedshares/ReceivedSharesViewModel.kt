@@ -1,20 +1,25 @@
 package com.linagora.android.linshare.view.receivedshares
 
 import androidx.lifecycle.viewModelScope
-import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesInteractor
 import arrow.core.Either
 import com.linagora.android.linshare.adapter.receivedshares.action.ReceivedSharePersonalContextMenu
+import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
+import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesInteractor
+import com.linagora.android.linshare.operator.download.DownloadOperator
+import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
+import com.linagora.android.linshare.view.myspace.MySpaceViewModel.Companion.NO_DOWNLOADING_DOCUMENT
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ReceivedSharesViewModel @Inject constructor(
     private val getReceivedSharesInteractor: GetReceivedSharesInteractor,
-    private val dispatcherProvider: CoroutinesDispatcherProvider
+    private val dispatcherProvider: CoroutinesDispatcherProvider,
+    private val downloadOperator: DownloadOperator
 ) : BaseViewModel(dispatcherProvider),
     ListItemBehavior<Share> {
 
@@ -27,6 +32,17 @@ class ReceivedSharesViewModel @Inject constructor(
     fun getReceivedList() {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getReceivedSharesInteractor())
+        }
+    }
+
+    fun getDownloading(): Share? {
+        return personalItemContextMenu.downloadingData.get()
+    }
+
+    fun downloadShare(credential: com.linagora.android.linshare.domain.model.Credential, token: Token, share: Share) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            personalItemContextMenu.setDownloading(NO_DOWNLOADING_DOCUMENT)
+            downloadOperator.download(credential, token, share.toDownloadRequest())
         }
     }
 
