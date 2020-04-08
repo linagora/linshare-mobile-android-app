@@ -44,6 +44,7 @@
             android:onClick="@{() -> mySpaceItemAction.onShareClick(document)}">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_share" />
 
             <TextView
