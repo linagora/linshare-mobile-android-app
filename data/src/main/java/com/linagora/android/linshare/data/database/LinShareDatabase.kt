@@ -10,7 +10,7 @@ import com.linagora.android.linshare.data.database.downloading.DownloadingTaskEn
 
 @Database(
     entities = [ DownloadingTaskEntity::class ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

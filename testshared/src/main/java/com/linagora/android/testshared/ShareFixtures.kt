@@ -3,6 +3,7 @@ package com.linagora.android.testshared
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesViewState
 import com.linagora.android.linshare.domain.usecases.share.ShareViewState
@@ -30,7 +31,7 @@ object ShareFixtures {
     )
 
     val SHARE_1 = Share(
-        uuid = UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa"),
+        shareId = ShareId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa")),
         description = "",
         name = "document.txt",
         creationDate = Date(1574837876965),
@@ -48,7 +49,7 @@ object ShareFixtures {
     )
 
     val SHARE_2 = Share(
-        uuid = UUID.fromString("6c0e1f35-89e5-6bc3-a8d4-156ec8074beb"),
+        shareId = ShareId(UUID.fromString("6c0e1f35-89e5-6bc3-a8d4-156ec8074beb")),
         description = "",
         name = "document.txt",
         creationDate = Date(1574837876965),

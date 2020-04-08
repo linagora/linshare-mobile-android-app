@@ -11,6 +11,7 @@ import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.operator.download.DownloadOperator
+import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
@@ -81,7 +82,7 @@ class MySpaceViewModel @Inject constructor(
     fun downloadDocument(credential: Credential, token: Token, document: Document) {
         viewModelScope.launch(dispatcherProvider.io) {
             personalItemContextMenu.setDownloading(NO_DOWNLOADING_DOCUMENT)
-            downloadOperator.downloadDocument(credential, token, document)
+            downloadOperator.download(credential, token, document.toDownloadRequest())
         }
     }
 }
