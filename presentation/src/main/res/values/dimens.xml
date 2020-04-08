@@ -80,7 +80,7 @@
     <!--my space item-->
     <dimen name="my_space_item_padding">12dp</dimen>
     <dimen name="my_space_item_padding_start">16dp</dimen>
-    <dimen name="my_space_item_icon_size">24dp</dimen>
+    <dimen name="my_space_item_icon_size">20dp</dimen>
     <dimen name="my_space_item_line_spacing">4dp</dimen>
     <dimen name="my_space_item_menu_container_width">40dp</dimen>
     <dimen name="my_space_item_offline_icon_size">18dp</dimen>
@@ -94,8 +94,8 @@
     <dimen name="padding_vertical_row_bottom_sheet">8dp</dimen>
     <dimen name="padding_horizontal_row_bottom_sheet">24dp</dimen>
     <dimen name="size_icon_bottom_sheet">20dp</dimen>
-    <dimen name="height_bottom_sheet">56dp</dimen>
-    <dimen name="padding_top_bottom_sheet">16dp</dimen>
+    <dimen name="height_bottom_sheet">48dp</dimen>
+    <dimen name="padding_top_bottom_sheet">12dp</dimen>
 
     <!--custom toast-->
     <dimen name="margin_toast">16dp</dimen>
