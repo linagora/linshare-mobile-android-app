@@ -11,6 +11,7 @@ import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
+import com.linagora.android.linshare.domain.model.download.DownloadType
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.search.QueryString
@@ -268,7 +269,8 @@ object TestFixtures {
             UUID.fromString("21a2901-b120-4111-9b0d-cbd7d493d7f8"),
             "documents.txt",
             25,
-            MediaType.get("text/plain")
+            MediaType.get("text/plain"),
+            DownloadType.DOCUMENT
         )
 
         val CONFLICT_DOWNLOADING_TASK_ENTITY = DownloadingTaskEntity(
@@ -276,7 +278,8 @@ object TestFixtures {
             UUID.fromString("21a2901-b120-4111-9b0d-cbd7d493d7f8"),
             "documents.txt",
             3000,
-            MediaType.get("text/plain")
+            MediaType.get("text/plain"),
+            DownloadType.DOCUMENT
         )
 
         val DOWNLOADING_TASK_ENTITY_2 = DownloadingTaskEntity(
@@ -284,7 +287,8 @@ object TestFixtures {
             UUID.fromString("21a2901-b120-4111-9b0d-cbd7d493d7f8"),
             "documents.txt",
             25,
-            MediaType.get("text/plain")
+            MediaType.get("text/plain"),
+            DownloadType.DOCUMENT
         )
     }
 

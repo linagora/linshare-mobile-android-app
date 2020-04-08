@@ -8,5 +8,9 @@ object Endpoint {
 
     const val DOCUMENT_PATH = "$ROOT_PATH/documents"
 
+    const val RECEIVED_SHARES_PATH = "$ROOT_PATH/received_shares"
+
+    const val DOWNLOAD = "download"
+
     val AUTHENTICAION = ServicePath(AUTHENTICATION_PATH)
 }

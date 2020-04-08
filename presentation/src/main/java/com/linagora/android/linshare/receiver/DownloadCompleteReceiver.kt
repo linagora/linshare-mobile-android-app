@@ -81,7 +81,7 @@ class DownloadCompleteReceiver : DaggerBroadcastReceiver() {
     private fun notifyDownloadSuccess(context: Context, downloadingTask: DownloadingTask) {
         downloadNotification.notify(systemNotifier.generateNotificationId()) {
             this.setContentTitle(context?.getString(R.string.download_success))
-                .setContentText(downloadingTask.documentName)
+                .setContentText(downloadingTask.downloadName)
                 .setSubText(getSuccessSubText(context, downloadingTask))
                 .setContentIntent(createPendingOpenFileExplorerIntent(context))
                 .setOngoing(FINISHED_NOTIFICATION)
@@ -96,7 +96,7 @@ class DownloadCompleteReceiver : DaggerBroadcastReceiver() {
         downloadingTask: DownloadingTask
     ) {
         downloadNotification.notify(systemNotifier.generateNotificationId()) {
-            this.setContentTitle(downloadingTask.documentName)
+            this.setContentTitle(downloadingTask.downloadName)
                 .setContentText(getFailedReasonMessage(context, cursor))
                 .setOngoing(FINISHED_NOTIFICATION)
                 .build()
@@ -104,7 +104,7 @@ class DownloadCompleteReceiver : DaggerBroadcastReceiver() {
     }
 
     private fun getSuccessSubText(context: Context, downloadingTask: DownloadingTask): String {
-        return context.getString(R.string.downloaded, FileSize(downloadingTask.documentSize).format(SHORT))
+        return context.getString(R.string.downloaded, FileSize(downloadingTask.downloadSize).format(SHORT))
     }
 
     private fun getFailedReasonMessage(context: Context, cursor: Cursor): String {

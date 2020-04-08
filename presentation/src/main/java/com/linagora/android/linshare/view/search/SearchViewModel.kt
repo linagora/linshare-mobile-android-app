@@ -15,6 +15,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.operator.download.DownloadOperator
+import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
@@ -84,7 +85,7 @@ class SearchViewModel @Inject constructor(
     fun downloadDocument(credential: Credential, token: Token, document: Document) {
         viewModelScope.launch(dispatcherProvider.io) {
             personalItemContextMenu.setDownloading(MySpaceViewModel.NO_DOWNLOADING_DOCUMENT)
-            downloadOperator.downloadDocument(credential, token, document)
+            downloadOperator.download(credential, token, document.toDownloadRequest())
         }
     }
 }

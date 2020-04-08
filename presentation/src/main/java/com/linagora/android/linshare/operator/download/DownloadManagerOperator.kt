@@ -7,10 +7,8 @@ import android.os.Environment
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Token
-import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.download.DownloadingTask
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
-import com.linagora.android.linshare.domain.network.ServicePath
 import com.linagora.android.linshare.domain.network.withServicePath
 import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
 import com.linagora.android.linshare.notification.BaseNotification
@@ -32,41 +30,42 @@ class DownloadManagerOperator @Inject constructor(
         private val LOGGER = LoggerFactory.getLogger(DownloadManagerOperator::class.java)
     }
 
-    override suspend fun downloadDocument(credential: Credential, token: Token, document: Document) {
-        LOGGER.info("downloadDocument() $document")
+    override suspend fun download(credential: Credential, token: Token, downloadRequest: DownloadRequest) {
+        LOGGER.info("download() $downloadRequest")
 
         try {
             val downloadUri = Uri.parse(credential.serverUrl
-                .withServicePath(ServicePath.buildDownloadPath(document.documentId))
+                .withServicePath(downloadRequest.toServicePath())
                 .toString())
             val request = DownloadManager.Request(downloadUri)
                 .addRequestHeader("Authorization", "Bearer ${token.token}")
-                .setTitle(document.name)
+                .setTitle(downloadRequest.downloadName)
                 .setDescription(context.getString(R.string.app_name))
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, document.name)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, downloadRequest.downloadName)
 
             (context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
                 .enqueue(request)
                 .let(::EnqueuedDownloadId)
-                .also { storeDownloadTask(it, document) }
+                .also { storeDownloadTask(it, downloadRequest) }
         } catch (exp: Exception) {
-            LOGGER.error("downloadDocument() $exp - ${exp.printStackTrace()}")
+            LOGGER.error("download() $exp - ${exp.printStackTrace()}")
             notifyDownloadFailure(
                 notificationId = systemNotifier.generateNotificationId(),
-                title = document.name,
+                title = downloadRequest.downloadName,
                 message = context.getString(R.string.download_failed)
             )
         }
     }
 
-    private suspend fun storeDownloadTask(enqueuedDownloadId: EnqueuedDownloadId, document: Document) {
+    private suspend fun storeDownloadTask(enqueuedDownloadId: EnqueuedDownloadId, downloadRequest: DownloadRequest) {
         downloadingRepository.storeTask(
             DownloadingTask(
                 enqueuedDownloadId = enqueuedDownloadId,
-                documentName = document.name,
-                documentSize = document.size,
-                documentId = document.documentId,
-                mediaType = document.type
+                downloadName = downloadRequest.downloadName,
+                downloadSize = downloadRequest.downloadSize,
+                downloadDataId = downloadRequest.downloadDataId,
+                mediaType = downloadRequest.downloadMediaType,
+                downloadType = downloadRequest.downloadType
             )
         )
     }
