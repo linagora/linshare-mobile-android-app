@@ -6,7 +6,7 @@ import com.linagora.android.linshare.domain.model.share.Share
 object ReceivedDiffCallback : DiffUtil.ItemCallback<Share>() {
 
     override fun areItemsTheSame(oldItem: Share, newItem: Share): Boolean {
-        return oldItem.uuid == newItem.uuid
+        return oldItem.shareId == newItem.shareId
     }
 
     override fun areContentsTheSame(oldItem: Share, newItem: Share): Boolean {

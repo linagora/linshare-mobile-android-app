@@ -8,9 +8,11 @@ import com.linagora.android.linshare.data.network.adapter.DocumentIdDeserializer
 import com.linagora.android.linshare.data.network.adapter.ErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
+import com.linagora.android.linshare.data.network.adapter.ShareIdDeserializer
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
+import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.network.AuthorizationInterceptor
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
@@ -63,6 +65,7 @@ class NetworkModule {
             .registerTypeAdapter(MediaType::class.java, MediaTypeDeserializer())
             .registerTypeAdapter(LinShareErrorCode::class.java, ErrorCodeDeserializer())
             .registerTypeAdapter(DocumentId::class.java, DocumentIdDeserializer())
+            .registerTypeAdapter(ShareId::class.java, ShareIdDeserializer())
             .create()
         return Retrofit.Builder()
             .baseUrl(DEFAULT_LINSHARE_BASE_URL)
