@@ -1,14 +1,15 @@
 package com.linagora.android.linshare.domain.model.share
 
+import com.google.gson.annotations.SerializedName
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.document.Document
 import okhttp3.MediaType
 import java.util.Date
-import java.util.UUID
 
 data class Share(
-    val uuid: UUID,
+    @SerializedName("uuid")
+    val shareId: ShareId,
     val name: String,
     val creationDate: Date,
     val modificationDate: Date,
