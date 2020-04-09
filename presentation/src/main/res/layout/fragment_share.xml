@@ -100,5 +100,36 @@
             style="@style/ShareButton"
             android:layout_marginBottom="@dimen/share_margin_bottom"/>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/addRecipients"
+            android:layout_marginTop="@dimen/share_add_recipients_margin_top"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingStart="@dimen/share_recipient_container_padding_side"
+            android:paddingEnd="@dimen/share_recipient_container_padding_side"
+            app:layout_constraintBottom_toTopOf="@+id/shareButton"
+            android:layout_marginBottom="@dimen/share_label_margin_top"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/recipientContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacing="@dimen/share_chip_spacing" />
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="36dp"
+            android:text="Button"
+            app:layout_constraintBottom_toTopOf="@+id/shareButton"
+            app:layout_constraintEnd_toEndOf="@+id/shareButton"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="@+id/shareButton" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

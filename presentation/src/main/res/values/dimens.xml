@@ -130,4 +130,8 @@
     <dimen name="user_suggestion_item_padding">12dp</dimen>
     <dimen name="user_suggestion_line_spacing">4dp</dimen>
     <dimen name="user_suggestion_text_margin_start">12dp</dimen>
+    <dimen name="share_recipient_container_padding_side">12dp</dimen>
+    <dimen name="share_chip_spacing">4dp</dimen>
+    <dimen name="share_recipient_text_size">15dp</dimen>
+    <dimen name="share_recipient_avatar_size">30dp</dimen>
 </resources>

@@ -162,4 +162,19 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <style name="RecipientTextAppearance">
+        <item name="android:textSize">@dimen/share_recipient_text_size</item>
+        <item name="android:textColor">@color/add_recipient_text</item>
+        <item name="android:ellipsize">middle</item>
+    </style>
+
+    <style name="RecipientChip" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="android:textAppearance">@style/RecipientTextAppearance</item>
+        <item name="closeIconVisible">true</item>
+        <item name="closeIconTint">@color/colorPrimary</item>
+        <item name="chipBackgroundColor">@color/recipient_background_color</item>
+        <item name="chipIconSize">@dimen/share_recipient_avatar_size</item>
+        <item name="chipStartPadding">0dp</item>
+    </style>
 </resources>

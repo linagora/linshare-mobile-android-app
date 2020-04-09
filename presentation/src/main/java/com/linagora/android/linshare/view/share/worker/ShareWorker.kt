@@ -69,7 +69,7 @@ class ShareWorker @Inject constructor(
         require(recipients!!.isNotEmpty())
         require(documents!!.isNotEmpty())
         return ShareRequest(
-            recipients = recipients.map(::GenericUser),
+            recipients = recipients.map { GenericUser(it) },
             documentIds = documents.map { UUID.fromString(it) }
         )
     }
