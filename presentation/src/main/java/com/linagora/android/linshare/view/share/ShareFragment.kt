@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentShareBinding
 import com.linagora.android.linshare.domain.model.GenericUser
@@ -17,13 +21,16 @@ import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePatte
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.model.parcelable.DocumentParcelable
-import com.linagora.android.linshare.model.parcelable.toDocument
 import com.linagora.android.linshare.util.dismissKeyboard
+import com.linagora.android.linshare.util.generateCircleLetterAvatar
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.dialog.NoOpCallback
+import com.linagora.android.linshare.view.dialog.OnRemoveRecipient
 import kotlinx.android.synthetic.main.fragment_share.addRecipients
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 class ShareFragment : MainNavigationFragment() {
 
@@ -31,6 +38,10 @@ class ShareFragment : MainNavigationFragment() {
         const val SHARE_DOCUMENT_BUNDLE_KEY = "shareDocument"
 
         const val AUTO_COMPLETE_THRESHOLD = 3
+
+        val RECIPIENT_ATTRIBUTES = null
+
+        const val NO_RECIPIENT_ATTRIBUTES_RESOURCE = 0
     }
 
     @Inject
@@ -60,6 +71,7 @@ class ShareFragment : MainNavigationFragment() {
         super.onViewCreated(view, savedInstanceState)
         bindingShareDocument()
         initAutoComplete()
+        setUpAddButton()
     }
 
     override fun configureToolbar(toolbar: Toolbar) {
@@ -119,5 +131,40 @@ class ShareFragment : MainNavigationFragment() {
 
     private fun backToPreviousScreen() {
         findNavController().navigateUp()
+    }
+
+    private fun setUpAddButton() {
+        binding.button.setOnClickListener {
+            val name = Random.nextInt().takeIf { it % 3 == 0 }
+                ?.let { "Dat ${it.toString().subSequence(IntRange(1, 5))}" }
+                ?: "Dat Pham Dat Pham Dat Pham Dat Pham Dat Pham"
+            val user = GenericUser("mail", name, name)
+            val chip = createRecipientChip(user)
+            binding.recipientContainer.addView(chip, 0)
+        }
+    }
+
+    private fun createRecipientChip(genericUser: GenericUser, onRemoveRecipient: OnRemoveRecipient = NoOpCallback): Chip {
+        return Chip(requireContext()).apply {
+
+            setChipDrawable(ChipDrawable.createFromAttributes(
+                requireContext(),
+                RECIPIENT_ATTRIBUTES,
+                NO_RECIPIENT_ATTRIBUTES_RESOURCE,
+                R.style.RecipientChip)
+            )
+
+            val iconTint = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            val icon = genericUser.generateCircleLetterAvatar(requireContext())
+                .also { DrawableCompat.setTint(it, iconTint) }
+
+            chipIcon = icon
+            text = genericUser.firstName
+
+            setOnCloseIconClickListener {
+                binding.recipientContainer.removeView(it)
+                onRemoveRecipient(it)
+            }
+        }
     }
 }

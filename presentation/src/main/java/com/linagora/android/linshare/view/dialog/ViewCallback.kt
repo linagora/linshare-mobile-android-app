@@ -12,3 +12,5 @@ object NoOpCallback : (View) -> Unit {
         // do nothing
     }
 }
+
+typealias OnRemoveRecipient = (View) -> Unit

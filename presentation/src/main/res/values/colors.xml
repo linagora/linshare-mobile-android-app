@@ -35,4 +35,5 @@
     <color name="available_offline_tag_background">#1B7EC7</color>
     <color name="add_recipient_gray">#D3D3D3</color>
     <color name="add_recipient_text">#7B7B7B</color>
+    <color name="recipient_background_color">#F7F7F7</color>
 </resources>
