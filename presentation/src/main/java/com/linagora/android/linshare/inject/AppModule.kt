@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.linagora.android.linshare.data.repository.authentication.LinshareAuthenticationRepository
+import com.linagora.android.linshare.data.repository.autocomplete.LinshareAutoCompleteRepository
 import com.linagora.android.linshare.data.repository.credential.PreferenceCredentialRepository
 import com.linagora.android.linshare.data.repository.credential.PreferenceTokenRepository
 import com.linagora.android.linshare.data.repository.document.DocumentRepositoryImp
@@ -18,6 +19,7 @@ import com.linagora.android.linshare.domain.repository.CredentialRepository
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.domain.repository.TokenRepository
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
+import com.linagora.android.linshare.domain.repository.autocomplete.AutoCompleteRepository
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
 import com.linagora.android.linshare.domain.repository.share.ReceivedShareRepository
@@ -124,5 +126,11 @@ open class AppModule {
     @Singleton
     fun provideReceivedSharesRepository(receivedSharesRepository: ReceivedSharesRepositoryImp): ReceivedShareRepository {
         return receivedSharesRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideAutoCompleteRepository(autoCompleteRepository: LinshareAutoCompleteRepository): AutoCompleteRepository {
+        return autoCompleteRepository
     }
 }
