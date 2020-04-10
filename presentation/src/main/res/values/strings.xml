@@ -108,4 +108,6 @@
     <string name="created">Created %s</string>
     <string name="received">Received</string>
     <string name="received_shares">Received shares</string>
+    <string name="unknown_user">Unknown User</string>
+    <string name="add_people"><i>Add people</i></string>
 </resources>
