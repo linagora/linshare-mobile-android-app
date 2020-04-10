@@ -121,4 +121,13 @@
     <dimen name="share_add_recipients_margin_top">8dp</dimen>
     <dimen name="share_add_recipients_margin_side">16dp</dimen>
     <dimen name="share_add_recipients_drawer_padding">4dp</dimen>
+
+    <!--user suggestion -->
+    <dimen name="user_suggestion_avatar_size">32dp</dimen>
+    <dimen name="user_suggestion_avatar_text_size">20dp</dimen>
+    <dimen name="user_suggestion_full_name_text_size">16dp</dimen>
+    <dimen name="user_suggestion_mail_text_size">13dp</dimen>
+    <dimen name="user_suggestion_item_padding">12dp</dimen>
+    <dimen name="user_suggestion_line_spacing">4dp</dimen>
+    <dimen name="user_suggestion_text_margin_start">12dp</dimen>
 </resources>

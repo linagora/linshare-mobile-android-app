@@ -9,6 +9,10 @@
         <variable
             name="document"
             type="Document" />
+
+        <variable
+            name="shareViewModel"
+            type="com.linagora.android.linshare.view.share.ShareFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,9 +81,14 @@
             android:layout_marginStart="@dimen/share_add_recipients_margin_side"
             android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
             style="@style/AddRecipientsStyle"
+            android:hint="@string/add_people"
+            android:textColorHint="@color/disable_state_color"
+            app:queryState="@{shareViewModel.suggessions}"
             app:layout_constraintTop_toBottomOf="@id/addRecipientLabel"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent">
+            <requestFocus/>
+        </androidx.appcompat.widget.AppCompatAutoCompleteTextView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/shareButton"

@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentShareBinding
 import com.linagora.android.linshare.domain.model.GenericUser
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.model.parcelable.DocumentParcelable
 import com.linagora.android.linshare.model.parcelable.toDocument
@@ -17,12 +22,15 @@ import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import kotlinx.android.synthetic.main.fragment_share.addRecipients
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShareFragment : MainNavigationFragment() {
 
     companion object {
         const val SHARE_DOCUMENT_BUNDLE_KEY = "shareDocument"
+
+        const val AUTO_COMPLETE_THRESHOLD = 3
     }
 
     @Inject
@@ -38,18 +46,20 @@ class ShareFragment : MainNavigationFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentShareBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
         initViewModel()
         return binding.root
     }
 
     private fun initViewModel() {
         shareFragmentViewModel = getViewModel(viewModelFactory)
+        binding.lifecycleOwner = this
+        binding.shareViewModel = shareFragmentViewModel
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindingShareDocument()
+        initAutoComplete()
     }
 
     override fun configureToolbar(toolbar: Toolbar) {
@@ -66,6 +76,25 @@ class ShareFragment : MainNavigationFragment() {
             }
     }
 
+    private fun initAutoComplete() {
+        binding.addRecipients.apply {
+            threshold = AUTO_COMPLETE_THRESHOLD
+
+            doAfterTextChanged { pattern ->
+                pattern?.toString()
+                    ?.takeIf { it.isNotBlank() && it.length >= AUTO_COMPLETE_THRESHOLD }
+                    ?.let { AutoCompletePattern(it) }
+                    ?.let { search(it) }
+            }
+
+            onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+                text.clear()
+                val selectedUser = parent.getItemAtPosition(position) as UserAutoCompleteResult
+                shareFragmentViewModel.onSelectedUserClick(selectedUser)
+            }
+        }
+    }
+
     private fun bindingData(document: Document) {
         binding.document = document
     }
@@ -79,6 +108,12 @@ class ShareFragment : MainNavigationFragment() {
                 backToPreviousScreen()
             }
             it.dismissKeyboard()
+        }
+    }
+
+    private fun search(autoCompletePattern: AutoCompletePattern) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            shareFragmentViewModel.queryChannel.send(autoCompletePattern)
         }
     }
 

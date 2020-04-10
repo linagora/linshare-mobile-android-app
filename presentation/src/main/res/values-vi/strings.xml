@@ -108,4 +108,6 @@
     <string name="created">Ngày tạo %s</string>
     <string name="received">Đã nhận</string>
     <string name="received_shares">Chia sẻ với tôi</string>
+    <string name="unknown_user">Không tìm thấy người dùng</string>
+    <string name="add_people"><i>Thêm người</i></string>
 </resources>
