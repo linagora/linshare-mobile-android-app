@@ -6,18 +6,23 @@ import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesViewState
+import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.share.ShareViewState
 import okhttp3.MediaType
 import java.util.Date
 import java.util.UUID
 
 object ShareFixtures {
-    private val RECIPIENT_1 = GenericUser(
-        mail = "user3@linshare.org"
+    val RECIPIENT_1 = GenericUser(
+        mail = "user3@linshare.org",
+        firstName = "Joe",
+        lastName = "Doe"
     )
 
-    private val RECIPIENT_2 = GenericUser(
-        mail = "user2@linshare.org"
+    val RECIPIENT_2 = GenericUser(
+        mail = "user2@linshare.org",
+        firstName = "Jane",
+        lastName = "Smith"
     )
 
     val SHARE_CREATION_1 = ShareRequest(
@@ -73,4 +78,8 @@ object ShareFixtures {
     private val RECEIVED_LIST_VIEW_STATE = ReceivedSharesViewState(listOf(SHARE_1, SHARE_2))
 
     val ALL_RECEIVED_STATE = Either.Right(RECEIVED_LIST_VIEW_STATE)
+
+    val ADD_RECIPIENT_1_STATE = Either.right(AddRecipient(RECIPIENT_1))
+
+    val ADD_RECIPIENT_2_STATE = Either.right(AddRecipient(RECIPIENT_2))
 }

@@ -11,7 +11,7 @@ import dagger.android.DaggerApplication
 import timber.log.Timber
 import javax.inject.Inject
 
-class LinShareApplication : DaggerApplication(), Configuration.Provider {
+open class LinShareApplication : DaggerApplication(), Configuration.Provider {
 
     @Inject lateinit var workerFactory: WorkerFactory
 

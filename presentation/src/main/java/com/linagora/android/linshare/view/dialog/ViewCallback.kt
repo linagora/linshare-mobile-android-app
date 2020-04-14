@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.view.dialog
 
 import android.view.View
+import com.linagora.android.linshare.domain.model.GenericUser
 
 typealias OnNegativeCallback = (View) -> Unit
 
@@ -13,4 +14,4 @@ object NoOpCallback : (View) -> Unit {
     }
 }
 
-typealias OnRemoveRecipient = (View) -> Unit
+typealias OnRemoveRecipient = (GenericUser) -> Unit

@@ -9,3 +9,8 @@ data class GenericUser(
         require(mail.isNotBlank()) { "mail of generic User must not be empty" }
     }
 }
+
+fun GenericUser.fullName(): String? {
+    return firstName?.takeIf { it.isNotBlank() }
+        ?.let { "$it $lastName" }
+}

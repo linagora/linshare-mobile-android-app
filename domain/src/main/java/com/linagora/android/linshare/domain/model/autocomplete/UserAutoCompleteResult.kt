@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.domain.model.autocomplete
 
+import com.linagora.android.linshare.domain.model.GenericUser
 import java.util.UUID
 
 data class UserAutoCompleteResult(
@@ -14,4 +15,12 @@ data class UserAutoCompleteResult(
 fun UserAutoCompleteResult.fullName(): String? {
     return firstName?.takeIf { it.isNotBlank() }
         ?.let { "$it $lastName" }
+}
+
+fun UserAutoCompleteResult.toGenericUser(): GenericUser {
+    return GenericUser(
+        mail = mail ?: display,
+        lastName = lastName,
+        firstName = firstName
+    )
 }
