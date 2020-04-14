@@ -1,5 +1,7 @@
 package com.linagora.android.linshare.view.share
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.work.Constraints
 import androidx.work.Data
@@ -7,11 +9,13 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
-import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.usecases.autocomplete.GetAutoCompleteSharingInteractor
+import com.linagora.android.linshare.domain.usecases.share.AddRecipient
+import com.linagora.android.linshare.domain.usecases.share.ShareButtonClick
 import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
@@ -32,7 +36,7 @@ import javax.inject.Singleton
 @Singleton
 class ShareFragmentViewModel @Inject constructor(
     application: LinShareApplication,
-    dispatcherProvider: CoroutinesDispatcherProvider,
+    private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val getAutoCompleteSharingInteractor: GetAutoCompleteSharingInteractor
 ) : LinShareViewModel(application, dispatcherProvider) {
 
@@ -46,7 +50,12 @@ class ShareFragmentViewModel @Inject constructor(
         .debounce(QUERY_INTERVAL_MS)
         .flatMapLatest { getAutoCompleteSharingInteractor(it) }
 
-    val suggessions = queryState.asLiveData()
+    val suggestions = queryState.asLiveData()
+
+    private val mutableRecipients = MutableLiveData<Set<GenericUser>>()
+        .apply { value = HashSet() }
+
+    val recipients: LiveData<Set<GenericUser>> = mutableRecipients
 
     fun share(recipients: List<GenericUser>, document: Document) {
         val inputData = createShareInputData(recipients, document)
@@ -71,7 +80,33 @@ class ShareFragmentViewModel @Inject constructor(
         )
     }
 
-    fun onSelectedUserClick(userAutoCompleteResult: UserAutoCompleteResult) {
-        LOGGER.info("onSelectedUserClick() $userAutoCompleteResult")
+    fun addRecipient(user: GenericUser) {
+        LOGGER.info("addRecipient() $user")
+        if (mutableRecipients.value?.contains(user) == true) {
+            return
+        }
+
+        val newRecipients = mutableRecipients.value
+            ?.let { mutableSetOf(user).plus(it) }
+
+        mutableRecipients.value = newRecipients
+        dispatchUIState(Either.right(AddRecipient(user)))
+    }
+
+    fun removeRecipient(user: GenericUser) {
+        LOGGER.info("removeRecipient() $user")
+        mutableRecipients.value?.flatMap { mutableSetOf(it) }
+            ?.minus(user)
+            ?.toCollection(LinkedHashSet())
+            ?.also { mutableRecipients.value = it }
+    }
+
+    fun onShareClick(document: Document) {
+        share(recipients.value!!.toList(), document)
+        dispatchUIState(Either.right(ShareButtonClick))
+    }
+
+    fun resetRecipients() {
+        mutableRecipients.value = mutableSetOf()
     }
 }

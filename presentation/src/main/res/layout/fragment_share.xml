@@ -83,7 +83,7 @@
             style="@style/AddRecipientsStyle"
             android:hint="@string/add_people"
             android:textColorHint="@color/disable_state_color"
-            app:queryState="@{shareViewModel.suggessions}"
+            app:queryState="@{shareViewModel.suggestions}"
             app:layout_constraintTop_toBottomOf="@id/addRecipientLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -98,7 +98,9 @@
             android:text="@string/share"
             android:enabled="false"
             style="@style/ShareButton"
-            android:layout_marginBottom="@dimen/share_margin_bottom"/>
+            android:layout_marginBottom="@dimen/share_margin_bottom"
+            android:onClick="@{() -> shareViewModel.onShareClick(document)}"
+            />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -119,17 +121,5 @@
                 app:chipSpacing="@dimen/share_chip_spacing" />
 
         </ScrollView>
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="36dp"
-            android:text="Button"
-            app:layout_constraintBottom_toTopOf="@+id/shareButton"
-            app:layout_constraintEnd_toEndOf="@+id/shareButton"
-            app:layout_constraintHorizontal_bias="0.492"
-            app:layout_constraintStart_toStartOf="@+id/shareButton" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
