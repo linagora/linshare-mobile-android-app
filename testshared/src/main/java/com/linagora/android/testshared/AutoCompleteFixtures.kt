@@ -1,6 +1,7 @@
 package com.linagora.android.testshared
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.usecases.autocomplete.AutoCompleteNoResult
 import com.linagora.android.linshare.domain.usecases.autocomplete.UserAutoCompleteViewState
@@ -29,5 +30,5 @@ object AutoCompleteFixtures {
     val USER_AUTOCOMPLETE_STATE = Either.right(
         UserAutoCompleteViewState(listOf(USER_AUTOCOMPLETE_1, USER_AUTOCOMPLETE_2)))
 
-    val NO_RESULT_USER_AUTOCOMPLETE_STATE = Either.right(AutoCompleteNoResult)
+    val NO_RESULT_USER_AUTOCOMPLETE_STATE = Either.right(AutoCompleteNoResult(AutoCompletePattern("invalid")))
 }

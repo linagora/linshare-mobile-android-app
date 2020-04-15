@@ -76,6 +76,8 @@
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/addRecipients"
             android:layout_width="match_parent"
+            android:maxLines="1"
+            android:inputType="textEmailAddress"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/share_add_recipients_margin_top"
             android:layout_marginStart="@dimen/share_add_recipients_margin_side"

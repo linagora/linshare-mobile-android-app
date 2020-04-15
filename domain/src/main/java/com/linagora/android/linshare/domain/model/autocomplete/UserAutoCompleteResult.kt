@@ -10,7 +10,13 @@ data class UserAutoCompleteResult(
     val lastName: String?,
     val domain: UUID?,
     val mail: String?
-) : AutoCompleteResult
+) : AutoCompleteResult {
+    companion object {
+        fun externalUser(pattern: AutoCompletePattern): UserAutoCompleteResult {
+            return UserAutoCompleteResult(pattern.value, pattern.value, null, null, null, pattern.value)
+        }
+    }
+}
 
 fun UserAutoCompleteResult.fullName(): String? {
     return firstName?.takeIf { it.isNotBlank() }

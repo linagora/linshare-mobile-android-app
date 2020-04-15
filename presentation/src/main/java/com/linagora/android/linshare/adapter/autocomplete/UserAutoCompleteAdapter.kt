@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.fullName
@@ -21,7 +22,7 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
     }
 
     enum class StateSuggestionUser {
-        FOUND, NOT_FOUND
+        FOUND, NOT_FOUND, EXTERNAL_USER
     }
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -36,9 +37,13 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
     }
 
     override fun getCount(): Int {
-        return takeIf { stateSuggestions.get() == StateSuggestionUser.NOT_FOUND }
+        return takeIf { isNotFoundInternalUser(stateSuggestions.get()) }
             ?.let { NO_SUGGESTION_ITEM }
             ?: suggestions.size
+    }
+
+    private fun isNotFoundInternalUser(state: StateSuggestionUser): Boolean {
+        return state == StateSuggestionUser.NOT_FOUND || state == StateSuggestionUser.EXTERNAL_USER
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -48,31 +53,34 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
             ?.let { Pair(convertView, it as UserAutoCompleteViewHolder) }
             ?: inflateView(parent)
 
-        currentItem?.also { viewHolder.apply {
+        viewHolder.apply {
             bindingAvatar(avatarTextView, currentItem)
             bindingName(nameTextView, currentItem)
             bindingMail(mailTextView, currentItem)
-        } }
+        }
 
         return inflatedView
     }
 
-    private fun bindingAvatar(avatarTextView: TextView, item: UserAutoCompleteResult) {
+    private fun bindingAvatar(avatarTextView: TextView, item: UserAutoCompleteResult?) {
         setVisibleView(avatarTextView)
         avatarTextView.text = getAvatarCharacter(item)
     }
 
-    private fun bindingName(nameTextView: TextView, item: UserAutoCompleteResult) {
+    private fun bindingName(nameTextView: TextView, item: UserAutoCompleteResult?) {
         setVisibleView(nameTextView)
-        nameTextView.text = item.fullName() ?: item.display
+        nameTextView.text = item?.fullName() ?: item?.display
     }
 
-    private fun bindingMail(mailTextView: TextView, item: UserAutoCompleteResult) {
-        val (textColorId, textContent) = takeIf { stateSuggestions.get() == StateSuggestionUser.NOT_FOUND }
-            ?.let { Pair(R.color.error_border_color, mailTextView.context.getString(R.string.unknown_user)) }
-            ?: Pair(R.color.file_name_color, item.mail ?: item.display)
+    private fun bindingMail(mailTextView: TextView, item: UserAutoCompleteResult?) {
+        val (textColorId, textContent) =
+            when (stateSuggestions.get()) {
+                StateSuggestionUser.NOT_FOUND -> Pair(R.color.error_border_color, mailTextView.context.getString(R.string.unknown_user))
+                StateSuggestionUser.EXTERNAL_USER -> Pair(R.color.file_name_color, item?.display)
+                else -> Pair(R.color.file_name_color, item?.mail ?: item?.display)
+            }
 
-        mailTextView.setTextColor(textColorId)
+        mailTextView.setTextColor(ContextCompat.getColor(mailTextView.context, textColorId))
         mailTextView.text = textContent
     }
 
@@ -82,9 +90,9 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
             ?: View.VISIBLE
     }
 
-    private fun getAvatarCharacter(userAutoCompleteResult: UserAutoCompleteResult): String {
-        return userAutoCompleteResult.firstName?.getFirstLetter()
-            ?: userAutoCompleteResult.display?.getFirstLetter()
+    private fun getAvatarCharacter(userAutoCompleteResult: UserAutoCompleteResult?): String {
+        return userAutoCompleteResult?.firstName?.getFirstLetter()
+            ?: userAutoCompleteResult?.display?.getFirstLetter()
             ?: "U"
     }
 
