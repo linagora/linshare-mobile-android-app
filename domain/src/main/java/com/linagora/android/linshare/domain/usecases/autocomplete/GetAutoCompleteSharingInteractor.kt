@@ -25,16 +25,16 @@ class GetAutoCompleteSharingInteractor @Inject constructor(
             val autoCompleteState = Either
                 .catch { autoCompleteRepository.getAutoComplete(autoCompletePattern, AutoCompleteType.SHARING) }
                 .map { it.asListOfType<UserAutoCompleteResult>() }
-                .bimap(::AutoCompleteFailure, this@GetAutoCompleteSharingInteractor::getAutoCompleteState)
+                .bimap(::AutoCompleteFailure) { getAutoCompleteState(autoCompletePattern, it) }
 
             emit(autoCompleteState)
         }
     }
 
-    private fun getAutoCompleteState(userAutoCompleteResults: List<UserAutoCompleteResult>?): Success.ViewState {
+    private fun getAutoCompleteState(pattern: AutoCompletePattern, userAutoCompleteResults: List<UserAutoCompleteResult>?): Success.ViewState {
         return userAutoCompleteResults
             ?.takeIf { it.isNotEmpty() }
             ?.let(::UserAutoCompleteViewState)
-            ?: AutoCompleteNoResult
+            ?: AutoCompleteNoResult(pattern)
     }
 }

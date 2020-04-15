@@ -6,6 +6,8 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter.StateSuggestionUser
+import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult.Companion.externalUser
+import com.linagora.android.linshare.domain.model.autocomplete.isEmailValid
 import com.linagora.android.linshare.domain.usecases.autocomplete.AutoCompleteNoResult
 import com.linagora.android.linshare.domain.usecases.autocomplete.UserAutoCompleteViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -20,21 +22,36 @@ fun bindingUserSuggestion(
 ) {
 
     if (textView.adapter == null) {
-        textView.setAdapter(UserAutoCompleteAdapter(textView.context, LayoutId(R.layout.user_suggestion_item)))
+        textView.setAdapter(
+            UserAutoCompleteAdapter(
+                textView.context,
+                LayoutId(R.layout.user_suggestion_item)
+            )
+        )
     }
 
-    queryState?.map { when (it) {
-        is UserAutoCompleteViewState -> {
-            (textView.adapter as UserAutoCompleteAdapter).submitList(it.results)
-            submitStateSuggestions(textView, StateSuggestionUser.FOUND)
+    queryState?.map { success ->
+        val adapter = textView.adapter as UserAutoCompleteAdapter
+        when (success) {
+            is UserAutoCompleteViewState -> {
+                adapter.submitList(success.results)
+                submitStateSuggestions(textView, StateSuggestionUser.FOUND)
+            }
+            is AutoCompleteNoResult -> {
+                success.pattern.takeIf { it.isEmailValid() }
+                    ?.let {
+                        adapter.submitList(listOf(externalUser(it)))
+                        submitStateSuggestions(textView, StateSuggestionUser.EXTERNAL_USER)
+                    } ?: submitStateSuggestions(textView, StateSuggestionUser.NOT_FOUND)
+            }
         }
-        is AutoCompleteNoResult -> {
-            submitStateSuggestions(textView, StateSuggestionUser.NOT_FOUND)
-        }
-    } }
+    }
 }
 
-private fun submitStateSuggestions(textView: AppCompatAutoCompleteTextView, state: StateSuggestionUser) {
+private fun submitStateSuggestions(
+    textView: AppCompatAutoCompleteTextView,
+    state: StateSuggestionUser
+) {
     val adapter = textView.adapter as UserAutoCompleteAdapter
     adapter.submitStateSuggestions(state)
     showSuggestion(textView)
