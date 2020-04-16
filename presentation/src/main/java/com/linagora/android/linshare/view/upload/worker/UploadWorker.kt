@@ -214,6 +214,7 @@ class UploadWorker(
         uploadNotification.notify(notificationId) {
             this.setContentTitle(appContext.getString(R.string.upload_success))
                 .setOngoing(FINISHED_NOTIFICATION)
+                .setContentText(message)
                 .disableProgressBar()
             this.build()
         }
