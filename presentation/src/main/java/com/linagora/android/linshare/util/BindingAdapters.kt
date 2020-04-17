@@ -1,6 +1,5 @@
 package com.linagora.android.linshare.util
 
-import android.graphics.drawable.AnimationDrawable
 import android.text.format.Formatter
 import android.view.View
 import android.widget.Button
@@ -26,7 +25,10 @@ import com.linagora.android.linshare.util.FileSize.SizeFormat.SHORT
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
+import org.slf4j.LoggerFactory
 import timber.log.Timber
+
+private val LOGGER = LoggerFactory.getLogger(BindingAdapter::class.java)
 
 @BindingAdapter("guide")
 fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {
@@ -140,39 +142,46 @@ fun bindingUploadInfo(textView: TextView, document: DocumentRequest?, uploadErro
 
 @BindingAdapter("documentIcon", "uploadErrorStateIcon")
 fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?, uploadErrorState: Either<Failure, Success>) {
-    val animationDrawable = imageView.background as AnimationDrawable
-    uploadErrorState.map { success ->
-        when (success) {
-            PreUploadExecuting -> animationDrawable.start()
-            else -> {
-                animationDrawable.stop()
-                GlideApp.with(imageView.context)
-                    .load(document?.file)
-                    .placeholder(document?.mediaType?.getDrawableIcon()
-                        ?: android.R.drawable.screen_background_light_transparent)
-                    .into(imageView)
-            }
-        }
-    }
+    GlideApp.with(imageView.context)
+        .load(document?.file)
+        .placeholder(
+            document?.mediaType?.getDrawableIcon()
+                ?: uploadErrorState.fold(
+                    ifLeft = { R.drawable.ic_warning },
+                    ifRight = { android.R.drawable.screen_background_light_transparent })
+        )
+        .into(imageView)
+}
+
+@BindingAdapter("uploadErrorStateProgress")
+fun bindingUploadProgressIcon(imageView: AppCompatImageView, uploadErrorState: Either<Failure, Success>) {
+    uploadErrorState.fold(
+        ifLeft = { imageView.stopAnimationDrawable() },
+        ifRight = { success ->
+            success.takeIf { success is PreUploadExecuting }
+                ?.let { imageView.startAnimationDrawable() }
+                ?: imageView.stopAnimationDrawable() }
+    )
 }
 
 @BindingAdapter("uploadErrorMessage")
 fun bindingUploadError(textView: TextView, uploadErrorState: Either<Failure, Success>) {
-    uploadErrorState.fold(
-        ifLeft = { failure ->
-            when (failure) {
-                QuotaAccountNoMoreSpaceAvailable -> { R.string.no_more_space_avalable }
-                ExceedMaxFileSize -> { R.string.exceed_max_file_size }
-                ExtractInfoFailed -> { R.string.extrac_info_failed }
-                else -> null
-            }
-        },
-        ifRight = { null }
-    )
-    ?.let {
-        textView.setText(it)
-        textView.visibility = View.VISIBLE
-    } ?: textView.setVisibility(View.GONE)
+    LOGGER.info("uploadErrorMessage() $uploadErrorState")
+    textView.visibility = View.GONE
+    uploadErrorState.mapLeft { failure -> failure.getUploadErrorMessageId() }
+        .mapLeft {
+            textView.setText(it)
+            textView.visibility = View.VISIBLE
+        }
+}
+
+private fun Failure.getUploadErrorMessageId(): Int {
+    return when (this) {
+            QuotaAccountNoMoreSpaceAvailable -> { R.string.no_more_space_avalable }
+            ExceedMaxFileSize -> { R.string.exceed_max_file_size }
+            ExtractInfoFailed -> { R.string.extrac_info_failed }
+            else -> { R.string.unable_to_prepare_file_for_upload }
+        }
 }
 
 @BindingAdapter("uploadError")

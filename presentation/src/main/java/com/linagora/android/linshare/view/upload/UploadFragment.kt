@@ -26,6 +26,9 @@ import com.linagora.android.linshare.databinding.FragmentUploadBinding
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
+import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
+import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
+import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
@@ -60,8 +63,6 @@ class UploadFragment : MainNavigationFragment() {
         private val EMPTY_SELECTION_ARGS = null
 
         private val DEFAULT_SORT_ORDER = null
-
-        private val EMPTY_DOCUMENT_REQUEST = null
     }
 
     @Inject
@@ -114,45 +115,49 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun receiveFile() {
-
         uploadFragmentViewModel.dispatchState(Either.right(PreUploadExecuting))
 
         uploadScoped.launch(dispatcherProvider.io) {
-            LOGGER.info("receiveFile()")
-            val bundle = requireArguments()
-            bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
-                ?.let { uri ->
-                    buildDocumentRequest(uri)
-                        ?.let { documentRequest -> bindingData(documentRequest) }
-                        ?: handleBuildDocumentRequestFailed()
-                }
-                ?: handleBuildDocumentRequestFailed()
+            runCatching { extractArgument() }
+                .getOrElse(this@UploadFragment::handlePreUploadError)
         }
     }
 
-    private fun handleBuildDocumentRequestFailed() {
+    private suspend fun extractArgument() {
+        LOGGER.info("extractArgument()")
+        val bundle = requireArguments()
+        bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
+            ?.let { uri -> buildDocumentRequest(uri) }
+            ?.let(this@UploadFragment::bindingData)
+    }
+
+    private fun handlePreUploadError(throwable: Throwable) {
+        LOGGER.error("handlePreUploadError(): $throwable - ${throwable.printStackTrace()}")
+        takeIf { throwable is EmptyDocumentException }
+            ?.let { handleBuildDocumentRequestFailed(ExtractInfoFailed) }
+            ?: handleBuildDocumentRequestFailed(PreUploadError)
+    }
+
+    private fun handleBuildDocumentRequestFailed(failure: Failure.FeatureFailure) {
         uploadScoped.launch(dispatcherProvider.main) {
-            uploadFragmentViewModel.dispatchState(Either.left(ExtractInfoFailed))
+            uploadFragmentViewModel.dispatchState(Either.left(failure))
         }
     }
 
-    private suspend fun buildDocumentRequest(uri: Uri): DocumentRequest? {
-        return try {
-            withContext(uploadScoped.coroutineContext + dispatcherProvider.io) {
-                val projection = arrayOf(OpenableColumns.DISPLAY_NAME, Media.MIME_TYPE)
-                requireContext().contentResolver
-                    .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
-                    ?.use { cursor -> extractCursor(uri, cursor) }
-            }
-        } catch (exp: Exception) {
-            LOGGER.error("$exp - ${exp.printStackTrace()}")
-            EMPTY_DOCUMENT_REQUEST
+    private suspend fun buildDocumentRequest(uri: Uri): DocumentRequest {
+        return withContext(uploadScoped.coroutineContext + dispatcherProvider.io) {
+            val projection = arrayOf(OpenableColumns.DISPLAY_NAME, Media.MIME_TYPE)
+            requireContext().contentResolver
+                .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
+                ?.use { cursor -> extractCursor(uri, cursor) }
+                ?: throw EmptyDocumentException
         }
     }
 
-    private fun extractCursor(uri: Uri, cursor: Cursor): DocumentRequest? {
+    private fun extractCursor(uri: Uri, cursor: Cursor): DocumentRequest {
         return takeIf { cursor.moveToFirst() }
             ?.let { cursor.getDocumentRequest(uri.createTempFile(requireContext())) }
+            ?: throw EmptyDocumentException
     }
 
     private fun bindingData(documentRequest: DocumentRequest) {
