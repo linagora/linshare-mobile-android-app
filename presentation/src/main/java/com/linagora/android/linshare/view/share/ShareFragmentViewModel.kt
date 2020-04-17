@@ -90,7 +90,7 @@ class ShareFragmentViewModel @Inject constructor(
             ?.let { mutableSetOf(user).plus(it) }
 
         mutableRecipients.value = newRecipients
-        dispatchUIState(Either.right(AddRecipient(user)))
+        dispatchState(Either.right(AddRecipient(user)))
     }
 
     fun removeRecipient(user: GenericUser) {
@@ -103,7 +103,7 @@ class ShareFragmentViewModel @Inject constructor(
 
     fun onShareClick(document: Document) {
         share(recipients.value!!.toList(), document)
-        dispatchUIState(Either.right(ShareButtonClick))
+        dispatchState(Either.right(ShareButtonClick))
     }
 
     fun resetRecipients() {

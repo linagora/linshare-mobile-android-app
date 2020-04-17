@@ -29,7 +29,7 @@ class LetterAvatarDrawable(
         letterPaint.textSize = shape.height / 2
         val (xPos, yPos) = calculateCenterPosition()
 
-        canvas.drawText(letter.toString(), xPos, yPos, letterPaint)
+        canvas.drawText(letter.toUpperCase().toString(), xPos, yPos, letterPaint)
     }
 
     private fun calculateCenterPosition(): Pair<Float, Float> {
