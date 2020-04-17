@@ -5,12 +5,12 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.linagora.android.linshare.view.action.PersonalItemContextMenu"/>
+        <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.share.Share"/>
 
         <variable
-            name="personalContextMenu"
-            type="PersonalItemContextMenu&lt;Share&gt;" />
+            name="downloadContextMenu"
+            type="DownloadItemContextMenu&lt;Share&gt;" />
 
         <variable
             name="share"
@@ -36,7 +36,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> personalContextMenu.download(share)}">
+            android:onClick="@{() -> downloadContextMenu.download(share)}">
 
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
