@@ -113,4 +113,5 @@
     <string name="copy_in_my_space">Sao chép tới Không gian của tôi</string>
     <string name="copied_in_my_space">Tệp %s đã được sao chép tới Không gian cá nhân</string>
     <string name="view">Xem</string>
+    <string name="unable_to_prepare_file_for_upload">Không thể chuẩn bị file để tải lên</string>
 </resources>

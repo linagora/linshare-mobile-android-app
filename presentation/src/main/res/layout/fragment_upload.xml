@@ -56,15 +56,26 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/uploadIcon"
-                    android:layout_width="@dimen/upload_icon_size"
-                    android:layout_height="@dimen/upload_icon_size"
+                    android:layout_width="@dimen/user_suggestion_avatar_size"
+                    android:layout_height="@dimen/user_suggestion_avatar_size"
                     android:layout_marginStart="@dimen/upload_icon_margin_start"
                     android:scaleType="centerCrop"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:uploadErrorStateIcon="@{viewModel.viewState}"
+                    app:documentIcon="@{document}"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/uploadProgress"
+                    android:layout_width="@dimen/user_suggestion_avatar_size"
+                    android:layout_height="@dimen/user_suggestion_avatar_size"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintTop_toTopOf="@+id/uploadIcon"
+                    app:layout_constraintStart_toStartOf="@+id/uploadIcon"
+                    app:layout_constraintEnd_toEndOf="@+id/uploadIcon"
+                    app:layout_constraintBottom_toBottomOf="@+id/uploadIcon"
                     android:background="@drawable/progress_animation"
-                    app:documentIcon="@{document}"
-                    app:uploadErrorStateIcon="@{viewModel.viewState}"/>
+                    app:uploadErrorStateProgress="@{viewModel.viewState}"/>
 
                 <TextView
                     android:id="@+id/uploadInfo"

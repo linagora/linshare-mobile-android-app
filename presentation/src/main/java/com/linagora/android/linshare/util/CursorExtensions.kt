@@ -6,7 +6,7 @@ import android.provider.OpenableColumns
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import java.io.File
 
-fun Cursor.getDocumentRequest(file: File): DocumentRequest? {
+fun Cursor.getDocumentRequest(file: File): DocumentRequest {
     val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
     val mediaType = getColumnIndex(MediaStore.Images.Media.MIME_TYPE)
         .takeIf { columnIndex -> columnIndex > -1 }
