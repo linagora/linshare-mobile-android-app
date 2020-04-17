@@ -71,6 +71,10 @@
 
         </LinearLayout>
 
+        <View
+            style="@style/DivideView"
+            android:layout_marginBottom="@dimen/padding_top_bottom_sheet" />
+
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
             android:onClick="@{() -> contextMenu.remove(document)}">
