@@ -105,7 +105,7 @@ class MySpaceFragment : MainNavigationFragment() {
             document = document,
             title = getString(R.string.confirm_delete_file, document.name),
             negativeText = getString(R.string.cancel),
-            positiveText = getString(R.string.remove),
+            positiveText = getString(R.string.delete),
             onPositiveCallback = { handleRemoveDocument(document) }
         ).show(childFragmentManager, "confirm_remove_document_dialog")
     }
