@@ -2,7 +2,7 @@ package com.linagora.android.linshare.view.action
 
 import java.util.concurrent.atomic.AtomicReference
 
-interface PersonalItemContextMenu<T> {
+interface DownloadItemContextMenu<T> {
 
     val downloadingData: AtomicReference<T>
 

@@ -17,8 +17,8 @@ import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
+import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemContextMenu
-import com.linagora.android.linshare.view.myspace.action.MySpacePersonalContextMenu
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class MySpaceViewModel @Inject constructor(
 
     val itemContextMenu = MySpaceItemContextMenu(this)
 
-    val personalItemContextMenu = MySpacePersonalContextMenu(this)
+    val downloadContextMenu = MySpaceDownloadContextMenu(this)
 
     fun getAllDocuments() {
         viewModelScope.launch(dispatcherProvider.io) {
@@ -70,7 +70,7 @@ class MySpaceViewModel @Inject constructor(
     }
 
     fun getDownloadingDocument(): Document? {
-        return personalItemContextMenu.downloadingData.get()
+        return downloadContextMenu.downloadingData.get()
     }
 
     fun removeDocument(document: Document) {
@@ -81,7 +81,7 @@ class MySpaceViewModel @Inject constructor(
 
     fun downloadDocument(credential: Credential, token: Token, document: Document) {
         viewModelScope.launch(dispatcherProvider.io) {
-            personalItemContextMenu.setDownloading(NO_DOWNLOADING_DOCUMENT)
+            downloadContextMenu.setDownloading(NO_DOWNLOADING_DOCUMENT)
             downloadOperator.download(credential, token, document.toDownloadRequest())
         }
     }

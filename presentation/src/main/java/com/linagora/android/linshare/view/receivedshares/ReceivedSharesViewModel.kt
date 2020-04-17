@@ -2,7 +2,7 @@ package com.linagora.android.linshare.view.receivedshares
 
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
-import com.linagora.android.linshare.adapter.receivedshares.action.ReceivedSharePersonalContextMenu
+import com.linagora.android.linshare.adapter.receivedshares.action.ReceivedShareDownloadContextMenu
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
@@ -23,7 +23,7 @@ class ReceivedSharesViewModel @Inject constructor(
 ) : BaseViewModel(dispatcherProvider),
     ListItemBehavior<Share> {
 
-    val personalItemContextMenu = ReceivedSharePersonalContextMenu(this)
+    val downloadContextMenu = ReceivedShareDownloadContextMenu(this)
 
     override fun onContextMenuClick(data: Share) {
         dispatchState(Either.right(ContextMenuReceivedShareClick(data)))
@@ -36,12 +36,12 @@ class ReceivedSharesViewModel @Inject constructor(
     }
 
     fun getDownloading(): Share? {
-        return personalItemContextMenu.downloadingData.get()
+        return downloadContextMenu.downloadingData.get()
     }
 
     fun downloadShare(credential: com.linagora.android.linshare.domain.model.Credential, token: Token, share: Share) {
         viewModelScope.launch(dispatcherProvider.io) {
-            personalItemContextMenu.setDownloading(NO_DOWNLOADING_DOCUMENT)
+            downloadContextMenu.setDownloading(NO_DOWNLOADING_DOCUMENT)
             downloadOperator.download(credential, token, share.toDownloadRequest())
         }
     }

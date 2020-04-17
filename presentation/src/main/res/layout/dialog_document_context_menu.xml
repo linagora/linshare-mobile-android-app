@@ -7,7 +7,7 @@
     <data>
         <import type="com.linagora.android.linshare.view.action.MySpaceItemAction"/>
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
-        <import type="com.linagora.android.linshare.view.action.PersonalItemContextMenu"/>
+        <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.document.Document"/>
 
         <variable
@@ -19,8 +19,8 @@
             type="ItemContextMenu&lt;Document&gt;" />
 
         <variable
-            name="personalContextMenu"
-            type="PersonalItemContextMenu&lt;Document&gt;" />
+            name="downloadContextMenu"
+            type="DownloadItemContextMenu&lt;Document&gt;" />
 
         <variable
             name="document"
@@ -59,7 +59,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> personalContextMenu.download(document)}">
+            android:onClick="@{() -> downloadContextMenu.download(document)}">
 
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"

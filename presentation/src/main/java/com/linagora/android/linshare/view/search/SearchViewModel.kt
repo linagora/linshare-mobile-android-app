@@ -20,8 +20,8 @@ import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
 import com.linagora.android.linshare.view.myspace.MySpaceViewModel
+import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemContextMenu
-import com.linagora.android.linshare.view.myspace.action.MySpacePersonalContextMenu
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
@@ -47,7 +47,7 @@ class SearchViewModel @Inject constructor(
 
     val itemContextMenu = MySpaceItemContextMenu(this)
 
-    val personalItemContextMenu = MySpacePersonalContextMenu(this)
+    val downloadContextMenu = MySpaceDownloadContextMenu(this)
 
     private val searchState = MutableLiveData<Either<Failure, Success>>()
         .apply { value = INITIAL_STATE }
@@ -79,12 +79,12 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getDownloadingDocument(): Document? {
-        return personalItemContextMenu.downloadingData.get()
+        return downloadContextMenu.downloadingData.get()
     }
 
     fun downloadDocument(credential: Credential, token: Token, document: Document) {
         viewModelScope.launch(dispatcherProvider.io) {
-            personalItemContextMenu.setDownloading(MySpaceViewModel.NO_DOWNLOADING_DOCUMENT)
+            downloadContextMenu.setDownloading(MySpaceViewModel.NO_DOWNLOADING_DOCUMENT)
             downloadOperator.download(credential, token, document.toDownloadRequest())
         }
     }

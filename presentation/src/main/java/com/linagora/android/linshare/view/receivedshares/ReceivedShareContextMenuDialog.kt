@@ -32,6 +32,6 @@ class ReceivedShareContextMenuDialog(private val share: Share) : DaggerBottomShe
         receivedSharesViewModel = getParentViewModel(viewModelFactory)
 
         binding.share = share
-        binding.personalContextMenu = receivedSharesViewModel.personalItemContextMenu
+        binding.downloadContextMenu = receivedSharesViewModel.downloadContextMenu
     }
 }
