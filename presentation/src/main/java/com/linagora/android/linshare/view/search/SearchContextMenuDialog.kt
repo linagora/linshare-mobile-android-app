@@ -33,5 +33,6 @@ class SearchContextMenuDialog(private val document: Document) : DaggerBottomShee
         documentContextMenuBinding.document = document
         documentContextMenuBinding.contextMenu = searchViewModel.itemContextMenu
         documentContextMenuBinding.downloadContextMenu = searchViewModel.downloadContextMenu
+        documentContextMenuBinding.mySpaceItemAction = searchViewModel.mySpaceItemAction
     }
 }

@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSearchBinding
@@ -22,7 +23,9 @@ import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
+import com.linagora.android.linshare.domain.usecases.myspace.ShareItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.util.dismissKeyboard
@@ -32,6 +35,7 @@ import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.myspace.ConfirmRemoveDocumentDialog
+import com.linagora.android.linshare.view.share.ShareFragment
 import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.android.synthetic.main.fragment_search.view.searchView
 import kotlinx.coroutines.launch
@@ -98,6 +102,7 @@ class SearchFragment : MainNavigationFragment() {
             }
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
             is RemoveClick -> confirmRemoveDocument(viewEvent.document)
+            is ShareItemClick -> navigateToShare(viewEvent.document)
         }
         searchViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -224,5 +229,12 @@ class SearchFragment : MainNavigationFragment() {
 
     private fun handleRemoveDocument(document: Document) {
         searchViewModel.removeDocument(document)
+    }
+
+    private fun navigateToShare(document: Document) {
+        searchContextMenuDialog.dismiss()
+        val bundle = Bundle()
+        bundle.putParcelable(ShareFragment.SHARE_DOCUMENT_BUNDLE_KEY, document.toParcelable())
+        findNavController().navigate(R.id.navigationShare, bundle)
     }
 }

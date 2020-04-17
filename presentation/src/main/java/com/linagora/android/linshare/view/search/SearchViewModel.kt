@@ -17,6 +17,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
 import com.linagora.android.linshare.view.myspace.MySpaceViewModel
@@ -44,6 +45,8 @@ class SearchViewModel @Inject constructor(
         private val LOGGER = LoggerFactory.getLogger(SearchViewModel::class.java)
         const val QUERY_INTERVAL_MS = 500L
     }
+
+    val mySpaceItemAction = MySpaceItemActionImp(this)
 
     val itemContextMenu = MySpaceItemContextMenu(this)
 
