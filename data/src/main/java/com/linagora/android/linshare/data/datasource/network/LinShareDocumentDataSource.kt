@@ -3,6 +3,7 @@ package com.linagora.android.linshare.data.datasource.network
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.ErrorResponse
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
@@ -96,5 +97,9 @@ class LinShareDocumentDataSource @Inject constructor(
 
     override suspend fun share(shareRequest: ShareRequest): List<Share> {
         return linshareApi.share(shareRequest)
+    }
+
+    override suspend fun copy(copyRequest: CopyRequest): List<Document> {
+        return linshareApi.copyInMySpace(copyRequest)
     }
 }

@@ -6,6 +6,7 @@ import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
@@ -84,4 +85,8 @@ interface LinshareApi {
     suspend fun getSharingAutoComplete(
         @Path("pattern") pattern: String
     ): List<UserAutoCompleteResult>
+
+    @POST("/documents/copy")
+    @Headers("Accept: application/json")
+    suspend fun copyInMySpace(@Body copyRequest: CopyRequest): List<Document>
 }
