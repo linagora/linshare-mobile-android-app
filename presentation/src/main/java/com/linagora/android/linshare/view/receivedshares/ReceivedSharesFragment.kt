@@ -9,13 +9,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import arrow.core.Either
+import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentReceivedSharesBinding
+import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.DownloadReceivedShareClick
+import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyInMySpace
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
@@ -23,6 +28,7 @@ import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.widget.withLinShare
 import kotlinx.android.synthetic.main.fragment_received_shares.swipeLayoutReceivedList
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -39,6 +45,8 @@ class ReceivedSharesFragment : MainNavigationFragment() {
 
     private lateinit var receivedShareContextMenuDialog: ReceivedShareContextMenuDialog
 
+    private lateinit var binding: FragmentReceivedSharesBinding
+
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReceivedSharesFragment::class.java)
     }
@@ -48,7 +56,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentReceivedSharesBinding.inflate(inflater, container, false)
+        binding = FragmentReceivedSharesBinding.inflate(inflater, container, false)
         initViewModel(binding)
         return binding.root
     }
@@ -71,17 +79,26 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     private fun observeViewState() {
         receivedSharesViewModel.viewState.observe(viewLifecycleOwner, Observer {
             it.map { success -> when (success) {
+                is Success.ViewState -> reactToViewState(success)
                 is Success.ViewEvent -> reactToViewEvent(success)
             } }
         })
     }
 
+    private fun reactToViewState(success: Success.ViewState) {
+        when (success) {
+            is CopyInMySpaceSuccess -> showCopyInMySpaceSuccess(success.documents)
+        }
+    }
+
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        LOGGER.info("reactToViewEvent(): $viewEvent")
         when (viewEvent) {
             is ContextMenuReceivedShareClick -> showContextMenuReceivedShare(viewEvent.share)
             is DownloadReceivedShareClick -> handleDownloadDocument(viewEvent.share)
+            is ReceivedSharesCopyInMySpace -> handleCopyInMySpace(viewEvent.share)
         }
-        receivedSharesViewModel.dispatchState(Either.right(Success.Idle))
+        resetState()
     }
 
     private fun handleDownloadDocument(share: Share) {
@@ -145,4 +162,23 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             }
         }
     }
+
+    private fun handleCopyInMySpace(share: Share) {
+        LOGGER.info("handleCopyInMySpace(): $share")
+        receivedShareContextMenuDialog.dismiss()
+        receivedSharesViewModel.copyInMySpace(share)
+    }
+
+    private fun showCopyInMySpaceSuccess(documents: List<Document>) {
+        LOGGER.info("showCopyInMySpaceSuccess(): $documents")
+        Snackbar.make(binding.root, getString(R.string.copied_in_my_space, documents[0].name), Snackbar.LENGTH_LONG)
+            .withLinShare(requireContext())
+            .setAction(R.string.view) { goToMySpace() }
+            .show()
+        resetState()
+    }
+
+    private fun goToMySpace() = findNavController().navigate(R.id.navigation_my_space)
+
+    private fun resetState() = receivedSharesViewModel.dispatchState(Either.right(Success.Idle))
 }

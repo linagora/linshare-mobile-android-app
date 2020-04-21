@@ -5,12 +5,17 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.view.action.CopyInMySpaceContextMenu"/>
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.share.Share"/>
 
         <variable
             name="downloadContextMenu"
             type="DownloadItemContextMenu&lt;Share&gt;" />
+
+        <variable
+            name="copyInMySpaceContextMenu"
+            type="CopyInMySpaceContextMenu&lt;Share&gt;" />
 
         <variable
             name="share"
@@ -33,6 +38,19 @@
             android:layout_marginTop="@dimen/padding_top_bottom_sheet"
             style="@style/DivideView"
             app:layout_constraintTop_toBottomOf="@id/shareInfoContainer" />
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> copyInMySpaceContextMenu.copyInMySpace(share)}">
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_copy" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/copy_in_my_space" />
+        </LinearLayout>
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"

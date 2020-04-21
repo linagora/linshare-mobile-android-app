@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toStartOf="@+id/shareSize"
             app:layout_constraintStart_toEndOf="@+id/previewShareIcon"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{share.sender.firstName + ` ` + share.sender.lastName}"
+            android:text="@{share.name}"
             />
 
         <TextView

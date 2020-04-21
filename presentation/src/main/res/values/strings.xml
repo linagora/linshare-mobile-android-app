@@ -110,4 +110,7 @@
     <string name="received_shares">Received shares</string>
     <string name="unknown_user">Unknown User</string>
     <string name="add_people"><i>Add people</i></string>
+    <string name="copy_in_my_space">Copy In My Space</string>
+    <string name="copied_in_my_space">File %s has been copied into My Space</string>
+    <string name="view">View</string>
 </resources>
