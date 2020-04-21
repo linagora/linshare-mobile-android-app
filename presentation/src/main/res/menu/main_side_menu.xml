@@ -3,7 +3,7 @@
 
     <group
         android:id="@+id/navigation_received_group"
-        android:checkableBehavior="none">
+        android:checkableBehavior="single">
 
         <item
             android:id="@id/navigation_received_shares"

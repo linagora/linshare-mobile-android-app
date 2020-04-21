@@ -33,5 +33,6 @@ class ReceivedShareContextMenuDialog(private val share: Share) : DaggerBottomShe
 
         binding.share = share
         binding.downloadContextMenu = receivedSharesViewModel.downloadContextMenu
+        binding.copyInMySpaceContextMenu = receivedSharesViewModel.copyInMySpaceContextMenu
     }
 }

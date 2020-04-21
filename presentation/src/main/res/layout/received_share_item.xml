@@ -20,7 +20,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/my_space_item_padding">
+        android:paddingTop="@dimen/my_space_item_padding"
+        android:paddingBottom="@dimen/my_space_item_padding">
 
         <ImageView
             android:id="@+id/receivedIcon"
@@ -43,7 +44,7 @@
             android:singleLine="true"
             android:text="@{share.name}"
             android:textColor="@color/file_name_color"
-            android:textSize="@dimen/file_name_text_size"
+            android:textSize="@dimen/my_space_item_primary_text_size"
             app:layout_constraintBaseline_toBaselineOf="@id/receivedIcon"
             app:layout_constraintEnd_toStartOf="@+id/receivedMenuContainer"
             app:layout_constraintStart_toEndOf="@id/receivedIcon"
@@ -59,7 +60,7 @@
             android:ellipsize="middle"
             android:singleLine="true"
             android:textColor="@color/file_size_color"
-            android:textSize="@dimen/file_size_text_size"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
             app:layout_constraintStart_toEndOf="@id/receivedIcon"
             app:layout_constraintTop_toBottomOf="@id/receivedName"
             android:text="@{share.sender.firstName + ` ` + share.sender.lastName}" />
@@ -74,7 +75,7 @@
             android:ellipsize="middle"
             android:singleLine="true"
             android:textColor="@color/file_size_color"
-            android:textSize="@dimen/file_size_text_size"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
             app:layout_constraintStart_toEndOf="@id/receivedIcon"
             app:layout_constraintTop_toBottomOf="@id/receivedUserName"
             app:receivedCreationDate="@{share}" />
@@ -83,7 +84,6 @@
             android:id="@+id/receivedMenuContainer"
             android:layout_width="@dimen/my_space_item_menu_container_width"
             android:layout_height="@dimen/my_space_item_menu_container_width"
-            android:layout_marginBottom="@dimen/my_space_item_padding"
             android:onClick="@{() -> itemBehavior.onContextMenuClick(share)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
