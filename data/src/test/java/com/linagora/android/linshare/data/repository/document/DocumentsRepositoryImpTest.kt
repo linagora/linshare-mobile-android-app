@@ -12,6 +12,7 @@ import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
+import com.linagora.android.testshared.CopyFixtures.COPY_REQUEST_1
 import com.linagora.android.testshared.ShareFixtures.SHARE_1
 import com.linagora.android.testshared.ShareFixtures.SHARE_2
 import com.linagora.android.testshared.ShareFixtures.SHARE_CREATION_1
@@ -177,5 +178,14 @@ class DocumentsRepositoryImpTest {
             assertThat(shares).hasSize(2)
             assertThat(shares).containsExactly(SHARE_1, SHARE_2)
         }
+    }
+
+    @Test
+    fun copyShouldSuccess() = runBlockingTest {
+        `when`(documentDataSource.copy(COPY_REQUEST_1))
+            .thenAnswer { listOf(DOCUMENT) }
+
+        val documents = documentRepositoryImp.copy(COPY_REQUEST_1)
+        assertThat(documents).containsExactly(DOCUMENT)
     }
 }

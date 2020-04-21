@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.data.repository.document
 
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
@@ -36,5 +37,9 @@ class DocumentRepositoryImp @Inject constructor(
 
     override suspend fun share(shareRequest: ShareRequest): List<Share> {
         return linShareDocumentDataSource.share(shareRequest)
+    }
+
+    override suspend fun copy(copyRequest: CopyRequest): List<Document> {
+        return linShareDocumentDataSource.copy(copyRequest)
     }
 }

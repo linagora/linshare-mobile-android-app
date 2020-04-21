@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.domain.repository.document
 
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
@@ -22,4 +23,6 @@ interface DocumentRepository {
     suspend fun search(query: QueryString): List<Document>
 
     suspend fun share(shareRequest: ShareRequest): List<Share>
+
+    suspend fun copy(copyRequest: CopyRequest): List<Document>
 }
