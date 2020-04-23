@@ -3,6 +3,7 @@ package com.linagora.android.linshare.inject
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import androidx.work.WorkManager
 import com.linagora.android.linshare.data.repository.authentication.LinshareAuthenticationRepository
 import com.linagora.android.linshare.data.repository.autocomplete.LinshareAutoCompleteRepository
 import com.linagora.android.linshare.data.repository.credential.PreferenceCredentialRepository
@@ -132,5 +133,11 @@ open class AppModule {
     @Singleton
     fun provideAutoCompleteRepository(autoCompleteRepository: LinshareAutoCompleteRepository): AutoCompleteRepository {
         return autoCompleteRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(context: Context): WorkManager {
+        return WorkManager.getInstance(context)
     }
 }

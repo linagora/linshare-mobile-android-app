@@ -15,10 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.work.Constraints
 import androidx.work.Data
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import arrow.core.Either
 import com.linagora.android.linshare.R
@@ -40,11 +37,11 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
-import com.linagora.android.linshare.view.upload.worker.UploadWorker
+import com.linagora.android.linshare.view.upload.request.UploadToMySpaceRequest
+import com.linagora.android.linshare.view.upload.request.UploadWorkerRequest
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_MIME_TYPE_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_NAME_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_PATH_INPUT_KEY
-import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.TAG_UPLOAD_WORKER
 import com.linagora.android.linshare.view.widget.makeCustomToast
 import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
@@ -64,6 +61,9 @@ class UploadFragment : MainNavigationFragment() {
 
         private val DEFAULT_SORT_ORDER = null
     }
+
+    @Inject
+    lateinit var workManager: WorkManager
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -173,22 +173,15 @@ class UploadFragment : MainNavigationFragment() {
         btnUpload.setOnClickListener {
 
             val inputData = createInputDataForUploadFile(documentRequest)
-
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-
-            val uploadRequest = OneTimeWorkRequestBuilder<UploadWorker>()
-                .setInputData(inputData)
-                .setConstraints(constraints)
-                .addTag(TAG_UPLOAD_WORKER)
-                .build()
-
-            WorkManager.getInstance(requireContext()).enqueue(uploadRequest)
+            createUploadRequest().execute(inputData)
 
             alertStartToUpload(1)
             navigateAfterUpload()
         }
+    }
+
+    private fun createUploadRequest(): UploadWorkerRequest {
+        return UploadToMySpaceRequest(workManager)
     }
 
     private fun alertStartToUpload(uploadFiles: Int) {
