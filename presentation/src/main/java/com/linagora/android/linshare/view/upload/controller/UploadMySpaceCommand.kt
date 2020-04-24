@@ -14,10 +14,11 @@ import kotlinx.coroutines.flow.map
 
 class UploadMySpaceCommand(
     private val uploadInteractor: UploadInteractor,
-    private val viewStateStore: ViewStateStore = ViewStateStore()
+    private val viewStateStore: ViewStateStore = ViewStateStore(),
+    override val documentRequest: DocumentRequest
 ) : UploadCommand {
 
-    override suspend fun execute(documentRequest: DocumentRequest): Flow<State<Either<Failure, Success>>> {
+    override suspend fun execute(): Flow<State<Either<Failure, Success>>> {
         return uploadInteractor(documentRequest)
             .map { viewStateStore.storeAndGet(it) }
             .map { State<Either<Failure, Success>> { toUploadMySpaceState(documentRequest, it) } }

@@ -2,6 +2,7 @@ package com.linagora.android.linshare.inject.worker
 
 import com.linagora.android.linshare.inject.annotation.WorkerKey
 import com.linagora.android.linshare.view.share.worker.ShareWorker
+import com.linagora.android.linshare.view.upload.worker.UploadCompletedNotificationWorker
 import com.linagora.android.linshare.view.upload.worker.UploadWorker
 import dagger.Binds
 import dagger.Module
@@ -19,4 +20,9 @@ interface WorkerBindingModule {
     @IntoMap
     @WorkerKey(ShareWorker::class)
     fun bindShareWorker(factory: ShareWorker.Factory): ChildWorkerFactory
+
+    @Binds
+    @IntoMap
+    @WorkerKey(UploadCompletedNotificationWorker::class)
+    fun bindUploadCompletedNotificationWorker(factory: UploadCompletedNotificationWorker.Factory): ChildWorkerFactory
 }

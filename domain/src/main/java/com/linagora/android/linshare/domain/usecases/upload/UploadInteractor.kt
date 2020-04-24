@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
@@ -36,6 +37,10 @@ class UploadInteractor @Inject constructor(
     private val enoughAccountQuotaInteractor: EnoughAccountQuotaInteractor,
     private val documentRepository: DocumentRepository
 ) {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(UploadInteractor::class.java)
+    }
 
     private val currentState = AtomicReference<Either<Failure, Success>>(Either.right(Idle))
 
@@ -110,6 +115,7 @@ class UploadInteractor @Inject constructor(
             }
             producerScope.send(State { Either.right(UploadSuccessViewState(document)) })
         } catch (uploadException: UploadException) {
+            LOGGER.error("upload(): $uploadException")
             when (val uploadErrorCode = uploadException.errorResponse.errCode) {
                 is ClientErrorCode -> { handleStateClientErrorCode(producerScope, uploadErrorCode) }
                 is LinShareErrorCode -> { handleStateLinShareErrorCode(producerScope, uploadErrorCode) }

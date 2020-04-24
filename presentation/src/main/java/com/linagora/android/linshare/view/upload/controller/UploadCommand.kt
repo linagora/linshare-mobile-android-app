@@ -8,5 +8,8 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import kotlinx.coroutines.flow.Flow
 
 interface UploadCommand {
-    suspend fun execute(documentRequest: DocumentRequest): Flow<State<Either<Failure, Success>>>
+
+    val documentRequest: DocumentRequest
+
+    suspend fun execute(): Flow<State<Either<Failure, Success>>>
 }
