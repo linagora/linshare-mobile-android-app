@@ -7,25 +7,24 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
-import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
-import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
-import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
-import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
+import com.linagora.android.linshare.domain.usecases.upload.UploadFailed
+import com.linagora.android.linshare.domain.usecases.upload.UploadSuccess
 import com.linagora.android.linshare.domain.usecases.upload.UploadingViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.linshare.domain.usecases.utils.ViewStateStore
 import com.linagora.android.linshare.inject.worker.ChildWorkerFactory
 import com.linagora.android.linshare.model.resources.StringId
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
@@ -39,6 +38,7 @@ import com.linagora.android.linshare.notification.UploadAndDownloadNotification.
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.upload.controller.UploadController
 import com.linagora.android.linshare.view.widget.makeCustomToast
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
@@ -52,11 +52,12 @@ class UploadWorker(
     private val appContext: Context,
     private val params: WorkerParameters,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
-    private val uploadInteractor: UploadInteractor,
     private val systemNotifier: SystemNotifier,
     private val uploadNotification: BaseNotification,
     private val authorizationManager: AuthorizationManager,
-    private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor
+    private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
+    private val uploadController: UploadController,
+    private val viewStateStore: ViewStateStore
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
@@ -69,9 +70,11 @@ class UploadWorker(
         const val FILE_MIME_TYPE_INPUT_KEY = "upload_file_mime_type"
 
         const val TAG_UPLOAD_WORKER = "upload_worker"
-    }
 
-    private val currentState = Either.right(Idle)
+        const val RESULT_MESSAGE = "upload_result_message"
+
+        const val UPLOAD_RESULT = "upload_result"
+    }
 
     override suspend fun doWork(): Result {
         val notificationId = systemNotifier.generateNotificationId()
@@ -80,11 +83,11 @@ class UploadWorker(
             var tempUploadFile: File? = null
             try {
                 tempUploadFile = File(inputData.getString(FILE_PATH_INPUT_KEY)!!)
+                val documentRequest = buildDocumentFromInputData(tempUploadFile)
 
-                buildDocumentFromInputData(tempUploadFile)
-                    .also { upload(it, notificationId) }
+                upload(documentRequest, notificationId)
 
-                Result.success()
+                getUploadCompletedResult(documentRequest)
             } catch (throwable: Throwable) {
                 LOGGER.error(throwable.message, throwable)
                 notifyUploadFailure(
@@ -126,39 +129,49 @@ class UploadWorker(
         }))
     }
 
-    private suspend fun upload(
-        document: DocumentRequest,
-        notificationId: NotificationId
-    ) {
-        uploadInteractor(document)
-            .collect { state -> collectUploadState(notificationId, document, state) }
+    private suspend fun upload(documentRequest: DocumentRequest, notificationId: NotificationId) {
+        uploadController.upload(documentRequest)
+            .collect { state -> collectUploadState(notificationId, documentRequest, state) }
     }
 
-    private suspend fun collectUploadState(notificationId: NotificationId, document: DocumentRequest, state: State<Either<Failure, Success>>) {
-        state(currentState).fold(
-            ifLeft = { failure -> notifyOnFailureState(systemNotifier.generateNotificationId(), document, failure) },
+    private suspend fun collectUploadState(
+        notificationId: NotificationId,
+        document: DocumentRequest,
+        state: State<Either<Failure, Success>>
+    ) {
+        viewStateStore.storeAndGet(state).fold(
+            ifLeft = { },
             ifRight = { success -> reactOnSuccessState(notificationId, document, success) }
         )
     }
 
-    private fun notifyOnFailureState(notificationId: NotificationId, document: DocumentRequest, failure: Failure) {
-        when (failure) {
-            QuotaAccountNoMoreSpaceAvailable -> notifyUploadFailure(
-                notificationId = notificationId,
-                title = document.uploadFileName,
-                message = appContext.getString(R.string.no_more_space_avalable)
-            )
-            InternetNotAvailable -> notifyUploadFailure(
-                notificationId = notificationId,
-                title = appContext.getString(R.string.you_are_offline),
-                message = String.format(appContext.getString(R.string.internet_not_available), document.uploadFileName)
-            )
-            else -> notifyUploadFailure(
-                notificationId = notificationId,
-                title = appContext.getString(R.string.upload_failed),
-                message = document.uploadFileName
-            )
+    private fun getUploadCompletedResult(document: DocumentRequest): Result {
+        return viewStateStore.getCurrentState().fold(
+            ifLeft = { getFailureResult(it, document) },
+            ifRight = { getSuccessResult(it, document) }
+        )
+    }
+
+    private fun getFailureResult(failure: Failure, document: DocumentRequest): Result {
+        LOGGER.info("getFailureResult(): $failure")
+        val failedMessage = when (failure) {
+            is UploadFailed -> failure.message
+            else -> document.uploadFileName
         }
+        return Result.success(workDataOf(
+            RESULT_MESSAGE to failedMessage,
+            UPLOAD_RESULT to UploadResult.UPLOAD_FAILED.name
+        ))
+    }
+
+    private fun getSuccessResult(success: Success, document: DocumentRequest): Result {
+        val successMessage = when (success) {
+            is UploadSuccess -> success.message
+            else -> document.uploadFileName
+        }
+        return Result.success(workDataOf(
+            UPLOAD_RESULT to UploadResult.UPLOAD_SUCCESS.name,
+            RESULT_MESSAGE to successMessage))
     }
 
     private suspend fun reactOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {
@@ -166,7 +179,6 @@ class UploadWorker(
             is AuthenticationViewState -> setUpInterceptors(success)
             Loading -> alertDownLoading(document.uploadFileName)
             is UploadingViewState -> updateUploadingProgress(document, notificationId, success.transferredBytes, success.totalBytes)
-            is UploadSuccessViewState -> notifyUploadSuccess(systemNotifier.generateNotificationId(), document.uploadFileName)
         }
     }
 
@@ -205,19 +217,10 @@ class UploadWorker(
         transferredBytes: TransferredBytes,
         totalBytes: TotalBytes
     ) {
+        LOGGER.info("updateUploadingProgress(): $transferredBytes/$totalBytes")
         reduceUpdateProgress(transferredBytes)
             .takeIf { it < MAX_UPDATE_PROGRESS_COUNT }
             ?.let { notifyUploading(notificationId, document.uploadFileName, totalBytes, transferredBytes) }
-    }
-
-    private fun notifyUploadSuccess(notificationId: NotificationId, message: String) {
-        uploadNotification.notify(notificationId) {
-            this.setContentTitle(appContext.getString(R.string.upload_success))
-                .setOngoing(FINISHED_NOTIFICATION)
-                .setContentText(message)
-                .disableProgressBar()
-            this.build()
-        }
     }
 
     private fun notifyUploadFailure(notificationId: NotificationId, title: StringId, message: StringId) {
@@ -240,11 +243,12 @@ class UploadWorker(
 
     class Factory @Inject constructor(
         private val dispatcherProvider: CoroutinesDispatcherProvider,
-        private val uploadInteractor: UploadInteractor,
         private val systemNotifier: SystemNotifier,
         private val uploadAndDownloadNotification: UploadAndDownloadNotification,
         private val authorizationManager: AuthorizationManager,
-        private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor
+        private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
+        private val uploadController: UploadController,
+        private val viewStateStore: ViewStateStore
     ) : ChildWorkerFactory {
         override fun create(
             applicationContext: Context,
@@ -254,11 +258,12 @@ class UploadWorker(
                 applicationContext,
                 params,
                 dispatcherProvider,
-                uploadInteractor,
                 systemNotifier,
                 uploadAndDownloadNotification,
                 authorizationManager,
-                dynamicBaseUrlInterceptor
+                dynamicBaseUrlInterceptor,
+                uploadController,
+                viewStateStore
             )
         }
     }
