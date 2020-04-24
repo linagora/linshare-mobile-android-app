@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.net.SocketException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class LinShareDocumentDataSource @Inject constructor(
@@ -56,6 +57,7 @@ class LinShareDocumentDataSource @Inject constructor(
             LOGGER.error("$exp - ${exp.printStackTrace()}")
             when (exp) {
                 is SocketException -> throw UploadException(ErrorResponse.INTERNET_NOT_AVAILABLE)
+                is UnknownHostException -> throw UploadException(ErrorResponse.INTERNET_NOT_AVAILABLE)
                 else -> throw UploadException(ErrorResponse.UNKNOWN_RESPONSE)
             }
         }

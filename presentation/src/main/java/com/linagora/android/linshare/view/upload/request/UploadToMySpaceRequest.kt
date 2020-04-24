@@ -5,6 +5,7 @@ import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.linagora.android.linshare.view.upload.worker.UploadCompletedNotificationWorker
 import com.linagora.android.linshare.view.upload.worker.UploadWorker
 
 class UploadToMySpaceRequest constructor(private val workManager: WorkManager) : UploadWorkerRequest {
@@ -20,6 +21,11 @@ class UploadToMySpaceRequest constructor(private val workManager: WorkManager) :
             .addTag(UploadWorker.TAG_UPLOAD_WORKER)
             .build()
 
-        workManager.enqueue(uploadRequest)
+        val uploadCompletedNotification = OneTimeWorkRequestBuilder<UploadCompletedNotificationWorker>()
+            .build()
+
+        workManager.beginWith(uploadRequest)
+            .then(uploadCompletedNotification)
+            .enqueue()
     }
 }

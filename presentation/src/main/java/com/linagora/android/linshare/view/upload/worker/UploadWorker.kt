@@ -38,6 +38,7 @@ import com.linagora.android.linshare.notification.UploadAndDownloadNotification.
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.upload.controller.UploadCommand
 import com.linagora.android.linshare.view.upload.controller.UploadController
 import com.linagora.android.linshare.view.widget.makeCustomToast
 import kotlinx.coroutines.flow.collect
@@ -85,7 +86,10 @@ class UploadWorker(
                 tempUploadFile = File(inputData.getString(FILE_PATH_INPUT_KEY)!!)
                 val documentRequest = buildDocumentFromInputData(tempUploadFile)
 
-                upload(documentRequest, notificationId)
+                upload(
+                    uploadCommand = createUploadCommand(documentRequest),
+                    notificationId = notificationId
+                )
 
                 getUploadCompletedResult(documentRequest)
             } catch (throwable: Throwable) {
@@ -129,9 +133,13 @@ class UploadWorker(
         }))
     }
 
-    private suspend fun upload(documentRequest: DocumentRequest, notificationId: NotificationId) {
-        uploadController.upload(documentRequest)
-            .collect { state -> collectUploadState(notificationId, documentRequest, state) }
+    private fun createUploadCommand(documentRequest: DocumentRequest): UploadCommand {
+        return uploadController.createUploadCommand(documentRequest)
+    }
+
+    private suspend fun upload(uploadCommand: UploadCommand, notificationId: NotificationId) {
+        uploadController.upload(uploadCommand)
+            .collect { state -> collectUploadState(notificationId, uploadCommand.documentRequest, state) }
     }
 
     private suspend fun collectUploadState(
@@ -140,7 +148,7 @@ class UploadWorker(
         state: State<Either<Failure, Success>>
     ) {
         viewStateStore.storeAndGet(state).fold(
-            ifLeft = { },
+            ifLeft = { Unit },
             ifRight = { success -> reactOnSuccessState(notificationId, document, success) }
         )
     }

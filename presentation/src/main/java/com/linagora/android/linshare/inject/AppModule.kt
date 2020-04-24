@@ -27,12 +27,15 @@ import com.linagora.android.linshare.domain.repository.share.ReceivedShareReposi
 import com.linagora.android.linshare.domain.repository.user.AuditUserRepository
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
+import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
+import com.linagora.android.linshare.domain.usecases.utils.ViewStateStore
 import com.linagora.android.linshare.network.AuthorizationManagerImp
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification
 import com.linagora.android.linshare.operator.download.DownloadManagerOperator
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.view.LinShareApplication
+import com.linagora.android.linshare.view.upload.controller.UploadController
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -139,5 +142,10 @@ open class AppModule {
     @Singleton
     fun provideWorkManager(context: Context): WorkManager {
         return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    fun provideUploadController(context: Context, uploadInteractor: UploadInteractor, viewStateStore: ViewStateStore): UploadController {
+        return UploadController(context, uploadInteractor, viewStateStore)
     }
 }

@@ -22,15 +22,14 @@ class UploadController @Inject constructor(
     private val viewStateStore: ViewStateStore
 ) {
 
-    suspend fun upload(documentRequest: DocumentRequest): Flow<State<Either<Failure, Success>>> {
-        val uploadCommand = createUploadCommand()
-        return uploadCommand.execute(documentRequest)
+    suspend fun upload(uploadCommand: UploadCommand): Flow<State<Either<Failure, Success>>> {
+        return uploadCommand.execute()
             .map { viewStateStore.storeAndGet(it) }
             .map { State<Either<Failure, Success>> { mapGenericState(it) } }
     }
 
-    private fun createUploadCommand(): UploadCommand {
-        return UploadMySpaceCommand(uploadInteractor)
+    fun createUploadCommand(documentRequest: DocumentRequest): UploadCommand {
+        return UploadMySpaceCommand(uploadInteractor, documentRequest = documentRequest)
     }
 
     private fun mapGenericState(state: Either<Failure, Success>): Either<Failure, Success> {
