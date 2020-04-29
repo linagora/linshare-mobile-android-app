@@ -13,7 +13,7 @@ import com.linagora.android.linshare.domain.usecases.autocomplete.UserAutoComple
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.resources.LayoutId
-import com.linagora.android.linshare.view.share.ShareFragment.Companion.AUTO_COMPLETE_THRESHOLD
+import com.linagora.android.linshare.util.binding.AddRecipientsViewBindingExtension.AUTO_COMPLETE_THRESHOLD
 
 @BindingAdapter("queryState")
 fun bindingUserSuggestion(
