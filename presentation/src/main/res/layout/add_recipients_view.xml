@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="arrow.core.Either"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
+
+        <variable
+            name="suggestions"
+            type="Either&lt;Failure,Success&gt;" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/addRecipientLabel"
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/share_label_margin_start"
+            android:layout_marginTop="@dimen/share_label_margin_top"
+            android:text="@string/add_recipients"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/addRecipients"
+            style="@style/AddRecipientsStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/share_add_recipients_margin_side"
+            android:layout_marginTop="@dimen/share_add_recipients_margin_top"
+            android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
+            android:hint="@string/add_people"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:textColorHint="@color/disable_state_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addRecipientLabel"
+            app:queryState="@{suggestions}">
+
+            <requestFocus />
+        </androidx.appcompat.widget.AppCompatAutoCompleteTextView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/share_add_recipients_margin_top"
+            android:paddingStart="@dimen/share_recipient_container_padding_side"
+            android:paddingEnd="@dimen/share_recipient_container_padding_side"
+            app:layout_constraintTop_toBottomOf="@+id/addRecipients"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/recipientContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacing="@dimen/share_chip_spacing" />
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
