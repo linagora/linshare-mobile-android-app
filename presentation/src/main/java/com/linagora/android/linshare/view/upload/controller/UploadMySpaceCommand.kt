@@ -27,7 +27,7 @@ class UploadMySpaceCommand(
     private fun toUploadMySpaceState(documentRequest: DocumentRequest, state: Either<Failure, Success>): Either<Failure, Success> {
         return state.map { success ->
             when (success) {
-                is UploadSuccessViewState -> UploadSuccess(documentRequest.uploadFileName)
+                is UploadSuccessViewState -> UploadSuccess(success.document, documentRequest.uploadFileName)
                 else -> success
             }
         }

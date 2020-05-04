@@ -230,7 +230,10 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun createUploadRequest(): UploadWorkerRequest {
-        return UploadToMySpaceRequest(workManager)
+        return uploadFragmentViewModel.shareRecipientsManager.recipients.value
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { recipients -> UploadAndShareRequest(workManager, recipients) }
+            ?: UploadToMySpaceRequest(workManager)
     }
 
     private fun alertStartToUpload(uploadFiles: Int) {

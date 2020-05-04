@@ -6,15 +6,26 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.util.append
+import com.linagora.android.linshare.view.share.worker.ShareWorker
+import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.RECIPIENTS_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadCompletedNotificationWorker
 import com.linagora.android.linshare.view.upload.worker.UploadWorker
+import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.UPLOAD_REQUEST_TYPE
 
-class UploadToMySpaceRequest constructor(private val workManager: WorkManager) : UploadWorkerRequest {
+class UploadAndShareRequest constructor(
+    private val workManager: WorkManager,
+    private val recipients: Set<GenericUser>
+) : UploadWorkerRequest {
+    init {
+        require(recipients.isNotEmpty()) { "Can not share without recipient" }
+    }
 
     override fun execute(inputData: Data) {
         val data = inputData.append(workDataOf(
-            UploadWorker.UPLOAD_REQUEST_TYPE to UploadRequestType.UploadToMySpace.name
+            UPLOAD_REQUEST_TYPE to UploadRequestType.UploadAndShare.name,
+            RECIPIENTS_KEY to recipients.map { it.mail }.toTypedArray()
         ))
 
         val constraints = Constraints.Builder()
@@ -27,10 +38,16 @@ class UploadToMySpaceRequest constructor(private val workManager: WorkManager) :
             .addTag(UploadWorker.TAG_UPLOAD_WORKER)
             .build()
 
+        val shareWorker = OneTimeWorkRequestBuilder<ShareWorker>()
+            .setConstraints(constraints)
+            .addTag(ShareWorker.TAG_SHARE_WORKER)
+            .build()
+
         val uploadCompletedNotification = OneTimeWorkRequestBuilder<UploadCompletedNotificationWorker>()
             .build()
 
         workManager.beginWith(uploadRequest)
+            .then(shareWorker)
             .then(uploadCompletedNotification)
             .enqueue()
     }
