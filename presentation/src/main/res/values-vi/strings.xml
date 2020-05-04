@@ -54,6 +54,13 @@
 
     <string name="upload_success">Hoàn thành tải lên</string>
     <string name="upload_failed">Tải lên không thành công</string>
+    <string name="upload_and_share_success">Chia sẻ thành công</string>
+    <string name="upload_and_share_failed">Chia sẻ không thành công</string>
+    <string name="upload_success_but_share_failed">Chia sẻ tệp không thành công</string>
+    <plurals name="file_is_shared_with_people">
+        <item quantity="one">Tệp đã được chia sẻ với 1 người</item>
+        <item quantity="few">Tệp đã được chia sẻ với %d người</item>
+    </plurals>
     <string name="can_not_perform_upload">Tải lên không thể thực hiện được, hãy thử lại</string>
     <string name="no_more_space_avalable">Bộ nhớ LinShare của bạn đã vượt quá giới hạn, hãy làm trống và thử lại</string>
     <string name="exceed_max_file_size">Dung lượng tải lên vượt quá giới hạn, hãy thử với tệp khác</string>

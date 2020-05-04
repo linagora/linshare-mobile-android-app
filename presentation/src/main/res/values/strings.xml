@@ -54,6 +54,13 @@
 
     <string name="upload_success">Upload completed</string>
     <string name="upload_failed">Upload failed</string>
+    <string name="upload_and_share_success">Upload and Share completed</string>
+    <string name="upload_and_share_failed">Upload and Share failed</string>
+    <string name="upload_success_but_share_failed">File is not shared successfully</string>
+    <plurals name="file_is_shared_with_people">
+        <item quantity="one">File is shared with 1 person</item>
+        <item quantity="other">File is shared with %d people</item>
+    </plurals>
     <string name="can_not_perform_upload">Can not perform uploading. Please try again</string>
     <string name="no_more_space_avalable">You exceeded your storage quota on the LinShare server. Free space and retry your upload.</string>
     <string name="exceed_max_file_size">Uploaded file size exceeds the allowable limit. Please try another file.</string>

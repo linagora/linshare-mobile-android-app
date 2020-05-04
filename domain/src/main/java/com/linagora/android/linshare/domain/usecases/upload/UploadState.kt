@@ -10,5 +10,5 @@ import com.linagora.android.linshare.domain.usecases.utils.Success.ViewState
 data class UploadSuccessViewState(val document: Document) : ViewState()
 data class UploadingViewState(val transferredBytes: TransferredBytes, val totalBytes: TotalBytes) : ViewState()
 object PreUploadError : Failure.FeatureFailure()
-data class UploadSuccess(val message: String) : Success.ViewState()
+data class UploadSuccess(val document: Document, val message: String) : Success.ViewState()
 data class UploadFailed(val message: String) : Failure.FeatureFailure()

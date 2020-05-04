@@ -11,6 +11,7 @@ import androidx.work.workDataOf
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.ErrorResponse
+import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
@@ -38,6 +39,8 @@ import com.linagora.android.linshare.notification.UploadAndDownloadNotification.
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.DOCUMENTS_KEY
+import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.RECIPIENTS_KEY
 import com.linagora.android.linshare.view.upload.controller.UploadCommand
 import com.linagora.android.linshare.view.upload.controller.UploadController
 import com.linagora.android.linshare.view.widget.makeCustomToast
@@ -69,6 +72,8 @@ class UploadWorker(
         const val FILE_NAME_INPUT_KEY = "upload_file_name"
 
         const val FILE_MIME_TYPE_INPUT_KEY = "upload_file_mime_type"
+
+        const val UPLOAD_REQUEST_TYPE = "upload_request_type"
 
         const val TAG_UPLOAD_WORKER = "upload_worker"
 
@@ -168,18 +173,33 @@ class UploadWorker(
         }
         return Result.success(workDataOf(
             RESULT_MESSAGE to failedMessage,
-            UPLOAD_RESULT to UploadResult.UPLOAD_FAILED.name
+            UPLOAD_RESULT to UploadResult.UPLOAD_FAILED.name,
+            UPLOAD_REQUEST_TYPE to inputData.getString(UPLOAD_REQUEST_TYPE)
         ))
     }
 
-    private fun getSuccessResult(success: Success, document: DocumentRequest): Result {
-        val successMessage = when (success) {
-            is UploadSuccess -> success.message
-            else -> document.uploadFileName
-        }
+    private fun getSuccessResult(success: Success, documentRequest: DocumentRequest): Result {
+        LOGGER.info("getSuccessResult(): $success")
         return Result.success(workDataOf(
             UPLOAD_RESULT to UploadResult.UPLOAD_SUCCESS.name,
-            RESULT_MESSAGE to successMessage))
+            RESULT_MESSAGE to getSuccessMessage(success, documentRequest),
+            UPLOAD_REQUEST_TYPE to inputData.getString(UPLOAD_REQUEST_TYPE),
+            DOCUMENTS_KEY to listOf(getUploadedDocument(success)?.documentId?.uuid.toString()).toTypedArray(),
+            RECIPIENTS_KEY to inputData.getStringArray(RECIPIENTS_KEY)
+        ))
+    }
+
+    private fun getSuccessMessage(success: Success, documentRequest: DocumentRequest): String {
+        return when (success) {
+            is UploadSuccess -> success.message
+            else -> documentRequest.uploadFileName
+        }
+    }
+
+    private fun getUploadedDocument(success: Success): Document? {
+        return success.takeIf { it is UploadSuccess }
+            ?.let { it as UploadSuccess }
+            ?.document
     }
 
     private suspend fun reactOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {
