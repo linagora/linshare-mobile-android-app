@@ -124,23 +124,28 @@
 
         </androidx.cardview.widget.CardView>
 
+        <include
+            android:id="@+id/addRecipientContainer"
+            layout="@layout/add_recipients_view"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/fileInfoContainer"
+            app:layout_constraintBottom_toTopOf="@+id/btnUpload"
+            android:layout_marginBottom="@dimen/share_label_margin_top"
+            app:suggestions="@{viewModel.shareRecipientsManager.suggestions}"
+            />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnUpload"
-            android:layout_marginTop="@dimen/upload_button_margin_top"
+            android:layout_marginBottom="@dimen/share_margin_bottom"
             android:text="@string/upload_to_my_space"
             android:enabled="false"
             style="@style/UploadButton"
-            app:uploadError="@{viewModel.viewState}"
+            app:uploadState="@{viewModel.viewState}"
+            app:shareRecipients="@{viewModel.shareRecipientsManager.recipients}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fileInfoContainer" />
-
-        <View
-            android:background="@color/divide_view"
-            app:layout_constraintTop_toBottomOf="@id/btnUpload"
-            android:layout_marginTop="@dimen/upload_button_margin_top"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

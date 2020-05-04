@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.Data
@@ -20,16 +21,25 @@ import androidx.work.WorkManager
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentUploadBinding
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.toGenericUser
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
+import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
+import com.linagora.android.linshare.util.binding.addRecipientView
+import com.linagora.android.linshare.util.binding.initView
+import com.linagora.android.linshare.util.binding.onSelectedRecipient
+import com.linagora.android.linshare.util.binding.queryAfterTextChange
 import com.linagora.android.linshare.util.createTempFile
+import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getDocumentRequest
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
@@ -37,6 +47,7 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.upload.request.UploadAndShareRequest
 import com.linagora.android.linshare.view.upload.request.UploadToMySpaceRequest
 import com.linagora.android.linshare.view.upload.request.UploadWorkerRequest
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_MIME_TYPE_INPUT_KEY
@@ -95,6 +106,7 @@ class UploadFragment : MainNavigationFragment() {
         binding = FragmentUploadBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         initViewModel()
+        initAutoComplete()
         return binding.root
     }
 
@@ -112,6 +124,26 @@ class UploadFragment : MainNavigationFragment() {
 
         uploadFragmentViewModel = getViewModel(viewModelFactory)
         binding.viewModel = uploadFragmentViewModel
+
+        observeViewState()
+    }
+
+    private fun initAutoComplete() {
+        with(binding.addRecipientContainer) {
+            initView()
+            queryAfterTextChange { pattern -> queryRecipientAutoComplete(pattern) }
+            onSelectedRecipient { userAutoCompleteResult ->
+                uploadFragmentViewModel.addRecipient(userAutoCompleteResult.toGenericUser())
+            }
+        }
+    }
+
+    private fun observeViewState() {
+        uploadFragmentViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
+            state.map { success -> when (success) {
+                is Success.ViewEvent -> reactToViewEvent(success)
+            } }
+        })
     }
 
     private fun receiveFile() {
@@ -169,6 +201,23 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
+    private fun queryRecipientAutoComplete(autoCompletePattern: AutoCompletePattern) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            uploadFragmentViewModel.shareRecipientsManager.query(autoCompletePattern)
+        }
+    }
+
+    private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (viewEvent) {
+            is AddRecipient -> binding.addRecipientContainer
+                .addRecipientView(
+                    context = requireContext(),
+                    user = viewEvent.user,
+                    onRemoveRecipient = uploadFragmentViewModel::removeRecipient)
+        }
+        uploadFragmentViewModel.dispatchState(Either.right(Success.Idle))
+    }
+
     private fun setUpUploadButton(documentRequest: DocumentRequest) {
         btnUpload.setOnClickListener {
 
@@ -213,5 +262,22 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun navigateToWizardLogin() {
         findNavController().navigate(R.id.wizardFragment)
+    }
+
+    private fun clearAutoCompleteFocus() {
+        with(binding.addRecipientContainer) {
+            addRecipients.dismissKeyboard()
+            addRecipients.clearFocus()
+        }
+    }
+
+    override fun onPause() {
+        clearAutoCompleteFocus()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        uploadFragmentViewModel.resetRecipients()
     }
 }

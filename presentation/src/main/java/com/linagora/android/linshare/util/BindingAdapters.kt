@@ -12,6 +12,7 @@ import arrow.core.Either
 import arrow.core.orNull
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
@@ -184,12 +185,19 @@ private fun Failure.getUploadErrorMessageId(): Int {
         }
 }
 
-@BindingAdapter("uploadError")
-fun bindingUploadButton(button: Button, uploadErrorState: Either<Failure, Success>) {
-    uploadErrorState.fold(
+@BindingAdapter("uploadState")
+fun bindingUploadButton(button: Button, uploadState: Either<Failure, Success>) {
+    uploadState.fold(
         ifLeft = { disableButtonUpload(button) },
         ifRight = { success -> bindingUploadButtonWhenSuccess(success, button) }
     )
+}
+
+@BindingAdapter("shareRecipients")
+fun bindingUploadButtonText(button: Button, recipients: Set<GenericUser>) {
+    recipients.takeIf { it.isNotEmpty() }
+        ?.run { button.setText(R.string.upload_and_share) }
+        ?: button.setText(R.string.upload_to_my_space)
 }
 
 private fun bindingUploadButtonWhenSuccess(success: Success, button: Button) {
@@ -207,8 +215,8 @@ private fun disableButtonPreUploadExecuting(button: Button) {
 
 private fun enableButtonUpload(button: Button) {
     button.isEnabled = true
-    button.setTextColor(ContextCompat.getColor(button.context, R.color.colorPrimary))
-    button.setBackgroundResource(R.drawable.round_with_border_button_layout)
+    button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
+    button.setBackgroundResource(R.drawable.round_button_primary_solid)
 }
 
 private fun disableButtonUpload(button: Button) {
