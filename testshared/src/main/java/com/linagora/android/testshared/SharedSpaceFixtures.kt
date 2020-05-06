@@ -1,12 +1,15 @@
 package com.linagora.android.testshared
 
 import arrow.core.Either
+
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.usecases.sharedspace.EmptySharedSpaceState
+import com.linagora.android.linshare.domain.usecases.sharedspace.NoResultsSearchSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
 import java.util.Date
 import java.util.UUID
@@ -36,4 +39,8 @@ object SharedSpaceFixtures {
     val ALL_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(ALL_SHARED_SPACE)
 
     val EMPTY_SHARED_SPACE_LIST_VIEW_STATE = Either.Left(EmptySharedSpaceState)
+
+    val NOT_FOUND_SHARED_SPACE_STATE = Either.left(NoResultsSearchSharedSpace)
+
+    val QUERY_STRING_SHARED_SPACE = QueryString("query_string")
 }

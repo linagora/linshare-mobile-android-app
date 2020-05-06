@@ -13,3 +13,5 @@ data class SharedSpaceItemClick(val sharedSpaceNodeNested: SharedSpaceNodeNested
 data class SharedSpaceContextMenuClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
 data class GetSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
 data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()
+object NoResultsSearchSharedSpace : Failure.FeatureFailure()
+object SearchSharedSpaceInitial : Success.ViewState()

@@ -12,3 +12,7 @@ data class SharedSpaceNodeNested(
     val name: String,
     val nodeType: LinShareNodeType
 )
+
+fun SharedSpaceNodeNested.nameContains(query: String): Boolean {
+    return name.toLowerCase().contains(query.toLowerCase())
+}
