@@ -4,6 +4,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
 import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 
 interface SharedSpaceRepository {
@@ -15,4 +16,6 @@ interface SharedSpaceRepository {
         membersParameter: MembersParameter = MembersParameter.WithoutMembers,
         rolesParameter: RolesParameter = RolesParameter.WithRole
     ): SharedSpace
+
+    suspend fun search(query: QueryString): List<SharedSpaceNodeNested>
 }

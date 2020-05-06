@@ -7,6 +7,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_1
+import com.linagora.android.testshared.SharedSpaceFixtures.QUERY_STRING_SHARED_SPACE
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_2
 import kotlinx.coroutines.test.runBlockingTest
@@ -53,15 +54,44 @@ class SharedSpaceRepositoryImpTest {
 
     @Test
     fun getSharedSpaceShouldReturnAnExistedSharedSpace() = runBlockingTest {
-        `when`(sharedSpaceDataSource.getSharedSpace(
+        `when`(
+            sharedSpaceDataSource.getSharedSpace(
                 SHARED_SPACE_ID_1,
                 MembersParameter.WithoutMembers,
-                RolesParameter.WithRole))
+                RolesParameter.WithRole
+            )
+        )
             .thenAnswer { SharedSpaceDocumentFixtures.SHARED_SPACE_1 }
 
         val sharedSpace = sharedSpaceRepositoryImp
-            .getSharedSpace(SHARED_SPACE_ID_1, MembersParameter.WithoutMembers, RolesParameter.WithRole)
+            .getSharedSpace(
+                SHARED_SPACE_ID_1,
+                MembersParameter.WithoutMembers,
+                RolesParameter.WithRole
+            )
 
         assertThat(sharedSpace).isEqualTo(SharedSpaceDocumentFixtures.SHARED_SPACE_1)
+    }
+
+    @Test
+    fun searchShouldReturnResultList() {
+        runBlockingTest {
+            `when`(sharedSpaceDataSource.searchSharedSpaces(QUERY_STRING_SHARED_SPACE))
+                .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_2) }
+
+            val documents = sharedSpaceRepositoryImp.search(QUERY_STRING_SHARED_SPACE)
+            assertThat(documents).containsExactly(SHARED_SPACE_1, SHARED_SPACE_2)
+        }
+    }
+
+    @Test
+    fun searchShouldReturnResultEmptyList() {
+        runBlockingTest {
+            `when`(sharedSpaceDataSource.searchSharedSpaces(QUERY_STRING_SHARED_SPACE))
+                .thenAnswer { emptyList<SharedSpaceNodeNested>() }
+
+            val documents = sharedSpaceRepositoryImp.search(QUERY_STRING_SHARED_SPACE)
+            assertThat(documents).isEmpty()
+        }
     }
 }
