@@ -122,4 +122,6 @@
     <string name="copied_in_my_space">Tệp %s đã được sao chép tới Không gian cá nhân</string>
     <string name="view">Xem</string>
     <string name="unable_to_prepare_file_for_upload">Không thể chuẩn bị file để tải lên</string>
+    <string name="shared_space">Không gian chia sẻ</string>
+    <string name="do_not_have_any_workgroup">Bạn chưa có nhóm làm việc nào</string>
 </resources>

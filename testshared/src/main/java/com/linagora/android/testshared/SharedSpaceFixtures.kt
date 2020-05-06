@@ -31,11 +31,9 @@ object SharedSpaceFixtures {
         nodeType = LinShareNodeType.WORK_GROUP
     )
 
-    private val EMPTY_SHARED_SPACE = EmptySharedSpaceState
-
     private val ALL_SHARED_SPACE = SharedSpaceViewState(listOf(SHARED_SPACE_1, SHARED_SPACE_2))
 
     val ALL_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(ALL_SHARED_SPACE)
 
-    val EMPTY_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(EMPTY_SHARED_SPACE)
+    val EMPTY_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(EmptySharedSpaceState)
 }

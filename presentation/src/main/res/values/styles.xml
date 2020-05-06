@@ -176,4 +176,26 @@
         <item name="chipIconSize">@dimen/share_recipient_avatar_size</item>
         <item name="chipStartPadding">0dp</item>
     </style>
+
+    <style name="TitleTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/item_upload_container_margin_side</item>
+        <item name="android:layout_marginEnd">@dimen/item_upload_container_margin_side</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">@dimen/my_space_item_primary_text_size</item>
+        <item name="android:textColor">@color/file_name_color</item>
+    </style>
+
+    <style name="DescriptionTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:textSize">@dimen/my_space_item_secondary_text_size</item>
+        <item name="android:textColor">@color/file_size_color</item>
+        <item name="android:layout_marginStart">@dimen/item_upload_container_margin_side</item>
+        <item name="android:layout_marginEnd">@dimen/item_upload_container_margin_side</item>
+    </style>
 </resources>

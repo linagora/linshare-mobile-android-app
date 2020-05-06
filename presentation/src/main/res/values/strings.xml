@@ -122,4 +122,6 @@
     <string name="copied_in_my_space">File %s has been copied into My Space</string>
     <string name="view">View</string>
     <string name="unable_to_prepare_file_for_upload">Unable to prepare file for upload</string>
+    <string name="shared_space">Shared Space</string>
+    <string name="do_not_have_any_workgroup">You don\'t have any workgroup yet</string>
 </resources>

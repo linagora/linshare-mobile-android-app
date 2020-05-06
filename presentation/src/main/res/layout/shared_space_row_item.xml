@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested"/>
+
+        <variable
+            name="shareSpaceNodeNested"
+            type="ShareSpaceNodeNested" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/my_space_item_padding"
+        android:paddingBottom="@dimen/my_space_item_padding"
+        android:paddingStart="@dimen/my_space_item_padding_start">
+
+        <ImageView
+            android:src="@drawable/ic_shared_space_item"
+            android:id="@+id/sharedSpaceIcon"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/my_space_item_icon_size"
+            android:layout_height="@dimen/my_space_item_icon_size"
+            app:layout_constraintTop_toTopOf="@id/sharedSpaceName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/sharedSpaceName"
+            />
+
+        <TextView
+            android:id="@+id/sharedSpaceName"
+            style="@style/TitleTextStyle"
+            android:text="@{shareSpaceNodeNested.name}"
+            android:layout_marginStart="@dimen/my_space_item_padding_start"
+            app:layout_constraintStart_toEndOf="@id/sharedSpaceIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/sharedSpaceIcon"
+            app:layout_constraintEnd_toStartOf="@id/sharedSpaceMenuContainer" />
+
+        <TextView
+            android:id="@+id/sharedSpaceLastModified"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:layout_marginStart="@dimen/my_space_item_padding_start"
+            style="@style/DescriptionTextStyle"
+            app:layout_constraintTop_toBottomOf="@id/sharedSpaceName"
+            app:layout_constraintStart_toEndOf="@id/sharedSpaceIcon"
+            app:sharedSpaceItemLastModified="@{shareSpaceNodeNested}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sharedSpaceMenuContainer"
+            android:layout_width="@dimen/my_space_item_menu_container_width"
+            android:layout_height="@dimen/my_space_item_menu_container_width"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/sharedSpaceContextMenu"
+                android:layout_width="@dimen/my_space_item_offline_icon_size"
+                android:layout_height="@dimen/my_space_item_context_menu_height"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_three_dot"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
