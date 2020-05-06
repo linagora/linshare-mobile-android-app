@@ -23,6 +23,7 @@ import javax.inject.Singleton
         WorkerBindingModule::class,
         NetworkModule::class,
         ShareModule::class,
+        SharedSpaceModule::class,
         AutoCompleteModule::class
     ]
 )
