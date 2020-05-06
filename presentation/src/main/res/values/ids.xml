@@ -3,4 +3,5 @@
     <item name="navigation_account_details" type="id"/>
     <item name="navigation_my_space" type="id"/>
     <item name="navigation_received_shares" type="id"/>
+    <item name="navigation_shared_space" type="id"/>
 </resources>

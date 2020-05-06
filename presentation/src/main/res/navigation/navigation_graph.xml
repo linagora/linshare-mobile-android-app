@@ -79,4 +79,9 @@
         android:name="com.linagora.android.linshare.view.receivedshares.ReceivedSharesFragment"
         tools:layout="@layout/fragment_received_shares">
     </fragment>
+    <fragment
+        android:id="@id/navigation_shared_space"
+        android:name="com.linagora.android.linshare.view.sharedspace.SharedSpaceFragment"
+        tools:layout="@layout/fragment_shared_space">
+    </fragment>
 </navigation>

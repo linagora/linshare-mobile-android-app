@@ -22,6 +22,16 @@
     </group>
 
     <group
+        android:id="@+id/navigation_shared_space"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@id/navigation_shared_space"
+            android:icon="@drawable/ic_shared_space"
+            android:title="@string/shared_space"/>
+    </group>
+
+    <group
         android:id="@+id/navigation_setting_group"
         android:checkableBehavior="none">
 

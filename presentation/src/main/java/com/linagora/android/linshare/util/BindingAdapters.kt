@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import arrow.core.Either
 import arrow.core.orNull
@@ -19,6 +20,7 @@ import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
+import com.linagora.android.linshare.domain.usecases.sharedspace.EmptySharedSpaceState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
@@ -223,4 +225,12 @@ private fun disableButtonUpload(button: Button) {
     button.isEnabled = false
     button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
     button.setBackgroundResource(R.drawable.round_with_border_disable_button_layout)
+}
+
+@BindingAdapter("visibleEmptyMessage")
+fun bindingEmptyMessage(textView: TextView, sharedSpace: Either<Failure, Success>?) {
+    val visible = sharedSpace?.fold(
+        ifLeft = { false },
+        ifRight = { it is EmptySharedSpaceState })
+    textView.isVisible = visible ?: false
 }
