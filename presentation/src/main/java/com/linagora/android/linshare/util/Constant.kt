@@ -13,4 +13,8 @@ object Constant {
     const val NO_TIMEOUT = 0L
 
     const val QUERY_INTERVAL_MS = 500L
+
+    const val WORK_GROUP_TYPE_FOLDER = "FOLDER"
+
+    const val WORK_GROUP_TYPE_DOCUMENT = "DOCUMENT"
 }
