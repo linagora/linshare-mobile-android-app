@@ -10,13 +10,20 @@ import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
 import com.linagora.android.linshare.data.network.adapter.ShareIdDeserializer
 import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdAdapter
+import com.linagora.android.linshare.data.network.adapter.WorkGroupNodeIdAdapter
+import com.linagora.android.linshare.data.network.factory.RuntimeTypeAdapterFactory
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.network.AuthorizationInterceptor
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
+import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
 import com.linagora.android.linshare.util.Constant.DEFAULT_TIMEOUT_SECONDS
 import com.linagora.android.linshare.util.Constant.NO_TIMEOUT
@@ -61,6 +68,11 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideLinShareRetrofit(clientBuilder: OkHttpClient.Builder): Retrofit {
+        val workGroupNodeTypeAdapterFactory = RuntimeTypeAdapterFactory
+            .of(WorkGroupNode::class.java, "type")
+            .registerSubtype(WorkGroupFolder::class.java, Constant.WORK_GROUP_TYPE_FOLDER)
+            .registerSubtype(WorkGroupDocument::class.java, Constant.WORK_GROUP_TYPE_DOCUMENT)
+
         val gson = GsonBuilder()
             .registerTypeAdapter(Date::class.java, DateLongDeserializer())
             .registerTypeAdapter(QuotaSize::class.java, QuotaSizeDeserializer())
@@ -69,7 +81,11 @@ class NetworkModule {
             .registerTypeAdapter(DocumentId::class.java, DocumentIdDeserializer())
             .registerTypeAdapter(ShareId::class.java, ShareIdDeserializer())
             .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
+            .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
+            .registerTypeAdapter(WorkGroupNodeId::class.java, WorkGroupNodeIdAdapter())
+            .registerTypeAdapterFactory(workGroupNodeTypeAdapterFactory)
             .create()
+
         return Retrofit.Builder()
             .baseUrl(DEFAULT_LINSHARE_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
