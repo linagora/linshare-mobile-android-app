@@ -84,4 +84,12 @@
         android:name="com.linagora.android.linshare.view.sharedspace.SharedSpaceFragment"
         tools:layout="@layout/fragment_shared_space">
     </fragment>
+    <fragment
+        android:id="@+id/navigation_shared_spaced_document"
+        android:name="com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentFragment"
+        tools:layout="@layout/fragment_shared_space_document" >
+        <argument
+            android:name="navigationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+    </fragment>
 </navigation>

@@ -3,6 +3,7 @@ package com.linagora.android.linshare.domain.usecases.sharedspace
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -18,11 +19,11 @@ class GetSharedSpaceChildDocumentsInteractor @Inject constructor(
     private val sharedSpacesDocumentRepository: SharedSpacesDocumentRepository
 ) {
 
-    operator fun invoke(sharedSpaceId: SharedSpaceId): Flow<State<Either<Failure, Success>>> {
+    operator fun invoke(sharedSpaceId: SharedSpaceId, parentNodeId: WorkGroupNodeId?): Flow<State<Either<Failure, Success>>> {
         return flow<State<Either<Failure, Success>>> {
             emitState { Either.right(Success.Loading) }
 
-            val state = Either.catch { sharedSpacesDocumentRepository.getAllChildNodes(sharedSpaceId) }
+            val state = Either.catch { sharedSpacesDocumentRepository.getAllChildNodes(sharedSpaceId, parentNodeId) }
                 .bimap(::SharedSpaceDocumentFailure, ::generateState)
 
             emitState { state }
