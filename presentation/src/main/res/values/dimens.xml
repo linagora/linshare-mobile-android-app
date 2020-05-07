@@ -144,4 +144,5 @@
     <dimen name="shared_space_navigation_margin_vertical">8dp</dimen>
     <dimen name="shared_space_navigation_path_text_size">16sp</dimen>
     <dimen name="shared_space_path_margin_start">16dp</dimen>
+    <dimen name="result_count_margin">24dp</dimen>
 </resources>

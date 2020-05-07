@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleNam
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.usecases.sharedspace.EmptySharedSpaceState
 import com.linagora.android.linshare.domain.usecases.sharedspace.NoResultsSearchSharedSpace
+import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
 import java.util.Date
 import java.util.UUID
@@ -36,7 +37,11 @@ object SharedSpaceFixtures {
 
     private val ALL_SHARED_SPACE = SharedSpaceViewState(listOf(SHARED_SPACE_1, SHARED_SPACE_2))
 
+    private val SEARCH_SHARED_SPACE = SearchSharedSpaceViewState(listOf(SHARED_SPACE_1, SHARED_SPACE_2))
+
     val ALL_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(ALL_SHARED_SPACE)
+
+    val SEARCH_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(SEARCH_SHARED_SPACE)
 
     val EMPTY_SHARED_SPACE_LIST_VIEW_STATE = Either.Left(EmptySharedSpaceState)
 
