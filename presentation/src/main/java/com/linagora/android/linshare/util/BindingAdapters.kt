@@ -228,8 +228,8 @@ private fun disableButtonUpload(button: Button) {
 }
 
 @BindingAdapter("visibleEmptyMessage")
-fun bindingEmptyMessage(textView: TextView, sharedSpace: Either<Failure, Success>?) {
-    val visible = sharedSpace?.fold(
+fun bindingEmptyMessage(textView: TextView, state: Either<Failure, Success>?) {
+    val visible = state?.fold(
         ifLeft = { false },
         ifRight = { it is EmptySharedSpaceState })
     textView.isVisible = visible ?: false

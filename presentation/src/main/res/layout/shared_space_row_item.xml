@@ -5,11 +5,11 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested"/>
 
         <variable
-            name="shareSpaceNodeNested"
-            type="ShareSpaceNodeNested" />
+            name="sharedSpaceNodeNested"
+            type="SharedSpaceNodeNested" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
         <TextView
             android:id="@+id/sharedSpaceName"
             style="@style/TitleTextStyle"
-            android:text="@{shareSpaceNodeNested.name}"
+            android:text="@{sharedSpaceNodeNested.name}"
             android:layout_marginStart="@dimen/my_space_item_padding_start"
             app:layout_constraintStart_toEndOf="@id/sharedSpaceIcon"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,7 +47,7 @@
             style="@style/DescriptionTextStyle"
             app:layout_constraintTop_toBottomOf="@id/sharedSpaceName"
             app:layout_constraintStart_toEndOf="@id/sharedSpaceIcon"
-            app:sharedSpaceItemLastModified="@{shareSpaceNodeNested}" />
+            app:sharedSpaceItemLastModified="@{sharedSpaceNodeNested}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/sharedSpaceMenuContainer"

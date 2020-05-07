@@ -1,8 +1,8 @@
-package com.linagora.android.linshare.data.datasource
+package com.linagora.android.linshare.domain.repository.sharedspace
 
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 
-interface SharedSpaceDataSource {
+interface SharedSpaceRepository {
 
     suspend fun getSharedSpaces(): List<SharedSpaceNodeNested>
 }

@@ -1,8 +1,8 @@
 package com.linagora.android.linshare.domain.usecases.sharedspace
 
 import arrow.core.Either
-import com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested
-import com.linagora.android.linshare.domain.repository.sharespace.SharedSpaceRepository
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -29,7 +29,7 @@ class GetSharedSpaceInteractor @Inject constructor(
         }
     }
 
-    private fun generateSharedSpaceState(sharedSpace: List<ShareSpaceNodeNested>): Success {
+    private fun generateSharedSpaceState(sharedSpace: List<SharedSpaceNodeNested>): Success {
         return sharedSpace.takeIf { it.isNotEmpty() }
             ?.let { SharedSpaceViewState(it) }
             ?: let { EmptySharedSpaceState }

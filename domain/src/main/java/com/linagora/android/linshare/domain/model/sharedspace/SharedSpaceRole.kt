@@ -1,4 +1,4 @@
-package com.linagora.android.linshare.domain.model.sharespace
+package com.linagora.android.linshare.domain.model.sharedspace
 
 import java.util.UUID
 

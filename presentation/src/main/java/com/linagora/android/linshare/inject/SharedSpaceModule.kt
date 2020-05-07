@@ -2,8 +2,8 @@ package com.linagora.android.linshare.inject
 
 import com.linagora.android.linshare.data.datasource.SharedSpaceDataSource
 import com.linagora.android.linshare.data.datasource.network.LinShareSharedSpaceDataSource
-import com.linagora.android.linshare.data.repository.sharespace.SharedSpaceRepositoryImp
-import com.linagora.android.linshare.domain.repository.sharespace.SharedSpaceRepository
+import com.linagora.android.linshare.data.repository.sharedspace.SharedSpaceRepositoryImp
+import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -19,5 +19,5 @@ abstract class SharedSpaceModule {
 
     @Binds
     @Singleton
-    abstract fun provideShareSpaceRepository(sharedSpaceRepositoryImp: SharedSpaceRepositoryImp): SharedSpaceRepository
+    abstract fun provideSharedSpaceRepository(sharedSpaceRepositoryImp: SharedSpaceRepositoryImp): SharedSpaceRepository
 }

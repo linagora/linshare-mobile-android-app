@@ -1,8 +1,8 @@
-package com.linagora.android.linshare.data.repository.sharespace
+package com.linagora.android.linshare.data.repository.sharedspace
 
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.SharedSpaceDataSource
-import com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_2
 import kotlinx.coroutines.test.runBlockingTest
@@ -40,7 +40,7 @@ class SharedSpaceRepositoryImpTest {
     fun getAllSharedSpaceShouldReturnEmptyListWhenNoSharedSpaceExist() {
         runBlockingTest {
             `when`(sharedSpaceDataSource.getSharedSpaces())
-                .thenAnswer { emptyList<ShareSpaceNodeNested>() }
+                .thenAnswer { emptyList<SharedSpaceNodeNested>() }
 
             val sharedSpace = sharedSpaceRepositoryImp.getSharedSpaces()
             assertThat(sharedSpace).isEmpty()

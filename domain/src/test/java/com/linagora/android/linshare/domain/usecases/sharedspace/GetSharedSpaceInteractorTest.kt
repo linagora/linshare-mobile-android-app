@@ -2,8 +2,8 @@ package com.linagora.android.linshare.domain.usecases.sharedspace
 
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested
-import com.linagora.android.linshare.domain.repository.sharespace.SharedSpaceRepository
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
 import com.linagora.android.testshared.SharedSpaceFixtures.ALL_SHARED_SPACE_LIST_VIEW_STATE
 import com.linagora.android.testshared.SharedSpaceFixtures.EMPTY_SHARED_SPACE_LIST_VIEW_STATE
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
@@ -49,7 +49,7 @@ class GetSharedSpaceInteractorTest {
     fun getSharedSpaceListShouldSuccessWithEmptySharedSpaceList() {
         runBlockingTest {
             `when`(sharedSpaceRepository.getSharedSpaces())
-                .thenAnswer { emptyList<ShareSpaceNodeNested>() }
+                .thenAnswer { emptyList<SharedSpaceNodeNested>() }
 
             assertThat(getSharedSpaceInteractor()
                 .map { it(INIT_STATE) }
