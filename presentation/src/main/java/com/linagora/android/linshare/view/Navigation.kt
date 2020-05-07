@@ -11,4 +11,9 @@ class Navigation {
         OUTSIDE_APP,
         INSIDE_APP
     }
+
+    enum class FileType {
+        ROOT,
+        NORMAL
+    }
 }
