@@ -10,7 +10,7 @@ import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
-import com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -93,5 +93,5 @@ interface LinshareApi {
 
     @GET("/shared_spaces?withRole=true")
     @Headers("Accept: application/json")
-    suspend fun getSharedSpaces(): List<ShareSpaceNodeNested>
+    suspend fun getSharedSpaces(): List<SharedSpaceNodeNested>
 }

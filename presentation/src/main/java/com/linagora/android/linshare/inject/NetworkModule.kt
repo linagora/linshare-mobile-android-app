@@ -9,12 +9,12 @@ import com.linagora.android.linshare.data.network.adapter.ErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
 import com.linagora.android.linshare.data.network.adapter.ShareIdDeserializer
-import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdDeserializer
+import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdAdapter
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.share.ShareId
-import com.linagora.android.linshare.domain.model.sharespace.ShareSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.network.AuthorizationInterceptor
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
@@ -50,7 +50,7 @@ class NetworkModule {
 
         if (BuildConfig.DEBUG) {
             val logger = HttpLoggingInterceptor()
-            logger.level = HttpLoggingInterceptor.Level.HEADERS
+            logger.level = HttpLoggingInterceptor.Level.BODY
             builder.addInterceptor(logger)
         }
 
@@ -68,7 +68,7 @@ class NetworkModule {
             .registerTypeAdapter(LinShareErrorCode::class.java, ErrorCodeDeserializer())
             .registerTypeAdapter(DocumentId::class.java, DocumentIdDeserializer())
             .registerTypeAdapter(ShareId::class.java, ShareIdDeserializer())
-            .registerTypeAdapter(ShareSpaceId::class.java, SharedSpaceIdDeserializer())
+            .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
             .create()
         return Retrofit.Builder()
             .baseUrl(DEFAULT_LINSHARE_BASE_URL)

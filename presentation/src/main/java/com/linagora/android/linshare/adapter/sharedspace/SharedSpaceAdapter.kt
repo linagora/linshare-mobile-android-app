@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.linagora.android.linshare.adapter.diff.ShareSpaceNodeNestedDiffCallback
+import com.linagora.android.linshare.adapter.diff.SharedSpaceNodeNestedDiffCallback
 import com.linagora.android.linshare.databinding.SharedSpaceRowItemBinding
-import com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 
-class SharedSpaceAdapter : ListAdapter<ShareSpaceNodeNested, SharedSpaceViewHolder>(ShareSpaceNodeNestedDiffCallback) {
+class SharedSpaceAdapter : ListAdapter<SharedSpaceNodeNested, SharedSpaceViewHolder>(SharedSpaceNodeNestedDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SharedSpaceViewHolder {
         return SharedSpaceViewHolder(SharedSpaceRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -23,8 +23,8 @@ class SharedSpaceViewHolder(
     private val binding: SharedSpaceRowItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(shareSpaceNodeNested: ShareSpaceNodeNested) {
-        binding.shareSpaceNodeNested = shareSpaceNodeNested
+    fun bind(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        binding.sharedSpaceNodeNested = sharedSpaceNodeNested
         binding.executePendingBindings()
     }
 }

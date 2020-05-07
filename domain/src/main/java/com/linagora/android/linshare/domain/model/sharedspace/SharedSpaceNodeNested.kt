@@ -1,11 +1,11 @@
-package com.linagora.android.linshare.domain.model.sharespace
+package com.linagora.android.linshare.domain.model.sharedspace
 
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-data class ShareSpaceNodeNested(
+data class SharedSpaceNodeNested(
     @SerializedName("uuid")
-    val shareSpaceId: ShareSpaceId,
+    val sharedSpaceId: SharedSpaceId,
     val role: SharedSpaceRole,
     val creationDate: Date,
     val modificationDate: Date,

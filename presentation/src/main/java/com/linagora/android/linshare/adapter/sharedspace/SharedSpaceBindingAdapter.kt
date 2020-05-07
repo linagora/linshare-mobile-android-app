@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.domain.model.sharespace.ShareSpaceNodeNested
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -52,12 +52,12 @@ fun bindingSharedSpaceLoading(
 @BindingAdapter("sharedSpaceItemLastModified")
 fun bindingSharedSpaceItemLastModified(
     textView: TextView,
-    shareSpaceNodeNested: ShareSpaceNodeNested
+    sharedSpaceNodeNested: SharedSpaceNodeNested
 ) {
     textView.text = runCatching {
         textView.context.getString(
             R.string.last_modified,
-            TimeUtils.convertToLocalTime(shareSpaceNodeNested.modificationDate, LastModifiedFormat)
+            TimeUtils.convertToLocalTime(sharedSpaceNodeNested.modificationDate, LastModifiedFormat)
         )
     }.getOrNull()
 }
