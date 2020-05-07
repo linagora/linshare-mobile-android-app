@@ -65,7 +65,7 @@ class MySpaceViewModel @Inject constructor(
     }
 
     fun onSearchButtonClick() {
-        LOGGER.info("onSearchButtonClick()")
+        LOGGER.info("openSearchButtonClick()")
         dispatchState(Either.right(SearchButtonClick))
     }
 

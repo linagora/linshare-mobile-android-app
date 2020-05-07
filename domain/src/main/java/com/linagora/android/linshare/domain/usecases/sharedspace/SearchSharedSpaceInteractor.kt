@@ -43,7 +43,7 @@ class SearchSharedSpaceInteractor @Inject constructor(private val sharedSpaceRep
 
     private fun generateSearchState(shareSpaceNodeNesteds: List<SharedSpaceNodeNested>): Either<Failure, Success> {
         return shareSpaceNodeNesteds.takeIf { it.isNotEmpty() }
-            ?.let { Either.right(SharedSpaceViewState(it)) }
+            ?.let { Either.right(SearchSharedSpaceViewState(it)) }
             ?: let { Either.left(NoResultsSearchSharedSpace) }
     }
 }

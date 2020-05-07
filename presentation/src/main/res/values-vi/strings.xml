@@ -124,4 +124,5 @@
     <string name="unable_to_prepare_file_for_upload">Không thể chuẩn bị file để tải lên</string>
     <string name="shared_space">Không gian chia sẻ</string>
     <string name="do_not_have_any_workgroup">Bạn chưa có nhóm làm việc nào</string>
+    <string name="search_in_shared_space">Tìm kiếm trong không gian chia sẻ</string>
 </resources>

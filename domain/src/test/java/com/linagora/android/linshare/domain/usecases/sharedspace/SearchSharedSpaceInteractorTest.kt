@@ -5,9 +5,9 @@ import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
-import com.linagora.android.testshared.SharedSpaceFixtures.ALL_SHARED_SPACE_LIST_VIEW_STATE
 import com.linagora.android.testshared.SharedSpaceFixtures.NOT_FOUND_SHARED_SPACE_STATE
 import com.linagora.android.testshared.SharedSpaceFixtures.QUERY_STRING_SHARED_SPACE
+import com.linagora.android.testshared.SharedSpaceFixtures.SEARCH_SHARED_SPACE_LIST_VIEW_STATE
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_2
 import com.linagora.android.testshared.TestFixtures.Searchs.QUERY_STRING
@@ -47,7 +47,7 @@ class SearchSharedSpaceInteractorTest {
             assertThat(states[0](INIT_STATE))
                 .isEqualTo(LOADING_STATE)
             assertThat(states[1](LOADING_STATE))
-                .isEqualTo(ALL_SHARED_SPACE_LIST_VIEW_STATE)
+                .isEqualTo(SEARCH_SHARED_SPACE_LIST_VIEW_STATE)
         }
     }
 

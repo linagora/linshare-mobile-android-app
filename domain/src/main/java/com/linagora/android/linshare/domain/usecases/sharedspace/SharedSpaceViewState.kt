@@ -8,6 +8,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 
 data class SharedSpaceViewState(val sharedSpace: List<SharedSpaceNodeNested>) : Success.ViewState()
 data class SharedSpaceFailure(val throwable: Throwable) : FeatureFailure()
+data class SearchSharedSpaceViewState(val sharedSpace: List<SharedSpaceNodeNested>) : Success.ViewState()
 object EmptySharedSpaceState : Failure.FeatureFailure()
 data class SharedSpaceItemClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
 data class SharedSpaceContextMenuClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
@@ -15,3 +16,5 @@ data class GetSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewSta
 data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()
 object NoResultsSearchSharedSpace : Failure.FeatureFailure()
 object SearchSharedSpaceInitial : Success.ViewState()
+object OpenSearchSharedSpaceButtonClick : Success.ViewEvent()
+object CloseSearchSharedSpaceButtonClick : Success.ViewEvent()

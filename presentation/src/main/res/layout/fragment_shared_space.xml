@@ -50,6 +50,57 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
+            <LinearLayout
+                android:id="@+id/searchContainer"
+                style="@style/Search.AppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/backSharedSpaces"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:onClick="@{() -> viewModel.closeSearchButtonClick()}"
+                    android:src="@drawable/ic_arrow_back"
+                    android:tint="@color/file_name_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:closeIcon="@drawable/ic_close"
+                    android:iconifiedByDefault="false"
+                    android:queryBackground="@color/transparent"
+                    android:queryHint="@string/search_in_shared_space"
+                    android:searchHintIcon="@null"
+                    android:searchIcon="@null" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/resultsCountContainer"
+                app:layout_constraintTop_toBottomOf="@+id/app_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
+                style="@style/ResultsCountContainerStyle"
+                app:resultsCountSharedSpaceContainer="@{viewModel.viewState}">
+
+                <TextView
+                    android:id="@+id/resultsCount"
+                    style="@style/ResultsCountStyle"
+                    android:layout_marginStart="@dimen/result_count_margin"
+                    android:layout_marginEnd="@dimen/result_count_margin"
+                    app:resultsCountSharedSpace="@{viewModel.viewState}"/>
+
+            </LinearLayout>
+
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeLayoutSharedSpace"
                 android:layout_width="match_parent"
@@ -58,7 +109,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:layout_constraintTop_toBottomOf="@id/resultsCountContainer"
                 app:onRefreshListener="@{() -> viewModel.onSwipeRefresh()}"
                 app:sharedSpaceLoadingState="@{viewModel.viewState}">
 
@@ -85,7 +136,40 @@
                 android:textSize="@dimen/empty_shared_space_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:visibleEmptyMessage="@{viewModel.viewState}" />
+                app:visibleEmptyMessage="@{viewModel.viewState}"
+                app:bindingTextEmptyMessage="@{viewModel.viewState}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/sharedSpaceBottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/bottom_app_bar_background"
+            android:elevation="6dp"
+            app:contentInsetStart="16dp"
+            app:fabAlignmentMode="center"
+            app:hideOnScroll="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/sharedSpaceSearch"
+                    android:layout_width="@dimen/search_icon_size"
+                    android:layout_height="@dimen/search_icon_size"
+                    android:layout_marginEnd="@dimen/search_icon_margin_end"
+                    android:background="@null"
+                    android:onClick="@{() -> viewModel.openSearchButtonClick()}"
+                    android:src="@drawable/ic_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
