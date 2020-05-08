@@ -20,7 +20,6 @@ import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
-import com.linagora.android.linshare.domain.usecases.sharedspace.EmptySharedSpaceState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
@@ -230,7 +229,7 @@ private fun disableButtonUpload(button: Button) {
 @BindingAdapter("visibleEmptyMessage")
 fun bindingEmptyMessage(textView: TextView, state: Either<Failure, Success>?) {
     val visible = state?.fold(
-        ifLeft = { false },
-        ifRight = { it is EmptySharedSpaceState })
+        ifLeft = { true },
+        ifRight = { false })
     textView.isVisible = visible ?: false
 }

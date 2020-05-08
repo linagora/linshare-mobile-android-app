@@ -35,5 +35,5 @@ object SharedSpaceFixtures {
 
     val ALL_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(ALL_SHARED_SPACE)
 
-    val EMPTY_SHARED_SPACE_LIST_VIEW_STATE = Either.Right(EmptySharedSpaceState)
+    val EMPTY_SHARED_SPACE_LIST_VIEW_STATE = Either.Left(EmptySharedSpaceState)
 }

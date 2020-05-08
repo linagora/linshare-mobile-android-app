@@ -23,15 +23,15 @@ class GetSharedSpaceInteractor @Inject constructor(
             emitState { Either.right(Loading) }
 
             val state = Either.catch { sharedSpaceRepository.getSharedSpaces() }
-                .bimap(::SharedSpaceFailure, ::generateSharedSpaceState)
+                .fold({ Either.left(SharedSpaceFailure(it)) }, ::generateSharedSpaceState)
 
             emitState { state }
         }
     }
 
-    private fun generateSharedSpaceState(sharedSpace: List<SharedSpaceNodeNested>): Success {
+    private fun generateSharedSpaceState(sharedSpace: List<SharedSpaceNodeNested>): Either<Failure, Success> {
         return sharedSpace.takeIf { it.isNotEmpty() }
-            ?.let { SharedSpaceViewState(it) }
-            ?: let { EmptySharedSpaceState }
+            ?.let { Either.right(SharedSpaceViewState(it)) }
+            ?: let { Either.left(EmptySharedSpaceState) }
     }
 }

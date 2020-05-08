@@ -31,7 +31,6 @@ fun bindingSharedSpaceList(
                     recyclerView.isVisible = true
                     (recyclerView.adapter as SharedSpaceAdapter).submitList(it.sharedSpace)
                 }
-                else -> recyclerView.isVisible = false
             }
         })
 }
