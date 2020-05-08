@@ -103,4 +103,12 @@ interface LinshareApi {
         @Path("uuid") uuid: String,
         @Query("parent") parentUuid: String? = null
     ): List<WorkGroupNode>
+
+    @GET("shared_spaces/{sharedSpaceId}/nodes/{nodeId}")
+    @Headers("Accept: application/json")
+    suspend fun getSharedSpaceNode(
+        @Path("sharedSpaceId") sharedSpaceUuid: String,
+        @Path("nodeId") sharedSpaceNodeUuid: String,
+        @Query("tree") tree: Boolean = true
+    ): WorkGroupNode
 }
