@@ -19,4 +19,11 @@ class SharedSpacesDocumentRepositoryImp @Inject constructor(
     ): List<WorkGroupNode> {
         return sharedSpacesDocumentDataSource.getAllChildNodes(sharedSpaceId, parentNodeId)
     }
+
+    override suspend fun getSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        nodeId: WorkGroupNodeId
+    ): WorkGroupNode {
+        return sharedSpacesDocumentDataSource.getSharedSpaceNode(sharedSpaceId, nodeId)
+    }
 }

@@ -10,4 +10,9 @@ interface SharedSpacesDocumentRepository {
         sharedSpaceId: SharedSpaceId,
         parentNodeId: WorkGroupNodeId? = null
     ): List<WorkGroupNode>
+
+    suspend fun getSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        nodeId: WorkGroupNodeId
+    ): WorkGroupNode
 }

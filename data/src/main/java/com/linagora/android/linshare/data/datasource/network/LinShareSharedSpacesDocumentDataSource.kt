@@ -22,4 +22,14 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
             ?: linShareApi.getAllSharedSpaceNode(sharedSpaceId.uuid.toString())
         return workGroupNodes.sortedBy { it.modificationDate }
     }
+
+    override suspend fun getSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        nodeId: WorkGroupNodeId
+    ): WorkGroupNode {
+        return linShareApi.getSharedSpaceNode(
+            sharedSpaceId.uuid.toString(),
+            nodeId.uuid.toString()
+        )
+    }
 }

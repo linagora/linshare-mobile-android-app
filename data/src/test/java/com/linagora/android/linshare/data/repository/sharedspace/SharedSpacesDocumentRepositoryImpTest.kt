@@ -3,6 +3,7 @@ package com.linagora.android.linshare.data.repository.sharedspace
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.sharedspacesdocument.SharedSpacesDocumentDataSource
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_2
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_1
@@ -54,5 +55,14 @@ class SharedSpacesDocumentRepositoryImpTest {
 
         assertThat(sharedSpacesDocumentRepositoryImp.getAllChildNodes(SHARED_SPACE_ID_2, PARENT_NODE_ID_2))
             .isEmpty()
+    }
+
+    @Test
+    fun getNodeShouldReturnADocumentWhenExisted() = runBlockingTest {
+        `when`(sharedSpacesDocumentDataSource.getSharedSpaceNode(SHARED_SPACE_ID_1, NODE_ID_1))
+            .thenAnswer { WORK_GROUP_DOCUMENT_1 }
+
+        assertThat(sharedSpacesDocumentRepositoryImp.getSharedSpaceNode(SHARED_SPACE_ID_1, NODE_ID_1))
+            .isEqualTo(WORK_GROUP_DOCUMENT_1)
     }
 }

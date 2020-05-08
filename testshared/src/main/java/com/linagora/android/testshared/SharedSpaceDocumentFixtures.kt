@@ -20,6 +20,8 @@ object SharedSpaceDocumentFixtures {
 
     val PARENT_NODE_ID_2 = WorkGroupNodeId(UUID.fromString("7371802c-f452-47a8-a65c-b5f0b36ce401"))
 
+    val NODE_ID_1 = WorkGroupNodeId(UUID.fromString("d3f70cc4-efde-49b8-92d7-85fc229b3c05"))
+
     val WORK_GROUP_FOLDER_1 = WorkGroupFolder(
         workGroupNodeId = WorkGroupNodeId(UUID.fromString("f231c326-64af-4956-82bd-94215dd8d6e2")),
         parentWorkGroupNodeId = WorkGroupNodeId(UUID.fromString("7371802c-f452-47a8-a65c-b5f0b36ce410")),
@@ -41,7 +43,7 @@ object SharedSpaceDocumentFixtures {
     )
 
     val WORK_GROUP_DOCUMENT_1 = WorkGroupDocument(
-        workGroupNodeId = WorkGroupNodeId(UUID.fromString("d3f70cc4-efde-49b8-92d7-85fc229b3c05")),
+        workGroupNodeId = NODE_ID_1,
         name = "Document_Daily report_090420.odt",
         parentWorkGroupNodeId = WorkGroupNodeId(UUID.fromString("7371802c-f452-47a8-a65c-b5f0b36ce410")),
         sharedSpaceId = SHARED_SPACE_ID_1,
