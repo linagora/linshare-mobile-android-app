@@ -7,11 +7,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.linagora.android.linshare.adapter.diff.SharedSpaceNodeNestedDiffCallback
 import com.linagora.android.linshare.databinding.SharedSpaceRowItemBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.view.base.ListItemBehavior
 
-class SharedSpaceAdapter : ListAdapter<SharedSpaceNodeNested, SharedSpaceViewHolder>(SharedSpaceNodeNestedDiffCallback) {
+class SharedSpaceAdapter(
+    private val itemBehavior: ListItemBehavior<SharedSpaceNodeNested>
+) : ListAdapter<SharedSpaceNodeNested, SharedSpaceViewHolder>(SharedSpaceNodeNestedDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SharedSpaceViewHolder {
-        return SharedSpaceViewHolder(SharedSpaceRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return SharedSpaceViewHolder(
+            SharedSpaceRowItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), itemBehavior
+        )
     }
 
     override fun onBindViewHolder(holder: SharedSpaceViewHolder, position: Int) {
@@ -20,11 +29,13 @@ class SharedSpaceAdapter : ListAdapter<SharedSpaceNodeNested, SharedSpaceViewHol
 }
 
 class SharedSpaceViewHolder(
-    private val binding: SharedSpaceRowItemBinding
+    private val binding: SharedSpaceRowItemBinding,
+    private val itemBehavior: ListItemBehavior<SharedSpaceNodeNested>
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(sharedSpaceNodeNested: SharedSpaceNodeNested) {
         binding.sharedSpaceNodeNested = sharedSpaceNodeNested
         binding.executePendingBindings()
+        binding.listItemBehavior = itemBehavior
     }
 }
