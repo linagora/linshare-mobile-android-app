@@ -9,6 +9,10 @@
             name="viewModel"
             type="com.linagora.android.linshare.view.sharedspace.SharedSpaceViewModel" />
 
+        <variable
+            name="sharedSpaceItemBehavior"
+            type="com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -65,7 +69,8 @@
                     android:background="@color/white"
                     app:layoutManager="LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:sharedSpaceState="@{viewModel.viewState}" />
+                    app:sharedSpaceState="@{viewModel.viewState}"
+                    app:itemBehavior="@{viewModel.sharedSpaceItemBehavior}"/>
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

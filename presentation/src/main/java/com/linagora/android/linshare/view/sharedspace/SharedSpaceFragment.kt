@@ -4,9 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceBinding
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import kotlinx.android.synthetic.main.fragment_shared_space.swipeLayoutSharedSpace
@@ -40,12 +45,29 @@ class SharedSpaceFragment : MainNavigationFragment() {
         sharedSpaceViewModel = getViewModel(viewModelFactory)
         binding.lifecycleOwner = this
         binding.viewModel = sharedSpaceViewModel
+        observeViewState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
         getSharedSpace()
+    }
+
+    private fun observeViewState() {
+        sharedSpaceViewModel.viewState.observe(viewLifecycleOwner, Observer {
+            it.map { success -> when (success) {
+                is Success.ViewEvent -> reactToViewEvent(success)
+            } }
+        })
+    }
+
+    private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (viewEvent) {
+            is SharedSpaceContextMenuClick -> {}
+            is SharedSpaceItemClick -> {}
+        }
+        sharedSpaceViewModel.dispatchState(Either.right(Success.Idle))
     }
 
     private fun setUpSwipeRefreshLayout() {

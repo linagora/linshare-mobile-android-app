@@ -13,13 +13,15 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.TimeUtils
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
+import com.linagora.android.linshare.view.base.ListItemBehavior
 
-@BindingAdapter("sharedSpaceState", requireAll = true)
+@BindingAdapter("sharedSpaceState", "itemBehavior", requireAll = true)
 fun bindingSharedSpaceList(
     recyclerView: RecyclerView,
-    sharedSpaceState: Either<Failure, Success>
+    sharedSpaceState: Either<Failure, Success>,
+    itemBehavior: ListItemBehavior<SharedSpaceNodeNested>
 ) {
-    if (recyclerView.adapter == null) { recyclerView.adapter = SharedSpaceAdapter() }
+    if (recyclerView.adapter == null) { recyclerView.adapter = SharedSpaceAdapter(itemBehavior) }
 
     sharedSpaceState.fold(
         ifLeft = { recyclerView.isVisible = false },
