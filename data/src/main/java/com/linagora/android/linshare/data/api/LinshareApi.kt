@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import okhttp3.MultipartBody
@@ -111,4 +112,12 @@ interface LinshareApi {
         @Path("nodeId") sharedSpaceNodeUuid: String,
         @Query("tree") tree: Boolean = true
     ): WorkGroupNode
+
+    @GET("shared_spaces/{uuid}")
+    @Headers("Accept: application/json")
+    suspend fun getSharedSpace(
+        @Path("uuid") sharedSpaceUuid: String,
+        @Query("members") includeMembers: Boolean = false,
+        @Query("withRole") withRole: Boolean = true
+    ): SharedSpace
 }

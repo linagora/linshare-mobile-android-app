@@ -1,7 +1,11 @@
 package com.linagora.android.testshared
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
@@ -79,4 +83,13 @@ object SharedSpaceDocumentFixtures {
     ))
 
     val STATE_EMPTY_SHARED_DOCUMENT_IN_SPACE_2 = Either.right(SharedSpaceDocumentEmpty)
+
+    val SHARED_SPACE_1 = SharedSpace(
+        sharedSpaceId = SHARED_SPACE_ID_1,
+        name = "ABC",
+        creationDate = Date(1588664667969),
+        modificationDate = Date(1588928300716),
+        nodeType = LinShareNodeType.WORK_GROUP,
+        role = SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.ADMIN)
+    )
 }

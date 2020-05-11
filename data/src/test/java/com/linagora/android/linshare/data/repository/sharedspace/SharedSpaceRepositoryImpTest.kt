@@ -2,7 +2,11 @@ package com.linagora.android.linshare.data.repository.sharedspace
 
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.SharedSpaceDataSource
+import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
+import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_2
 import kotlinx.coroutines.test.runBlockingTest
@@ -45,5 +49,19 @@ class SharedSpaceRepositoryImpTest {
             val sharedSpace = sharedSpaceRepositoryImp.getSharedSpaces()
             assertThat(sharedSpace).isEmpty()
         }
+    }
+
+    @Test
+    fun getSharedSpaceShouldReturnAnExistedSharedSpace() = runBlockingTest {
+        `when`(sharedSpaceDataSource.getSharedSpace(
+                SHARED_SPACE_ID_1,
+                MembersParameter.WithoutMembers,
+                RolesParameter.WithRole))
+            .thenAnswer { SharedSpaceDocumentFixtures.SHARED_SPACE_1 }
+
+        val sharedSpace = sharedSpaceRepositoryImp
+            .getSharedSpace(SHARED_SPACE_ID_1, MembersParameter.WithoutMembers, RolesParameter.WithRole)
+
+        assertThat(sharedSpace).isEqualTo(SharedSpaceDocumentFixtures.SHARED_SPACE_1)
     }
 }
