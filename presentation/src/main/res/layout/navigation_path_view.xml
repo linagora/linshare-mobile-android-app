@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.view.widget.NavigationPathBehavior"/>
+
+        <variable
+            name="navigationPathBehavior"
+            type="NavigationPathBehavior" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/navigationBack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/ic_navigation_back"
+            android:layout_width="@dimen/shared_space_navigation_back_icon_size"
+            android:layout_height="@dimen/shared_space_navigation_back_icon_size"
+            android:layout_marginTop="@dimen/shared_space_navigation_margin_vertical"
+            android:layout_marginBottom="@dimen/shared_space_navigation_margin_vertical"
+            android:layout_marginStart="@dimen/shared_space_navigation_margin_side"
+            android:onClick="@{() -> navigationPathBehavior.onBack()}"/>
+
+        <TextView
+            android:id="@+id/navigationCurrentFolder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shared_space_navigation_margin_vertical"
+            android:layout_marginBottom="@dimen/shared_space_navigation_margin_vertical"
+            android:layout_marginStart="@dimen/shared_space_path_margin_start"
+            android:layout_marginEnd="@dimen/shared_space_navigation_margin_side"
+            android:singleLine="true"
+            android:textSize="@dimen/shared_space_navigation_path_text_size"
+            android:textColor="@color/text_primary_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/navigationBack"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <View
+            android:layout_marginTop="@dimen/shared_space_navigation_margin_vertical"
+            app:layout_constraintTop_toBottomOf="@+id/navigationCurrentFolder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/DivideView"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

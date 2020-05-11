@@ -125,7 +125,7 @@
     </style>
 
     <style name="DivideView">
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">0.5dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/divide_view</item>
     </style>
@@ -197,5 +197,17 @@
         <item name="android:textColor">@color/file_size_color</item>
         <item name="android:layout_marginStart">@dimen/item_upload_container_margin_side</item>
         <item name="android:layout_marginEnd">@dimen/item_upload_container_margin_side</item>
+    </style>
+
+    <style name="ScreenTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxWidth">@dimen/shared_space_title_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/text_with_logo_color</item>
+        <item name="android:textSize">@dimen/url_name_text_size</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">middle</item>
     </style>
 </resources>

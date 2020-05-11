@@ -1,62 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode" />
+        <import type="com.linagora.android.linshare.view.base.ListItemBehavior" />
 
         <variable
             name="node"
             type="WorkGroupNode" />
+
+        <variable
+            name="listItemBehavior"
+            type="ListItemBehavior&lt;WorkGroupNode&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/my_space_item_padding"
-        android:paddingBottom="@dimen/my_space_item_padding"
-        android:paddingStart="@dimen/my_space_item_padding_start">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/documentIcon"
-            android:scaleType="fitXY"
-            android:layout_width="@dimen/my_space_item_icon_size"
-            android:layout_height="@dimen/my_space_item_icon_size"
-            app:layout_constraintTop_toTopOf="@id/documentName"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/documentName"
-            app:sharedSpaceDocumentIcon="@{node}"/>
-
-        <TextView
-            android:id="@+id/documentName"
-            style="@style/TitleTextStyle"
-            android:layout_marginStart="@dimen/item_upload_container_margin_side"
-            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
-            app:layout_constraintStart_toEndOf="@id/documentIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@id/documentIcon"
-            app:layout_constraintEnd_toStartOf="@id/documentMenuContainer"
-            android:text="@{node.name}"/>
-
-        <TextView
-            android:id="@+id/sharedSpaceLastModified"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/my_space_item_line_spacing"
-            android:layout_marginStart="@dimen/item_upload_container_margin_side"
-            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
-            style="@style/DescriptionTextStyle"
-            app:layout_constraintTop_toBottomOf="@id/documentName"
-            app:layout_constraintStart_toEndOf="@id/documentIcon"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/my_space_item_padding_start"
+            android:paddingTop="@dimen/my_space_item_padding"
+            android:paddingBottom="@dimen/my_space_item_padding"
+            android:onClick="@{() -> listItemBehavior.onItemClick(node)}"
             app:layout_constraintEnd_toStartOf="@id/documentMenuContainer"
-            app:sharedSpaceDocumentLastModified="@{node}"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/documentIcon"
+                android:layout_width="@dimen/my_space_item_icon_size"
+                android:layout_height="@dimen/my_space_item_icon_size"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="@id/documentName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/documentName"
+                app:sharedSpaceDocumentIcon="@{node}" />
+
+            <TextView
+                android:id="@+id/documentName"
+                style="@style/TitleTextStyle"
+                android:layout_marginStart="@dimen/my_space_item_padding_start"
+                android:layout_marginEnd="@dimen/my_space_item_padding_start"
+                android:text="@{node.name}"
+                app:layout_constraintBaseline_toBaselineOf="@id/documentIcon"
+                app:layout_constraintStart_toEndOf="@id/documentIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/sharedSpaceLastModified"
+                style="@style/DescriptionTextStyle"
+                android:layout_width="0dp"
+                android:layout_marginStart="@dimen/my_space_item_padding_start"
+                android:layout_marginTop="@dimen/my_space_item_line_spacing"
+                android:layout_marginEnd="@dimen/my_space_item_padding_start"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/documentIcon"
+                app:layout_constraintTop_toBottomOf="@id/documentName"
+                app:sharedSpaceDocumentLastModified="@{node}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/documentMenuContainer"
             android:layout_width="@dimen/my_space_item_menu_container_width"
             android:layout_height="@dimen/my_space_item_menu_container_width"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/documentContextMenu"
