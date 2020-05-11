@@ -33,18 +33,21 @@
                 android:layout_height="?attr/actionBarSize"
                 andrdoid:navigationIcon="@drawable/ic_linshare_menu">
 
-                <TextView
-                    android:id="@+id/txtTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"
-                    android:textColor="@color/text_with_logo_color"
-                    android:textSize="@dimen/url_name_text_size" />
+                    <TextView
+                        android:id="@+id/txtTitle"
+                        style="@style/ScreenTitle" />
 
             </androidx.appcompat.widget.Toolbar>
-
         </com.google.android.material.appbar.AppBarLayout>
+
+        <include
+            android:id="@+id/navigationPath"
+            layout="@layout/navigation_path_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/app_bar"
+            app:navigationPathBehavior="@{viewModel.navigationPathBehavior}"
+            />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeLayoutSharedSpace"
@@ -54,10 +57,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_bar"
+            app:layout_constraintTop_toBottomOf="@id/navigationPath"
             app:onRefreshListener="@{() -> viewModel.onSwipeRefresh(navigationInfo)}"
-            app:sharedSpaceDocumentState="@{viewModel.viewState}"
-            >
+            app:sharedSpaceDocumentState="@{viewModel.viewState}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/sharedSpaceDocuments"
@@ -66,8 +68,8 @@
                 android:background="@color/white"
                 app:layoutManager="LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:sharedSpaceDocumentState="@{viewModel.viewState}"/>
-
+                app:sharedSpaceDocumentState="@{viewModel.viewState}"
+                app:listItemBehavior="@{viewModel.listItemBehavior}"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView

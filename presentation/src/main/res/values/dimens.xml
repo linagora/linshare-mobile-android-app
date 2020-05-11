@@ -137,4 +137,11 @@
 
     <!--share space -->
     <dimen name="empty_shared_space_text_size">21dp</dimen>
+    <dimen name="shared_space_title_width">232dp</dimen>
+    <dimen name="shared_space_navigation_path_height">48dp</dimen>
+    <dimen name="shared_space_navigation_back_icon_size">20dp</dimen>
+    <dimen name="shared_space_navigation_margin_side">16dp</dimen>
+    <dimen name="shared_space_navigation_margin_vertical">8dp</dimen>
+    <dimen name="shared_space_navigation_path_text_size">16sp</dimen>
+    <dimen name="shared_space_path_margin_start">16dp</dimen>
 </resources>
