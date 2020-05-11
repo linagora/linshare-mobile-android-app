@@ -17,14 +17,16 @@ import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.util.TimeUtils
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
 import com.linagora.android.linshare.util.getDrawableIcon
+import com.linagora.android.linshare.view.base.ListItemBehavior
 
-@BindingAdapter("sharedSpaceDocumentState")
+@BindingAdapter("sharedSpaceDocumentState", "listItemBehavior", requireAll = true)
 fun bindingSharedSpaceDocumentList(
     recyclerView: RecyclerView,
-    sharedSpaceDocumentState: Either<Failure, Success>
+    sharedSpaceDocumentState: Either<Failure, Success>,
+    listItemBehavior: ListItemBehavior<WorkGroupNode>
 ) {
     if (recyclerView.adapter == null) {
-        recyclerView.adapter = SharedSpaceDocumentAdapter()
+        recyclerView.adapter = SharedSpaceDocumentAdapter(listItemBehavior)
     }
 
     sharedSpaceDocumentState.fold(
@@ -35,7 +37,6 @@ fun bindingSharedSpaceDocumentList(
                     recyclerView.isVisible = true
                     (recyclerView.adapter as SharedSpaceDocumentAdapter).submitList(success.documents)
                 }
-                else -> recyclerView.isVisible = false
             }
         }
     )
