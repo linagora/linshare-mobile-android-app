@@ -69,6 +69,7 @@
             android:id="@+id/documentMenuContainer"
             android:layout_width="@dimen/my_space_item_menu_container_width"
             android:layout_height="@dimen/my_space_item_menu_container_width"
+            android:onClick="@{() -> listItemBehavior.onContextMenuClick(node)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

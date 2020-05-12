@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument"/>
+
+        <variable
+            name="workGroupDocument"
+            type="WorkGroupDocument" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/RowLinerBottomSheetStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/previewWorkGroupDocumentIcon"
+            style="@style/ImageInRowBottomSheet"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:workGroupDocumentIcon="@{workGroupDocument}"
+            />
+
+        <TextView
+            android:id="@+id/workGroupDocumentName"
+            style="@style/DocumentInfoHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/workGroupDocumentNameSize"
+            app:layout_constraintStart_toEndOf="@+id/previewWorkGroupDocumentIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{workGroupDocument.name}"
+            />
+
+        <TextView
+            android:id="@+id/workGroupDocumentNameSize"
+            style="@style/DocumentSizeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@id/workGroupDocumentName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/workGroupDocumentName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:workGroupDocumentSize="@{workGroupDocument}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
