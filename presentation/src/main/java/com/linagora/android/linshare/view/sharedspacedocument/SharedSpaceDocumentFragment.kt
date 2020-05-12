@@ -16,8 +16,10 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceDocumentClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnBackClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -30,6 +32,7 @@ import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
+import kotlinx.android.synthetic.main.navigation_path_view.view.navigationCurrentFolder
 import javax.inject.Inject
 
 class SharedSpaceDocumentFragment : MainNavigationFragment() {
@@ -40,6 +43,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var sharedSpaceDocumentContextMenuDialog: SharedSpaceDocumentContextMenuDialog
 
     private lateinit var sharedSpacesDocumentViewModel: SharedSpaceDocumentViewModel
 
@@ -82,9 +87,16 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
+            is SharedSpaceDocumentContextMenuClick -> showContextMenuSharedSpaceDocument(viewEvent.workGroupNode as WorkGroupDocument)
+            is DownloadSharedSpaceDocumentClick -> { }
             SharedSpaceDocumentOnBackClick -> navigateBack()
         }
         sharedSpacesDocumentViewModel.dispatchState(Either.right(Success.Idle))
+    }
+
+    private fun showContextMenuSharedSpaceDocument(workGroupDocument: WorkGroupDocument) {
+        sharedSpaceDocumentContextMenuDialog = SharedSpaceDocumentContextMenuDialog(workGroupDocument)
+        sharedSpaceDocumentContextMenuDialog.show(childFragmentManager, sharedSpaceDocumentContextMenuDialog.tag)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

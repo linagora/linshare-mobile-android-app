@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.view.sharedspacedocument
 
 import androidx.lifecycle.viewModelScope
+import com.linagora.android.linshare.adapter.sharedspace.action.SharedSpaceDocumentDownloadContextMenu
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
@@ -23,6 +24,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
 ) : BaseViewModel(dispatcherProvider) {
 
     val listItemBehavior = SharedSpaceDocumentItemBehavior(this)
+
+    val downloadContextMenu = SharedSpaceDocumentDownloadContextMenu(this)
 
     val navigationPathBehavior = SharedSpaceNavigationPathBehavior(this)
 

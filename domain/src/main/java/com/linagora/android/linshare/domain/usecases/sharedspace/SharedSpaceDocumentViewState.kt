@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.domain.usecases.sharedspace
 
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -12,3 +13,4 @@ data class GetSharedSpaceNodeSuccess(val node: WorkGroupNode) : Success.ViewStat
 data class SharedSpaceDocumentItemClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
 data class SharedSpaceDocumentContextMenuClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
 object SharedSpaceDocumentOnBackClick : Success.ViewEvent()
+data class DownloadSharedSpaceDocumentClick(val workGroupDocument: WorkGroupDocument) : Success.ViewEvent()
