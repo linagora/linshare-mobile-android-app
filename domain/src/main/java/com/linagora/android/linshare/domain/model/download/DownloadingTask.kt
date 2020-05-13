@@ -9,5 +9,6 @@ data class DownloadingTask(
     val downloadName: String,
     val downloadSize: Long,
     val mediaType: MediaType,
-    val downloadType: DownloadType
+    val downloadType: DownloadType,
+    val sharedSpaceId: UUID? = null
 )

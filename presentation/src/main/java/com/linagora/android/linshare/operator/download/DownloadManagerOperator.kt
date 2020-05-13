@@ -65,7 +65,8 @@ class DownloadManagerOperator @Inject constructor(
                 downloadSize = downloadRequest.downloadSize,
                 downloadDataId = downloadRequest.downloadDataId,
                 mediaType = downloadRequest.downloadMediaType,
-                downloadType = downloadRequest.downloadType
+                downloadType = downloadRequest.downloadType,
+                sharedSpaceId = downloadRequest.sharedSpaceId
             )
         )
     }

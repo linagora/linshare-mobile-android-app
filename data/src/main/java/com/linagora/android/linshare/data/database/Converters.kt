@@ -9,13 +9,13 @@ import java.util.UUID
 class Converters {
 
     @TypeConverter
-    fun fromUUID(uuid: UUID): String {
-        return uuid.toString()
+    fun fromUUID(uuid: UUID?): String? {
+        return uuid?.toString()
     }
 
     @TypeConverter
-    fun toUUID(uuidValue: String): UUID? {
-        return UUID.fromString(uuidValue)
+    fun toUUID(uuidValue: String?): UUID? {
+        return uuidValue?.let { UUID.fromString(it) }
     }
 
     @TypeConverter

@@ -25,7 +25,9 @@ data class DownloadingTaskEntity(
 
     val mediaType: MediaType,
 
-    val downloadType: DownloadType
+    val downloadType: DownloadType,
+
+    val sharedSpaceId: UUID? = null
 )
 
 fun DownloadingTask.toEntity(): DownloadingTaskEntity {

@@ -1,8 +1,12 @@
 package com.linagora.android.linshare.view.sharedspacedocument
 
 import androidx.lifecycle.viewModelScope
-import com.linagora.android.linshare.adapter.sharedspace.action.SharedSpaceDocumentDownloadContextMenu
+import com.linagora.android.linshare.adapter.sharedspace.action.SharedSpaceNodeDownloadContextMenu
+import com.linagora.android.linshare.domain.model.Credential
+import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
@@ -10,6 +14,8 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.GetSingleShared
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.getParentNodeId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
+import com.linagora.android.linshare.operator.download.DownloadOperator
+import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
@@ -20,12 +26,17 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val getSharedSpaceChildDocumentsInteractor: GetSharedSpaceChildDocumentsInteractor,
     private val getSharedSpaceNodeInteractor: GetSharedSpaceNodeInteractor,
-    private val getSingleSharedSpaceInteractor: GetSingleSharedSpaceInteractor
+    private val getSingleSharedSpaceInteractor: GetSingleSharedSpaceInteractor,
+    private val downloadOperator: DownloadOperator
 ) : BaseViewModel(dispatcherProvider) {
+
+    companion object {
+        val NO_DOWNLOADING_SHARED_SPACE_DOCUMENT = null
+    }
 
     val listItemBehavior = SharedSpaceDocumentItemBehavior(this)
 
-    val downloadContextMenu = SharedSpaceDocumentDownloadContextMenu(this)
+    val downloadContextMenu = SharedSpaceNodeDownloadContextMenu(this)
 
     val navigationPathBehavior = SharedSpaceNavigationPathBehavior(this)
 
@@ -52,5 +63,16 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getSingleSharedSpaceInteractor(sharedSpaceId))
         }
+    }
+
+    fun downloadSharedSpaceDocument(credential: Credential, token: Token, workGroupDocument: WorkGroupDocument) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            downloadContextMenu.setDownloading(NO_DOWNLOADING_SHARED_SPACE_DOCUMENT)
+            downloadOperator.download(credential, token, workGroupDocument.toDownloadRequest())
+        }
+    }
+
+    fun getDownloading(): WorkGroupNode? {
+        return downloadContextMenu.downloadingData.get()
     }
 }
