@@ -11,6 +11,6 @@ data class SharedSpaceDocumentFailure(val throwable: Throwable) : Failure.Featur
 data class GetSharedSpaceNodeFail(val throwable: Throwable) : Failure.FeatureFailure()
 data class GetSharedSpaceNodeSuccess(val node: WorkGroupNode) : Success.ViewState()
 data class SharedSpaceDocumentItemClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
-data class SharedSpaceDocumentContextMenuClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
+data class SharedSpaceDocumentContextMenuClick(val workGroupDocument: WorkGroupDocument) : Success.ViewEvent()
 object SharedSpaceDocumentOnBackClick : Success.ViewEvent()
-data class DownloadSharedSpaceDocumentClick(val workGroupDocument: WorkGroupDocument) : Success.ViewEvent()
+data class DownloadSharedSpaceNodeClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()

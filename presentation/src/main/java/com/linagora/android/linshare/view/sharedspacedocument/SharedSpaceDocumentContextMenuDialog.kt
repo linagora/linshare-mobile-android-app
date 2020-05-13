@@ -24,15 +24,15 @@ class SharedSpaceDocumentContextMenuDialog(private val workGroupDocument: WorkGr
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding =
-            DialogSharedSpaceDocumentContextMenuBinding.inflate(inflater, container, false)
+        val binding = DialogSharedSpaceDocumentContextMenuBinding
+            .inflate(inflater, container, false)
         initViewModel(binding)
         return binding.root
     }
 
     private fun initViewModel(binding: DialogSharedSpaceDocumentContextMenuBinding) {
         sharedSpaceDocumentViewModel = getParentViewModel(viewModelFactory)
-        binding.workGroupDocument = workGroupDocument
+        binding.workGroupNode = workGroupDocument
         binding.downloadContextMenu = sharedSpaceDocumentViewModel.downloadContextMenu
     }
 }

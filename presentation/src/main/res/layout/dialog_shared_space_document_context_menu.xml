@@ -6,15 +6,15 @@
 
     <data>
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
-        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode"/>
 
         <variable
             name="downloadContextMenu"
-            type="DownloadItemContextMenu&lt;WorkGroupDocument&gt;" />
+            type="DownloadItemContextMenu&lt;WorkGroupNode&gt;" />
 
         <variable
-            name="workGroupDocument"
-            type="WorkGroupDocument" />
+            name="workGroupNode"
+            type="WorkGroupNode" />
     </data>
 
     <LinearLayout
@@ -27,7 +27,7 @@
         <include
             android:id="@+id/workGroupDocumentInfoContainer"
             layout="@layout/header_work_group_document_info_container"
-            bind:workGroupDocument="@{workGroupDocument}"/>
+            bind:workGroupNode="@{workGroupNode}"/>
 
         <View
             android:layout_marginTop="@dimen/padding_top_bottom_sheet"
@@ -36,7 +36,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> downloadContextMenu.download(workGroupDocument)}">
+            android:onClick="@{() -> downloadContextMenu.download(workGroupNode)}">
 
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"

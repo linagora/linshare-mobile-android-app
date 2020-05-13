@@ -10,6 +10,10 @@ object Endpoint {
 
     const val RECEIVED_SHARES_PATH = "$ROOT_PATH/received_shares"
 
+    const val SHARED_SPACE_PATH = "$ROOT_PATH/shared_spaces"
+
+    const val NODES = "nodes"
+
     const val DOWNLOAD = "download"
 
     val AUTHENTICAION = ServicePath(AUTHENTICATION_PATH)
