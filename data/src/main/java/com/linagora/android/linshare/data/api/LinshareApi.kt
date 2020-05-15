@@ -120,4 +120,14 @@ interface LinshareApi {
         @Query("members") includeMembers: Boolean = false,
         @Query("withRole") withRole: Boolean = true
     ): SharedSpace
+
+    @Multipart
+    @POST("shared_spaces/{sharedSpaceId}/nodes")
+    @Headers("Accept: application/json")
+    suspend fun uploadToSharedSpace(
+        @Path("sharedSpaceId") sharedSpaceUuid: String,
+        @Part("parent") parentUuid: String? = null,
+        @Part file: MultipartBody.Part,
+        @Part("filesize") fileSize: Long
+    ): WorkGroupNode
 }

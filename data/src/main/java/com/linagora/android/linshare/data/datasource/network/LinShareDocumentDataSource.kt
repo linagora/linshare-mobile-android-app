@@ -12,6 +12,7 @@ import com.linagora.android.linshare.domain.model.document.nameContains
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
+import com.linagora.android.linshare.domain.model.sharedspace.PartParameter.FILE_PARAMETER_FIELD
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import okhttp3.MultipartBody
@@ -26,8 +27,6 @@ class LinShareDocumentDataSource @Inject constructor(
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(LinShareDocumentDataSource::class.java)
-
-        private const val FILE_PARAMETER_FIELD = "file"
     }
 
     override suspend fun upload(
