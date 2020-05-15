@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="com.linagora.android.linshare.domain.model.document.DocumentRequest"/>
+        <import type="com.linagora.android.linshare.view.Navigation.UploadType"/>
+        <import type="android.view.View"/>
+
+        <variable
+            name="uploadType"
+            type="UploadType" />
+
         <variable
             name="document"
             type="DocumentRequest" />
@@ -133,6 +140,7 @@
             app:layout_constraintBottom_toTopOf="@+id/btnUpload"
             android:layout_marginBottom="@dimen/share_label_margin_top"
             app:suggestions="@{viewModel.shareRecipientsManager.suggestions}"
+            android:visibility="@{uploadType == UploadType.INSIDE_APP_TO_WORKGROUP ? View.INVISIBLE : View.VISIBLE}"
             />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -143,6 +151,7 @@
             style="@style/UploadButton"
             app:uploadState="@{viewModel.viewState}"
             app:shareRecipients="@{viewModel.shareRecipientsManager.recipients}"
+            app:uploadType="@{uploadType}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
