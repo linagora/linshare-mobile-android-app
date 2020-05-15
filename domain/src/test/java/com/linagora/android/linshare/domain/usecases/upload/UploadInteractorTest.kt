@@ -7,11 +7,13 @@ import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST
 import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST_BIG_SIZE
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
+import com.linagora.android.linshare.domain.usecases.InteractorHandler
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.utils.ViewStateStore
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode
 import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
@@ -50,12 +52,21 @@ class UploadInteractorTest {
     @Mock
     lateinit var documentRepository: DocumentRepository
 
-    lateinit var uploadInteractor: UploadInteractor
+    private lateinit var interactorHandler: InteractorHandler
+
+    private lateinit var uploadInteractor: UploadInteractor
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        uploadInteractor = UploadInteractor(getAuthenticatedInfoInteractor, enoughAccountQuotaInteractor, documentRepository)
+        interactorHandler = InteractorHandler()
+        uploadInteractor = UploadInteractor(
+            getAuthenticatedInfoInteractor,
+            enoughAccountQuotaInteractor,
+            documentRepository,
+            interactorHandler,
+            ViewStateStore()
+        )
     }
 
     @Test
@@ -187,7 +198,7 @@ class UploadInteractorTest {
             val states = uploadInteractor(DOCUMENT_REQUEST_BIG_SIZE)
                 .toList(ArrayList())
 
-            assertThat(states).hasSize(3)
+            assertThat(states).hasSize(4)
 
             assertThat(states[0](INIT_STATE))
                 .isEqualTo(LOADING_STATE)
@@ -196,6 +207,9 @@ class UploadInteractorTest {
                 .isEqualTo(AUTHENTICATE_SUCCESS_STATE)
 
             assertThat(states[2](AUTHENTICATE_SUCCESS_STATE))
+                .isEqualTo(VALID_QUOTA_ACCOUNT_STATE)
+
+            assertThat(states[3](VALID_QUOTA_ACCOUNT_STATE))
                 .isEqualTo(QUOTA_ACCOUNT_NO_MORE_AVAILABLE_SPACE)
         }
     }
@@ -259,7 +273,7 @@ class UploadInteractorTest {
             val states = uploadInteractor(DOCUMENT_REQUEST_BIG_SIZE)
                 .toList(ArrayList())
 
-            assertThat(states).hasSize(3)
+            assertThat(states).hasSize(4)
             assertThat(states[0](INIT_STATE))
                 .isEqualTo(LOADING_STATE)
 
@@ -267,6 +281,9 @@ class UploadInteractorTest {
                 .isEqualTo(AUTHENTICATE_SUCCESS_STATE)
 
             assertThat(states[2](AUTHENTICATE_SUCCESS_STATE))
+                .isEqualTo(VALID_QUOTA_ACCOUNT_STATE)
+
+            assertThat(states[3](VALID_QUOTA_ACCOUNT_STATE))
                 .isEqualTo(UPLOAD_SUCCESS_VIEW_STATE)
         }
     }
