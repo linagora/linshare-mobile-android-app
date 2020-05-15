@@ -52,6 +52,7 @@
         <item quantity="other">Uploading %s files</item>
     </plurals>
 
+    <string name="upload">Upload</string>
     <string name="upload_success">Upload completed</string>
     <string name="upload_failed">Upload failed</string>
     <string name="upload_and_share_success">Upload and Share completed</string>

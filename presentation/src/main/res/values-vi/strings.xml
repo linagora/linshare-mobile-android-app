@@ -52,6 +52,7 @@
         <item quantity="other">Đang tải lên %s tệp</item>
     </plurals>
 
+    <string name="upload">Tải lên</string>
     <string name="upload_success">Hoàn thành tải lên</string>
     <string name="upload_failed">Tải lên không thành công</string>
     <string name="upload_and_share_success">Chia sẻ thành công</string>
