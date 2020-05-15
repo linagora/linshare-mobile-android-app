@@ -31,6 +31,9 @@ import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentExcepti
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.toQuotaId
+import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
+import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
@@ -49,6 +52,7 @@ import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.upload.request.UploadAndShareRequest
 import com.linagora.android.linshare.view.upload.request.UploadToMySpaceRequest
+import com.linagora.android.linshare.view.upload.request.UploadToSharedSpaceRequest
 import com.linagora.android.linshare.view.upload.request.UploadWorkerRequest
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_MIME_TYPE_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_NAME_INPUT_KEY
@@ -105,6 +109,7 @@ class UploadFragment : MainNavigationFragment() {
     ): View? {
         binding = FragmentUploadBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+        binding.uploadType = args.uploadType
         initViewModel()
         initAutoComplete()
         return binding.root
@@ -129,11 +134,13 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun initAutoComplete() {
-        with(binding.addRecipientContainer) {
-            initView()
-            queryAfterTextChange { pattern -> queryRecipientAutoComplete(pattern) }
-            onSelectedRecipient { userAutoCompleteResult ->
-                uploadFragmentViewModel.addRecipient(userAutoCompleteResult.toGenericUser())
+        if (args.uploadType != Navigation.UploadType.INSIDE_APP_TO_WORKGROUP) {
+            with(binding.addRecipientContainer) {
+                initView()
+                queryAfterTextChange { pattern -> queryRecipientAutoComplete(pattern) }
+                onSelectedRecipient { userAutoCompleteResult ->
+                    uploadFragmentViewModel.addRecipient(userAutoCompleteResult.toGenericUser())
+                }
             }
         }
     }
@@ -230,10 +237,46 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun createUploadRequest(): UploadWorkerRequest {
+        return when (args.uploadType) {
+            Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> createSharedSpaceUploadRequest(args)
+            else -> createMySpaceUploadRequest()
+        }
+    }
+
+    private fun createMySpaceUploadRequest(): UploadWorkerRequest {
         return uploadFragmentViewModel.shareRecipientsManager.recipients.value
             ?.takeIf { it.isNotEmpty() }
             ?.let { recipients -> UploadAndShareRequest(workManager, recipients) }
             ?: UploadToMySpaceRequest(workManager)
+    }
+
+    private fun createSharedSpaceUploadRequest(
+        args: UploadFragmentArgs
+    ): UploadWorkerRequest {
+        LOGGER.info("createSharedSpaceUploadRequest()")
+
+        val sharedSpaceId = args.uploadDestinationInfo
+            ?.sharedSpaceDestinationInfo
+            ?.sharedSpaceIdParcelable
+            ?.toSharedSpaceId()
+
+        val sharedSpaceQuotaId = args.uploadDestinationInfo
+            ?.sharedSpaceDestinationInfo
+            ?.sharedSpaceQuotaId
+            ?.toQuotaId()
+
+        val parentNodeId = args.uploadDestinationInfo
+            ?.parentDestinationInfo
+            ?.parentNodeId
+            ?.toWorkGroupNodeId()
+
+        require(sharedSpaceId != null)
+        require(sharedSpaceQuotaId != null)
+        require(parentNodeId != null)
+
+        LOGGER.info("createSharedSpaceUploadRequest(): $sharedSpaceId - $sharedSpaceQuotaId - $parentNodeId")
+
+        return UploadToSharedSpaceRequest(workManager, sharedSpaceId, sharedSpaceQuotaId, parentNodeId)
     }
 
     private fun alertStartToUpload(uploadFiles: Int) {
@@ -251,7 +294,7 @@ class UploadFragment : MainNavigationFragment() {
                 requireActivity().onBackPressed()
                 requireActivity().finish()
             }
-            Navigation.UploadType.INSIDE_APP -> findNavController().popBackStack()
+            Navigation.UploadType.INSIDE_APP, Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> findNavController().popBackStack()
         }
     }
 
