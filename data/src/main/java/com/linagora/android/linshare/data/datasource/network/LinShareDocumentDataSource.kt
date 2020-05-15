@@ -2,7 +2,8 @@ package com.linagora.android.linshare.data.datasource.network
 
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
-import com.linagora.android.linshare.domain.model.ErrorResponse
+import com.linagora.android.linshare.data.network.NetworkExecutor
+import com.linagora.android.linshare.data.network.handler.UploadNetworkRequestHandler
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
@@ -13,18 +14,14 @@ import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
-import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import okhttp3.MultipartBody
 import org.slf4j.LoggerFactory
-import retrofit2.HttpException
-import retrofit2.Retrofit
-import java.net.SocketException
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 class LinShareDocumentDataSource @Inject constructor(
-    private val retrofit: Retrofit,
-    private val linshareApi: LinshareApi
+    private val linshareApi: LinshareApi,
+    private val networkExecutor: NetworkExecutor,
+    private val uploadNetworkRequestHandler: UploadNetworkRequestHandler
 ) : DocumentDataSource {
 
     companion object {
@@ -37,30 +34,24 @@ class LinShareDocumentDataSource @Inject constructor(
         documentRequest: DocumentRequest,
         onTransfer: OnTransfer
     ): Document {
-        try {
-            val fileRequestBody = MeasurableUploadRequestBody(
-                contentType = documentRequest.mediaType,
-                file = documentRequest.file,
-                onTransfer = onTransfer
-            )
-            return linshareApi.upload(
-                file = MultipartBody.Part.createFormData(
-                    FILE_PARAMETER_FIELD,
-                    documentRequest.uploadFileName,
-                    fileRequestBody),
-                fileSize = documentRequest.file.length()
-            )
-        } catch (httpExp: HttpException) {
-            val errorResponse = parseErrorResponse(httpExp)
-            throw UploadException(errorResponse)
-        } catch (exp: Exception) {
-            LOGGER.error("$exp - ${exp.printStackTrace()}")
-            when (exp) {
-                is SocketException -> throw UploadException(ErrorResponse.INTERNET_NOT_AVAILABLE)
-                is UnknownHostException -> throw UploadException(ErrorResponse.INTERNET_NOT_AVAILABLE)
-                else -> throw UploadException(ErrorResponse.UNKNOWN_RESPONSE)
-            }
-        }
+        return networkExecutor.execute(
+            networkRequest = { uploadToMySpace(documentRequest, onTransfer) },
+            onFailure = { uploadNetworkRequestHandler(it) }
+        )
+    }
+
+    private suspend fun uploadToMySpace(
+        documentRequest: DocumentRequest,
+        onTransfer: OnTransfer
+    ): Document {
+        val fileRequestBody = documentRequest.toMeasureRequestBody(onTransfer)
+        return linshareApi.upload(
+            file = MultipartBody.Part.createFormData(
+                FILE_PARAMETER_FIELD,
+                documentRequest.uploadFileName,
+                fileRequestBody),
+            fileSize = documentRequest.file.length()
+        )
     }
 
     override suspend fun remove(documentId: DocumentId): Document {
@@ -74,22 +65,6 @@ class LinShareDocumentDataSource @Inject constructor(
 
     override suspend fun getAll(): List<Document> {
         return linshareApi.getAll().sortedByDescending { it.modificationDate }
-    }
-
-    private fun parseErrorResponse(httpException: HttpException): ErrorResponse {
-        return runCatching {
-            httpException.response()
-                ?.errorBody()
-                .let {
-                    val converter = retrofit.responseBodyConverter<ErrorResponse>(
-                        ErrorResponse::class.java,
-                        arrayOfNulls<Annotation>(0))
-                    converter.convert(it) ?: ErrorResponse.UNKNOWN_RESPONSE
-                }
-        }.getOrElse {
-            LOGGER.error("parseErrorResponse: ${it.printStackTrace()}")
-            ErrorResponse.UNKNOWN_RESPONSE
-        }
     }
 
     override suspend fun search(query: QueryString): List<Document> {

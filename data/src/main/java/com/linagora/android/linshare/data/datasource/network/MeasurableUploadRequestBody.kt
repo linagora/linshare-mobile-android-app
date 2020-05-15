@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.data.datasource.network
 
+import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
@@ -40,4 +41,12 @@ class MeasurableUploadRequestBody(
                 }
             }
     }
+}
+
+fun DocumentRequest.toMeasureRequestBody(onTransfer: OnTransfer): MeasurableUploadRequestBody {
+    return MeasurableUploadRequestBody(
+        contentType = mediaType,
+        file = file,
+        onTransfer = onTransfer
+    )
 }
