@@ -13,6 +13,7 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.download.DownloadType
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
+import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
@@ -183,7 +184,7 @@ object TestFixtures {
 
         const val QUOTA_UUID_VALUE = "77d10c28-583c-45a8-b747-d8a028f980bb"
 
-        private val QUOTA_UUID = UUID.fromString(QUOTA_UUID_VALUE)
+        val QUOTA_UUID = QuotaId(UUID.fromString(QUOTA_UUID_VALUE))
 
         val LINSHARE_USER = User(
             UUID.fromString("b7240862-d03c-4b30-a46b-ffa1eb65301c"),

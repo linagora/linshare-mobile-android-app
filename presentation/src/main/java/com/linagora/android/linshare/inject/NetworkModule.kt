@@ -7,6 +7,7 @@ import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
 import com.linagora.android.linshare.data.network.adapter.DocumentIdDeserializer
 import com.linagora.android.linshare.data.network.adapter.ErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
+import com.linagora.android.linshare.data.network.adapter.QuotaIdAdapter
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
 import com.linagora.android.linshare.data.network.adapter.ShareIdDeserializer
 import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdAdapter
@@ -14,6 +15,7 @@ import com.linagora.android.linshare.data.network.adapter.WorkGroupNodeIdAdapter
 import com.linagora.android.linshare.data.network.factory.RuntimeTypeAdapterFactory
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentId
+import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
@@ -57,7 +59,7 @@ class NetworkModule {
 
         if (BuildConfig.DEBUG) {
             val logger = HttpLoggingInterceptor()
-            logger.level = HttpLoggingInterceptor.Level.BODY
+            logger.level = HttpLoggingInterceptor.Level.HEADERS
             builder.addInterceptor(logger)
         }
 
@@ -83,6 +85,7 @@ class NetworkModule {
             .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
             .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
             .registerTypeAdapter(WorkGroupNodeId::class.java, WorkGroupNodeIdAdapter())
+            .registerTypeAdapter(QuotaId::class.java, QuotaIdAdapter())
             .registerTypeAdapterFactory(workGroupNodeTypeAdapterFactory)
             .create()
 

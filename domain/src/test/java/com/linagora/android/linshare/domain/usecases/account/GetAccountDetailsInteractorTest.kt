@@ -13,7 +13,7 @@ import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
 import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
-import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA_UUID_VALUE
+import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA_UUID
 import com.linagora.android.testshared.TestFixtures.Credentials.CREDENTIAL
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
 import com.linagora.android.testshared.TestFixtures.State.ACCOUNT_DETAILS_SUCCESS_STATE
@@ -83,7 +83,7 @@ class GetAccountDetailsInteractorTest {
             `when`(userRepository.getAuthorizedUser())
                 .thenAnswer { LINSHARE_USER }
 
-            `when`(quotaRepository.findQuota(QUOTA_UUID_VALUE))
+            `when`(quotaRepository.findQuota(QUOTA_UUID))
                 .thenAnswer { QUOTA }
 
             val states = getAccountDetails(LINSHARE_CREDENTIAL)
@@ -163,7 +163,7 @@ class GetAccountDetailsInteractorTest {
             `when`(userRepository.getAuthorizedUser())
                 .thenAnswer { LINSHARE_USER }
 
-            `when`(quotaRepository.findQuota(QUOTA_UUID_VALUE))
+            `when`(quotaRepository.findQuota(QUOTA_UUID))
                 .thenAnswer { QUOTA }
 
             val states = getAccountDetails(LINSHARE_CREDENTIAL)
@@ -260,7 +260,7 @@ class GetAccountDetailsInteractorTest {
             `when`(userRepository.getAuthorizedUser())
                 .thenAnswer { LINSHARE_USER }
 
-            `when`(quotaRepository.findQuota(QUOTA_UUID_VALUE))
+            `when`(quotaRepository.findQuota(QUOTA_UUID))
                 .thenAnswer { null }
 
             val states = getAccountDetails(LINSHARE_CREDENTIAL)

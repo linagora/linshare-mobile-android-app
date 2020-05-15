@@ -4,6 +4,8 @@ import arrow.core.Either
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.enoughQuotaToUpload
+import com.linagora.android.linshare.domain.model.validMaxFileSizeToUpload
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -34,7 +36,7 @@ class EnoughAccountQuotaInteractor @Inject constructor(
         user: User,
         document: DocumentRequest
     ) {
-        quotaRepository.findQuota(user.quotaUuid.toString())
+        quotaRepository.findQuota(user.quotaUuid)
             ?.let { quota -> validateQuota(producerScope, document, quota) }
             ?: producerScope.send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
     }
@@ -44,24 +46,16 @@ class EnoughAccountQuotaInteractor @Inject constructor(
         document: DocumentRequest,
         quota: AccountQuota
     ) {
-        if (!validMaxFileSize(quota, document)) {
+        if (!quota.validMaxFileSizeToUpload(document)) {
             producerScope.send(State { Either.left(ExceedMaxFileSize) })
             return
         }
 
-        if (!enoughAccountQuota(quota, document)) {
+        if (!quota.enoughQuotaToUpload(document)) {
             producerScope.send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
             return
         }
 
         producerScope.send(State { Either.right(ValidAccountQuota) })
-    }
-
-    private fun enoughAccountQuota(quota: AccountQuota, document: DocumentRequest): Boolean {
-        return document.file.length() < (quota.quota - quota.usedSpace)
-    }
-
-    private fun validMaxFileSize(quota: AccountQuota, document: DocumentRequest): Boolean {
-        return document.file.length() < quota.maxFileSize.size
     }
 }

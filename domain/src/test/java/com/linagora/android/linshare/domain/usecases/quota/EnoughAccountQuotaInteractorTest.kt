@@ -48,7 +48,7 @@ class EnoughAccountQuotaInteractorTest {
         runBlockingTest {
             Mockito.`when`(userRepository.getAuthorizedUser())
                 .thenAnswer { LINSHARE_USER }
-            Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid.toString()))
+            Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid))
                 .thenAnswer { QUOTA }
 
             val states = enoughAccountQuotaInteractor(DOCUMENT_REQUEST)
@@ -68,7 +68,7 @@ class EnoughAccountQuotaInteractorTest {
         runBlockingTest {
             Mockito.`when`(userRepository.getAuthorizedUser())
                 .thenAnswer { LINSHARE_USER }
-            Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid.toString()))
+            Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid))
                 .thenAnswer { LOW_QUOTA }
 
             val states = enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE)
@@ -88,7 +88,7 @@ class EnoughAccountQuotaInteractorTest {
         runBlockingTest {
             Mockito.`when`(userRepository.getAuthorizedUser())
                 .thenAnswer { LINSHARE_USER }
-            Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid.toString()))
+            Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid))
                 .thenAnswer { QUOTA }
 
             val states = enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE)

@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
@@ -88,9 +89,9 @@ class LinshareDataSource @Inject constructor(
         }.getOrNull()
     }
 
-    suspend fun findQuota(quotaUuid: String): AccountQuota? {
+    suspend fun findQuota(quotaUuid: QuotaId): AccountQuota? {
         return kotlin.runCatching {
-            linshareApi.getQuota(quotaUuid)
+            linshareApi.getQuota(quotaUuid.uuid.toString())
         }.getOrNull()
     }
 }
