@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.domain.model.sharedspace
 
 import com.google.gson.annotations.SerializedName
+import com.linagora.android.linshare.domain.model.quota.QuotaId
 import java.util.Date
 
 data class SharedSpace(
@@ -12,5 +13,7 @@ data class SharedSpace(
     val nodeType: LinShareNodeType,
     val creationDate: Date,
     val modificationDate: Date,
-    val role: SharedSpaceRole
+    val role: SharedSpaceRole,
+    @SerializedName("quotaUuid")
+    val quotaId: QuotaId
 )

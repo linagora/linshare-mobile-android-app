@@ -11,7 +11,6 @@ import androidx.work.workDataOf
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.ErrorResponse
-import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
@@ -50,6 +49,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.util.UUID
 import javax.inject.Inject
 
 class UploadWorker(
@@ -184,7 +184,7 @@ class UploadWorker(
             UPLOAD_RESULT to UploadResult.UPLOAD_SUCCESS.name,
             RESULT_MESSAGE to getSuccessMessage(success, documentRequest),
             UPLOAD_REQUEST_TYPE to inputData.getString(UPLOAD_REQUEST_TYPE),
-            DOCUMENTS_KEY to listOf(getUploadedDocument(success)?.documentId?.uuid.toString()).toTypedArray(),
+            DOCUMENTS_KEY to listOf(getUploadedDocument(success)?.toString()).toTypedArray(),
             RECIPIENTS_KEY to inputData.getStringArray(RECIPIENTS_KEY)
         ))
     }
@@ -196,10 +196,10 @@ class UploadWorker(
         }
     }
 
-    private fun getUploadedDocument(success: Success): Document? {
+    private fun getUploadedDocument(success: Success): UUID? {
         return success.takeIf { it is UploadSuccess }
             ?.let { it as UploadSuccess }
-            ?.document
+            ?.let { it.uploadedDocumentUUID }
     }
 
     private suspend fun reactOnSuccessState(notificationId: NotificationId, document: DocumentRequest, success: Success) {

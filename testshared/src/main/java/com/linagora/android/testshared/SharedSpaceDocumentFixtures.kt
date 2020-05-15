@@ -11,6 +11,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
+import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA_UUID
 import okhttp3.MediaType
 import java.util.Date
 import java.util.UUID
@@ -90,6 +91,7 @@ object SharedSpaceDocumentFixtures {
         creationDate = Date(1588664667969),
         modificationDate = Date(1588928300716),
         nodeType = LinShareNodeType.WORK_GROUP,
-        role = SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.ADMIN)
+        role = SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.ADMIN),
+        quotaId = QUOTA_UUID
     )
 }

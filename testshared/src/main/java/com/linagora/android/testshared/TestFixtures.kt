@@ -35,9 +35,11 @@ import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
 import com.linagora.android.linshare.domain.usecases.search.NoResults
 import com.linagora.android.linshare.domain.usecases.search.SearchViewState
 import com.linagora.android.linshare.domain.usecases.upload.UploadSuccessViewState
+import com.linagora.android.linshare.domain.usecases.upload.UploadToSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure.Error
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_DOCUMENT_1
 import com.linagora.android.testshared.TestFixtures.Accounts.LAST_LOGIN
 import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
@@ -171,6 +173,8 @@ object TestFixtures {
 
         val UPLOAD_SUCCESS_VIEW_STATE = Either.right(UploadSuccessViewState(DOCUMENT))
 
+        val UPLOAD_SUCCESS_SHARED_SPACE_VIEW_STATE = Either.right(UploadToSharedSpaceSuccess(WORK_GROUP_DOCUMENT_1))
+
         val INTERNET_NOT_AVAILABLE = Either.left(InternetNotAvailable)
     }
 
@@ -182,7 +186,7 @@ object TestFixtures {
 
         val LAST_LOGIN = LastLogin(LAST_LOGIN_DATE)
 
-        const val QUOTA_UUID_VALUE = "77d10c28-583c-45a8-b747-d8a028f980bb"
+        private const val QUOTA_UUID_VALUE = "77d10c28-583c-45a8-b747-d8a028f980bb"
 
         val QUOTA_UUID = QuotaId(UUID.fromString(QUOTA_UUID_VALUE))
 

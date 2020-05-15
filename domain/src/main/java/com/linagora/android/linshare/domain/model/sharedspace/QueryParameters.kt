@@ -9,3 +9,8 @@ enum class RolesParameter {
     WithRole,
     WithoutRole
 }
+
+object PartParameter {
+
+    const val FILE_PARAMETER_FIELD = "file"
+}
