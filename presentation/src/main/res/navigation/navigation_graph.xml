@@ -61,6 +61,11 @@
         <argument
             android:name="uploadType"
             app:argType="com.linagora.android.linshare.view.Navigation$UploadType" />
+        <argument
+            android:name="uploadDestinationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@id/navigation_my_space"
