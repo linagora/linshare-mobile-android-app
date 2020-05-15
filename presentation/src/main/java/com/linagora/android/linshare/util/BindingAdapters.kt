@@ -25,6 +25,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.util.FileSize.SizeFormat.SHORT
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
+import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
 import org.slf4j.LoggerFactory
@@ -194,11 +195,14 @@ fun bindingUploadButton(button: Button, uploadState: Either<Failure, Success>) {
     )
 }
 
-@BindingAdapter("shareRecipients")
-fun bindingUploadButtonText(button: Button, recipients: Set<GenericUser>) {
-    recipients.takeIf { it.isNotEmpty() }
-        ?.run { button.setText(R.string.upload_and_share) }
-        ?: button.setText(R.string.upload_to_my_space)
+@BindingAdapter("shareRecipients", "uploadType", requireAll = true)
+fun bindingUploadButtonText(button: Button, recipients: Set<GenericUser>, uploadType: Navigation.UploadType) {
+    when (uploadType) {
+        Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> button.setText(R.string.upload)
+        else -> recipients.takeIf { it.isNotEmpty() }
+            ?.run { button.setText(R.string.upload_and_share) }
+            ?: button.setText(R.string.upload_to_my_space)
+    }
 }
 
 private fun bindingUploadButtonWhenSuccess(success: Success, button: Button) {

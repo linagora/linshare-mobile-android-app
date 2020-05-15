@@ -30,8 +30,8 @@ import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.Constant
-import com.linagora.android.linshare.util.MimeType
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.util.openFilePicker
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP
@@ -181,12 +181,6 @@ class MySpaceFragment : MainNavigationFragment() {
                 )
             }
         }
-    }
-
-    private fun openFilePicker() {
-        val getDocumentIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        getDocumentIntent.type = MimeType.ALL_TYPE
-        startActivityForResult(getDocumentIntent, OpenFilePickerRequestCode.code)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

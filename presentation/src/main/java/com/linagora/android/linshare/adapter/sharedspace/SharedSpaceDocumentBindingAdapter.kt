@@ -1,15 +1,20 @@
 package com.linagora.android.linshare.adapter.sharedspace
 
+import android.content.res.ColorStateList
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.canUpload
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -79,4 +84,27 @@ fun bindingSharedSpaceDocumentIcon(imageView: ImageView, workGroupNode: WorkGrou
     GlideApp.with(imageView.context)
         .load(drawableICon)
         .into(imageView)
+}
+
+@BindingAdapter("sharedSpaceDocumentAddButton")
+fun bindingSharedSpaceDocumentAddButton(
+    floatingActionButton: FloatingActionButton,
+    currentSharedSpace: SharedSpace?
+) {
+    val enable = currentSharedSpace
+        ?.takeIf { sharedSpace -> sharedSpace.role.canUpload() }
+        ?.let { true }
+        ?: false
+
+    val backgroundColor = enable.takeIf { enable }
+        ?.let { R.color.colorPrimary }
+        ?: R.color.disable_state_color
+
+    val visible = currentSharedSpace?.let { true }
+        ?: false
+
+    floatingActionButton.isEnabled = enable
+    floatingActionButton.isVisible = visible
+    floatingActionButton.backgroundTintList = ColorStateList
+        .valueOf(ContextCompat.getColor(floatingActionButton.context, backgroundColor))
 }

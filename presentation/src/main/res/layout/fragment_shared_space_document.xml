@@ -16,72 +16,102 @@
             type="SharedSpaceDocumentViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:elevation="0dp"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                andrdoid:navigationIcon="@drawable/ic_linshare_menu">
+                android:layout_height="wrap_content"
+                app:elevation="0dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    andrdoid:navigationIcon="@drawable/ic_linshare_menu">
 
                     <TextView
                         android:id="@+id/txtTitle"
                         style="@style/ScreenTitle" />
 
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.AppBarLayout>
 
-        <include
-            android:id="@+id/navigationPath"
-            layout="@layout/navigation_path_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/app_bar"
-            app:navigationPathBehavior="@{viewModel.navigationPathBehavior}"
-            />
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeLayoutSharedSpace"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/navigationPath"
-            app:onRefreshListener="@{() -> viewModel.onSwipeRefresh(navigationInfo)}"
-            app:sharedSpaceDocumentState="@{viewModel.viewState}">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/sharedSpaceDocuments"
+            <include
+                android:id="@+id/navigationPath"
+                layout="@layout/navigation_path_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:layoutManager="LinearLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:sharedSpaceDocumentState="@{viewModel.viewState}"
-                app:listItemBehavior="@{viewModel.listItemBehavior}"/>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:navigationPathBehavior="@{viewModel.navigationPathBehavior}" />
 
-        <TextView
-            android:id="@+id/emptyMessage"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeLayoutSharedSpace"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/navigationPath"
+                app:onRefreshListener="@{() -> viewModel.onSwipeRefresh(navigationInfo)}"
+                app:sharedSpaceDocumentState="@{viewModel.viewState}">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sharedSpaceDocuments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    app:layoutManager="LinearLayoutManager"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:listItemBehavior="@{viewModel.listItemBehavior}"
+                    app:sharedSpaceDocumentState="@{viewModel.viewState}" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <TextView
+                android:id="@+id/emptyMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/my_space_item_padding_start"
+                android:textAlignment="center"
+                android:textColor="@color/file_name_color"
+                android:textSize="@dimen/no_results_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/sharedSpaceDocumentBottomBar"
             android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:backgroundTint="@color/bottom_app_bar_background"
+            android:layout_gravity="bottom"
+            app:hideOnScroll="true"
+            app:contentInsetStart="16dp"
+            android:elevation="6dp"
+            app:fabAlignmentMode="center">
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sharedSpaceDocumentAddButton"
+            android:layout_width="wrap_content"
+            android:theme="@style/FloatingUploadButton"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:padding="@dimen/my_space_item_padding_start"
-            android:textColor="@color/file_name_color"
-            android:textSize="@dimen/no_results_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:src="@drawable/ic_add"
+            app:fabSize="normal"
+            android:visibility="invisible"
+            app:layout_anchor="@id/sharedSpaceDocumentBottomBar"
+            app:rippleColor="@color/divide_view"
+            app:sharedSpaceDocumentAddButton="@{viewModel.currentSharedSpace}"
+            android:onClick="@{() -> viewModel.onAddButtonClick()}"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -1,16 +1,24 @@
 package com.linagora.android.linshare.view.sharedspacedocument
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import arrow.core.Either
 import com.linagora.android.linshare.adapter.sharedspace.action.SharedSpaceNodeDownloadContextMenu
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSingleSharedSpaceInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.getParentNodeId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
@@ -20,6 +28,7 @@ import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SharedSpaceDocumentViewModel @Inject constructor(
@@ -32,6 +41,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
 
     companion object {
         val NO_DOWNLOADING_SHARED_SPACE_DOCUMENT = null
+
+        private val LOGGER = LoggerFactory.getLogger(SharedSpaceDocumentViewModel::class.java)
     }
 
     val listItemBehavior = SharedSpaceDocumentItemBehavior(this)
@@ -39,6 +50,12 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     val downloadContextMenu = SharedSpaceNodeDownloadContextMenu(this)
 
     val navigationPathBehavior = SharedSpaceNavigationPathBehavior(this)
+
+    private val mutableCurrentSharedSpace = MutableLiveData<SharedSpace?>()
+    val currentSharedSpace: LiveData<SharedSpace?> = mutableCurrentSharedSpace
+
+    private val mutableCurrentNode = MutableLiveData<WorkGroupNode?>()
+    val currentNode: LiveData<WorkGroupNode?> = mutableCurrentNode
 
     fun onSwipeRefresh(sharedSpaceNavigationInfo: SharedSpaceNavigationInfo) {
         getAllChildNodes(
@@ -74,5 +91,17 @@ class SharedSpaceDocumentViewModel @Inject constructor(
 
     fun getDownloading(): WorkGroupNode? {
         return downloadContextMenu.downloadingData.get()
+    }
+
+    override fun onSuccessDispatched(success: Success) {
+        when (success) {
+            is GetSharedSpaceSuccess -> mutableCurrentSharedSpace.value = success.sharedSpace
+            is GetSharedSpaceNodeSuccess -> mutableCurrentNode.value = success.node
+        }
+    }
+
+    fun onAddButtonClick() {
+        LOGGER.info("onAddButtonClick()")
+        dispatchState(Either.right(SharedSpaceDocumentOnAddButtonClick))
     }
 }

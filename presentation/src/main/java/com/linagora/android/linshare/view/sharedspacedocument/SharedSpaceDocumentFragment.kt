@@ -2,6 +2,8 @@ package com.linagora.android.linshare.view.sharedspacedocument
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,9 +27,13 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceN
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnBackClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
+import com.linagora.android.linshare.model.parcelable.UploadDestinationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.getParentNodeId
 import com.linagora.android.linshare.model.parcelable.toParcelable
@@ -38,17 +44,22 @@ import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
-import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.util.Constant
+import com.linagora.android.linshare.util.openFilePicker
+import com.linagora.android.linshare.view.Navigation.FileType
+import com.linagora.android.linshare.view.Navigation.UploadType
+import com.linagora.android.linshare.view.OpenFilePickerRequestCode
+import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     companion object {
-        const val NAVIGATION_INFO_KEY = "navigationInfo"
-
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceDocumentFragment::class.java)
+
+        const val NAVIGATION_INFO_KEY = "navigationInfo"
     }
 
     @Inject
@@ -104,6 +115,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is SharedSpaceDocumentContextMenuClick -> showContextMenuSharedSpaceDocumentNode(viewEvent.workGroupDocument)
             is DownloadSharedSpaceNodeClick -> handleDownloadSharedSpaceNode(viewEvent.workGroupNode)
             SharedSpaceDocumentOnBackClick -> navigateBack()
+            SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
         }
         sharedSpacesDocumentViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -203,6 +215,42 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        LOGGER.info("onActivityResult() $requestCode - $data")
+        requestCode.takeIf { it == OpenFilePickerRequestCode.code }
+            ?.let { data?.data }
+            ?.let(this@SharedSpaceDocumentFragment::navigateToUpload)
+    }
+
+    private fun navigateToUpload(uri: Uri) {
+        val bundle = UploadFragmentArgs(
+                uploadType = UploadType.INSIDE_APP_TO_WORKGROUP,
+                uploadDestinationInfo = createUploadDestination())
+            .toBundle()
+        bundle.putParcelable(Constant.UPLOAD_URI_BUNDLE_KEY, uri)
+        findNavController().navigate(R.id.uploadFragment, bundle)
+    }
+
+    private fun createUploadDestination(): UploadDestinationInfo {
+        val currentSharedSpace = sharedSpacesDocumentViewModel.currentSharedSpace.value
+        val currentNode = sharedSpacesDocumentViewModel.currentNode.value
+
+        require(currentSharedSpace != null) { "sharedSpace is not available" }
+        require(currentNode != null) { "workgroup node is not available" }
+
+        return UploadDestinationInfo(
+            sharedSpaceDestinationInfo = SharedSpaceDestinationInfo(
+                currentSharedSpace.sharedSpaceId.toParcelable(),
+                currentSharedSpace.name,
+                currentSharedSpace.quotaId.toParcelable()
+            ),
+            parentDestinationInfo = ParentDestinationInfo(
+                currentNode.workGroupNodeId.toParcelable(),
+                currentNode.name
+            )
+        )
+    }
+
     private fun navigateIntoSubFolder(workGroupNode: WorkGroupNode) {
         if (workGroupNode is WorkGroupDocument) {
             return
@@ -217,7 +265,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun generateNavigationInfoForSubFolder(workGroupNode: WorkGroupNode): SharedSpaceNavigationInfo {
         return SharedSpaceNavigationInfo(
             sharedSpaceIdParcelable = workGroupNode.sharedSpaceId.toParcelable(),
-            fileType = Navigation.FileType.NORMAL,
+            fileType = FileType.NORMAL,
             nodeIdParcelable = WorkGroupNodeIdParcelable(workGroupNode.workGroupNodeId.uuid)
         )
     }
