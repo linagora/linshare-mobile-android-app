@@ -19,3 +19,11 @@ sealed class Failure {
 
     abstract class QuotaAccountError(linShareErrorCode: LinShareErrorCode) : QuotaError()
 }
+
+typealias onFailure = (Failure) -> Unit
+
+object NoOpOnFailure : onFailure {
+    override fun invoke(failure: Failure) {
+        // do nothing
+    }
+}
