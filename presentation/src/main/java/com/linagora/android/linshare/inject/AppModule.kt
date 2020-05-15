@@ -28,6 +28,7 @@ import com.linagora.android.linshare.domain.repository.user.AuditUserRepository
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
+import com.linagora.android.linshare.domain.usecases.upload.UploadToSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.utils.ViewStateStore
 import com.linagora.android.linshare.network.AuthorizationManagerImp
 import com.linagora.android.linshare.notification.BaseNotification
@@ -145,7 +146,12 @@ open class AppModule {
     }
 
     @Provides
-    fun provideUploadController(context: Context, uploadInteractor: UploadInteractor, viewStateStore: ViewStateStore): UploadController {
-        return UploadController(context, uploadInteractor, viewStateStore)
+    fun provideUploadController(
+        context: Context,
+        uploadInteractor: UploadInteractor,
+        uploadToSharedSpaceInteractor: UploadToSharedSpaceInteractor,
+        viewStateStore: ViewStateStore
+    ): UploadController {
+        return UploadController(context, uploadInteractor, uploadToSharedSpaceInteractor, viewStateStore)
     }
 }

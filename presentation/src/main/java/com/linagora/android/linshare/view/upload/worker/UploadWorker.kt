@@ -80,6 +80,12 @@ class UploadWorker(
         const val RESULT_MESSAGE = "upload_result_message"
 
         const val UPLOAD_RESULT = "upload_result"
+
+        const val UPLOAD_TO_SHARED_SPACE_ID_KEY = "uploadToSharedSpaceId"
+
+        const val UPLOAD_TO_SHARED_SPACE_QUOTA_ID_KEY = "sharedSpaceQuotaId"
+
+        const val UPLOAD_TO_PARENT_NODE_ID_KEY = "uploadToParentNodeId"
     }
 
     override suspend fun doWork(): Result {
@@ -139,7 +145,7 @@ class UploadWorker(
     }
 
     private fun createUploadCommand(documentRequest: DocumentRequest): UploadCommand {
-        return uploadController.createUploadCommand(documentRequest)
+        return uploadController.createUploadCommand(inputData, documentRequest)
     }
 
     private suspend fun upload(uploadCommand: UploadCommand, notificationId: NotificationId) {
