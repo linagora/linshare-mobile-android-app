@@ -5,6 +5,7 @@ import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.LastLogin
 import com.linagora.android.linshare.domain.model.User
+import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.repository.user.AuditUserRepository
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
@@ -90,7 +91,7 @@ class GetAccountDetailsInteractor @Inject constructor(
         userRepository.getAuthorizedUser()
             ?.let { user ->
                 sendAuthorizedUser(producerScope, authenticationViewState, user)
-                findQuota(producerScope, authenticationViewState, user.quotaUuid.toString())
+                findQuota(producerScope, authenticationViewState, user.quotaUuid)
             } ?: producerScope.send(State { Either.left(Error) })
     }
 
@@ -123,7 +124,7 @@ class GetAccountDetailsInteractor @Inject constructor(
     private suspend fun findQuota(
         producerScope: ProducerScope<State<Either<Failure, Success>>>,
         authenticationViewState: AuthenticationViewState,
-        quotaId: String
+        quotaId: QuotaId
     ) {
         quotaRepository.findQuota(quotaId)
             ?.let { sendAccountQuota(producerScope, authenticationViewState, it) }
