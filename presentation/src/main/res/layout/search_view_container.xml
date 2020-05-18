@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.view.action.SearchAction"/>
+
+        <variable
+            name="searchAction"
+            type="SearchAction" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/searchContainer"
+        style="@style/Search.AppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/backSharedSpaces"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:onClick="@{() -> searchAction.closeSearchView()}"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="@color/file_name_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:closeIcon="@drawable/ic_close"
+            android:iconifiedByDefault="false"
+            android:queryBackground="@color/transparent"
+            android:queryHint="@string/search_in_shared_space"
+            android:searchHintIcon="@null"
+            android:searchIcon="@null" />
+
+    </LinearLayout>
+</layout>
