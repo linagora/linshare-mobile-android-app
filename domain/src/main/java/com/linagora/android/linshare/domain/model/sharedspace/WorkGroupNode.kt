@@ -11,3 +11,7 @@ interface WorkGroupNode {
     val description: String?
     val name: String
 }
+
+fun WorkGroupNode.nameContains(query: String): Boolean {
+    return name.toLowerCase().contains(query.toLowerCase())
+}

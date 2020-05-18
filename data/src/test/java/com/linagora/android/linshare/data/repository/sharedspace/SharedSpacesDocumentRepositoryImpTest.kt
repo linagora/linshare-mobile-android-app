@@ -6,6 +6,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_2
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.QUERY_SHARED_SPACE_DOCUMENT
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_2
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_DOCUMENT_1
@@ -14,6 +15,7 @@ import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_FO
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
@@ -64,5 +66,39 @@ class SharedSpacesDocumentRepositoryImpTest {
 
         assertThat(sharedSpacesDocumentRepositoryImp.getSharedSpaceNode(SHARED_SPACE_ID_1, NODE_ID_1))
             .isEqualTo(WORK_GROUP_DOCUMENT_1)
+    }
+
+    @Test
+    fun searchDocumentShouldReturnMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentDataSource.searchSharedSpaceDocument(
+                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        assertThat(sharedSpacesDocumentRepositoryImp.searchSharedSpaceDocuments(
+                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .containsExactly(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2)
+    }
+
+    @Test
+    fun searchDocumentShouldReturnEmptyListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentDataSource.searchSharedSpaceDocument(
+                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { emptyList<WorkGroupNode>() }
+
+        assertThat(sharedSpacesDocumentRepositoryImp.searchSharedSpaceDocuments(
+                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .isEmpty()
+    }
+
+    @Test
+    fun searchDocumentShouldThrowWhenSearchHaveError() = runBlockingTest {
+        `when`(sharedSpacesDocumentDataSource.searchSharedSpaceDocument(
+                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenThrow(RuntimeException())
+
+        assertThrows<RuntimeException> { runBlockingTest {
+            sharedSpacesDocumentRepositoryImp.searchSharedSpaceDocuments(
+                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT) }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.linagora.android.testshared
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
@@ -9,6 +10,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleNam
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA_UUID
@@ -93,5 +95,11 @@ object SharedSpaceDocumentFixtures {
         nodeType = LinShareNodeType.WORK_GROUP,
         role = SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.ADMIN),
         quotaId = QUOTA_UUID
+    )
+
+    val QUERY_SHARED_SPACE_DOCUMENT = QueryString("document")
+
+    val SEARCH_SHARED_SPACE_DOCUMENT_STATE = Either.right(SearchSharedSpaceDocumentViewState(
+        listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2))
     )
 }

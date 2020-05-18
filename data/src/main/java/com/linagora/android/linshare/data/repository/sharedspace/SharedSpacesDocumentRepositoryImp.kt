@@ -2,6 +2,7 @@ package com.linagora.android.linshare.data.repository.sharedspace
 
 import com.linagora.android.linshare.data.datasource.sharedspacesdocument.SharedSpacesDocumentDataSource
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
@@ -37,5 +38,13 @@ class SharedSpacesDocumentRepositoryImp @Inject constructor(
     ): WorkGroupNode {
         return sharedSpacesDocumentDataSource
             .uploadSharedSpaceDocument(documentRequest, sharedSpaceId, parentNodeId, onTransfer)
+    }
+
+    override suspend fun searchSharedSpaceDocuments(
+        sharedSpaceId: SharedSpaceId,
+        parentNodeId: WorkGroupNodeId?,
+        query: QueryString
+    ): List<WorkGroupNode> {
+        return sharedSpacesDocumentDataSource.searchSharedSpaceDocument(sharedSpaceId, parentNodeId, query)
     }
 }
