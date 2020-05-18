@@ -5,10 +5,12 @@ import com.linagora.android.linshare.data.datasource.sharedspacesdocument.Shared
 import com.linagora.android.linshare.data.network.NetworkExecutor
 import com.linagora.android.linshare.data.network.handler.UploadNetworkRequestHandler
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.PartParameter.FILE_PARAMETER_FIELD
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.nameContains
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -51,6 +53,15 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
             networkRequest = { uploadToSharedSpace(documentRequest, sharedSpaceId, parentNodeId, onTransfer) },
             onFailure = { uploadNetworkRequestHandler(it) }
         )
+    }
+
+    override suspend fun searchSharedSpaceDocument(
+        sharedSpaceId: SharedSpaceId,
+        parentNodeId: WorkGroupNodeId?,
+        queryString: QueryString
+    ): List<WorkGroupNode> {
+        return getAllChildNodes(sharedSpaceId, parentNodeId)
+            ?.filter { node -> node.nameContains(queryString.value) }
     }
 
     private suspend fun uploadToSharedSpace(

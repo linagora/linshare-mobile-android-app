@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.data.datasource.sharedspacesdocument
 
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
@@ -26,4 +27,10 @@ interface SharedSpacesDocumentDataSource {
         parentNodeId: WorkGroupNodeId? = null,
         onTransfer: OnTransfer
     ): WorkGroupNode
+
+    suspend fun searchSharedSpaceDocument(
+        sharedSpaceId: SharedSpaceId,
+        parentNodeId: WorkGroupNodeId? = null,
+        queryString: QueryString
+    ): List<WorkGroupNode>
 }
