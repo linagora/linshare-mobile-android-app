@@ -26,8 +26,6 @@ fun bindingSearchResult(
         recyclerView.adapter = MySpaceAdapter(itemBehavior)
     }
 
-    println("bindingList $searchState")
-
     searchState?.fold(
         ifLeft = { recyclerView.isVisible = false },
         ifRight = { when (it) {

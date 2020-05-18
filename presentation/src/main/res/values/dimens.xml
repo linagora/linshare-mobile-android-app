@@ -106,7 +106,7 @@
     <dimen name="elevation">6dp</dimen>
 
     <!--search -->
-    <dimen name="no_results_text_size">26dp</dimen>
+    <dimen name="no_results_text_size">21dp</dimen>
 
 
     <!--bottom bar-->

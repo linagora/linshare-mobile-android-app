@@ -15,6 +15,8 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.canUpload
+import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentNoResult
+import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -37,14 +39,21 @@ fun bindingSharedSpaceDocumentList(
     sharedSpaceDocumentState.fold(
         ifLeft = { recyclerView.isVisible = false },
         ifRight = { success ->
-            when (success) {
-                is SharedSpaceDocumentViewState -> {
-                    recyclerView.isVisible = true
-                    (recyclerView.adapter as SharedSpaceDocumentAdapter).submitList(success.documents)
-                }
-            }
+            recyclerView.isVisible = true
+            submitSharedSpaceDocumentList(recyclerView, success)
         }
     )
+}
+
+private fun submitSharedSpaceDocumentList(recyclerView: RecyclerView, success: Success) {
+    val documents = when (success) {
+        is SharedSpaceDocumentViewState -> success.documents
+        is SearchSharedSpaceDocumentViewState -> success.documents
+        else -> emptyList()
+    }
+    if (recyclerView.adapter is SharedSpaceDocumentAdapter && documents.isNotEmpty()) {
+        (recyclerView.adapter as SharedSpaceDocumentAdapter).submitList(documents)
+    }
 }
 
 @BindingAdapter("sharedSpaceDocumentState")
@@ -86,10 +95,11 @@ fun bindingSharedSpaceDocumentIcon(imageView: ImageView, workGroupNode: WorkGrou
         .into(imageView)
 }
 
-@BindingAdapter("sharedSpaceDocumentAddButton")
+@BindingAdapter("sharedSpaceDocumentAddButton", "isSearchingState")
 fun bindingSharedSpaceDocumentAddButton(
     floatingActionButton: FloatingActionButton,
-    currentSharedSpace: SharedSpace?
+    currentSharedSpace: SharedSpace?,
+    isSearchingState: Boolean
 ) {
     val enable = currentSharedSpace
         ?.takeIf { sharedSpace -> sharedSpace.role.canUpload() }
@@ -100,11 +110,22 @@ fun bindingSharedSpaceDocumentAddButton(
         ?.let { R.color.colorPrimary }
         ?: R.color.disable_state_color
 
-    val visible = currentSharedSpace?.let { true }
+    val visible = currentSharedSpace
+        ?.let { !isSearchingState }
         ?: false
 
     floatingActionButton.isEnabled = enable
     floatingActionButton.isVisible = visible
     floatingActionButton.backgroundTintList = ColorStateList
         .valueOf(ContextCompat.getColor(floatingActionButton.context, backgroundColor))
+}
+
+@BindingAdapter("emptyMessageInSharedSpaceDocument")
+fun bindingTextEmptyMessageInSharedSpaceDocument(textView: TextView, state: Either<Failure, Success>?) {
+    state?.fold(
+        ifLeft = { failure -> failure.takeIf { it is SearchSharedSpaceDocumentNoResult }
+            ?.let { textView.setText(R.string.search_no_results) }
+            ?: textView.setText(R.string.do_not_have_any_document) },
+        ifRight = { textView.setText(R.string.do_not_have_any_document) }
+    )
 }

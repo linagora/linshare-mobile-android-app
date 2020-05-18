@@ -1,13 +1,14 @@
 package com.linagora.android.linshare.view.sharedspacedocument
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -18,10 +19,13 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentBinding
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
+import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
@@ -41,15 +45,17 @@ import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
+import com.linagora.android.linshare.util.Constant
+import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.util.openFilePicker
+import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
-import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
-import com.linagora.android.linshare.util.Constant
-import com.linagora.android.linshare.util.openFilePicker
 import com.linagora.android.linshare.view.Navigation.FileType
 import com.linagora.android.linshare.view.Navigation.UploadType
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
+import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -116,6 +122,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is DownloadSharedSpaceNodeClick -> handleDownloadSharedSpaceNode(viewEvent.workGroupNode)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
+            OpenSearchView -> handleOpenSearch()
+            CloseSearchView -> handleCloseSearch()
         }
         sharedSpacesDocumentViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -125,6 +133,25 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
             PermissionResult.PermissionGranted -> { download(workGroupNode) }
             else -> { shouldRequestWriteStoragePermission() }
+        }
+    }
+
+    private fun handleOpenSearch() {
+        binding.apply {
+            includeSearchContainer.searchContainer.visibility = View.VISIBLE
+            includeSearchContainer.searchView.requestFocus()
+            sharedSpaceDocumentBottomBar.visibility = View.GONE
+        }
+    }
+
+    private fun handleCloseSearch() {
+        binding.apply {
+            includeSearchContainer.searchContainer.visibility = View.GONE
+            sharedSpaceDocumentBottomBar.visibility = View.VISIBLE
+            includeSearchContainer.searchView.apply {
+                setQuery(Constant.CLEAR_QUERY_STRING, Constant.NOT_SUBMIT_TEXT)
+                clearFocus()
+            }
         }
     }
 
@@ -183,6 +210,9 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
+
+        setUpSearchView()
+
         getAllNodes(
             sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
             parentNodeId = arguments.navigationInfo.getParentNodeId())
@@ -193,6 +223,44 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
         sharedSpacesDocumentViewModel.getCurrentSharedSpace(
             sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId())
+    }
+
+    private fun setUpSearchView() {
+        binding.includeSearchContainer.searchView.apply {
+
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    this@apply.dismissKeyboard()
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    LOGGER.info("onQueryTextChange() $newText")
+                    searchSharedSpaceDocument(newText)
+                    return true
+                }
+            })
+
+            setOnQueryTextFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    view.findFocus().showKeyboard()
+                }
+            }
+        }
+    }
+
+    private fun searchSharedSpaceDocument(query: String) {
+        query.trim()
+            .let(::QueryString)
+            .let { sendQueryString(it) }
+    }
+
+    private fun sendQueryString(query: QueryString) {
+        sharedSpacesDocumentViewModel.searchDocument(
+            sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
+            parentNodeId = arguments.navigationInfo.getParentNodeId(),
+            query = query
+        )
     }
 
     private fun setUpSwipeRefreshLayout() {

@@ -45,6 +45,16 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <include
+                android:id="@+id/includeSearchContainer"
+                layout="@layout/search_view_container"
+                style="@style/Search.AppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:visibility="gone"
+                app:searchAction="@{viewModel.searchAction}"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <include
                 android:id="@+id/navigationPath"
                 layout="@layout/navigation_path_view"
                 android:layout_width="match_parent"
@@ -85,6 +95,8 @@
                 android:textColor="@color/file_name_color"
                 android:textSize="@dimen/no_results_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:visibleEmptyMessage="@{viewModel.viewState}"
+                app:emptyMessageInSharedSpaceDocument="@{viewModel.viewState}"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -98,6 +110,25 @@
             app:contentInsetStart="16dp"
             android:elevation="6dp"
             app:fabAlignmentMode="center">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/sharedSpaceSearch"
+                    android:layout_width="@dimen/search_icon_size"
+                    android:layout_height="@dimen/search_icon_size"
+                    android:layout_marginEnd="@dimen/search_icon_margin_end"
+                    android:background="@null"
+                    android:onClick="@{() -> viewModel.searchAction.openSearchView()}"
+                    android:src="@drawable/ic_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </com.google.android.material.bottomappbar.BottomAppBar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -111,6 +142,7 @@
             app:layout_anchor="@id/sharedSpaceDocumentBottomBar"
             app:rippleColor="@color/divide_view"
             app:sharedSpaceDocumentAddButton="@{viewModel.currentSharedSpace}"
+            app:isSearchingState="@{viewModel.searchAction.isSearching()}"
             android:onClick="@{() -> viewModel.onAddButtonClick()}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
