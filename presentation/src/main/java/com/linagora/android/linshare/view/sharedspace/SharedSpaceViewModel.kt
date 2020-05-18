@@ -3,9 +3,7 @@ package com.linagora.android.linshare.view.sharedspace
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.search.QueryString
-import com.linagora.android.linshare.domain.usecases.sharedspace.CloseSearchSharedSpaceButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceInteractor
-import com.linagora.android.linshare.domain.usecases.sharedspace.OpenSearchSharedSpaceButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -13,6 +11,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.Constant.MIN_LENGTH_CHARACTERS_TO_SEARCH
 import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -32,6 +31,8 @@ class SharedSpaceViewModel @Inject constructor(
 ) : BaseViewModel(dispatcherProvider) {
 
     val sharedSpaceItemBehavior = SharedSpaceItemBehavior(this)
+
+    val searchAction = SearchActionImp(this)
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceViewModel::class.java)
@@ -63,15 +64,5 @@ class SharedSpaceViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getSharedSpaceInteractor())
         }
-    }
-
-    fun openSearchButtonClick() {
-        LOGGER.info("openSearchButtonClick()")
-        dispatchState(Either.right(OpenSearchSharedSpaceButtonClick))
-    }
-
-    fun closeSearchButtonClick() {
-        LOGGER.info("closeSearchButtonClick()")
-        dispatchState(Either.right(CloseSearchSharedSpaceButtonClick))
     }
 }

@@ -14,8 +14,8 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceBinding
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.domain.usecases.sharedspace.CloseSearchSharedSpaceButtonClick
-import com.linagora.android.linshare.domain.usecases.sharedspace.OpenSearchSharedSpaceButtonClick
+import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
+import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -30,7 +30,6 @@ import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentFragment.Companion.NAVIGATION_INFO_KEY
-import kotlinx.android.synthetic.main.fragment_shared_space.swipeLayoutSharedSpace
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -84,32 +83,35 @@ class SharedSpaceFragment : MainNavigationFragment() {
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is SharedSpaceItemClick -> navigateIntoSharedSpace(viewEvent.sharedSpaceNodeNested)
-            is OpenSearchSharedSpaceButtonClick -> handleOpenSearch()
-            is CloseSearchSharedSpaceButtonClick -> handleCloseSearch()
+            is OpenSearchView -> handleOpenSearch()
+            is CloseSearchView -> handleCloseSearch()
             is SharedSpaceContextMenuClick -> { }
-            is SharedSpaceItemClick -> { }
         }
         sharedSpaceViewModel.dispatchState(Either.right(Success.Idle))
     }
 
     private fun handleOpenSearch() {
-        binding.searchContainer.visibility = View.VISIBLE
-        binding.searchView.requestFocus()
-        binding.sharedSpaceBottomBar.visibility = View.GONE
-    }
-
-    private fun handleCloseSearch() {
-        binding.searchContainer.visibility = View.GONE
-        getSharedSpace()
-        binding.sharedSpaceBottomBar.visibility = View.VISIBLE
-        binding.searchView.apply {
-            setQuery(CLEAR_QUERY_STRING, NOT_SUBMIT_TEXT)
-            clearFocus()
+        binding.apply {
+            includeSearchContainer.searchContainer.visibility = View.VISIBLE
+            includeSearchContainer.searchView.requestFocus()
+            sharedSpaceBottomBar.visibility = View.GONE
         }
     }
 
+    private fun handleCloseSearch() {
+        binding.apply {
+            includeSearchContainer.searchContainer.visibility = View.GONE
+            sharedSpaceBottomBar.visibility = View.VISIBLE
+            includeSearchContainer.searchView.apply {
+                setQuery(CLEAR_QUERY_STRING, NOT_SUBMIT_TEXT)
+                clearFocus()
+            }
+        }
+        getSharedSpace()
+    }
+
     private fun setUpSearchView() {
-        binding.searchView.apply {
+        binding.includeSearchContainer.searchView.apply {
 
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
@@ -143,7 +145,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
     }
 
     private fun setUpSwipeRefreshLayout() {
-        swipeLayoutSharedSpace.setColorSchemeResources(R.color.colorPrimary)
+        binding.swipeLayoutSharedSpace.setColorSchemeResources(R.color.colorPrimary)
     }
 
     private fun getSharedSpace() {
