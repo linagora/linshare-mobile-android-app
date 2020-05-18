@@ -4,14 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.view.sharedspace.SharedSpaceViewModel"/>
+        <import type="com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior"/>
 
         <variable
             name="viewModel"
-            type="com.linagora.android.linshare.view.sharedspace.SharedSpaceViewModel" />
+            type="SharedSpaceViewModel"/>
 
         <variable
             name="sharedSpaceItemBehavior"
-            type="com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior" />
+            type="SharedSpaceItemBehavior"/>
 
     </data>
 
@@ -50,39 +52,15 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <LinearLayout
-                android:id="@+id/searchContainer"
-                style="@style/Search.AppBar"
+            <include
+                android:id="@+id/includeSearchContainer"
+                layout="@layout/search_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:orientation="horizontal"
                 android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageButton
-                    android:id="@+id/backSharedSpaces"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:onClick="@{() -> viewModel.closeSearchButtonClick()}"
-                    android:src="@drawable/ic_arrow_back"
-                    android:tint="@color/file_name_color"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:closeIcon="@drawable/ic_close"
-                    android:iconifiedByDefault="false"
-                    android:queryBackground="@color/transparent"
-                    android:queryHint="@string/search_in_shared_space"
-                    android:searchHintIcon="@null"
-                    android:searchIcon="@null" />
-
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent"
+                app:searchAction="@{viewModel.searchAction}"
+                />
 
             <LinearLayout
                 android:id="@+id/resultsCountContainer"
@@ -161,7 +139,7 @@
                     android:layout_height="@dimen/search_icon_size"
                     android:layout_marginEnd="@dimen/search_icon_margin_end"
                     android:background="@null"
-                    android:onClick="@{() -> viewModel.openSearchButtonClick()}"
+                    android:onClick="@{() -> viewModel.searchAction.openSearchView()}"
                     android:src="@drawable/ic_search"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
