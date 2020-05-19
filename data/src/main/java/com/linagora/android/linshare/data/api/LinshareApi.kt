@@ -126,7 +126,7 @@ interface LinshareApi {
     @Headers("Accept: application/json")
     suspend fun uploadToSharedSpace(
         @Path("sharedSpaceId") sharedSpaceUuid: String,
-        @Part("parent") parentUuid: String? = null,
+        @Query("parent") parentUuid: String? = null,
         @Part file: MultipartBody.Part,
         @Part("filesize") fileSize: Long
     ): WorkGroupNode
