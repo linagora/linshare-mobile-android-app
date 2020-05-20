@@ -47,4 +47,11 @@ class SharedSpacesDocumentRepositoryImp @Inject constructor(
     ): List<WorkGroupNode> {
         return sharedSpacesDocumentDataSource.searchSharedSpaceDocument(sharedSpaceId, parentNodeId, query)
     }
+
+    override suspend fun removeSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        sharedSpaceNodeUuid: WorkGroupNodeId
+    ): WorkGroupNode {
+        return sharedSpacesDocumentDataSource.removeSharedSpaceNode(sharedSpaceId, sharedSpaceNodeUuid)
+    }
 }

@@ -3,6 +3,8 @@ package com.linagora.android.linshare.data.repository.sharedspace
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.sharedspacesdocument.SharedSpacesDocumentDataSource
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNotFoundSharedSpaceDocumentException
+import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeException
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_2
@@ -96,9 +98,57 @@ class SharedSpacesDocumentRepositoryImpTest {
                 SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
             .thenThrow(RuntimeException())
 
-        assertThrows<RuntimeException> { runBlockingTest {
-            sharedSpacesDocumentRepositoryImp.searchSharedSpaceDocuments(
-                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT) }
+        assertThrows<RuntimeException> {
+            runBlockingTest {
+                sharedSpacesDocumentRepositoryImp.searchSharedSpaceDocuments(
+                    SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT
+                )
+            }
+        }
+    }
+
+    @Test
+    fun removeSharedSpaceNodeSuccess() {
+        runBlockingTest {
+            `when`(
+                sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1))
+                .thenAnswer { WORK_GROUP_DOCUMENT_1 }
+
+            val document =
+                sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
+            assertThat(document).isEqualTo(WORK_GROUP_DOCUMENT_1)
+        }
+    }
+
+    @Test
+    fun removeShouldThrowWhenRemoveSharedSpaceNodeFailure() {
+        runBlockingTest {
+            `when`(sharedSpacesDocumentDataSource.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1))
+                .thenThrow(
+                    RemoveSharedSpaceNodeException(
+                        RuntimeException()
+                    )
+                )
+
+            assertThrows<RemoveSharedSpaceNodeException> {
+                runBlockingTest {
+                    sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun removeShouldThrowWhenRemoveSharedSpaceNodeNotFound() {
+        runBlockingTest {
+            `when`(sharedSpacesDocumentDataSource.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1))
+                .thenThrow(RemoveNotFoundSharedSpaceDocumentException)
+
+            assertThrows<RemoveNotFoundSharedSpaceDocumentException> {
+                runBlockingTest {
+                    sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
+                }
+            }
         }
     }
 }

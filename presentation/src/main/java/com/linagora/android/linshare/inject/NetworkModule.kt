@@ -3,9 +3,9 @@ package com.linagora.android.linshare.inject
 import com.google.gson.GsonBuilder
 import com.linagora.android.linshare.BuildConfig
 import com.linagora.android.linshare.data.api.LinshareApi
+import com.linagora.android.linshare.data.network.adapter.BaseErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
 import com.linagora.android.linshare.data.network.adapter.DocumentIdDeserializer
-import com.linagora.android.linshare.data.network.adapter.ErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaIdAdapter
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
@@ -13,7 +13,7 @@ import com.linagora.android.linshare.data.network.adapter.ShareIdDeserializer
 import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdAdapter
 import com.linagora.android.linshare.data.network.adapter.WorkGroupNodeIdAdapter
 import com.linagora.android.linshare.data.network.factory.RuntimeTypeAdapterFactory
-import com.linagora.android.linshare.domain.model.LinShareErrorCode
+import com.linagora.android.linshare.domain.model.BaseErrorCode
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
@@ -79,7 +79,7 @@ class NetworkModule {
             .registerTypeAdapter(Date::class.java, DateLongDeserializer())
             .registerTypeAdapter(QuotaSize::class.java, QuotaSizeDeserializer())
             .registerTypeAdapter(MediaType::class.java, MediaTypeDeserializer())
-            .registerTypeAdapter(LinShareErrorCode::class.java, ErrorCodeDeserializer())
+            .registerTypeAdapter(BaseErrorCode::class.java, BaseErrorCodeDeserializer())
             .registerTypeAdapter(DocumentId::class.java, DocumentIdDeserializer())
             .registerTypeAdapter(ShareId::class.java, ShareIdDeserializer())
             .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
