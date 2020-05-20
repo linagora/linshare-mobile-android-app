@@ -69,6 +69,7 @@ android {
                     "$rootProject.rootDir.absolutePath/domain/proguard-rules.pro",
                     "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
             signingConfig signingConfigs.debug
+            applicationVariants.all { variant -> renameAPK(variant, defaultConfig, name) }
         }
         release {
             minifyEnabled true
@@ -78,6 +79,7 @@ android {
                     "$rootProject.rootDir.absolutePath/domain/proguard-rules.pro",
                     "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
             signingConfig signingConfigs.release
+            applicationVariants.all { variant -> renameAPK(variant, defaultConfig, name) }
         }
     }
 
@@ -119,6 +121,12 @@ if (propFile.exists()) {
     android.signingConfigs.release.storePassword = 'linshare'
     android.signingConfigs.release.keyAlias = 'linshareAndroid'
     android.signingConfigs.release.keyPassword = 'linshare'
+}
+
+def renameAPK(variant, defaultConfig, buildTypes) {
+    variant.outputs.all { output ->
+        output.outputFileName = applicationName + "_v" + defaultConfig.versionName + "-" + buildTypes + ".apk"
+    }
 }
 
 dependencies {
