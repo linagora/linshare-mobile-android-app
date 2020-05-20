@@ -3,6 +3,7 @@ package com.linagora.android.linshare.data.datasource.network
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.sharedspacesdocument.SharedSpacesDocumentDataSource
 import com.linagora.android.linshare.data.network.NetworkExecutor
+import com.linagora.android.linshare.data.network.handler.RemoveSharedSpaceDocumentNetworkRequestHandler
 import com.linagora.android.linshare.data.network.handler.UploadNetworkRequestHandler
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
@@ -20,7 +21,8 @@ import javax.inject.Singleton
 class LinShareSharedSpacesDocumentDataSource @Inject constructor(
     private val linShareApi: LinshareApi,
     private val networkExecutor: NetworkExecutor,
-    private val uploadNetworkRequestHandler: UploadNetworkRequestHandler
+    private val uploadNetworkRequestHandler: UploadNetworkRequestHandler,
+    private val removeSharedSpaceDocumentNetworkRequestHandler: RemoveSharedSpaceDocumentNetworkRequestHandler
 ) : SharedSpacesDocumentDataSource {
 
     override suspend fun getAllChildNodes(
@@ -88,5 +90,20 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
                         documentRequest.uploadFileName,
                         fileRequestBody),
                     fileSize = documentRequest.file.length())
+    }
+
+    override suspend fun removeSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        sharedSpaceNodeId: WorkGroupNodeId
+    ): WorkGroupNode {
+        return networkExecutor.execute(
+            networkRequest = {
+                linShareApi.removeSharedSpaceNode(
+                    sharedSpaceId.uuid.toString(),
+                    sharedSpaceNodeId.uuid.toString()
+                )
+            },
+            onFailure = { removeSharedSpaceDocumentNetworkRequestHandler(it) }
+        )
     }
 }

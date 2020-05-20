@@ -12,4 +12,6 @@ object BusinessErrorCode {
     val DeviceNotEnoughStorageErrorCode = ClientErrorCode(1100)
 
     val EmptyDocumentErrorCode = ClientErrorCode(1200)
+
+    val WorkGroupNodeNotFoundErrorCode = LinShareErrorCode(26007)
 }

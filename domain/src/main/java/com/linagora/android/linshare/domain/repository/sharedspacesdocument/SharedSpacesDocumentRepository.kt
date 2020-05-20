@@ -31,4 +31,9 @@ interface SharedSpacesDocumentRepository {
         parentNodeId: WorkGroupNodeId? = null,
         query: QueryString
     ): List<WorkGroupNode>
+
+    suspend fun removeSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        sharedSpaceNodeId: WorkGroupNodeId
+    ): WorkGroupNode
 }

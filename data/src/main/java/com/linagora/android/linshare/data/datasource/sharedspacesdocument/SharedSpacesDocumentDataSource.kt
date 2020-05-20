@@ -33,4 +33,9 @@ interface SharedSpacesDocumentDataSource {
         parentNodeId: WorkGroupNodeId? = null,
         queryString: QueryString
     ): List<WorkGroupNode>
+
+    suspend fun removeSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        sharedSpaceNodeUuid: WorkGroupNodeId
+    ): WorkGroupNode
 }

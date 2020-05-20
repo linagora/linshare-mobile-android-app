@@ -130,4 +130,14 @@ interface LinshareApi {
         @Part file: MultipartBody.Part,
         @Part("filesize") fileSize: Long
     ): WorkGroupNode
+
+    @DELETE("/shared_spaces/{sharedSpaceUuid}/nodes/{sharedSpaceNodeUuid}")
+    @Headers(
+        "Accept: application/json",
+        "Content-Type: application/json"
+    )
+    suspend fun removeSharedSpaceNode(
+        @Path("sharedSpaceUuid") sharedSpaceUuid: String,
+        @Path("sharedSpaceNodeUuid") sharedSpaceNodeUuid: String
+    ): WorkGroupNode
 }

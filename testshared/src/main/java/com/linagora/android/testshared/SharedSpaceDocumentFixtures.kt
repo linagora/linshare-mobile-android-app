@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleNam
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
@@ -102,4 +103,5 @@ object SharedSpaceDocumentFixtures {
     val SEARCH_SHARED_SPACE_DOCUMENT_STATE = Either.right(SearchSharedSpaceDocumentViewState(
         listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2))
     )
+    val REMOVE_SHARED_SPACE_DOCUMENT_SUCCESS_VIEW_STATE = Either.Right(RemoveSharedSpaceNodeSuccessViewState(WORK_GROUP_DOCUMENT_1))
 }
