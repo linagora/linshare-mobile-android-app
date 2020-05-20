@@ -22,4 +22,12 @@ internal abstract class SharedSpaceDocumentPresentationModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeSharedSpaceDocumentContextMenuDialog(): SharedSpaceDocumentContextMenuDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeConfirmRemoveSharedSpaceNodeDialog(): ConfirmRemoveSharedSpaceNodeDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeSharedSpaceFolderContextMenuDialog(): SharedSpaceFolderContextMenuDialog
 }

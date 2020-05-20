@@ -18,6 +18,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceN
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSingleSharedSpaceInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -34,6 +35,7 @@ import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
+import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -50,6 +52,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val getSharedSpaceNodeInteractor: GetSharedSpaceNodeInteractor,
     private val getSingleSharedSpaceInteractor: GetSingleSharedSpaceInteractor,
     private val searchSharedSpaceDocumentInteractor: SearchSharedSpaceDocumentInteractor,
+    private val removeSharedSpaceNodeInteractor: RemoveSharedSpaceNodeInteractor,
     private val downloadOperator: DownloadOperator
 ) : BaseViewModel(dispatcherProvider) {
 
@@ -62,6 +65,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     val listItemBehavior = SharedSpaceDocumentItemBehavior(this)
 
     val downloadContextMenu = SharedSpaceNodeDownloadContextMenu(this)
+
+    val itemContextMenu = SharedSpaceNodeItemContextMenu(this)
 
     val navigationPathBehavior = SharedSpaceNavigationPathBehavior(this)
 
@@ -140,5 +145,11 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     fun onAddButtonClick() {
         LOGGER.info("onAddButtonClick()")
         dispatchState(Either.right(SharedSpaceDocumentOnAddButtonClick))
+    }
+
+    fun removeSharedSpaceNode(workGroupNode: WorkGroupNode, sharedSpaceId: SharedSpaceId) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(removeSharedSpaceNodeInteractor(sharedSpaceId, workGroupNode.workGroupNodeId))
+        }
     }
 }

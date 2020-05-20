@@ -5,13 +5,8 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode"/>
         <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu"/>
-
-        <variable
-            name="downloadContextMenu"
-            type="DownloadItemContextMenu&lt;WorkGroupNode&gt;" />
 
         <variable
             name="workGroupNode"
@@ -38,20 +33,6 @@
             android:layout_marginTop="@dimen/padding_top_bottom_sheet"
             style="@style/DivideView"
             app:layout_constraintTop_toBottomOf="@id/workGroupNodeInfoContainer" />
-
-        <LinearLayout
-            style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> downloadContextMenu.download(workGroupNode)}">
-
-            <ImageView
-                style="@style/ImageInRowLinerBottomSheetStyle"
-                android:src="@drawable/ic_download" />
-
-            <TextView
-                style="@style/TextInRowLinerBottomSheetStyle"
-                android:text="@string/download_to_device" />
-
-        </LinearLayout>
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
