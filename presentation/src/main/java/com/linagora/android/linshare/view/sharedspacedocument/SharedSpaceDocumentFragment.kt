@@ -20,19 +20,23 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentBinding
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.domain.model.search.QueryString
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNodeNotFoundSharedSpaceState
+import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnBackClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderContextMenuClick
+import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
@@ -76,6 +80,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     private lateinit var sharedSpaceDocumentContextMenuDialog: SharedSpaceDocumentContextMenuDialog
 
+    private lateinit var sharedSpaceFolderContextMenuDialog: SharedSpaceFolderContextMenuDialog
+
     private lateinit var sharedSpacesDocumentViewModel: SharedSpaceDocumentViewModel
 
     private lateinit var binding: FragmentSharedSpaceDocumentBinding
@@ -103,14 +109,26 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     private fun observeViewState() {
         sharedSpacesDocumentViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
-            state.map { success -> when (success) {
-                is Success.ViewEvent -> reactToViewEvent(success)
-                is Success.ViewState -> reactToViewState(success)
-            } }
+            state.fold(
+                ifLeft = { failure -> reactToFailureState(failure) },
+                ifRight = { success ->
+                    when (success) {
+                        is Success.ViewEvent -> reactToViewEvent(success)
+                        is Success.ViewState -> reactToViewState(success)
+                    }
+                })
         })
     }
 
+    private fun reactToFailureState(failure: Failure) {
+        failure.takeIf { it is RemoveNodeNotFoundSharedSpaceState }
+            ?.let { getAllNodes() }
+    }
+
     private fun reactToViewState(viewState: Success.ViewState) {
+        when (viewState) {
+            is RemoveSharedSpaceNodeSuccessViewState -> getAllNodes()
+        }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
     }
@@ -119,7 +137,9 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         when (viewEvent) {
             is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
             is SharedSpaceDocumentContextMenuClick -> showContextMenuSharedSpaceDocumentNode(viewEvent.workGroupDocument)
+            is SharedSpaceFolderContextMenuClick -> showContextMenuSharedSpaceFolderNode(viewEvent.workGroupFolder)
             is DownloadSharedSpaceNodeClick -> handleDownloadSharedSpaceNode(viewEvent.workGroupNode)
+            is RemoveSharedSpaceNodeClick -> confirmRemoveSharedSpaceNode(viewEvent.workGroupNode)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
             OpenSearchView -> handleOpenSearch()
@@ -128,8 +148,26 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         sharedSpacesDocumentViewModel.dispatchState(Either.right(Success.Idle))
     }
 
+    private fun confirmRemoveSharedSpaceNode(workGroupNode: WorkGroupNode) {
+        workGroupNode.takeIf { it is WorkGroupDocument }
+            ?.let { sharedSpaceDocumentContextMenuDialog.dismiss() }
+            ?: sharedSpaceFolderContextMenuDialog.dismiss()
+
+        ConfirmRemoveSharedSpaceNodeDialog(
+            title = getString(R.string.confirm_delete_file, workGroupNode.name),
+            negativeText = getString(R.string.cancel),
+            positiveText = getString(R.string.delete),
+            onPositiveCallback = { handleRemoveSharedSpaceNode(workGroupNode) }
+        ).show(childFragmentManager, "confirm_remove_shared_space_node_dialog")
+    }
+
+    private fun handleRemoveSharedSpaceNode(workGroupNode: WorkGroupNode) {
+        sharedSpacesDocumentViewModel.removeSharedSpaceNode(workGroupNode, arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId())
+    }
+
     private fun handleDownloadSharedSpaceNode(workGroupNode: WorkGroupNode) {
         sharedSpaceDocumentContextMenuDialog.dismiss()
+
         when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
             PermissionResult.PermissionGranted -> { download(workGroupNode) }
             else -> { shouldRequestWriteStoragePermission() }
@@ -207,15 +245,16 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         sharedSpaceDocumentContextMenuDialog.show(childFragmentManager, sharedSpaceDocumentContextMenuDialog.tag)
     }
 
+    private fun showContextMenuSharedSpaceFolderNode(workGroupFolder: WorkGroupFolder) {
+        sharedSpaceFolderContextMenuDialog = SharedSpaceFolderContextMenuDialog(workGroupFolder)
+        sharedSpaceFolderContextMenuDialog.show(childFragmentManager, sharedSpaceFolderContextMenuDialog.tag)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
-
         setUpSearchView()
-
-        getAllNodes(
-            sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
-            parentNodeId = arguments.navigationInfo.getParentNodeId())
+        getAllNodes()
 
         sharedSpacesDocumentViewModel.getCurrentNode(
             sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
@@ -267,8 +306,11 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         binding.swipeLayoutSharedSpace.setColorSchemeResources(R.color.colorPrimary)
     }
 
-    private fun getAllNodes(sharedSpaceId: SharedSpaceId, parentNodeId: WorkGroupNodeId?) {
-        sharedSpacesDocumentViewModel.getAllChildNodes(sharedSpaceId, parentNodeId)
+    private fun getAllNodes() {
+        sharedSpacesDocumentViewModel.getAllChildNodes(
+            arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
+            arguments.navigationInfo.getParentNodeId()
+        )
     }
 
     private fun bindingTitleName(viewState: Success.ViewState) {

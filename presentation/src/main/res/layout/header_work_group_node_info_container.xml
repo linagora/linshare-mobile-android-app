@@ -16,40 +16,40 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/previewWorkGroupDocumentIcon"
+            android:id="@+id/previewWorkGroupNodeIcon"
             style="@style/ImageInRowBottomSheet"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:workGroupDocumentIcon="@{workGroupNode}"
+            app:workGroupNodeIcon="@{workGroupNode}"
             />
 
         <TextView
-            android:id="@+id/workGroupDocumentName"
+            android:id="@+id/workGroupNodeName"
             style="@style/DocumentInfoHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/item_upload_container_margin_side"
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/workGroupDocumentNameSize"
-            app:layout_constraintStart_toEndOf="@+id/previewWorkGroupDocumentIcon"
+            app:layout_constraintEnd_toStartOf="@+id/workGroupNodeNameSize"
+            app:layout_constraintStart_toEndOf="@+id/previewWorkGroupNodeIcon"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@{workGroupNode.name}"
             />
 
         <TextView
-            android:id="@+id/workGroupDocumentNameSize"
+            android:id="@+id/workGroupNodeNameSize"
             style="@style/DocumentSizeHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@id/workGroupDocumentName"
+            app:layout_constraintBaseline_toBaselineOf="@id/workGroupNodeName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/workGroupDocumentName"
+            app:layout_constraintStart_toEndOf="@+id/workGroupNodeName"
             app:layout_constraintTop_toTopOf="parent"
-            app:workGroupDocumentSize="@{workGroupNode}"/>
+            app:workGroupNodeSize="@{workGroupNode}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
