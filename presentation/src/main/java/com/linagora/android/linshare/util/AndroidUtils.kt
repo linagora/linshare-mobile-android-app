@@ -1,7 +1,7 @@
 package com.linagora.android.linshare.util
 
 import android.os.Build
-import com.linagora.android.linshare.domain.model.ErrorResponse
+import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.DEVICE_NOT_ENOUGH_SPACE_MESSAGE
 import java.io.IOException
 
 object AndroidUtils {
@@ -11,5 +11,5 @@ object AndroidUtils {
     }
 
     fun isDeviceNotEnoughStorage(throwable: Throwable) = throwable is IOException &&
-            throwable.message.equals(ErrorResponse.DEVICE_NOT_ENOUGH_SPACE_MESSAGE)
+            throwable.message.equals(DEVICE_NOT_ENOUGH_SPACE_MESSAGE)
 }

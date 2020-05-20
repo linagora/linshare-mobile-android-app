@@ -38,8 +38,8 @@ class RemoveSharedSpaceNodeInteractorTest {
                 .thenAnswer { WORK_GROUP_DOCUMENT_1 }
 
             assertThat(removeSharedSpaceNodeInteractor(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
-                .map { it(INIT_STATE) }
-                .toList(ArrayList()))
+                    .map { it(INIT_STATE) }
+                    .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, REMOVE_SHARED_SPACE_DOCUMENT_SUCCESS_VIEW_STATE)
         }
     }
@@ -53,8 +53,8 @@ class RemoveSharedSpaceNodeInteractorTest {
                 .thenThrow(exception)
 
             assertThat(removeSharedSpaceNodeInteractor(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
-                .map { it(INIT_STATE) }
-                .toList(ArrayList()))
+                    .map { it(INIT_STATE) }
+                    .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, Either.Left(RemoveSharedSpaceNodeFailure(exception)))
         }
     }
@@ -62,14 +62,13 @@ class RemoveSharedSpaceNodeInteractorTest {
     @Test
     fun removeNotFoundSharedSpaceNodeShouldFailed() {
         runBlockingTest {
-            val exception = RemoveNotFoundSharedSpaceDocumentException
 
             `when`(sharedSpacesDocumentRepository.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1))
-                .thenThrow(exception)
+                .thenThrow(RemoveNotFoundSharedSpaceDocumentException)
 
             assertThat(removeSharedSpaceNodeInteractor(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
-                .map { it(INIT_STATE) }
-                .toList(ArrayList()))
+                    .map { it(INIT_STATE) }
+                    .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, Either.Left(RemoveNodeNotFoundSharedSpaceState))
         }
     }

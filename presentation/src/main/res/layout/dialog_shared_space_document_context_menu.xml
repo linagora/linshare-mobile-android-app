@@ -53,6 +53,8 @@
 
         </LinearLayout>
 
+        <View style="@style/DivideView"/>
+
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
             android:onClick="@{() -> itemContextMenu.remove(workGroupNode)}">
