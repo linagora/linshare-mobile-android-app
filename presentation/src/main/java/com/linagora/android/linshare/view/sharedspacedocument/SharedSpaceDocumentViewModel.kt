@@ -147,7 +147,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         dispatchState(Either.right(SharedSpaceDocumentOnAddButtonClick))
     }
 
-    fun removeSharedSpaceNode(workGroupNode: WorkGroupNode, sharedSpaceId: SharedSpaceId) {
+    fun removeSharedSpaceNode(sharedSpaceId: SharedSpaceId, workGroupNode: WorkGroupNode) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(removeSharedSpaceNodeInteractor(sharedSpaceId, workGroupNode.workGroupNodeId))
         }

@@ -2,12 +2,12 @@ package com.linagora.android.linshare.domain.usecases
 
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.usecases.upload.UploadErrorHandler
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.FILE_NOT_FOUND
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.produce
@@ -83,7 +83,7 @@ class InteractorHandlerTest {
 
         private fun fakeUpload(value: Int): Int {
             if (value > 5) {
-                throw UploadException(ErrorResponse.FILE_NOT_FOUND)
+                throw UploadException(FILE_NOT_FOUND)
             }
             return value
         }

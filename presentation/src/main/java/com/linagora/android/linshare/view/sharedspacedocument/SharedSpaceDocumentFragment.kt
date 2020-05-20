@@ -149,9 +149,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     }
 
     private fun confirmRemoveSharedSpaceNode(workGroupNode: WorkGroupNode) {
-        workGroupNode.takeIf { it is WorkGroupDocument }
-            ?.let { sharedSpaceDocumentContextMenuDialog.dismiss() }
-            ?: sharedSpaceFolderContextMenuDialog.dismiss()
+        dismissContextMenuDialog(workGroupNode)
 
         ConfirmRemoveSharedSpaceNodeDialog(
             title = getString(R.string.confirm_delete_file, workGroupNode.name),
@@ -161,12 +159,19 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         ).show(childFragmentManager, "confirm_remove_shared_space_node_dialog")
     }
 
+    private fun dismissContextMenuDialog(workGroupNode: WorkGroupNode) {
+        workGroupNode.takeIf { it is WorkGroupDocument }
+            ?.let { sharedSpaceDocumentContextMenuDialog.dismiss() }
+            ?: sharedSpaceFolderContextMenuDialog.dismiss()
+    }
+
     private fun handleRemoveSharedSpaceNode(workGroupNode: WorkGroupNode) {
-        sharedSpacesDocumentViewModel.removeSharedSpaceNode(workGroupNode, arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId())
+        sharedSpacesDocumentViewModel.removeSharedSpaceNode(
+            arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(), workGroupNode)
     }
 
     private fun handleDownloadSharedSpaceNode(workGroupNode: WorkGroupNode) {
-        sharedSpaceDocumentContextMenuDialog.dismiss()
+        dismissContextMenuDialog(workGroupNode)
 
         when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
             PermissionResult.PermissionGranted -> { download(workGroupNode) }

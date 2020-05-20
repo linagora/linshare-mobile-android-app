@@ -1,16 +1,18 @@
 package com.linagora.android.linshare.data.network.handler
 
 import com.linagora.android.linshare.data.network.parseLinShareErrorResponse
-import com.linagora.android.linshare.domain.model.ErrorResponse.Companion.UNKNOWN_RESPONSE
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNotFoundSharedSpaceDocumentException
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceDocumentException
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode
+import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.UNKNOWN_RESPONSE
 import com.linagora.android.linshare.domain.utils.OnCatch
 import org.slf4j.LoggerFactory
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoveSharedSpaceDocumentNetworkRequestHandler @Inject constructor(
     private val retrofit: Retrofit
 ) : OnCatch {

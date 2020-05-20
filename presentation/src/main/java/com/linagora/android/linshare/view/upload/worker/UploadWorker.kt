@@ -25,6 +25,7 @@ import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.linshare.domain.usecases.utils.ViewStateStore
+import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.FILE_NOT_FOUND
 import com.linagora.android.linshare.inject.worker.ChildWorkerFactory
 import com.linagora.android.linshare.model.resources.StringId
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
@@ -122,7 +123,7 @@ class UploadWorker(
 
     private fun handleMessageUploadException(errorResponse: ErrorResponse): StringId {
         return when (errorResponse) {
-            ErrorResponse.FILE_NOT_FOUND -> StringId(R.string.file_not_found)
+            FILE_NOT_FOUND -> StringId(R.string.file_not_found)
             else -> StringId(R.string.can_not_perform_upload)
         }
     }

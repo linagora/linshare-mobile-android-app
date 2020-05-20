@@ -73,29 +73,29 @@ class SharedSpacesDocumentRepositoryImpTest {
     @Test
     fun searchDocumentShouldReturnMatchedListDocument() = runBlockingTest {
         `when`(sharedSpacesDocumentDataSource.searchSharedSpaceDocument(
-                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
             .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
 
         assertThat(sharedSpacesDocumentRepositoryImp.searchSharedSpaceDocuments(
-                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
             .containsExactly(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2)
     }
 
     @Test
     fun searchDocumentShouldReturnEmptyListDocument() = runBlockingTest {
         `when`(sharedSpacesDocumentDataSource.searchSharedSpaceDocument(
-                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
             .thenAnswer { emptyList<WorkGroupNode>() }
 
         assertThat(sharedSpacesDocumentRepositoryImp.searchSharedSpaceDocuments(
-                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
             .isEmpty()
     }
 
     @Test
     fun searchDocumentShouldThrowWhenSearchHaveError() = runBlockingTest {
         `when`(sharedSpacesDocumentDataSource.searchSharedSpaceDocument(
-                SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            SHARED_SPACE_ID_1, NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
             .thenThrow(RuntimeException())
 
         assertThrows<RuntimeException> {
@@ -108,32 +108,22 @@ class SharedSpacesDocumentRepositoryImpTest {
     }
 
     @Test
-    fun removeSharedSpaceNodeSuccess() {
-        runBlockingTest {
-            `when`(
-                sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1))
-                .thenAnswer { WORK_GROUP_DOCUMENT_1 }
+    fun removeSharedSpaceNodeSuccess() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1))
+            .thenAnswer { WORK_GROUP_DOCUMENT_1 }
 
-            val document =
-                sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
-            assertThat(document).isEqualTo(WORK_GROUP_DOCUMENT_1)
-        }
+        val document = sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
+        assertThat(document).isEqualTo(WORK_GROUP_DOCUMENT_1)
     }
 
     @Test
     fun removeShouldThrowWhenRemoveSharedSpaceNodeFailure() {
         runBlockingTest {
             `when`(sharedSpacesDocumentDataSource.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1))
-                .thenThrow(
-                    RemoveSharedSpaceNodeException(
-                        RuntimeException()
-                    )
-                )
+                .thenThrow(RemoveSharedSpaceNodeException(RuntimeException()))
 
             assertThrows<RemoveSharedSpaceNodeException> {
-                runBlockingTest {
-                    sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
-                }
+                runBlockingTest { sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1) }
             }
         }
     }
@@ -145,9 +135,7 @@ class SharedSpacesDocumentRepositoryImpTest {
                 .thenThrow(RemoveNotFoundSharedSpaceDocumentException)
 
             assertThrows<RemoveNotFoundSharedSpaceDocumentException> {
-                runBlockingTest {
-                    sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1)
-                }
+                runBlockingTest { sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1) }
             }
         }
     }
