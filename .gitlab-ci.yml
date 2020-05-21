@@ -8,7 +8,6 @@ cache:
   key: "$CI_PIPELINE_ID"
   paths:
     - .gradle/
-    - presentation-debug.apk
 
 stages:
   - linter
@@ -36,7 +35,6 @@ assembleDebug:
     - docker
   script:
     - ./gradlew assembleDebug
-    - cp presentation/build/outputs/apk/debug/presentation-debug.apk .
 
 testDebug:
   stage: test
@@ -50,13 +48,13 @@ publishAPK:
   tags:
     - docker
   script:
-    - echo "Publishing APK"
+    - ./gradlew -Pci --console=plain clean assemble
   environment:
     name: master
   artifacts:
-    name: "linshare-apk-master"
+    name: "linshare-apk-for-test"
     expire_in: 1 month
     paths:
-      - presentation-debug.apk
+      - presentation/build/outputs/apk/develop/LinShare*.apk
   only:
     - master
