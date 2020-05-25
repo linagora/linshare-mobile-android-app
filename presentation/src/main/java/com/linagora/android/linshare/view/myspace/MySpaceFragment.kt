@@ -30,6 +30,7 @@ import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.Constant
+import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
 import com.linagora.android.linshare.view.MainActivityViewModel
@@ -52,8 +53,6 @@ class MySpaceFragment : MainNavigationFragment() {
             by activityViewModels { viewModelFactory }
 
     private lateinit var mySpaceViewModel: MySpaceViewModel
-
-    private lateinit var mySpaceContextMenuDialog: MySpaceContextMenuDialog
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceFragment::class.java)
@@ -100,7 +99,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun confirmRemoveDocument(document: Document) {
-        mySpaceContextMenuDialog.dismiss()
+        dismissContextMenu()
         ConfirmRemoveDocumentDialog(
             document = document,
             title = getString(R.string.confirm_delete_file, document.name),
@@ -111,8 +110,9 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun showContextMenu(document: Document) {
-        mySpaceContextMenuDialog = MySpaceContextMenuDialog(document)
-        mySpaceContextMenuDialog.show(childFragmentManager, mySpaceContextMenuDialog.tag)
+        dismissContextMenu()
+        MySpaceContextMenuDialog(document)
+            .show(childFragmentManager, MySpaceContextMenuDialog.TAG)
     }
 
     private fun handleRemoveDocument(document: Document) {
@@ -147,7 +147,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun handleDownloadDocument(document: Document) {
-        mySpaceContextMenuDialog.dismiss()
+        dismissContextMenu()
         when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
             PermissionResult.PermissionGranted -> { download(document) }
             else -> { shouldRequestWriteStoragePermission() }
@@ -190,6 +190,10 @@ class MySpaceFragment : MainNavigationFragment() {
             ?.let(this@MySpaceFragment::navigateToUpload)
     }
 
+    private fun dismissContextMenu() {
+        childFragmentManager.dismissDialogFragmentByTag(MySpaceContextMenuDialog.TAG)
+    }
+
     private fun navigateToUpload(uri: Uri) {
         val bundle = UploadFragmentArgs(INSIDE_APP).toBundle()
         bundle.putParcelable(Constant.UPLOAD_URI_BUNDLE_KEY, uri)
@@ -201,7 +205,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun navigateToShare(document: Document) {
-        mySpaceContextMenuDialog.dismiss()
+        dismissContextMenu()
         val bundle = Bundle()
         bundle.putParcelable(SHARE_DOCUMENT_BUNDLE_KEY, document.toParcelable())
         findNavController().navigate(R.id.navigationShare, bundle)

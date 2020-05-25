@@ -12,6 +12,11 @@ import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
 import javax.inject.Inject
 
 class MySpaceContextMenuDialog(private val document: Document) : DaggerBottomSheetDialogFragment() {
+
+    companion object {
+        const val TAG = "mySpaceContextMenu"
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
