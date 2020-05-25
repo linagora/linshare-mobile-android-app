@@ -289,10 +289,7 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun navigateAfterUpload() {
         when (args.uploadType) {
-            Navigation.UploadType.OUTSIDE_APP -> {
-                requireActivity().onBackPressed()
-                requireActivity().finish()
-            }
+            Navigation.UploadType.OUTSIDE_APP -> requireActivity().onBackPressed()
             Navigation.UploadType.INSIDE_APP, Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> findNavController().popBackStack()
         }
     }

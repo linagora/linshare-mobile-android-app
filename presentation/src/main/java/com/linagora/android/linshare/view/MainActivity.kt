@@ -126,7 +126,7 @@ class MainActivity : BaseActivity(), NavigationHost {
                     R.id.uploadFragment,
                     bundle,
                     NavOptions.Builder()
-                        .setPopUpTo(R.id.mainFragment, true)
+                        .setPopUpTo(R.id.navigation_graph, true)
                         .build()
                 )
             }
