@@ -63,7 +63,7 @@ class DownloadCompleteReceiver : DaggerBroadcastReceiver() {
         val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val query = DownloadManager.Query().setFilterById(downloadingTask.enqueuedDownloadId.value)
         downloadManager.query(query).use { cursor ->
-            cursor.moveToFirst()
+            if (!cursor.moveToFirst()) { return }
             when (getDownloadStatus(cursor)) {
                 DownloadSuccess -> notifyDownloadSuccess(context, downloadingTask)
                 DownloadFailed -> notifyDownloadFailed(context, cursor, downloadingTask)
