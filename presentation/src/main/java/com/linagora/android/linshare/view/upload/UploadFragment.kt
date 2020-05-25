@@ -58,7 +58,6 @@ import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.F
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_NAME_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_PATH_INPUT_KEY
 import com.linagora.android.linshare.view.widget.makeCustomToast
-import kotlinx.android.synthetic.main.fragment_upload.btnUpload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -226,8 +225,8 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun setUpUploadButton(documentRequest: DocumentRequest) {
-        btnUpload.setOnClickListener {
-
+        binding.btnUpload.setOnClickListener {
+            LOGGER.info("setUpUploadButton(): upload ${documentRequest.file} - ${documentRequest.file.length()}")
             val inputData = createInputDataForUploadFile(documentRequest)
             createUploadRequest().execute(inputData)
 
