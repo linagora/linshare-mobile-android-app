@@ -10,3 +10,9 @@ fun Snackbar.withLinShare(context: Context): Snackbar {
     setActionTextColor(ContextCompat.getColor(context, R.color.white))
     return this
 }
+
+fun Snackbar.errorLayout(context: Context): Snackbar {
+    view.background = ContextCompat.getDrawable(context, R.drawable.error_toast_layout)
+    setActionTextColor(ContextCompat.getColor(context, R.color.white))
+    return this
+}

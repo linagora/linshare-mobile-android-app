@@ -128,4 +128,8 @@
     <string name="search_in_shared_space">Search in Shared Space</string>
 
     <string name="do_not_have_any_document">You don\'t have any document yet</string>
+
+    <string name="copy_to_my_space_error_quota_reach">Not enough space in My Space to copy</string>
+    <string name="copy_to_my_space_error_file_size_exceed">The file has exceeded size limit.</string>
+    <string name="copy_to_my_space_error">An error occurred, can not copy.</string>
 </resources>

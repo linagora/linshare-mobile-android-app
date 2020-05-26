@@ -17,19 +17,24 @@ import com.linagora.android.linshare.databinding.FragmentReceivedSharesBinding
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithFileSizeExceed
+import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithQuotaReach
 import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.DownloadReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyInMySpace
+import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
+import com.linagora.android.linshare.model.resources.StringId
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.widget.errorLayout
 import com.linagora.android.linshare.view.widget.withLinShare
-import kotlinx.android.synthetic.main.fragment_received_shares.swipeLayoutReceivedList
+import kotlinx.android.synthetic.main.fragment_received_shares.*
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -77,12 +82,27 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     }
 
     private fun observeViewState() {
-        receivedSharesViewModel.viewState.observe(viewLifecycleOwner, Observer {
-            it.map { success -> when (success) {
-                is Success.ViewState -> reactToViewState(success)
-                is Success.ViewEvent -> reactToViewEvent(success)
-            } }
+        receivedSharesViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
+            state.fold(
+                this@ReceivedSharesFragment::reactToFailureState,
+                this@ReceivedSharesFragment::reactToSuccessState)
         })
+    }
+
+    private fun reactToFailureState(failure: Failure) {
+        if (failure is CopyFailedWithFileSizeExceed) {
+            showCopyToMySpaceError(StringId(R.string.copy_to_my_space_error_file_size_exceed))
+        }
+        if (failure is CopyFailedWithQuotaReach) {
+            showCopyToMySpaceError(StringId(R.string.copy_to_my_space_error_quota_reach))
+        }
+    }
+
+    private fun reactToSuccessState(success: Success) {
+        when (success) {
+            is Success.ViewState -> reactToViewState(success)
+            is Success.ViewEvent -> reactToViewEvent(success)
+        }
     }
 
     private fun reactToViewState(success: Success.ViewState) {
@@ -167,6 +187,14 @@ class ReceivedSharesFragment : MainNavigationFragment() {
         LOGGER.info("handleCopyInMySpace(): $share")
         receivedShareContextMenuDialog.dismiss()
         receivedSharesViewModel.copyInMySpace(share)
+    }
+
+    private fun showCopyToMySpaceError(stringId: StringId) {
+        LOGGER.info("showCopyToMySpaceError()")
+        Snackbar.make(binding.root, getString(stringId.value), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .show()
+        resetState()
     }
 
     private fun showCopyInMySpaceSuccess(documents: List<Document>) {
