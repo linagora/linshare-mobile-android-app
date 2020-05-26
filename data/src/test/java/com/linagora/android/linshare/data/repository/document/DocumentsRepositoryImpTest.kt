@@ -10,8 +10,10 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
+import com.linagora.android.linshare.domain.usecases.copy.CopyException
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
+import com.linagora.android.linshare.domain.utils.BusinessErrorCode
 import com.linagora.android.testshared.CopyFixtures.COPY_REQUEST_1
 import com.linagora.android.testshared.ShareFixtures.SHARE_1
 import com.linagora.android.testshared.ShareFixtures.SHARE_2
@@ -187,5 +189,20 @@ class DocumentsRepositoryImpTest {
 
         val documents = documentRepositoryImp.copy(COPY_REQUEST_1)
         assertThat(documents).containsExactly(DOCUMENT)
+    }
+
+    @Test
+    fun copyShouldThrowWhenAccountQuotaReach() = runBlockingTest {
+        val copyException = CopyException(
+            ErrorResponse(
+                "account quota reach",
+                BusinessErrorCode.QuotaAccountNoMoreSpaceErrorCode))
+
+        `when`(documentDataSource.copy(COPY_REQUEST_1))
+            .thenThrow(copyException)
+
+        assertThrows<CopyException> {
+            runBlockingTest { documentRepositoryImp.copy(COPY_REQUEST_1) }
+        }
     }
 }

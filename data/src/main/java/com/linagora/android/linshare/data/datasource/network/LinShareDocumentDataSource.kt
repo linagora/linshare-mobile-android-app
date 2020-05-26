@@ -3,6 +3,7 @@ package com.linagora.android.linshare.data.datasource.network
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.data.network.NetworkExecutor
+import com.linagora.android.linshare.data.network.handler.CopyNetworkRequestHandler
 import com.linagora.android.linshare.data.network.handler.UploadNetworkRequestHandler
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class LinShareDocumentDataSource @Inject constructor(
     private val linshareApi: LinshareApi,
     private val networkExecutor: NetworkExecutor,
-    private val uploadNetworkRequestHandler: UploadNetworkRequestHandler
+    private val uploadNetworkRequestHandler: UploadNetworkRequestHandler,
+    private val copyNetworkRequestHandler: CopyNetworkRequestHandler
 ) : DocumentDataSource {
 
     companion object {
@@ -76,6 +78,8 @@ class LinShareDocumentDataSource @Inject constructor(
     }
 
     override suspend fun copy(copyRequest: CopyRequest): List<Document> {
-        return linshareApi.copyInMySpace(copyRequest)
+        return networkExecutor.execute(
+            networkRequest = { linshareApi.copyInMySpace(copyRequest) },
+            onFailure = { copyNetworkRequestHandler(it) })
     }
 }
