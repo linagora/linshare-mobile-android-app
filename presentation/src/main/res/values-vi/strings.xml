@@ -128,4 +128,8 @@
     <string name="search_in_shared_space">Tìm kiếm trong không gian chia sẻ</string>
 
     <string name="do_not_have_any_document">Chưa có tài liệu</string>
+
+    <string name="copy_to_my_space_error_quota_reach">Không đủ dung lượng để sao chép.</string>
+    <string name="copy_to_my_space_error_file_size_exceed">Kích thước tệp vượt quá giới hạn.</string>
+    <string name="copy_to_my_space_error">Có lỗi xảy ra, không thể thực hiện sao chép.</string>
 </resources>
