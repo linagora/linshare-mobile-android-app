@@ -7,6 +7,8 @@ object BusinessErrorCode {
 
     val QuotaAccountNoMoreSpaceErrorCode = LinShareErrorCode(46011)
 
+    val FileSizeIsGreaterThanMaxFileSize = LinShareErrorCode(46010)
+
     val InternetNotAvailableErrorCode = ClientErrorCode(1)
 
     val DeviceNotEnoughStorageErrorCode = ClientErrorCode(1100)
