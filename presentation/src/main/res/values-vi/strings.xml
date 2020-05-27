@@ -119,7 +119,7 @@
     <string name="received_shares">Chia sẻ với tôi</string>
     <string name="unknown_user">Không tìm thấy người dùng</string>
     <string name="add_people"><i>Thêm người</i></string>
-    <string name="copy_in_my_space">Sao chép tới Không gian của tôi</string>
+    <string name="copy_to_my_space">Sao chép tới Không gian của tôi</string>
     <string name="copied_in_my_space">Tệp %s đã được sao chép tới Không gian cá nhân</string>
     <string name="view">Xem</string>
     <string name="unable_to_prepare_file_for_upload">Không thể chuẩn bị file để tải lên</string>
