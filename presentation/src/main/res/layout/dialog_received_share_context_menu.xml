@@ -49,7 +49,7 @@
 
             <TextView
                 style="@style/TextInRowLinerBottomSheetStyle"
-                android:text="@string/copy_in_my_space" />
+                android:text="@string/copy_to_my_space" />
         </LinearLayout>
 
         <LinearLayout

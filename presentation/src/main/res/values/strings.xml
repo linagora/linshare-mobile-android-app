@@ -119,7 +119,7 @@
     <string name="received_shares">Received shares</string>
     <string name="unknown_user">Unknown User</string>
     <string name="add_people"><i>Add people</i></string>
-    <string name="copy_in_my_space">Copy In My Space</string>
+    <string name="copy_to_my_space">Copy To My Space</string>
     <string name="copied_in_my_space">File %s has been copied into My Space</string>
     <string name="view">View</string>
     <string name="unable_to_prepare_file_for_upload">Unable to prepare file for upload</string>
