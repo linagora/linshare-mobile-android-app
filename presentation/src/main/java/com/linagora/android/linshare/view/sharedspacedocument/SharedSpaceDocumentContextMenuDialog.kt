@@ -32,6 +32,7 @@ class SharedSpaceDocumentContextMenuDialog(private val workGroupDocument: WorkGr
 
     private fun initViewModel(binding: DialogSharedSpaceDocumentContextMenuBinding) {
         sharedSpaceDocumentViewModel = getParentViewModel(viewModelFactory)
+        binding.sharedSpace = sharedSpaceDocumentViewModel.currentSharedSpace.value
         binding.workGroupNode = workGroupDocument
         binding.downloadContextMenu = sharedSpaceDocumentViewModel.downloadContextMenu
         binding.itemContextMenu = sharedSpaceDocumentViewModel.itemContextMenu

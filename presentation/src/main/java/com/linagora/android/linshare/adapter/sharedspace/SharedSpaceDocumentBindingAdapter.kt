@@ -1,7 +1,9 @@
 package com.linagora.android.linshare.adapter.sharedspace
 
 import android.content.res.ColorStateList
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -12,6 +14,8 @@ import arrow.core.Either
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.canUpload
@@ -128,4 +132,16 @@ fun bindingTextEmptyMessageInSharedSpaceDocument(textView: TextView, state: Eith
             ?: textView.setText(R.string.do_not_have_any_document) },
         ifRight = { textView.setText(R.string.do_not_have_any_document) }
     )
+}
+
+@BindingAdapter("contextActionVisible", "operationRoles", requireAll = true)
+fun bindingContextActionWithRole(
+    linearLayout: LinearLayout,
+    sharedSpaceRole: SharedSpaceRole,
+    operationRoles: List<SharedSpaceRoleName>
+) {
+    val visible = operationRoles.takeIf { it.isNotEmpty() && it.contains(sharedSpaceRole.name) }
+        ?.let { View.VISIBLE }
+        ?: View.GONE
+    linearLayout.visibility = visible
 }

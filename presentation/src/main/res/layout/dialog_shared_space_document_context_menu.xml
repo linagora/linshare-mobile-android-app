@@ -8,10 +8,16 @@
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode"/>
         <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
 
         <variable
             name="downloadContextMenu"
             type="DownloadItemContextMenu&lt;WorkGroupNode&gt;" />
+
+        <variable
+            name="sharedSpace"
+            type="SharedSpace" />
 
         <variable
             name="workGroupNode"
@@ -57,6 +63,8 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteRoles}"
+            app:contextActionVisible="@{sharedSpace.role}"
             android:onClick="@{() -> itemContextMenu.remove(workGroupNode)}">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
