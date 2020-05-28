@@ -28,15 +28,16 @@
     <string name="email_is_required">Authentication failed, email is invalid, please try again</string>
     <string name="wrong_url">Server URL is not valid, please try again</string>
     <string name="unknow_error">Unknown error occurred, please try again</string>
-    <string name="forget_account">Forget account</string>
+    <string name="logout_account">Logout account</string>
     <string name="last_login_title">Last login:</string>
     <string name="available_space_title">Available space:</string>
     <string name="notification">Notification</string>
     <string name="available_space">%s on %s</string>
 
-    <string name="confirm_remove_account_title">Are you sure you want to remove this account ?</string>
+    <string name="confirm_remove_account_title">Are you sure you want to log out of this account ?</string>
     <string name="cancel">Cancel</string>
     <string name="remove">Remove</string>
+    <string name="logout">Logout</string>
 
     <!--Notification-->
     <string name="upload_and_download_channel_name">Uploads and Downloads</string>

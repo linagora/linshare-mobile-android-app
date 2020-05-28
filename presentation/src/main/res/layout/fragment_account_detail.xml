@@ -237,7 +237,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/align_text_account_detail"
             android:layout_marginTop="@dimen/info_line_margin"
-            android:text="@string/forget_account"
+            android:text="@string/logout_account"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottomNotification" />
 
