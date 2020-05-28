@@ -6,10 +6,10 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter.StateSuggestionUser
-import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult.Companion.externalUser
 import com.linagora.android.linshare.domain.model.autocomplete.isEmailValid
+import com.linagora.android.linshare.domain.model.autocomplete.toExternalUser
 import com.linagora.android.linshare.domain.usecases.autocomplete.AutoCompleteNoResult
-import com.linagora.android.linshare.domain.usecases.autocomplete.UserAutoCompleteViewState
+import com.linagora.android.linshare.domain.usecases.autocomplete.AutoCompleteViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.resources.LayoutId
@@ -33,14 +33,14 @@ fun bindingUserSuggestion(
     queryState?.map { success ->
         val adapter = textView.adapter as UserAutoCompleteAdapter
         when (success) {
-            is UserAutoCompleteViewState -> {
+            is AutoCompleteViewState -> {
                 adapter.submitList(success.results)
                 submitStateSuggestions(textView, StateSuggestionUser.FOUND)
             }
             is AutoCompleteNoResult -> {
                 success.pattern.takeIf { it.isEmailValid() }
                     ?.let {
-                        adapter.submitList(listOf(externalUser(it)))
+                        adapter.submitList(listOf(it.toExternalUser()))
                         submitStateSuggestions(textView, StateSuggestionUser.EXTERNAL_USER)
                     } ?: submitStateSuggestions(textView, StateSuggestionUser.NOT_FOUND)
             }

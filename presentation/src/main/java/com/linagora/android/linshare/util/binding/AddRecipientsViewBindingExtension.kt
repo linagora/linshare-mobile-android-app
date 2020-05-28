@@ -12,11 +12,13 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.AddRecipientsViewBinding
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
-import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 import com.linagora.android.linshare.domain.model.fullName
 import com.linagora.android.linshare.util.binding.AddRecipientsViewBindingExtension.AUTO_COMPLETE_THRESHOLD
 import com.linagora.android.linshare.util.generateCircleLetterAvatar
 import com.linagora.android.linshare.util.showKeyboard
+import com.linagora.android.linshare.view.dialog.OnRemoveMailingList
 import com.linagora.android.linshare.view.dialog.OnRemoveRecipient
 import com.linagora.android.linshare.view.share.ShareFragment
 
@@ -36,8 +38,27 @@ fun AddRecipientsViewBinding.addRecipientView(
     user: GenericUser,
     onRemoveRecipient: OnRemoveRecipient
 ) {
-    val recipientChip = createRecipientChip(context, user, onRemoveRecipient)
+    val recipientChip = createChip(context)
+        .with(user)
+    recipientChip.setOnCloseIconClickListener {
+        removeRecipientView(it)
+        onRemoveRecipient(it.tag as GenericUser)
+    }
     addRecipientView(recipientChip)
+}
+
+fun AddRecipientsViewBinding.addMailingListView(
+    context: Context,
+    mailingList: MailingList,
+    onRemoveMailingList: OnRemoveMailingList
+) {
+    val mailingListChip = createChip(context)
+        .with(mailingList)
+    mailingListChip.setOnCloseIconClickListener {
+        removeRecipientView(it)
+        onRemoveMailingList(it.tag as MailingList)
+    }
+    addRecipientView(mailingListChip)
 }
 
 fun AddRecipientsViewBinding.addRecipientView(recipientChip: Chip) {
@@ -57,15 +78,15 @@ fun AddRecipientsViewBinding.queryAfterTextChange(action: (AutoCompletePattern) 
     }
 }
 
-fun AddRecipientsViewBinding.onSelectedRecipient(action: (UserAutoCompleteResult) -> Unit) {
+fun AddRecipientsViewBinding.onSelectedRecipient(action: (AutoCompleteResult) -> Unit) {
     addRecipients.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
         addRecipients.text.clear()
-        val selectedUser = parent.getItemAtPosition(position) as UserAutoCompleteResult
+        val selectedUser = parent.getItemAtPosition(position) as AutoCompleteResult
         action(selectedUser)
     }
 }
 
-private fun AddRecipientsViewBinding.createRecipientChip(context: Context, genericUser: GenericUser, onRemoveRecipient: OnRemoveRecipient): Chip {
+fun AddRecipientsViewBinding.createChip(context: Context): Chip {
     return Chip(context).apply {
 
         setChipDrawable(
@@ -74,20 +95,31 @@ private fun AddRecipientsViewBinding.createRecipientChip(context: Context, gener
                 ShareFragment.RECIPIENT_ATTRIBUTES,
                 ShareFragment.NO_RECIPIENT_ATTRIBUTES_RESOURCE,
                 R.style.RecipientChip
-            ))
-
-        val iconTint = ContextCompat.getColor(context, R.color.colorAccent)
-        val icon = genericUser.generateCircleLetterAvatar(context)
-            .also { DrawableCompat.setTint(it, iconTint) }
-
-        chipIcon = icon
-        text = genericUser.fullName() ?: genericUser.mail
-
-        tag = genericUser
-
-        setOnCloseIconClickListener {
-            removeRecipientView(it)
-            onRemoveRecipient(it.tag as GenericUser)
-        }
+            )
+        )
     }
+}
+
+fun Chip.with(genericUser: GenericUser): Chip {
+    val iconTint = ContextCompat.getColor(context, R.color.colorAccent)
+    val icon = genericUser.generateCircleLetterAvatar(context)
+        .also { DrawableCompat.setTint(it, iconTint) }
+
+    chipIcon = icon
+    text = genericUser.fullName() ?: genericUser.mail
+
+    tag = genericUser
+    return this
+}
+
+fun Chip.with(mailingList: MailingList): Chip {
+    val iconTint = ContextCompat.getColor(context, R.color.colorAccent)
+    val icon = mailingList.generateCircleLetterAvatar(context)
+        .also { DrawableCompat.setTint(it, iconTint) }
+
+    chipIcon = icon
+    text = mailingList.display
+
+    tag = mailingList
+    return this
 }
