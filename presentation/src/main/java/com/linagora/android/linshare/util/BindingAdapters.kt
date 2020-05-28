@@ -13,7 +13,6 @@ import arrow.core.Either
 import arrow.core.orNull
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
@@ -196,11 +195,12 @@ fun bindingUploadButton(button: Button, uploadState: Either<Failure, Success>) {
     )
 }
 
-@BindingAdapter("shareRecipients", "uploadType", requireAll = true)
-fun bindingUploadButtonText(button: Button, recipients: Set<GenericUser>, uploadType: Navigation.UploadType) {
+@BindingAdapter("shareReceiversCount", "uploadType", requireAll = true)
+fun bindingUploadButtonText(button: Button, shareReceiversCount: Int, uploadType: Navigation.UploadType) {
+    println("bindingUploadButtonText()")
     when (uploadType) {
         Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> button.setText(R.string.upload)
-        else -> recipients.takeIf { it.isNotEmpty() }
+        else -> shareReceiversCount.takeIf { it > 0 }
             ?.run { button.setText(R.string.upload_and_share) }
             ?: button.setText(R.string.upload_to_my_space)
     }

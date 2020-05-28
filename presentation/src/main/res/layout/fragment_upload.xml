@@ -150,7 +150,7 @@
             android:enabled="false"
             style="@style/UploadButton"
             app:uploadState="@{viewModel.viewState}"
-            app:shareRecipients="@{viewModel.shareRecipientsManager.recipients}"
+            app:shareReceiversCount="@{viewModel.shareRecipientsManager.shareReceiverCount}"
             app:uploadType="@{uploadType}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

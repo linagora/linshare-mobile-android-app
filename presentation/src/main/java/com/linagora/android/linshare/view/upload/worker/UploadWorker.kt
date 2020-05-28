@@ -40,6 +40,7 @@ import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.DOCUMENTS_KEY
+import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.MAILING_LISTS_KEY
 import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.RECIPIENTS_KEY
 import com.linagora.android.linshare.view.upload.controller.UploadCommand
 import com.linagora.android.linshare.view.upload.controller.UploadController
@@ -192,7 +193,8 @@ class UploadWorker(
             RESULT_MESSAGE to getSuccessMessage(success, documentRequest),
             UPLOAD_REQUEST_TYPE to inputData.getString(UPLOAD_REQUEST_TYPE),
             DOCUMENTS_KEY to listOf(getUploadedDocument(success)?.toString()).toTypedArray(),
-            RECIPIENTS_KEY to inputData.getStringArray(RECIPIENTS_KEY)
+            RECIPIENTS_KEY to inputData.getStringArray(RECIPIENTS_KEY),
+            MAILING_LISTS_KEY to inputData.getStringArray(MAILING_LISTS_KEY)
         ))
     }
 

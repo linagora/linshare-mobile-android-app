@@ -21,11 +21,19 @@ import androidx.work.WorkManager
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentUploadBinding
+import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.MailingList
+import com.linagora.android.linshare.domain.model.autocomplete.MailingListAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.SimpleAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.toGenericUser
+import com.linagora.android.linshare.domain.model.autocomplete.toMailingList
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
+import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
@@ -37,6 +45,7 @@ import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
+import com.linagora.android.linshare.util.binding.addMailingListView
 import com.linagora.android.linshare.util.binding.addRecipientView
 import com.linagora.android.linshare.util.binding.initView
 import com.linagora.android.linshare.util.binding.onSelectedRecipient
@@ -136,11 +145,17 @@ class UploadFragment : MainNavigationFragment() {
         if (args.uploadType != Navigation.UploadType.INSIDE_APP_TO_WORKGROUP) {
             with(binding.addRecipientContainer) {
                 initView()
-                queryAfterTextChange { pattern -> queryRecipientAutoComplete(pattern) }
-                onSelectedRecipient { userAutoCompleteResult ->
-                    uploadFragmentViewModel.addRecipient(userAutoCompleteResult.toGenericUser())
-                }
+                queryAfterTextChange(this@UploadFragment::queryRecipientAutoComplete)
+                onSelectedRecipient(this@UploadFragment::reactOnSelectedSuggestion)
             }
+        }
+    }
+
+    private fun reactOnSelectedSuggestion(autoCompleteResult: AutoCompleteResult) {
+        when (autoCompleteResult) {
+            is UserAutoCompleteResult -> uploadFragmentViewModel.addRecipient(autoCompleteResult.toGenericUser())
+            is SimpleAutoCompleteResult -> uploadFragmentViewModel.addRecipient(autoCompleteResult.toGenericUser())
+            is MailingListAutoCompleteResult -> uploadFragmentViewModel.addMailingList(autoCompleteResult.toMailingList())
         }
     }
 
@@ -215,13 +230,20 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
-            is AddRecipient -> binding.addRecipientContainer
-                .addRecipientView(
-                    context = requireContext(),
-                    user = viewEvent.user,
-                    onRemoveRecipient = uploadFragmentViewModel::removeRecipient)
+            is AddRecipient -> addRecipientView(viewEvent.user)
+            is AddMailingList -> addMailingListView(viewEvent.mailingList)
         }
         uploadFragmentViewModel.dispatchState(Either.right(Success.Idle))
+    }
+
+    private fun addRecipientView(user: GenericUser) {
+        binding.addRecipientContainer
+            .addRecipientView(requireContext(), user, uploadFragmentViewModel::removeRecipient)
+    }
+
+    private fun addMailingListView(mailingList: MailingList) {
+        binding.addRecipientContainer
+            .addMailingListView(requireContext(), mailingList, uploadFragmentViewModel::removeMailingList)
     }
 
     private fun setUpUploadButton(documentRequest: DocumentRequest) {
@@ -243,10 +265,18 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun createMySpaceUploadRequest(): UploadWorkerRequest {
-        return uploadFragmentViewModel.shareRecipientsManager.recipients.value
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { recipients -> UploadAndShareRequest(workManager, recipients) }
+        return uploadFragmentViewModel.shareRecipientsManager.shareReceiverCount.value
+            ?.takeIf { it > 0 }
+            ?.let { createUploadAndShareRequest() }
             ?: UploadToMySpaceRequest(workManager)
+    }
+
+    private fun createUploadAndShareRequest(): UploadAndShareRequest {
+        return UploadAndShareRequest(
+            workManager = workManager,
+            recipients = uploadFragmentViewModel.shareRecipientsManager.recipients.value ?: emptySet(),
+            mailingLists = uploadFragmentViewModel.shareRecipientsManager.mailingLists.value ?: emptySet()
+        )
     }
 
     private fun createSharedSpaceUploadRequest(
@@ -320,6 +350,6 @@ class UploadFragment : MainNavigationFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        uploadFragmentViewModel.resetRecipients()
+        uploadFragmentViewModel.resetRecipientManager()
     }
 }

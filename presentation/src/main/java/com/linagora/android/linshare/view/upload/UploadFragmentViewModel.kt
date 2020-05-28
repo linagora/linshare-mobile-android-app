@@ -3,8 +3,10 @@ package com.linagora.android.linshare.view.upload
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
+import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
+import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
@@ -41,5 +43,17 @@ class UploadFragmentViewModel @Inject constructor(
         shareRecipientsManager.removeRecipient(user)
     }
 
-    fun resetRecipients() = shareRecipientsManager.resetRecipients()
+    fun addMailingList(mailingList: MailingList) {
+        LOGGER.info("addMailingList(): $mailingList")
+        if (shareRecipientsManager.addMailingList(mailingList)) {
+            dispatchState(Either.right(AddMailingList(mailingList)))
+        }
+    }
+
+    fun removeMailingList(mailingList: MailingList) {
+        LOGGER.info("removeMailingList(): $mailingList")
+        shareRecipientsManager.removeMailingList(mailingList)
+    }
+
+    fun resetRecipientManager() = shareRecipientsManager.resetShareRecipientManager()
 }
