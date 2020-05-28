@@ -59,20 +59,27 @@
 
         </LinearLayout>
 
-        <View style="@style/DivideView"/>
-
         <LinearLayout
-            style="@style/RowLinerBottomSheetStyle"
-            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteRoles}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:contextActionVisible="@{sharedSpace.role}"
-            android:onClick="@{() -> itemContextMenu.remove(workGroupNode)}">
-            <ImageView
-                style="@style/ImageInRowLinerBottomSheetStyle"
-                android:src="@drawable/ic_delete" />
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteRoles}">
 
-            <TextView
-                style="@style/TextInRowLinerBottomSheetStyle"
-                android:text="@string/delete" />
+            <View style="@style/DivideView" />
+
+            <LinearLayout
+                style="@style/RowLinerBottomSheetStyle"
+                android:onClick="@{() -> itemContextMenu.remove(workGroupNode)}">
+
+                <ImageView
+                    style="@style/ImageInRowLinerBottomSheetStyle"
+                    android:src="@drawable/ic_delete" />
+
+                <TextView
+                    style="@style/TextInRowLinerBottomSheetStyle"
+                    android:text="@string/delete" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </layout>

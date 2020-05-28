@@ -5,12 +5,19 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode"/>
-        <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu"/>
+
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode" />
+        <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu" />
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace" />
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole" />
 
         <variable
             name="workGroupNode"
             type="WorkGroupNode" />
+
+        <variable
+            name="sharedSpace"
+            type="SharedSpace" />
 
         <variable
             name="itemContextMenu"
@@ -29,21 +36,30 @@
             layout="@layout/header_work_group_node_info_container"
             bind:workGroupNode="@{workGroupNode}"/>
 
-        <View
-            android:layout_marginTop="@dimen/padding_top_bottom_sheet"
-            style="@style/DivideView"
-            app:layout_constraintTop_toBottomOf="@id/workGroupNodeInfoContainer" />
-
         <LinearLayout
-            style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> itemContextMenu.remove(workGroupNode)}">
-            <ImageView
-                style="@style/ImageInRowLinerBottomSheetStyle"
-                android:src="@drawable/ic_delete" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_top_bottom_sheet"
+            android:orientation="vertical"
+            app:contextActionVisible="@{sharedSpace.role}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteRoles}">
 
-            <TextView
-                style="@style/TextInRowLinerBottomSheetStyle"
-                android:text="@string/delete" />
+            <View
+                style="@style/DivideView"
+                app:layout_constraintTop_toBottomOf="@id/workGroupNodeInfoContainer" />
+
+            <LinearLayout
+                style="@style/RowLinerBottomSheetStyle"
+                android:onClick="@{() -> itemContextMenu.remove(workGroupNode)}">
+
+                <ImageView
+                    style="@style/ImageInRowLinerBottomSheetStyle"
+                    android:src="@drawable/ic_delete" />
+
+                <TextView
+                    style="@style/TextInRowLinerBottomSheetStyle"
+                    android:text="@string/delete" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </layout>
