@@ -28,15 +28,16 @@
     <string name="email_is_required">Lỗi xác thực, email không đúng, hãy thử lại</string>
     <string name="wrong_url">Địa chỉ máy chủ không chính xác, hãy thử lại</string>
     <string name="unknow_error">Lỗi không xác định, hãy thử lại</string>
-    <string name="forget_account">Quên tài khoản</string>
+    <string name="logout_account">Đăng xuất tài khoản</string>
     <string name="last_login_title">Lần đăng nhập cuối:</string>
     <string name="available_space_title">Bộ nhớ khả dụng:</string>
     <string name="notification">Thông báo</string>
     <string name="available_space">%s/%s</string>
 
-    <string name="confirm_remove_account_title">Bạn muốn xóa tài khoản này ?</string>
+    <string name="confirm_remove_account_title">Bạn muốn đăng xuất tài khoản này ?</string>
     <string name="cancel">Hủy</string>
     <string name="remove">Xóa</string>
+    <string name="logout">Đăng xuất</string>
 
     <!--Notification-->
     <string name="upload_and_download_channel_name">Thông báo tải lên và tải xuống</string>
