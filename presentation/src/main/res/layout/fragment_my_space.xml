@@ -37,7 +37,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="My Space"
+                        android:text="@string/my_space"
                         android:textAlignment="center"
                         android:textColor="@color/text_with_logo_color"
                         android:textSize="@dimen/url_name_text_size" />
