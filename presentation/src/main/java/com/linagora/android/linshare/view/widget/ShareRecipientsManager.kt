@@ -1,10 +1,12 @@
 package com.linagora.android.linshare.view.widget
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 import com.linagora.android.linshare.domain.usecases.autocomplete.GetAutoCompleteSharingInteractor
 import com.linagora.android.linshare.util.Constant
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -34,6 +36,18 @@ class ShareRecipientsManager @Inject constructor(
 
     val recipients: LiveData<Set<GenericUser>> = mutableRecipients
 
+    private val mutableMailingLists = MutableLiveData<Set<MailingList>>()
+        .apply { value = HashSet() }
+
+    val mailingLists: LiveData<Set<MailingList>> = mutableMailingLists
+
+    val shareReceiverCount = MediatorLiveData<Int>()
+
+    init {
+        shareReceiverCount.addSource(recipients) { onUpdateReceiver(it, mailingLists.value) }
+        shareReceiverCount.addSource(mailingLists) { onUpdateReceiver(recipients.value, it) }
+    }
+
     suspend fun query(pattern: AutoCompletePattern) {
         queryChannel.send(pattern)
     }
@@ -59,7 +73,45 @@ class ShareRecipientsManager @Inject constructor(
             ?.also { mutableRecipients.value = it }
     }
 
-    fun resetRecipients() {
+    private fun resetRecipients() {
         mutableRecipients.value = mutableSetOf()
+    }
+
+    fun addMailingList(mailingList: MailingList): Boolean {
+        LOGGER.info("addMailingList(): $mailingList")
+        if (mutableMailingLists.value?.contains(mailingList) == true) {
+            return false
+        }
+
+        val newMailingLists = mutableMailingLists.value
+            ?.let { mutableSetOf(mailingList).plus(it) }
+
+        mutableMailingLists.value = newMailingLists
+        return true
+    }
+
+    fun removeMailingList(mailingList: MailingList) {
+        LOGGER.info("removeMailingList(): $mailingList")
+        mutableMailingLists.value?.flatMap { mutableSetOf(it) }
+            ?.minus(mailingList)
+            ?.toCollection(LinkedHashSet())
+            ?.also { mutableMailingLists.value = it }
+    }
+
+    private fun onUpdateReceiver(recipients: Set<GenericUser>?, mailingLists: Set<MailingList>?) {
+        val count = recipients?.size ?: 0
+        shareReceiverCount.postValue(mailingLists
+            ?.let { it.size + count }
+            ?: count
+        )
+    }
+
+    private fun resetMailingLists() {
+        mutableMailingLists.value = mutableSetOf()
+    }
+
+    fun resetShareRecipientManager() {
+        resetRecipients()
+        resetMailingLists()
     }
 }

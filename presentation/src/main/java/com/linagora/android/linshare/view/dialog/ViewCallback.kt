@@ -2,6 +2,7 @@ package com.linagora.android.linshare.view.dialog
 
 import android.view.View
 import com.linagora.android.linshare.domain.model.GenericUser
+import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 
 typealias OnNegativeCallback = (View) -> Unit
 
@@ -15,3 +16,5 @@ object NoOpCallback : (View) -> Unit {
 }
 
 typealias OnRemoveRecipient = (GenericUser) -> Unit
+
+typealias OnRemoveMailingList = (MailingList) -> Unit

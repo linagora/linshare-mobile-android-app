@@ -12,14 +12,23 @@ import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentShareBinding
+import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.MailingList
+import com.linagora.android.linshare.domain.model.autocomplete.MailingListAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.SimpleAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.toGenericUser
+import com.linagora.android.linshare.domain.model.autocomplete.toMailingList
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.share.ShareButtonClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.DocumentParcelable
 import com.linagora.android.linshare.model.parcelable.toDocument
+import com.linagora.android.linshare.util.binding.addMailingListView
 import com.linagora.android.linshare.util.binding.addRecipientView
 import com.linagora.android.linshare.util.binding.initView
 import com.linagora.android.linshare.util.binding.onSelectedRecipient
@@ -89,10 +98,16 @@ class ShareFragment : MainNavigationFragment() {
     private fun initAutoComplete() {
         with(binding.addRecipientContainer) {
             initView()
-            queryAfterTextChange { pattern -> search(pattern) }
-            onSelectedRecipient { userAutoCompleteResult ->
-                shareFragmentViewModel.addRecipient(userAutoCompleteResult.toGenericUser())
-            }
+            queryAfterTextChange(this@ShareFragment::search)
+            onSelectedRecipient(this@ShareFragment::reactOnSelectedSuggestion)
+        }
+    }
+
+    private fun reactOnSelectedSuggestion(autoCompleteResult: AutoCompleteResult) {
+        when (autoCompleteResult) {
+            is UserAutoCompleteResult -> shareFragmentViewModel.addRecipient(autoCompleteResult.toGenericUser())
+            is SimpleAutoCompleteResult -> shareFragmentViewModel.addRecipient(autoCompleteResult.toGenericUser())
+            is MailingListAutoCompleteResult -> shareFragmentViewModel.addMailingList(autoCompleteResult.toMailingList())
         }
     }
 
@@ -124,8 +139,8 @@ class ShareFragment : MainNavigationFragment() {
     }
 
     private fun observeRecipients() {
-        shareFragmentViewModel.recipientsManager.recipients.observe(viewLifecycleOwner, Observer { recipients ->
-            val hasRecipients = recipients.size.takeIf { it > 0 }
+        shareFragmentViewModel.recipientsManager.shareReceiverCount.observe(viewLifecycleOwner, Observer { recipientsCount ->
+            val hasRecipients = recipientsCount.takeIf { it > 0 }
                 ?.let { true }
                 ?: false
 
@@ -137,14 +152,22 @@ class ShareFragment : MainNavigationFragment() {
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
-            is AddRecipient -> binding.addRecipientContainer
-                .addRecipientView(
-                    context = requireContext(),
-                    user = viewEvent.user,
-                    onRemoveRecipient = shareFragmentViewModel::removeRecipient)
+            is AddRecipient -> addRecipientView(viewEvent.user)
+            is AddMailingList -> addMailingListView(viewEvent.mailingList)
             is ShareButtonClick -> afterShareDocument()
         }
         shareFragmentViewModel.dispatchState(Either.right(Success.Idle))
+    }
+
+    private fun addRecipientView(user: GenericUser) {
+        binding.addRecipientContainer
+            .addRecipientView(requireContext(), user, shareFragmentViewModel::removeRecipient)
+    }
+
+    private fun addMailingListView(mailingList: MailingList) {
+        binding.addRecipientContainer
+            .addMailingListView(requireContext(), mailingList, shareFragmentViewModel::removeMailingList
+        )
     }
 
     private fun clearAutoCompleteFocus() {
@@ -161,6 +184,6 @@ class ShareFragment : MainNavigationFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        shareFragmentViewModel.resetRecipients()
+        shareFragmentViewModel.resetRecipientManager()
     }
 }

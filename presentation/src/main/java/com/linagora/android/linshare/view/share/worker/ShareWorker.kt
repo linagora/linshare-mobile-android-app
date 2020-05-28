@@ -9,6 +9,7 @@ import androidx.work.workDataOf
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.GenericUser
+import com.linagora.android.linshare.domain.model.autocomplete.MailingListId
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.usecases.share.ShareDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.share.ShareViewState
@@ -43,6 +44,8 @@ class ShareWorker @Inject constructor(
         const val RECIPIENTS_KEY = "recipients"
 
         const val DOCUMENTS_KEY = "documents"
+
+        const val MAILING_LISTS_KEY = "mailingLists"
     }
 
     override suspend fun doWork(): Result {
@@ -74,14 +77,36 @@ class ShareWorker @Inject constructor(
     }
 
     private fun extractShareCreation(): ShareRequest {
-        val recipients = inputData.getStringArray(RECIPIENTS_KEY)
+        val mailingListsArg = inputData.getStringArray(MAILING_LISTS_KEY)
+        val recipientsArg = inputData.getStringArray(RECIPIENTS_KEY)
         val documents = inputData.getStringArray(DOCUMENTS_KEY)
-        require(recipients!!.isNotEmpty()) { "Can not share without recipient" }
+
+        validateShareReceiverArgument(mailingListsArg, recipientsArg)
         require(documents!!.isNotEmpty()) { "Can not share without document" }
+
+        val mailingListIds = mailingListsArg
+            ?.map { MailingListId(UUID.fromString(it)) }
+            ?.toSet()
+            ?: emptySet()
+
+        val recipients = recipientsArg
+            ?.map { GenericUser(it) }
+            ?: emptyList()
+
         return ShareRequest(
-            recipients = recipients.map { GenericUser(it) },
+            mailingListIds = mailingListIds,
+            recipients = recipients,
             documentIds = documents.map { UUID.fromString(it) }
         )
+    }
+
+    private fun validateShareReceiverArgument(
+        mailingLists: Array<String>?,
+        recipients: Array<String>?
+    ) {
+        require(!(recipients.isNullOrEmpty() && mailingLists.isNullOrEmpty())) {
+            "Can not share without receivers"
+        }
     }
 
     private suspend fun alertShareResult(message: String) {

@@ -6,6 +6,8 @@ import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.usecases.autocomplete.GetAutoCompleteSharingInteractor
 import com.linagora.android.linshare.view.widget.ShareRecipientsManager
 import com.linagora.android.testshared.ShareFixtures
+import com.linagora.android.testshared.ShareFixtures.MAILING_LIST_1
+import com.linagora.android.testshared.ShareFixtures.MAILING_LIST_2
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -81,5 +83,57 @@ class ShareRecipientsManagerTest {
         shareRecipientsManager.removeRecipient(ShareFixtures.RECIPIENT_2)
 
         assertThat(shareRecipientsManager.recipients.value).containsExactly(ShareFixtures.RECIPIENT_1)
+    }
+
+    @Test
+    fun addMailingListShouldAddMailingListToEmptyMailingLists() {
+        shareRecipientsManager.addMailingList(MAILING_LIST_1)
+
+        assertThat(shareRecipientsManager.mailingLists.value)
+            .containsExactly(MAILING_LIST_1)
+    }
+
+    @Test
+    fun addMailingListShouldNotAddDuplicateMailingList() {
+        shareRecipientsManager.addMailingList(MAILING_LIST_1)
+        shareRecipientsManager.addMailingList(MAILING_LIST_1)
+
+        assertThat(shareRecipientsManager.mailingLists.value)
+            .hasSize(1)
+        assertThat(shareRecipientsManager.mailingLists.value?.first())
+            .isEqualTo(MAILING_LIST_1)
+    }
+
+    @Test
+    fun addMailingListShouldAddMultipleMailingList() {
+        shareRecipientsManager.addMailingList(MAILING_LIST_1)
+        shareRecipientsManager.addMailingList(MAILING_LIST_2)
+
+        assertThat(shareRecipientsManager.mailingLists.value)
+            .containsExactly(MAILING_LIST_1, MAILING_LIST_2)
+    }
+
+    @Test
+    fun removeMailingListShouldNotErrorWhenMailingListsEmpty() {
+        shareRecipientsManager.removeMailingList(MAILING_LIST_1)
+
+        assertThat(shareRecipientsManager.mailingLists.value).isEmpty()
+    }
+
+    @Test
+    fun removeMailingListShouldRemoveMailingList() {
+        shareRecipientsManager.addMailingList(MAILING_LIST_1)
+        shareRecipientsManager.removeMailingList(MAILING_LIST_1)
+
+        assertThat(shareRecipientsManager.mailingLists.value).isEmpty()
+    }
+
+    @Test
+    fun removeMailingListShouldNotRemoveNotMatchedMailingList() {
+        shareRecipientsManager.addMailingList(MAILING_LIST_1)
+        shareRecipientsManager.removeMailingList(MAILING_LIST_2)
+
+        assertThat(shareRecipientsManager.mailingLists.value)
+            .containsExactly(MAILING_LIST_1)
     }
 }
