@@ -34,5 +34,6 @@ class SharedSpaceFolderContextMenuDialog(private val workGroupFolder: WorkGroupF
         sharedSpaceDocumentViewModel = getParentViewModel(viewModelFactory)
         binding.workGroupNode = workGroupFolder
         binding.itemContextMenu = sharedSpaceDocumentViewModel.itemContextMenu
+        binding.sharedSpace = sharedSpaceDocumentViewModel.currentSharedSpace.value
     }
 }
