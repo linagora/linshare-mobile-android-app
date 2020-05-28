@@ -2,12 +2,11 @@ package com.linagora.android.linshare.domain.usecases.autocomplete
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
-import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.repository.autocomplete.AutoCompleteRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.domain.utils.asListOfType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -24,17 +23,16 @@ class GetAutoCompleteSharingInteractor @Inject constructor(
 
             val autoCompleteState = Either
                 .catch { autoCompleteRepository.getAutoComplete(autoCompletePattern, AutoCompleteType.SHARING) }
-                .map { it.asListOfType<UserAutoCompleteResult>() }
                 .bimap(::AutoCompleteFailure) { getAutoCompleteState(autoCompletePattern, it) }
 
             emit(autoCompleteState)
         }
     }
 
-    private fun getAutoCompleteState(pattern: AutoCompletePattern, userAutoCompleteResults: List<UserAutoCompleteResult>?): Success.ViewState {
+    private fun getAutoCompleteState(pattern: AutoCompletePattern, userAutoCompleteResults: List<AutoCompleteResult>?): Success.ViewState {
         return userAutoCompleteResults
             ?.takeIf { it.isNotEmpty() }
-            ?.let(::UserAutoCompleteViewState)
+            ?.let(::AutoCompleteViewState)
             ?: AutoCompleteNoResult(pattern)
     }
 }

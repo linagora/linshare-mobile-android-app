@@ -6,6 +6,7 @@ import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.network.adapter.BaseErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
 import com.linagora.android.linshare.data.network.adapter.DocumentIdDeserializer
+import com.linagora.android.linshare.data.network.adapter.MailingListIdAdapter
 import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaIdAdapter
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
@@ -14,6 +15,11 @@ import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdAdapter
 import com.linagora.android.linshare.data.network.adapter.WorkGroupNodeIdAdapter
 import com.linagora.android.linshare.data.network.factory.RuntimeTypeAdapterFactory
 import com.linagora.android.linshare.domain.model.BaseErrorCode
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.MailingListAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.MailingListId
+import com.linagora.android.linshare.domain.model.autocomplete.SimpleAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
@@ -69,11 +75,30 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideLinShareRetrofit(clientBuilder: OkHttpClient.Builder): Retrofit {
-        val workGroupNodeTypeAdapterFactory = RuntimeTypeAdapterFactory
+    fun provideWorkgroupNodeTypeAdapterFactory(): RuntimeTypeAdapterFactory<WorkGroupNode> {
+        return RuntimeTypeAdapterFactory
             .of(WorkGroupNode::class.java, "type")
             .registerSubtype(WorkGroupFolder::class.java, Constant.WORK_GROUP_TYPE_FOLDER)
             .registerSubtype(WorkGroupDocument::class.java, Constant.WORK_GROUP_TYPE_DOCUMENT)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAutoCompleteResultTypeAdapterFactory(): RuntimeTypeAdapterFactory<AutoCompleteResult> {
+        return RuntimeTypeAdapterFactory
+            .of(AutoCompleteResult::class.java, "type")
+            .registerSubtype(SimpleAutoCompleteResult::class.java, Constant.AUTO_COMPLETE_RESULT_TYPE_SIMPLE)
+            .registerSubtype(UserAutoCompleteResult::class.java, Constant.AUTO_COMPLETE_RESULT_TYPE_USER)
+            .registerSubtype(MailingListAutoCompleteResult::class.java, Constant.AUTO_COMPLETE_RESULT_TYPE_MAILING_LIST)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLinShareRetrofit(
+        clientBuilder: OkHttpClient.Builder,
+        autoCompleteTypeAdapterFactory: RuntimeTypeAdapterFactory<AutoCompleteResult>,
+        workGroupNodeTypeAdapterFactory: RuntimeTypeAdapterFactory<WorkGroupNode>
+    ): Retrofit {
 
         val gson = GsonBuilder()
             .registerTypeAdapter(Date::class.java, DateLongDeserializer())
@@ -86,7 +111,9 @@ class NetworkModule {
             .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
             .registerTypeAdapter(WorkGroupNodeId::class.java, WorkGroupNodeIdAdapter())
             .registerTypeAdapter(QuotaId::class.java, QuotaIdAdapter())
+            .registerTypeAdapter(MailingListId::class.java, MailingListIdAdapter())
             .registerTypeAdapterFactory(workGroupNodeTypeAdapterFactory)
+            .registerTypeAdapterFactory(autoCompleteTypeAdapterFactory)
             .create()
 
         return Retrofit.Builder()

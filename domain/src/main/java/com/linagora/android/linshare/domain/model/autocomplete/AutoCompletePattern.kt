@@ -15,3 +15,13 @@ fun AutoCompletePattern.isEmailValid(): Boolean {
         ?.let { Patterns.EMAIL_ADDRESS.matcher(this.value).matches() }
         ?: false
 }
+
+fun AutoCompletePattern.toExternalUser(): UserAutoCompleteResult {
+    return UserAutoCompleteResult(
+        identifier = value,
+        display = value,
+        firstName = null,
+        lastName = null,
+        domain = null,
+        mail = value)
+}
