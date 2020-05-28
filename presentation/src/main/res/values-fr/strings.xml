@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">LinShare</string>
+
+    <string name="already_have_account">Vous avez déjà un compte LinShare?</string>
+    <string name="login">S\'identifier</string>
+
+    <!--Wizard-->
+    <string name="wizard_title_one">Linshare</string>
+    <string name="wizard_intro_one">Créez un espace de travail différent pour votre projet</string>
+
+    <string name="wizard_title_two">Linshare</string>
+    <string name="wizard_intro_two">Créez un espace de travail différent pour votre projet</string>
+
+    <string name="wizard_title_three">Linshare</string>
+    <string name="wizard_intro_three">Créez un espace de travail différent pour votre projet</string>
+
+    <!--Login-->
+    <string name="linshare_slogan">Stockez et partagez vos fichiers où que vous soyez</string>
+    <string name="please_enter_credential">Veuillez saisir vos données de connexion</string>
+    <string name="https">https://</string>
+    <string name="email">email</string>
+    <string name="email_title">Email:</string>
+    <string name="first_name_title">FPrénom:</string>
+    <string name="last_name_title">Nom:</string>
+    <string name="password">mot de passe</string>
+    <string name="server_not_found">Authentification échouée, serveur introuvable, veuillez réessayer</string>
+    <string name="credential_error_message">Authentification échouée, email ou mot de passe invalide, veuillez réessayer</string>
+    <string name="email_is_required">Authentification échouée, email invalide, veuillez réessayer</string>
+    <string name="wrong_url">URL du serveur invalide, veuillez réessayer</string>
+    <string name="unknow_error">Une erreur inconnue s\'est produite, veuillez réessayer</string>
+    <string name="logout_account">Oublier le compte</string>
+    <string name="last_login_title">Dernière connexion:</string>
+    <string name="available_space_title">Espace disponible:</string>
+    <string name="notification">Notification</string>
+    <string name="available_space">%s sur %s</string>
+
+    <string name="confirm_remove_account_title">Voulez-vous vraiment vous déconnecter de ce compte?</string>
+    <string name="cancel">Annuler</string>
+    <string name="remove">Supprimer</string>
+    <string name="logout">Se déconnecter</string>
+
+    <!--Notification-->
+    <string name="upload_and_download_channel_name">Transferts et Téléchargements</string>
+    <string name="upload_and_download_channel_description">Notification de transfert et de téléchargement</string>
+
+    <plurals name="file_in_waiting_list">
+        <item quantity="one" tools:ignore="ImpliedQuantity">Les fichiers sont ajoutés à la liste d\'attente.</item>
+        <item quantity="other"> %s les fichiers sont ajoutés à la liste d\'attente.</item>
+    </plurals>
+
+    <plurals name="notify_count_file_upload">
+        <item quantity="one" tools:ignore="ImpliedQuantity">Transfert de fichier</item>
+        <item quantity="other">Transfert %s de fichiers</item>
+    </plurals>
+
+    <string name="upload">Transférer</string>
+    <string name="upload_success">Transfert terminé</string>
+    <string name="upload_failed">Transfert échoué</string>
+    <string name="upload_and_share_success">Transfert et Partage terminés</string>
+    <string name="upload_and_share_failed">Transfert et Partage échoués</string>
+    <string name="upload_success_but_share_failed">Le fichier n\'est pas partagé avec succès</string>
+    <plurals name="file_is_shared_with_people">
+        <item quantity="one" tools:ignore="ImpliedQuantity">Le fichier est partagé avec 1 personne</item>
+        <item quantity="other">Le fichier est partagé avec %d personnes</item>
+    </plurals>
+    <string name="can_not_perform_upload">Impossible d\'effectuer le transfert. Veuillez réessayer</string>
+    <string name="no_more_space_avalable">Vous avez dépassé votre quota de stockage sur le serveur LinShare. Libérez de l\'espace et réessayez votre transfert.</string>
+    <string name="exceed_max_file_size">La taille du fichier transféré dépasse la limite autorisée. Veuillez essayer un autre fichier.</string>
+    <string name="extrac_info_failed">Erreur inattendue lors de la tentative d\'accès à ce document via une application tierce.</string>
+    <string name="executing">Préparer le transfert</string>
+
+    <string name="upload_file">Transférer un fichier</string>
+    <string name="upload_to_my_space">Transférer sur Mon Espace</string>
+    <string name="upload_and_share">Transférer et Partager</string>
+
+    <string name="unable_to_upload_explanation">Pour effectuer le transfert, l\'application LinShare doit pouvoir accéder aux données de stockage de votre appareil. Vous pouvez configurer l\'accès dans les préférences du système.</string>
+    <string name="go_to_setting">Aller aux préférences</string>
+    <string name="permission_refuse">Permission refusée</string>
+
+    <!--MySpace-->
+    <string name="my_space">Mon Espace</string>
+    <string name="account_details">Détails du compte</string>
+
+    <string name="unable_to_perform_download">Pour effectuer le téléchargement, l\'application LinShare doit pouvoir accéder aux données de stockage de votre appareil. Vous pouvez configurer l\'accès dans les préférences du système.</string>
+    <string name="download_failed">Téléchargement échoué</string>
+
+    <string name="download_to_device">Télécharger sur l\'appareil</string>
+    <string name="delete">Supprimer</string>
+
+    <string name="download_success">Téléchargement échoué</string>
+    <string name="error_can_not_resume_download">Impossible de reprendre le téléchargement</string>
+    <string name="error_insufficient_space">L\'appareil n\'a pas suffisamment d\'espace. Libérez de l\'espace et réessayez</string>
+    <string name="downloaded">Downloaded: %s</string>Téléchargé: %s
+
+    <string name="file_not_found">Le fichier est introuvable à télécharger.</string>
+    <string name="you_are_offline">Vous n\'êtes pas connecté</string>
+    <string name="internet_not_available">La connexion Internet n\'est pas disponible.</string>
+    <string name="file_ready_to_upload">Le fichier %s est prêt à être transféré.</string>
+    <string name="file_added_to_waiting_list">Le fichier %s est ajouté à la liste d\'attente.</string>
+    <string name="confirm_delete_file">Voulez-vous vraiment supprimer \"%s\"?</string>
+
+    <string name="last_modified">Modifié %s</string>
+
+    <string name="search_in_my_space">Rechercher dans Mon Espace</string>
+    <string name="search_no_results">Aucun résultats trouvés</string>
+    <plurals name="search_total_results">
+        <item quantity="one">%d résultat</item>
+        <item quantity="other">%d résultats</item>
+    </plurals>
+
+    <string name="preparing">En train de préparer ...</string>
+
+    <string name="quick_share">Partager rapidement</string>
+    <string name="share">Partager</string>
+    <string name="add_recipients">Ajouter des destinataires</string>
+    <string name="share_failed">Le fichier n\'est pas partagé avec succès.</string>
+    <string name="share_success">Votre fichier a été partagé avec succès.</string>
+    <string name="created">Créé %s</string>
+    <string name="received">Reçu</string>
+    <string name="received_shares">Partages reçus</string>
+    <string name="unknown_user">Utilisateur inconnu</string>
+    <string name="add_people"><i>Ajouter des personnes</i></string>
+    <string name="copy_to_my_space">Copier à Mon Espace</string>
+    <string name="copied_in_my_space">Le fichier %s a été copié dans Mon Espace</string>
+    <string name="view">Voir</string>
+    <string name="unable_to_prepare_file_for_upload">Impossible de préparer le fichier pour le transfert</string>
+    <string name="shared_space">Espace Partagé</string>
+    <string name="do_not_have_any_workgroup">Vous n\'avez pas encore de groupe de travail</string>
+    <string name="search_in_shared_space">Rechercher dans l\'Espace Partagé</string>
+
+    <string name="do_not_have_any_document">Vous n\'avez pas encore de document</string>
+
+    <string name="copy_to_my_space_error_quota_reach">Espace insuffisant dans Mon Espace pour copier</string>
+    <string name="copy_to_my_space_error_file_size_exceed">Le fichier a dépassé la taille limite.</string>
+    <string name="copy_to_my_space_error">Une erreur s\'est produite, impossible de copier.</string>
+</resources>
