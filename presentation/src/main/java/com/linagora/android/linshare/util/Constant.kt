@@ -23,4 +23,10 @@ object Constant {
     const val CLEAR_QUERY_STRING = ""
 
     const val NOT_SUBMIT_TEXT = false
+
+    const val AUTO_COMPLETE_RESULT_TYPE_SIMPLE = "simple"
+
+    const val AUTO_COMPLETE_RESULT_TYPE_USER = "user"
+
+    const val AUTO_COMPLETE_RESULT_TYPE_MAILING_LIST = "mailinglist"
 }

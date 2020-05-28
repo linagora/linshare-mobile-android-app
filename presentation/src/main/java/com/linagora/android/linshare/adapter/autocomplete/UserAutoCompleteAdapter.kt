@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.fullName
 import com.linagora.android.linshare.model.resources.LayoutId
@@ -15,10 +16,12 @@ import com.linagora.android.linshare.util.getFirstLetter
 import java.util.concurrent.atomic.AtomicReference
 
 class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) :
-    ArrayAdapter<UserAutoCompleteResult>(context, layoutId.layoutResId) {
+    ArrayAdapter<AutoCompleteResult>(context, layoutId.layoutResId) {
 
     companion object {
         private const val NO_SUGGESTION_ITEM = 1
+
+        private const val DEFAULT_AVATAR_CHARACTER = "U"
     }
 
     enum class StateSuggestionUser {
@@ -27,11 +30,11 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    private var suggestions: List<UserAutoCompleteResult> = ArrayList()
+    private var suggestions: List<AutoCompleteResult> = ArrayList()
 
     private val stateSuggestions = AtomicReference(StateSuggestionUser.NOT_FOUND)
 
-    override fun getItem(position: Int): UserAutoCompleteResult? {
+    override fun getItem(position: Int): AutoCompleteResult? {
         return suggestions.takeIf { suggestions.isNotEmpty() }
             ?.let { suggestions[position] }
     }
@@ -62,26 +65,40 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
         return inflatedView
     }
 
-    private fun bindingAvatar(avatarTextView: TextView, item: UserAutoCompleteResult?) {
+    private fun bindingAvatar(avatarTextView: TextView, item: AutoCompleteResult?) {
         setVisibleView(avatarTextView)
         avatarTextView.text = getAvatarCharacter(item)
     }
 
-    private fun bindingName(nameTextView: TextView, item: UserAutoCompleteResult?) {
+    private fun bindingName(nameTextView: TextView, autoCompleteResult: AutoCompleteResult?) {
         setVisibleView(nameTextView)
-        nameTextView.text = item?.fullName() ?: item?.display
+        nameTextView.text = getSuggestionName(autoCompleteResult)
     }
 
-    private fun bindingMail(mailTextView: TextView, item: UserAutoCompleteResult?) {
+    private fun getSuggestionName(autoCompleteResult: AutoCompleteResult?): String? {
+        return when (autoCompleteResult) {
+            is UserAutoCompleteResult -> autoCompleteResult.fullName() ?: autoCompleteResult.display
+            else -> autoCompleteResult?.display
+        }
+    }
+
+    private fun bindingMail(mailTextView: TextView, item: AutoCompleteResult?) {
         val (textColorId, textContent) =
             when (stateSuggestions.get()) {
                 StateSuggestionUser.NOT_FOUND -> Pair(R.color.error_border_color, mailTextView.context.getString(R.string.unknown_user))
                 StateSuggestionUser.EXTERNAL_USER -> Pair(R.color.file_name_color, item?.display)
-                else -> Pair(R.color.file_name_color, item?.mail ?: item?.display)
+                else -> Pair(R.color.file_name_color, getSuggestionMail(item))
             }
 
         mailTextView.setTextColor(ContextCompat.getColor(mailTextView.context, textColorId))
         mailTextView.text = textContent
+    }
+
+    private fun getSuggestionMail(autoCompleteResult: AutoCompleteResult?): String? {
+        return when (autoCompleteResult) {
+            is UserAutoCompleteResult -> autoCompleteResult.mail ?: autoCompleteResult.display
+            else -> autoCompleteResult?.display
+        }
     }
 
     private fun setVisibleView(view: View) {
@@ -90,13 +107,21 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
             ?: View.VISIBLE
     }
 
-    private fun getAvatarCharacter(userAutoCompleteResult: UserAutoCompleteResult?): String {
-        return userAutoCompleteResult?.firstName?.getFirstLetter()
-            ?: userAutoCompleteResult?.display?.getFirstLetter()
-            ?: "U"
+    private fun getAvatarCharacter(autoCompleteResult: AutoCompleteResult?): String {
+        return when (autoCompleteResult) {
+            is UserAutoCompleteResult -> getAvatarForUser(autoCompleteResult)
+            else -> autoCompleteResult?.display?.getFirstLetter()
+                ?: DEFAULT_AVATAR_CHARACTER
+        }
     }
 
-    fun submitList(newSuggestions: List<UserAutoCompleteResult>) {
+    private fun getAvatarForUser(userAutoCompleteResult: UserAutoCompleteResult): String {
+        return userAutoCompleteResult.firstName?.getFirstLetter()
+            ?: userAutoCompleteResult.display.getFirstLetter()
+            ?: DEFAULT_AVATAR_CHARACTER
+    }
+
+    fun submitList(newSuggestions: List<AutoCompleteResult>) {
         suggestions = newSuggestions
     }
 

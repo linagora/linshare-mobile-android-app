@@ -2,6 +2,8 @@ package com.linagora.android.testshared
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
+import com.linagora.android.linshare.domain.model.autocomplete.MailingList
+import com.linagora.android.linshare.domain.model.autocomplete.MailingListId
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.share.ShareRequest
@@ -25,12 +27,28 @@ object ShareFixtures {
         lastName = "Smith"
     )
 
+    private val MAILING_LIST_ID_1 = MailingListId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa"))
+
+    val MAILING_LIST_1 = MailingList(
+        display = "Contact 1",
+        mailingListId = MAILING_LIST_ID_1
+    )
+
+    private val MAILING_LIST_ID_2 = MailingListId(UUID.fromString("6c0e1f35-89e5-6bc3-a8d4-156ec8074beb"))
+
+    val MAILING_LIST_2 = MailingList(
+        display = "Contact 2",
+        mailingListId = MAILING_LIST_ID_2
+    )
+
     val SHARE_CREATION_1 = ShareRequest(
+        mailingListIds = setOf(MAILING_LIST_ID_1),
         recipients = listOf(RECIPIENT_1),
         documentIds = listOf(TestFixtures.Documents.DOCUMENT_ID.uuid)
     )
 
     val SHARE_CREATION_2 = ShareRequest(
+        mailingListIds = setOf(MAILING_LIST_ID_1, MAILING_LIST_ID_2),
         recipients = listOf(RECIPIENT_1, RECIPIENT_2),
         documentIds = listOf(TestFixtures.Documents.DOCUMENT_ID.uuid)
     )
