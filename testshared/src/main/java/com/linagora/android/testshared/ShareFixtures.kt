@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 import com.linagora.android.linshare.domain.model.autocomplete.MailingListId
+import com.linagora.android.linshare.domain.model.contact.SimpleContact
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.share.ShareRequest
@@ -100,4 +101,12 @@ object ShareFixtures {
     val ADD_RECIPIENT_1_STATE = Either.right(AddRecipient(RECIPIENT_1))
 
     val ADD_RECIPIENT_2_STATE = Either.right(AddRecipient(RECIPIENT_2))
+
+    val CONTACT_1 = SimpleContact("Barbra Adkin", "badkin@hotmail.com")
+
+    val CONTACT_2 = SimpleContact("Barrett Toyama", "barrett.toyama@toyama.org")
+
+    val CONTACT_3 = SimpleContact("Glen Bartolet", "glen_bartolet@hotmail.com")
+
+    val CONTACT_4 = SimpleContact("Stephaine Barfield", "stephaine@barfield.com")
 }

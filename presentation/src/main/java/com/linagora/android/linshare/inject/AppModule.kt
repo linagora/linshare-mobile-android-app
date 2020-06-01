@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.inject
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -153,5 +154,11 @@ open class AppModule {
         viewStateStore: ViewStateStore
     ): UploadController {
         return UploadController(context, uploadInteractor, uploadToSharedSpaceInteractor, viewStateStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideContentResolver(context: Context): ContentResolver {
+        return context.contentResolver
     }
 }
