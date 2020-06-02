@@ -8,6 +8,7 @@ import com.linagora.android.linshare.domain.model.contact.SimpleContact
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.share.ShareRequest
+import com.linagora.android.linshare.domain.usecases.autocomplete.ContactSuggestionSuccess
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesViewState
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.share.ShareViewState
@@ -109,4 +110,8 @@ object ShareFixtures {
     val CONTACT_3 = SimpleContact("Glen Bartolet", "glen_bartolet@hotmail.com")
 
     val CONTACT_4 = SimpleContact("Stephaine Barfield", "stephaine@barfield.com")
+
+    val CONTACT_SUGGESTION_RESULTS = listOf(CONTACT_1, CONTACT_2, CONTACT_3, CONTACT_4)
+
+    val CONTACT_SUGGESTION_STATE = Either.Right(ContactSuggestionSuccess(CONTACT_SUGGESTION_RESULTS))
 }

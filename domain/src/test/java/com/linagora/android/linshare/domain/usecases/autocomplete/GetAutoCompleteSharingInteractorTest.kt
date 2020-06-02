@@ -49,8 +49,8 @@ class GetAutoCompleteSharingInteractorTest {
             .thenAnswer { emptyList<UserAutoCompleteResult>() }
 
         assertThat(autoCompleteSharingInteractor(AutoCompletePattern("invalid"))
-            .map { it }
-            .toList(ArrayList()))
+                .map { it }
+                .toList(ArrayList()))
             .containsExactly(LOADING_STATE, NO_RESULT_USER_AUTOCOMPLETE_STATE)
     }
 }
