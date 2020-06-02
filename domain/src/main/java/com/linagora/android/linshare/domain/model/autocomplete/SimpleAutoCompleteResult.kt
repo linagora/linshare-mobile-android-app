@@ -8,5 +8,5 @@ data class SimpleAutoCompleteResult(
 ) : AutoCompleteResult
 
 fun SimpleAutoCompleteResult.toGenericUser(): GenericUser {
-    return GenericUser(mail = display)
+    return GenericUser(mail = identifier, firstName = display)
 }

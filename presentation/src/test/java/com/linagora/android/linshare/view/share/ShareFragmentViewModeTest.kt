@@ -5,7 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import arrow.core.Either
 import com.linagora.android.linshare.TestApplication
-import com.linagora.android.linshare.domain.usecases.autocomplete.GetAutoCompleteSharingInteractor
+import com.linagora.android.linshare.domain.usecases.autocomplete.GetReceiverSuggestionInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
@@ -37,7 +37,7 @@ class ShareFragmentViewModeTest {
     lateinit var viewObserver: Observer<Either<Failure, Success>>
 
     @Mock
-    lateinit var getAutoCompleteSharingInteractor: GetAutoCompleteSharingInteractor
+    lateinit var getReceiverSuggestionInteractor: GetReceiverSuggestionInteractor
 
     private lateinit var shareRecipientsManager: ShareRecipientsManager
 
@@ -46,7 +46,7 @@ class ShareFragmentViewModeTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        shareRecipientsManager = ShareRecipientsManager(getAutoCompleteSharingInteractor)
+        shareRecipientsManager = ShareRecipientsManager(getReceiverSuggestionInteractor)
         shareFragmentViewModel = ShareFragmentViewModel(
             application = TestApplication(),
             dispatcherProvider = provideFakeCoroutinesDispatcherProvider(TestCoroutineDispatcher()),

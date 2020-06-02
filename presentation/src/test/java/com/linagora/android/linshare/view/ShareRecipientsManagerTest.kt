@@ -3,7 +3,7 @@ package com.linagora.android.linshare.view
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.domain.usecases.autocomplete.GetAutoCompleteSharingInteractor
+import com.linagora.android.linshare.domain.usecases.autocomplete.GetReceiverSuggestionInteractor
 import com.linagora.android.linshare.view.widget.ShareRecipientsManager
 import com.linagora.android.testshared.ShareFixtures
 import com.linagora.android.testshared.ShareFixtures.MAILING_LIST_1
@@ -24,14 +24,14 @@ class ShareRecipientsManagerTest {
     val rule = InstantTaskExecutorRule()
 
     @Mock
-    lateinit var getAutoCompleteSharingInteractor: GetAutoCompleteSharingInteractor
+    lateinit var getReceiverSuggestionInteractor: GetReceiverSuggestionInteractor
 
     private lateinit var shareRecipientsManager: ShareRecipientsManager
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        shareRecipientsManager = ShareRecipientsManager(getAutoCompleteSharingInteractor)
+        shareRecipientsManager = ShareRecipientsManager(getReceiverSuggestionInteractor)
     }
 
     @Test
