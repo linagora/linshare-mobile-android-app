@@ -12,5 +12,7 @@ data class GenericUser(
 
 fun GenericUser.fullName(): String? {
     return firstName?.takeIf { it.isNotBlank() }
-        ?.let { "$it $lastName" }
+        ?.let { firstName -> lastName
+            ?.let { "$firstName $it" }
+            ?: firstName }
 }

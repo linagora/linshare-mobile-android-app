@@ -35,23 +35,24 @@ class GetReceiverSuggestionInteractor @Inject constructor(
         val contactSuggestionCombine = contactSuggestionState.combineK(autoCompleteState)
 
         return when {
-            autoCompleteCombine == Either.right(Success.Loading) -> transformCombineState(
-                contactSuggestionCombine,
-                autoCompleteState,
-                contactSuggestionState
-            )
-            contactSuggestionCombine == Either.right(Success.Loading) -> transformCombineState(
-                autoCompleteCombine,
-                autoCompleteState,
-                contactSuggestionState
-            )
-            autoCompleteState.exists { it is AutoCompleteViewState } && contactSuggestionState.exists { it is ContactSuggestionSuccess } -> {
+            autoCompleteCombine == Either.right(Success.Loading) ->
+                transformCombineState(
+                    contactSuggestionCombine,
+                    autoCompleteState,
+                    contactSuggestionState
+                )
+            contactSuggestionCombine == Either.right(Success.Loading) ->
+                transformCombineState(
+                    autoCompleteCombine,
+                    autoCompleteState,
+                    contactSuggestionState
+                )
+            autoCompleteState.exists { it is AutoCompleteViewState } || contactSuggestionState.exists { it is ContactSuggestionSuccess } ->
                 transformCombineState(
                     Either.right(CombineReceiverSuggestion),
                     autoCompleteState,
                     contactSuggestionState
                 )
-            }
             else -> Either.left(ReceiverSuggestionNoResult(autoCompletePattern))
         }
     }
@@ -74,7 +75,6 @@ class GetReceiverSuggestionInteractor @Inject constructor(
             else -> success
         }
     }
-
 
     private fun combineReceiverSuggestionItem(
         autoCompleteState: Either<Failure, Success>,

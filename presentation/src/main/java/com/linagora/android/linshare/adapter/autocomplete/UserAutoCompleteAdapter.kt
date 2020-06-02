@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.SimpleAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.fullName
 import com.linagora.android.linshare.model.resources.LayoutId
@@ -97,6 +98,7 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
     private fun getSuggestionMail(autoCompleteResult: AutoCompleteResult?): String? {
         return when (autoCompleteResult) {
             is UserAutoCompleteResult -> autoCompleteResult.mail ?: autoCompleteResult.display
+            is SimpleAutoCompleteResult -> autoCompleteResult.identifier
             else -> autoCompleteResult?.display
         }
     }
@@ -123,10 +125,12 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
 
     fun submitList(newSuggestions: List<AutoCompleteResult>) {
         suggestions = newSuggestions
+        notifyDataSetChanged()
     }
 
     fun submitStateSuggestions(state: StateSuggestionUser) {
         stateSuggestions.set(state)
+        notifyDataSetChanged()
     }
 
     private fun inflateView(parent: ViewGroup): Pair<View, UserAutoCompleteViewHolder> {

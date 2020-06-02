@@ -7,7 +7,7 @@ import androidx.lifecycle.asLiveData
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
 import com.linagora.android.linshare.domain.model.autocomplete.MailingList
-import com.linagora.android.linshare.domain.usecases.autocomplete.GetAutoCompleteSharingInteractor
+import com.linagora.android.linshare.domain.usecases.autocomplete.GetReceiverSuggestionInteractor
 import com.linagora.android.linshare.util.Constant
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class ShareRecipientsManager @Inject constructor(
-    private val getAutoCompleteSharingInteractor: GetAutoCompleteSharingInteractor
+    private val getReceiverSuggestionInteractor: GetReceiverSuggestionInteractor
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ShareRecipientsManager::class.java)
@@ -27,7 +27,7 @@ class ShareRecipientsManager @Inject constructor(
 
     private val queryState = queryChannel.asFlow()
         .debounce(Constant.QUERY_INTERVAL_MS)
-        .flatMapLatest { getAutoCompleteSharingInteractor(it) }
+        .flatMapLatest { getReceiverSuggestionInteractor(it) }
 
     val suggestions = queryState.asLiveData()
 
