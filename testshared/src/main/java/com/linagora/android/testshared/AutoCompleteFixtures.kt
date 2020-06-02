@@ -27,8 +27,10 @@ object AutoCompleteFixtures {
         mail = "user6@linshare.org"
     )
 
-    val USER_AUTOCOMPLETE_STATE = Either.right(
-        AutoCompleteViewState(listOf(USER_AUTOCOMPLETE_1, USER_AUTOCOMPLETE_2)))
+    val USER_AUTOCOMPLETE_RESULTS = listOf(USER_AUTOCOMPLETE_1, USER_AUTOCOMPLETE_2)
 
-    val NO_RESULT_USER_AUTOCOMPLETE_STATE = Either.right(AutoCompleteNoResult(AutoCompletePattern("invalid")))
+    val USER_AUTOCOMPLETE_STATE = Either.right(
+        AutoCompleteViewState(USER_AUTOCOMPLETE_RESULTS))
+
+    val NO_RESULT_USER_AUTOCOMPLETE_STATE = Either.left(AutoCompleteNoResult(AutoCompletePattern("invalid")))
 }
