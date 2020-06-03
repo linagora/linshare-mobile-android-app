@@ -61,6 +61,7 @@ android {
 
     buildTypes {
         develop {
+            applicationIdSuffix ".develop"
             debuggable true
             minifyEnabled true
             shrinkResources true
@@ -70,6 +71,9 @@ android {
                     "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
             signingConfig signingConfigs.debug
             applicationVariants.all { variant -> renameAPK(variant, defaultConfig, name) }
+        }
+        debug {
+            applicationIdSuffix ".debug"
         }
         release {
             minifyEnabled true
