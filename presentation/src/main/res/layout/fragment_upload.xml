@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <import type="com.linagora.android.linshare.domain.model.document.DocumentRequest"/>
+        <import type="com.linagora.android.linshare.model.upload.UploadDocumentRequest"/>
         <import type="com.linagora.android.linshare.view.Navigation.UploadType"/>
         <import type="android.view.View"/>
 
@@ -11,8 +11,8 @@
             type="UploadType" />
 
         <variable
-            name="document"
-            type="DocumentRequest" />
+            name="uploadDocument"
+            type="UploadDocumentRequest" />
 
         <variable
             name="viewModel"
@@ -70,7 +70,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:uploadErrorStateIcon="@{viewModel.viewState}"
-                    app:documentIcon="@{document}"/>
+                    app:documentIcon="@{uploadDocument}"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/uploadProgress"
@@ -95,7 +95,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/uploadSize"
                     app:layout_constraintStart_toEndOf="@+id/uploadIcon"
                     app:layout_constraintTop_toTopOf="@id/uploadIcon"
-                    app:uploadInfo="@{document}"
+                    app:uploadInfo="@{uploadDocument}"
                     app:uploadErrorStateInfo="@{viewModel.viewState}"/>
 
                 <TextView
@@ -107,7 +107,7 @@
                     app:layout_constraintBaseline_toBaselineOf="@+id/uploadInfo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/uploadInfo"
-                    app:uploadSize="@{document}" />
+                    app:uploadSize="@{uploadDocument}" />
 
                 <TextView
                     android:id="@+id/uploadErrorMessage"
@@ -154,7 +154,8 @@
             app:uploadType="@{uploadType}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{() -> viewModel.onUploadButtonClick(uploadDocument)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
