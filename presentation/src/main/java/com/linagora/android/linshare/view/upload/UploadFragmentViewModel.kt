@@ -4,10 +4,10 @@ import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.MailingList
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
+import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.widget.ShareRecipientsManager
@@ -25,9 +25,9 @@ class UploadFragmentViewModel @Inject constructor(
         private val LOGGER = LoggerFactory.getLogger(UploadFragmentViewModel::class.java)
     }
 
-    fun checkAccountQuota(documentRequest: DocumentRequest) {
+    fun checkAccountQuota(documentRequest: UploadDocumentRequest) {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(enoughAccountQuotaInteractor(documentRequest))
+            consumeStates(enoughAccountQuotaInteractor(documentRequest.uploadFileSize))
         }
     }
 
@@ -53,6 +53,10 @@ class UploadFragmentViewModel @Inject constructor(
     fun removeMailingList(mailingList: MailingList) {
         LOGGER.info("removeMailingList(): $mailingList")
         shareRecipientsManager.removeMailingList(mailingList)
+    }
+
+    fun onUploadButtonClick(uploadDocumentRequest: UploadDocumentRequest) {
+        dispatchState(Either.right(OnUploadButtonClick(uploadDocumentRequest)))
     }
 
     fun resetRecipientManager() = shareRecipientsManager.resetShareRecipientManager()

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingEnd="@dimen/progress_dialog_padding_side"
+        android:paddingStart="@dimen/progress_dialog_padding_side"
+        android:paddingTop="@dimen/progress_dialog_padding_vertical"
+        android:paddingBottom="@dimen/progress_dialog_padding_vertical"
+        android:background="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/uploadProgressBar"
+            android:layout_width="@dimen/upload_progress_size"
+            android:layout_height="@dimen/upload_progress_size"
+            android:indeterminateTint="@color/white"
+            android:indeterminateDrawable="@drawable/progress_circular_drawable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/progress_dialog_margin_top"
+            app:layout_constraintTop_toBottomOf="@id/uploadProgressBar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/prepare_create_upload_request"
+            android:textColor="@color/white"
+            android:textSize="@dimen/progress_dialog_message_text_size"
+            style="@style/Label" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

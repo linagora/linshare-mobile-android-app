@@ -42,6 +42,8 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.toQuotaId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
+import com.linagora.android.linshare.model.upload.UploadDocumentRequest
+import com.linagora.android.linshare.model.upload.toDocumentRequest
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
@@ -50,15 +52,16 @@ import com.linagora.android.linshare.util.binding.addRecipientView
 import com.linagora.android.linshare.util.binding.initView
 import com.linagora.android.linshare.util.binding.onSelectedRecipient
 import com.linagora.android.linshare.util.binding.queryAfterTextChange
-import com.linagora.android.linshare.util.createTempFile
+import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.dismissKeyboard
-import com.linagora.android.linshare.util.getDocumentRequest
+import com.linagora.android.linshare.util.getUploadDocumentRequest
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.dialog.UploadProgressDialog
 import com.linagora.android.linshare.view.upload.request.UploadAndShareRequest
 import com.linagora.android.linshare.view.upload.request.UploadToMySpaceRequest
 import com.linagora.android.linshare.view.upload.request.UploadToSharedSpaceRequest
@@ -67,7 +70,6 @@ import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.F
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_NAME_INPUT_KEY
 import com.linagora.android.linshare.view.upload.worker.UploadWorker.Companion.FILE_PATH_INPUT_KEY
 import com.linagora.android.linshare.view.widget.makeCustomToast
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
@@ -94,8 +96,6 @@ class UploadFragment : MainNavigationFragment() {
     @Inject
     lateinit var dispatcherProvider: CoroutinesDispatcherProvider
 
-    private lateinit var uploadScoped: CoroutineScope
-
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
 
@@ -105,16 +105,12 @@ class UploadFragment : MainNavigationFragment() {
 
     private val args: UploadFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        uploadScoped = CoroutineScope(dispatcherProvider.main)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        LOGGER.info("onCreateView()")
         binding = FragmentUploadBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.uploadType = args.uploadType
@@ -163,6 +159,7 @@ class UploadFragment : MainNavigationFragment() {
         uploadFragmentViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             state.map { success -> when (success) {
                 is Success.ViewEvent -> reactToViewEvent(success)
+                is Success.ViewState -> reactToViewState(success)
             } }
         })
     }
@@ -170,7 +167,7 @@ class UploadFragment : MainNavigationFragment() {
     private fun receiveFile() {
         uploadFragmentViewModel.dispatchState(Either.right(PreUploadExecuting))
 
-        uploadScoped.launch(dispatcherProvider.io) {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             runCatching { extractArgument() }
                 .getOrElse(this@UploadFragment::handlePreUploadError)
         }
@@ -180,8 +177,8 @@ class UploadFragment : MainNavigationFragment() {
         LOGGER.info("extractArgument()")
         val bundle = requireArguments()
         bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
-            ?.let { uri -> buildDocumentRequest(uri) }
-            ?.let(this@UploadFragment::bindingData)
+            ?.let { uri -> buildUploadDocumentRequest(uri) }
+            ?.let { uploadFragmentViewModel.dispatchState(Either.right(ExtractInfoSuccess(it))) }
     }
 
     private fun handlePreUploadError(throwable: Throwable) {
@@ -192,14 +189,14 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun handleBuildDocumentRequestFailed(failure: Failure.FeatureFailure) {
-        uploadScoped.launch(dispatcherProvider.main) {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             uploadFragmentViewModel.dispatchState(Either.left(failure))
         }
     }
 
-    private suspend fun buildDocumentRequest(uri: Uri): DocumentRequest {
-        return withContext(uploadScoped.coroutineContext + dispatcherProvider.io) {
-            val projection = arrayOf(OpenableColumns.DISPLAY_NAME, Media.MIME_TYPE)
+    private suspend fun buildUploadDocumentRequest(uri: Uri): UploadDocumentRequest {
+        return withContext(viewLifecycleOwner.lifecycleScope.coroutineContext + dispatcherProvider.io) {
+            val projection = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, Media.MIME_TYPE)
             requireContext().contentResolver
                 .query(uri, projection, ALL_ROWS_SELECTION, EMPTY_SELECTION_ARGS, DEFAULT_SORT_ORDER)
                 ?.use { cursor -> extractCursor(uri, cursor) }
@@ -207,19 +204,26 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
-    private fun extractCursor(uri: Uri, cursor: Cursor): DocumentRequest {
+    private fun extractCursor(uri: Uri, cursor: Cursor): UploadDocumentRequest {
         return takeIf { cursor.moveToFirst() }
-            ?.let { cursor.getDocumentRequest(uri.createTempFile(requireContext())) }
+            ?.let { cursor.getUploadDocumentRequest(uri) }
             ?: throw EmptyDocumentException
     }
 
-    private fun bindingData(documentRequest: DocumentRequest) {
-        uploadScoped.launch(dispatcherProvider.main) {
-            binding.document = documentRequest
-            if (mainActivityViewModel.internetAvailable.value == NetworkConnectivity.CONNECTED)
-                uploadFragmentViewModel.checkAccountQuota(documentRequest)
-            setUpUploadButton(documentRequest)
+    private fun doAfterPreExecuteUpload(uploadDocumentRequest: UploadDocumentRequest) {
+        bindingData(uploadDocumentRequest)
+        checkAccountQuota(uploadDocumentRequest)
+    }
+
+    private fun bindingData(uploadDocumentRequest: UploadDocumentRequest) {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            binding.uploadDocument = uploadDocumentRequest
         }
+    }
+
+    private fun checkAccountQuota(uploadDocumentRequest: UploadDocumentRequest) {
+        if (mainActivityViewModel.internetAvailable.value == NetworkConnectivity.CONNECTED)
+            uploadFragmentViewModel.checkAccountQuota(uploadDocumentRequest)
     }
 
     private fun queryRecipientAutoComplete(autoCompletePattern: AutoCompletePattern) {
@@ -228,10 +232,19 @@ class UploadFragment : MainNavigationFragment() {
         }
     }
 
+    private fun reactToViewState(viewState: Success.ViewState) {
+        LOGGER.info("reactToViewState(): $viewState")
+        when (viewState) {
+            is ExtractInfoSuccess -> doAfterPreExecuteUpload(viewState.uploadDocumentRequest)
+            is BuildDocumentRequestSuccess -> executeUpload(viewState.documentRequest)
+        }
+    }
+
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is AddRecipient -> addRecipientView(viewEvent.user)
             is AddMailingList -> addMailingListView(viewEvent.mailingList)
+            is OnUploadButtonClick -> preUpload(viewEvent.uploadDocumentRequest)
         }
         uploadFragmentViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -246,15 +259,32 @@ class UploadFragment : MainNavigationFragment() {
             .addMailingListView(requireContext(), mailingList, uploadFragmentViewModel::removeMailingList)
     }
 
-    private fun setUpUploadButton(documentRequest: DocumentRequest) {
-        binding.btnUpload.setOnClickListener {
-            LOGGER.info("setUpUploadButton(): upload ${documentRequest.file} - ${documentRequest.file.length()}")
-            val inputData = createInputDataForUploadFile(documentRequest)
-            createUploadRequest().execute(inputData)
+    private fun preUpload(uploadDocumentRequest: UploadDocumentRequest) {
+        LOGGER.info("executeUpload(): ${uploadDocumentRequest.uploadFileName} - ${uploadDocumentRequest.uploadFileSize}")
+        dismissUploadProgressDialog()
+        UploadProgressDialog()
+            .show(childFragmentManager, UploadProgressDialog.TAG)
+        viewLifecycleOwner.lifecycleScope.launch(dispatcherProvider.io) {
+            val documentRequest = uploadDocumentRequest
+                .toDocumentRequest(requireContext())
 
-            alertStartToUpload(1)
-            navigateAfterUpload()
+            uploadFragmentViewModel.dispatchUIState(Either.right(
+                BuildDocumentRequestSuccess(documentRequest)))
         }
+    }
+
+    private fun executeUpload(documentRequest: DocumentRequest) {
+        dismissUploadProgressDialog()
+
+        val inputData = createInputDataForUploadFile(documentRequest)
+        createUploadRequest().execute(inputData)
+
+        alertStartToUpload(1)
+        navigateAfterUpload()
+    }
+
+    private fun dismissUploadProgressDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(UploadProgressDialog.TAG)
     }
 
     private fun createUploadRequest(): UploadWorkerRequest {

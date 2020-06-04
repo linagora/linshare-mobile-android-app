@@ -109,6 +109,7 @@
     </plurals>
 
     <string name="preparing">Preparing ...</string>
+    <string name="prepare_create_upload_request">Preparing file, please wait.</string>
 
     <string name="quick_share">Quick Share</string>
     <string name="share">Share</string>
