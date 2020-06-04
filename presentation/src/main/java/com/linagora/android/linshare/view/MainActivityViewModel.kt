@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadContact
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.permission.ReadContactPermission
 import com.linagora.android.linshare.permission.WriteStoragePermission
@@ -112,15 +113,20 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun shouldShowReadContactPermissionRequest(activity: Activity) {
-        shouldShowPermissionRequest.value = Initial
-        viewModelScope.launch(dispatcherProvider.io) {
-            val shouldShow = readContactPermission.shouldShowPermissionRequest(
-                readContactPermission.systemShouldShowPermissionRequest(activity))
-            shouldShowPermissionRequest.postValue(shouldShow)
+        if (shouldShowPermissionRequest.value != ShouldNotShowReadContact) {
+            shouldShowPermissionRequest.value = Initial
+            viewModelScope.launch(dispatcherProvider.io) {
+                val shouldShow = readContactPermission.shouldShowPermissionRequest(
+                    readContactPermission.systemShouldShowPermissionRequest(activity)
+                )
+                shouldShowPermissionRequest.postValue(shouldShow)
+            }
         }
     }
 
     fun setActionForReadContactPermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction) {
+        previousUserPermissionAction.takeIf { it == PreviousUserPermissionAction.DENIED }
+            ?.let { shouldShowPermissionRequest.value = ShouldNotShowReadContact }
         viewModelScope.launch(dispatcherProvider.io) {
             readContactPermission.setActionForPermissionRequest(previousUserPermissionAction)
         }
