@@ -54,6 +54,11 @@
     <dimen name="item_upload_container_margin_side">12dp</dimen>
     <dimen name="upload_container_padding_top">8dp</dimen>
     <dimen name="upload_icon_size">56dp</dimen>
+    <dimen name="upload_progress_size">48dp</dimen>
+    <dimen name="progress_dialog_padding_side">20dp</dimen>
+    <dimen name="progress_dialog_padding_vertical">16dp</dimen>
+    <dimen name="progress_dialog_margin_top">12dp</dimen>
+    <dimen name="progress_dialog_message_text_size">16sp</dimen>
 
     <!-- permission popup -->
     <dimen name="request_permission_popup_padding">24dp</dimen>

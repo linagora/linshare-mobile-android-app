@@ -3,6 +3,7 @@ package com.linagora.android.linshare.view.upload
 import androidx.lifecycle.ViewModel
 import com.linagora.android.linshare.inject.annotation.FragmentScoped
 import com.linagora.android.linshare.inject.annotation.ViewModelKey
+import com.linagora.android.linshare.view.dialog.UploadProgressDialog
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -19,4 +20,8 @@ internal abstract class UploadFragmentModule {
     @IntoMap
     @ViewModelKey(UploadFragmentViewModel::class)
     internal abstract fun bindUploadFragmentViewModel(viewModel: UploadFragmentViewModel): ViewModel
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeProgressUploadDialog(): UploadProgressDialog
 }

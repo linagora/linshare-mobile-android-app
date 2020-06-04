@@ -110,6 +110,7 @@
     </plurals>
 
     <string name="preparing">En train de préparer ...</string>
+    <string name="prepare_create_upload_request">En train de préparer le fichier, veuillez patienter.</string>
 
     <string name="quick_share">Partager rapidement</string>
     <string name="share">Partager</string>
