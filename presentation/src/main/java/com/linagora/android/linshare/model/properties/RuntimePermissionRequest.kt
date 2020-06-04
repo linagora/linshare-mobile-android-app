@@ -11,4 +11,8 @@ sealed class RuntimePermissionRequest {
     abstract class WriteStoragePermissionRequest : RuntimePermissionRequest()
     object ShouldShowWriteStorage : WriteStoragePermissionRequest()
     object ShouldNotShowWriteStorage : WriteStoragePermissionRequest()
+
+    abstract class ReadContactPermissionRequest : RuntimePermissionRequest()
+    object ShouldShowReadContact : ReadContactPermissionRequest()
+    object ShouldNotShowReadContact : ReadContactPermissionRequest()
 }

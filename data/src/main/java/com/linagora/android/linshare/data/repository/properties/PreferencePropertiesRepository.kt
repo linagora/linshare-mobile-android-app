@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.data.repository.properties
 
 import android.content.SharedPreferences
+import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository.Key.RECENT_ACTION_READ_CONTACT_PERMISSION_KEY
 import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository.Key.RECENT_ACTION_READ_STORAGE_PERMISSION_KEY
 import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository.Key.RECENT_ACTION_WRITE_STORAGE_PERMISSION_KEY
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
@@ -16,6 +17,8 @@ class PreferencePropertiesRepository @Inject constructor(
         const val RECENT_ACTION_READ_STORAGE_PERMISSION_KEY = "recent_action_read_storage_permission"
 
         const val RECENT_ACTION_WRITE_STORAGE_PERMISSION_KEY = "recent_action_write_storage_permission"
+
+        const val RECENT_ACTION_READ_CONTACT_PERMISSION_KEY = "recent_action_read_contact_permission"
     }
 
     override suspend fun storeRecentActionForReadStoragePermission(previousUserPermissionAction: PreviousUserPermissionAction) {
@@ -49,6 +52,24 @@ class PreferencePropertiesRepository @Inject constructor(
 
     override suspend fun getRecentActionForWriteStoragePermission(): PreviousUserPermissionAction {
         if (sharedPreferences.getBoolean(RECENT_ACTION_WRITE_STORAGE_PERMISSION_KEY, false)) {
+            return PreviousUserPermissionAction.DENIED
+        }
+        return PreviousUserPermissionAction.NONE
+    }
+
+    override suspend fun storeRecentActionForReadContactPermission(previousUserPermissionAction: PreviousUserPermissionAction) {
+        with(sharedPreferences.edit()) {
+            val denied = when (previousUserPermissionAction) {
+                PreviousUserPermissionAction.DENIED -> true
+                else -> false
+            }
+            putBoolean(RECENT_ACTION_READ_CONTACT_PERMISSION_KEY, denied)
+            commit()
+        }
+    }
+
+    override suspend fun getRecentActionForReadContactPermission(): PreviousUserPermissionAction {
+        if (sharedPreferences.getBoolean(RECENT_ACTION_READ_CONTACT_PERMISSION_KEY, false)) {
             return PreviousUserPermissionAction.DENIED
         }
         return PreviousUserPermissionAction.NONE

@@ -11,4 +11,8 @@ interface PropertiesRepository {
     suspend fun storeRecentActionForWriteStoragePermission(previousUserPermissionAction: PreviousUserPermissionAction)
 
     suspend fun getRecentActionForWriteStoragePermission(): PreviousUserPermissionAction
+
+    suspend fun storeRecentActionForReadContactPermission(previousUserPermissionAction: PreviousUserPermissionAction)
+
+    suspend fun getRecentActionForReadContactPermission(): PreviousUserPermissionAction
 }
