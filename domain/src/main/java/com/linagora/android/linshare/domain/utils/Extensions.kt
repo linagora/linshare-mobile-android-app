@@ -29,3 +29,9 @@ object DefaultOnCatch : OnCatch {
         throw throwable
     }
 }
+
+object NoOp : () -> Unit {
+    override fun invoke() {
+        // do nothing
+    }
+}

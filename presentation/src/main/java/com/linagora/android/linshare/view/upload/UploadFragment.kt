@@ -1,5 +1,7 @@
 package com.linagora.android.linshare.view.upload
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -31,6 +33,7 @@ import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteR
 import com.linagora.android.linshare.domain.model.autocomplete.toGenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.toMailingList
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
@@ -39,9 +42,12 @@ import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentExcepti
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.NoOp
 import com.linagora.android.linshare.model.parcelable.toQuotaId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
+import com.linagora.android.linshare.model.permission.PermissionResult
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadContact
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.model.upload.toDocumentRequest
 import com.linagora.android.linshare.util.Constant
@@ -61,6 +67,7 @@ import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationSt
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.ReadContactPermissionRequestCode
 import com.linagora.android.linshare.view.dialog.UploadProgressDialog
 import com.linagora.android.linshare.view.upload.request.UploadAndShareRequest
 import com.linagora.android.linshare.view.upload.request.UploadToMySpaceRequest
@@ -135,6 +142,18 @@ class UploadFragment : MainNavigationFragment() {
         binding.viewModel = uploadFragmentViewModel
 
         observeViewState()
+        observeRequestPermission()
+    }
+
+    private fun observeRequestPermission() {
+        mainActivityViewModel.shouldShowPermissionRequestState.observe(viewLifecycleOwner, Observer {
+            if (it is ShouldShowReadContact) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_CONTACTS),
+                    ReadContactPermissionRequestCode.code
+                )
+            }
+        })
     }
 
     private fun initAutoComplete() {
@@ -213,6 +232,18 @@ class UploadFragment : MainNavigationFragment() {
     private fun doAfterPreExecuteUpload(uploadDocumentRequest: UploadDocumentRequest) {
         bindingData(uploadDocumentRequest)
         checkAccountQuota(uploadDocumentRequest)
+        showReadContactPermissionRequest()
+    }
+
+    private fun showReadContactPermissionRequest() {
+        if (needToShowReadContactPermissionRequest()) {
+            mainActivityViewModel.shouldShowReadContactPermissionRequest(requireActivity())
+        }
+    }
+
+    private fun needToShowReadContactPermissionRequest(): Boolean {
+        return args.uploadType != Navigation.UploadType.INSIDE_APP_TO_WORKGROUP &&
+            mainActivityViewModel.checkReadContactPermission(requireContext()) == PermissionResult.PermissionDenied
     }
 
     private fun bindingData(uploadDocumentRequest: UploadDocumentRequest) {
@@ -370,6 +401,21 @@ class UploadFragment : MainNavigationFragment() {
         with(binding.addRecipientContainer) {
             addRecipients.dismissKeyboard()
             addRecipients.clearFocus()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        LOGGER.info("onRequestPermissionsResult(): $requestCode")
+        when (requestCode) {
+            ReadContactPermissionRequestCode.code -> Either.cond(
+                test = grantResults.all { grantResults -> grantResults == PackageManager.PERMISSION_GRANTED },
+                ifTrue = { NoOp },
+                ifFalse = { mainActivityViewModel.setActionForReadContactPermissionRequest(DENIED) }
+            )
         }
     }
 
