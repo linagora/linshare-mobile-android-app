@@ -1,17 +1,18 @@
 package com.linagora.android.linshare.util
 
 import android.database.Cursor
+import android.net.Uri
 import android.provider.MediaStore
 import android.provider.OpenableColumns
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
-import java.io.File
+import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 
-fun Cursor.getDocumentRequest(file: File): DocumentRequest {
+fun Cursor.getUploadDocumentRequest(uri: Uri): UploadDocumentRequest {
     val fileName = getString(getColumnIndex(OpenableColumns.DISPLAY_NAME))
+    val fileSize = getLong(getColumnIndex(OpenableColumns.SIZE))
     val mediaType = getColumnIndex(MediaStore.Images.Media.MIME_TYPE)
         .takeIf { columnIndex -> columnIndex > -1 }
         ?.let { columnIndex -> getString(columnIndex) }
         ?.let { mimeType -> fileName.getMediaType(mimeType) }
         ?: fileName.getMediaTypeFromExtension()
-    return DocumentRequest(file, fileName, mediaType)
+    return UploadDocumentRequest(uri, fileSize, fileName, mediaType)
 }

@@ -13,7 +13,6 @@ import arrow.core.Either
 import arrow.core.orNull
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
@@ -23,6 +22,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocu
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
+import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.util.FileSize.SizeFormat.SHORT
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
 import com.linagora.android.linshare.view.Navigation
@@ -127,14 +127,14 @@ fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDet
 }
 
 @BindingAdapter("uploadSize")
-fun bindingFileSize(textView: TextView, document: DocumentRequest?) {
+fun bindingFileSize(textView: TextView, document: UploadDocumentRequest?) {
     textView.text = runCatching {
-        Formatter.formatFileSize(textView.context, document!!.file.length())
+        Formatter.formatFileSize(textView.context, document!!.uploadFileSize)
     }.getOrNull()
 }
 
 @BindingAdapter("uploadInfo", "uploadErrorStateInfo")
-fun bindingUploadInfo(textView: TextView, document: DocumentRequest?, uploadErrorState: Either<Failure, Success>) {
+fun bindingUploadInfo(textView: TextView, document: UploadDocumentRequest?, uploadErrorState: Either<Failure, Success>) {
     textView.text = uploadErrorState.map { success ->
         when (success) {
             PreUploadExecuting -> textView.context.resources.getString(R.string.executing)
@@ -144,11 +144,11 @@ fun bindingUploadInfo(textView: TextView, document: DocumentRequest?, uploadErro
 }
 
 @BindingAdapter("documentIcon", "uploadErrorStateIcon")
-fun bindingUploadIcon(imageView: AppCompatImageView, document: DocumentRequest?, uploadErrorState: Either<Failure, Success>) {
+fun bindingUploadIcon(imageView: AppCompatImageView, document: UploadDocumentRequest?, uploadErrorState: Either<Failure, Success>) {
     GlideApp.with(imageView.context)
-        .load(document?.file)
+        .load(document?.uploadUri)
         .placeholder(
-            document?.mediaType?.getDrawableIcon()
+            document?.uploadMediaType?.getDrawableIcon()
                 ?: uploadErrorState.fold(
                     ifLeft = { R.drawable.ic_warning },
                     ifRight = { android.R.drawable.screen_background_light_transparent })
@@ -171,20 +171,20 @@ fun bindingUploadProgressIcon(imageView: AppCompatImageView, uploadErrorState: E
 fun bindingUploadError(textView: TextView, uploadErrorState: Either<Failure, Success>) {
     LOGGER.info("uploadErrorMessage() $uploadErrorState")
     textView.visibility = View.GONE
-    uploadErrorState.mapLeft { failure -> failure.getUploadErrorMessageId() }
+    uploadErrorState.mapLeft(::getUploadErrorMessageId)
         .mapLeft {
             textView.setText(it)
             textView.visibility = View.VISIBLE
         }
 }
 
-private fun Failure.getUploadErrorMessageId(): Int {
-    return when (this) {
-            QuotaAccountNoMoreSpaceAvailable -> { R.string.no_more_space_avalable }
-            ExceedMaxFileSize -> { R.string.exceed_max_file_size }
-            ExtractInfoFailed -> { R.string.extrac_info_failed }
-            else -> { R.string.unable_to_prepare_file_for_upload }
-        }
+private fun getUploadErrorMessageId(failure: Failure): Int {
+    return when (failure) {
+        QuotaAccountNoMoreSpaceAvailable -> R.string.no_more_space_avalable
+        ExceedMaxFileSize -> R.string.exceed_max_file_size
+        ExtractInfoFailed -> R.string.extrac_info_failed
+        else -> R.string.unable_to_prepare_file_for_upload
+    }
 }
 
 @BindingAdapter("uploadState")
@@ -197,7 +197,6 @@ fun bindingUploadButton(button: Button, uploadState: Either<Failure, Success>) {
 
 @BindingAdapter("shareReceiversCount", "uploadType", requireAll = true)
 fun bindingUploadButtonText(button: Button, shareReceiversCount: Int, uploadType: Navigation.UploadType) {
-    println("bindingUploadButtonText()")
     when (uploadType) {
         Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> button.setText(R.string.upload)
         else -> shareReceiversCount.takeIf { it > 0 }
