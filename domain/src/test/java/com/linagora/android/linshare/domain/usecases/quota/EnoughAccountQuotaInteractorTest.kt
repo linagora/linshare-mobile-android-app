@@ -2,8 +2,8 @@ package com.linagora.android.linshare.domain.usecases.quota
 
 import android.os.Build
 import com.google.common.truth.Truth.assertThat
-import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST
-import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST_BIG_SIZE
+import com.linagora.android.linshare.domain.DomainFixtures.BIG_FILE_SIZE
+import com.linagora.android.linshare.domain.DomainFixtures.FILE_SIZE
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
@@ -51,7 +51,7 @@ class EnoughAccountQuotaInteractorTest {
             Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid))
                 .thenAnswer { QUOTA }
 
-            val states = enoughAccountQuotaInteractor(DOCUMENT_REQUEST)
+            val states = enoughAccountQuotaInteractor(FILE_SIZE)
                 .toList(ArrayList())
 
             assertThat(states).hasSize(2)
@@ -71,7 +71,7 @@ class EnoughAccountQuotaInteractorTest {
             Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid))
                 .thenAnswer { LOW_QUOTA }
 
-            val states = enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE)
+            val states = enoughAccountQuotaInteractor(BIG_FILE_SIZE)
                 .toList(ArrayList())
 
             assertThat(states).hasSize(2)
@@ -91,7 +91,7 @@ class EnoughAccountQuotaInteractorTest {
             Mockito.`when`(quotaRepository.findQuota(LINSHARE_USER.quotaUuid))
                 .thenAnswer { QUOTA }
 
-            val states = enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE)
+            val states = enoughAccountQuotaInteractor(BIG_FILE_SIZE)
                 .toList(ArrayList())
 
             assertThat(states).hasSize(2)

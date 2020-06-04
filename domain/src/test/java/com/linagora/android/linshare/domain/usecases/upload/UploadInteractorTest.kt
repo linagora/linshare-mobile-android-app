@@ -3,8 +3,10 @@ package com.linagora.android.linshare.domain.usecases.upload
 import android.os.Build
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.DomainFixtures.BIG_FILE_SIZE
 import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST
 import com.linagora.android.linshare.domain.DomainFixtures.DOCUMENT_REQUEST_BIG_SIZE
+import com.linagora.android.linshare.domain.DomainFixtures.FILE_SIZE
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.usecases.InteractorHandler
@@ -80,7 +82,7 @@ class UploadInteractorTest {
                     }
                 }
 
-            `when`(enoughAccountQuotaInteractor(DOCUMENT_REQUEST))
+            `when`(enoughAccountQuotaInteractor(FILE_SIZE))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -114,7 +116,7 @@ class UploadInteractorTest {
                     }
                 }
 
-            `when`(enoughAccountQuotaInteractor(DOCUMENT_REQUEST))
+            `when`(enoughAccountQuotaInteractor(FILE_SIZE))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -148,7 +150,7 @@ class UploadInteractorTest {
                     }
                 }
 
-            `when`(enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE))
+            `when`(enoughAccountQuotaInteractor(BIG_FILE_SIZE))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -182,7 +184,7 @@ class UploadInteractorTest {
                     }
                 }
 
-            `when`(enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE))
+            `when`(enoughAccountQuotaInteractor(BIG_FILE_SIZE))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -225,7 +227,7 @@ class UploadInteractorTest {
                     }
                 }
 
-            `when`(enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE))
+            `when`(enoughAccountQuotaInteractor(BIG_FILE_SIZE))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -259,7 +261,7 @@ class UploadInteractorTest {
                     }
                 }
 
-            `when`(enoughAccountQuotaInteractor(DOCUMENT_REQUEST_BIG_SIZE))
+            `when`(enoughAccountQuotaInteractor(BIG_FILE_SIZE))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }

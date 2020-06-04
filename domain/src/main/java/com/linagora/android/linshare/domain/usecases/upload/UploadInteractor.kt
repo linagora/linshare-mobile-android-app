@@ -60,7 +60,7 @@ class UploadInteractor @Inject constructor(
         flowCollector: FlowCollector<Either<Failure, Success>>,
         documentRequest: DocumentRequest
     ) {
-        enoughAccountQuotaInteractor.invoke(documentRequest)
+        enoughAccountQuotaInteractor.invoke(documentRequest.file.length())
             .onStart { delay(500) }
             .map { viewStateStore.storeAndGet(it) }
             .filterNot { invalidState(it) }

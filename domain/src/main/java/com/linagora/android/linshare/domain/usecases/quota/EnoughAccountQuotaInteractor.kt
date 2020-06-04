@@ -3,7 +3,6 @@ package com.linagora.android.linshare.domain.usecases.quota
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.User
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.enoughQuotaToUpload
 import com.linagora.android.linshare.domain.model.validMaxFileSizeToUpload
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
@@ -22,11 +21,11 @@ class EnoughAccountQuotaInteractor @Inject constructor(
     private val quotaRepository: QuotaRepository
 ) {
 
-    operator fun invoke(document: DocumentRequest): Flow<State<Either<Failure, Success>>> {
+    operator fun invoke(fileSize: Long): Flow<State<Either<Failure, Success>>> {
         return channelFlow<State<Either<Failure, Success>>> {
             send(State { Either.right(Loading) })
             userRepository.getAuthorizedUser()
-                ?.let { user -> enoughQuota(this, user, document) }
+                ?.let { user -> enoughQuota(this, user, fileSize) }
                 ?: send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
         }
     }
@@ -34,24 +33,24 @@ class EnoughAccountQuotaInteractor @Inject constructor(
     private suspend fun enoughQuota(
         producerScope: ProducerScope<State<Either<Failure, Success>>>,
         user: User,
-        document: DocumentRequest
+        fileSize: Long
     ) {
         quotaRepository.findQuota(user.quotaUuid)
-            ?.let { quota -> validateQuota(producerScope, document, quota) }
+            ?.let { quota -> validateQuota(producerScope, fileSize, quota) }
             ?: producerScope.send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
     }
 
     private suspend fun validateQuota(
         producerScope: ProducerScope<State<Either<Failure, Success>>>,
-        document: DocumentRequest,
+        fileSize: Long,
         quota: AccountQuota
     ) {
-        if (!quota.validMaxFileSizeToUpload(document)) {
+        if (!quota.validMaxFileSizeToUpload(fileSize)) {
             producerScope.send(State { Either.left(ExceedMaxFileSize) })
             return
         }
 
-        if (!quota.enoughQuotaToUpload(document)) {
+        if (!quota.enoughQuotaToUpload(fileSize)) {
             producerScope.send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })
             return
         }

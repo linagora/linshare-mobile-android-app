@@ -14,6 +14,14 @@ fun AccountQuota.enoughQuotaToUpload(documentRequest: DocumentRequest): Boolean 
     return documentRequest.file.length() < (quota - usedSpace)
 }
 
+fun AccountQuota.enoughQuotaToUpload(fileSize: Long): Boolean {
+    return fileSize < (quota - usedSpace)
+}
+
 fun AccountQuota.validMaxFileSizeToUpload(documentRequest: DocumentRequest): Boolean {
     return documentRequest.file.length() < maxFileSize.size
+}
+
+fun AccountQuota.validMaxFileSizeToUpload(fileSize: Long): Boolean {
+    return fileSize < maxFileSize.size
 }
