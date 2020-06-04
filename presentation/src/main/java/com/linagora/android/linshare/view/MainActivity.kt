@@ -18,8 +18,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.ActivityMainBinding
+import com.linagora.android.linshare.domain.utils.NoOp
 import com.linagora.android.linshare.model.mapper.toParcelable
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowReadContact
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldNotShowWriteStorage
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadContact
 import com.linagora.android.linshare.model.resources.MenuId
 import com.linagora.android.linshare.model.resources.MenuResource
 import com.linagora.android.linshare.model.resources.ViewId
@@ -110,6 +114,7 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun handleStoragePermissionRequest() {
         viewModel.shouldShowPermissionRequestState.observe(this, Observer {
             when (it) {
+                Initial, ShouldShowReadContact, ShouldNotShowReadContact -> { NoOp }
                 ShouldNotShowWriteStorage -> showWriteStoragePermissionExplanation()
                 else -> handleIntent(intent)
             }

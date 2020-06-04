@@ -15,6 +15,7 @@ import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
+import com.linagora.android.linshare.permission.ReadContactPermission
 import com.linagora.android.linshare.permission.WriteStoragePermission
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
@@ -31,7 +32,8 @@ class MainActivityViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
     private val authorizationManager: AuthorizationManager,
-    private val writeStoragePermission: WriteStoragePermission
+    private val writeStoragePermission: WriteStoragePermission,
+    private val readContactPermission: ReadContactPermission
 ) : BaseViewModel(dispatcherProvider) {
 
     companion object {
@@ -107,5 +109,24 @@ class MainActivityViewModel @Inject constructor(
         LOGGER.info("setUpInterceptors()")
         dynamicBaseUrlInterceptor.changeBaseUrl(authenticationViewState.credential.serverUrl)
         authorizationManager.updateToken(authenticationViewState.token)
+    }
+
+    fun shouldShowReadContactPermissionRequest(activity: Activity) {
+        shouldShowPermissionRequest.value = Initial
+        viewModelScope.launch(dispatcherProvider.io) {
+            val shouldShow = readContactPermission.shouldShowPermissionRequest(
+                readContactPermission.systemShouldShowPermissionRequest(activity))
+            shouldShowPermissionRequest.postValue(shouldShow)
+        }
+    }
+
+    fun setActionForReadContactPermissionRequest(previousUserPermissionAction: PreviousUserPermissionAction) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            readContactPermission.setActionForPermissionRequest(previousUserPermissionAction)
+        }
+    }
+
+    fun checkReadContactPermission(context: Context): PermissionResult {
+        return readContactPermission.checkSelfPermission(context)
     }
 }
