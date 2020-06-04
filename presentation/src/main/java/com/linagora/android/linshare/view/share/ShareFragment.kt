@@ -1,10 +1,13 @@
 package com.linagora.android.linshare.view.share
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -22,12 +25,16 @@ import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteR
 import com.linagora.android.linshare.domain.model.autocomplete.toGenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.toMailingList
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.share.ShareButtonClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.NoOp
 import com.linagora.android.linshare.model.parcelable.DocumentParcelable
 import com.linagora.android.linshare.model.parcelable.toDocument
+import com.linagora.android.linshare.model.permission.PermissionResult
+import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadContact
 import com.linagora.android.linshare.util.binding.addMailingListView
 import com.linagora.android.linshare.util.binding.addRecipientView
 import com.linagora.android.linshare.util.binding.initView
@@ -35,7 +42,9 @@ import com.linagora.android.linshare.util.binding.onSelectedRecipient
 import com.linagora.android.linshare.util.binding.queryAfterTextChange
 import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.ReadContactPermissionRequestCode
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -54,6 +63,9 @@ class ShareFragment : MainNavigationFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val mainActivityViewModel: MainActivityViewModel
+            by activityViewModels { viewModelFactory }
 
     private lateinit var shareFragmentViewModel: ShareFragmentViewModel
 
@@ -82,17 +94,23 @@ class ShareFragment : MainNavigationFragment() {
         bindingShareDocument()
         initAutoComplete()
         observeRecipients()
+        observeRequestPermission()
     }
 
     override fun configureToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
     }
 
+    override fun onResume() {
+        super.onResume()
+        showReadContactPermissionRequest()
+    }
+
     private fun bindingShareDocument() {
         val bundle = requireArguments()
         bundle.getParcelable<DocumentParcelable>(SHARE_DOCUMENT_BUNDLE_KEY)
             ?.toDocument()
-            ?.let { bindingData(it) }
+            ?.let(this@ShareFragment::bindingData)
     }
 
     private fun initAutoComplete() {
@@ -174,6 +192,42 @@ class ShareFragment : MainNavigationFragment() {
         with(binding.addRecipientContainer) {
             addRecipients.dismissKeyboard()
             addRecipients.clearFocus()
+        }
+    }
+
+    private fun observeRequestPermission() {
+        mainActivityViewModel.shouldShowPermissionRequestState.observe(viewLifecycleOwner, Observer {
+            if (it is ShouldShowReadContact) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_CONTACTS),
+                    ReadContactPermissionRequestCode.code
+                )
+            }
+        })
+    }
+
+    private fun showReadContactPermissionRequest() {
+        if (needToShowReadContactPermissionRequest()) {
+            mainActivityViewModel.shouldShowReadContactPermissionRequest(requireActivity())
+        }
+    }
+
+    private fun needToShowReadContactPermissionRequest(): Boolean {
+        return mainActivityViewModel.checkReadContactPermission(requireContext()) == PermissionResult.PermissionDenied
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        LOGGER.info("onRequestPermissionsResult(): $requestCode")
+        when (requestCode) {
+            ReadContactPermissionRequestCode.code -> Either.cond(
+                test = grantResults.all { grantResults -> grantResults == PackageManager.PERMISSION_GRANTED },
+                ifTrue = { NoOp },
+                ifFalse = { mainActivityViewModel.setActionForReadContactPermissionRequest(DENIED) }
+            )
         }
     }
 
