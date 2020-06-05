@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.inject
 
+import com.linagora.android.linshare.inject.sharedspace.member.SharedSpaceMemberModule
 import com.linagora.android.linshare.inject.worker.WorkerBindingModule
 import com.linagora.android.linshare.inject.worker.WorkerFactoryModule
 import com.linagora.android.linshare.view.LinShareApplication
@@ -26,7 +27,8 @@ import javax.inject.Singleton
         NetworkModule::class,
         ShareModule::class,
         SharedSpaceModule::class,
-        AutoCompleteModule::class
+        AutoCompleteModule::class,
+        SharedSpaceMemberModule::class
     ]
 )
 interface AppComponent : AndroidInjector<LinShareApplication> {
