@@ -29,7 +29,6 @@ import com.linagora.android.linshare.model.resources.MenuResource
 import com.linagora.android.linshare.model.resources.ViewId
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.Constant.LINSHARE_APPLICATION_ID
-import com.linagora.android.linshare.util.Constant.UPLOAD_URI_BUNDLE_KEY
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.base.BaseActivity
 import com.linagora.android.linshare.view.dialog.WriteStorageExplanationPermissionDialog
@@ -124,9 +123,8 @@ class MainActivity : BaseActivity(), NavigationHost {
     private fun extractSendAction(intent: Intent) {
         intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             ?.let {
-                val bundle = UploadFragmentArgs(Navigation.UploadType.OUTSIDE_APP)
+                val bundle = UploadFragmentArgs(Navigation.UploadType.OUTSIDE_APP, it)
                     .toBundle()
-                bundle.putParcelable(UPLOAD_URI_BUNDLE_KEY, it)
                 navigationController.navigate(
                     R.id.uploadFragment,
                     bundle,

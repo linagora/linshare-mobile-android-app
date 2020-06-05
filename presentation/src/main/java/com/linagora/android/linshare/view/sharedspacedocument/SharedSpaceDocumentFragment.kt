@@ -340,9 +340,9 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun navigateToUpload(uri: Uri) {
         val bundle = UploadFragmentArgs(
                 uploadType = UploadType.INSIDE_APP_TO_WORKGROUP,
+                uri = uri,
                 uploadDestinationInfo = createUploadDestination())
             .toBundle()
-        bundle.putParcelable(Constant.UPLOAD_URI_BUNDLE_KEY, uri)
         findNavController().navigate(R.id.uploadFragment, bundle)
     }
 
