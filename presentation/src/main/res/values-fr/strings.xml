@@ -135,4 +135,5 @@
     <string name="copy_to_my_space_error_quota_reach">Espace insuffisant dans Mon Espace pour copier</string>
     <string name="copy_to_my_space_error_file_size_exceed">Le fichier a dépassé la taille limite.</string>
     <string name="copy_to_my_space_error">Une erreur s\'est produite, impossible de copier.</string>
+    <string name="pick_the_destination">Choisissez la destination</string>
 </resources>
