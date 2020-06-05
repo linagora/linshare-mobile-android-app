@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
@@ -198,7 +199,7 @@ fun bindingUploadButton(button: Button, uploadState: Either<Failure, Success>) {
 @BindingAdapter("shareReceiversCount", "uploadType", requireAll = true)
 fun bindingUploadButtonText(button: Button, shareReceiversCount: Int, uploadType: Navigation.UploadType) {
     when (uploadType) {
-        Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> button.setText(R.string.upload)
+        Navigation.UploadType.INSIDE_APP_TO_WORKGROUP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> button.setText(R.string.upload)
         else -> shareReceiversCount.takeIf { it > 0 }
             ?.run { button.setText(R.string.upload_and_share) }
             ?: button.setText(R.string.upload_to_my_space)
@@ -236,4 +237,12 @@ fun bindingEmptyMessage(textView: TextView, state: Either<Failure, Success>?) {
         ifLeft = { true },
         ifRight = { success -> success is SharedSpaceDocumentEmpty })
     textView.isVisible = visible ?: false
+}
+
+@BindingAdapter("visibilityPickDestinationContainer")
+fun bindingVisibilityPickDestinationContainer(constraintLayout: ConstraintLayout, uploadType: Navigation.UploadType) {
+    when (uploadType) {
+        Navigation.UploadType.OUTSIDE_APP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> constraintLayout.visibility = View.VISIBLE
+        else -> constraintLayout.visibility = View.GONE
+    }
 }

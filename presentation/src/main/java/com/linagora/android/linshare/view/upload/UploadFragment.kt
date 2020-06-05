@@ -157,13 +157,17 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun initAutoComplete() {
-        if (args.uploadType != Navigation.UploadType.INSIDE_APP_TO_WORKGROUP) {
+        if (isUploadToMySpace()) {
             with(binding.addRecipientContainer) {
                 initView()
                 queryAfterTextChange(this@UploadFragment::queryRecipientAutoComplete)
                 onSelectedRecipient(this@UploadFragment::reactOnSelectedSuggestion)
             }
         }
+    }
+
+    private fun isUploadToMySpace(): Boolean {
+        return binding.uploadType != Navigation.UploadType.INSIDE_APP_TO_WORKGROUP || binding.uploadType != Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP
     }
 
     private fun reactOnSelectedSuggestion(autoCompleteResult: AutoCompleteResult) {
