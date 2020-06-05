@@ -115,4 +115,9 @@
             android:name="sharedSpaceId"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable"/>
     </fragment>
+    <fragment
+        android:id="@+id/navigationSharedSpaceDestination"
+        android:name="com.linagora.android.linshare.view.sharedspacedestination.SharedSpaceDestinationFragment"
+        tools:layout="@layout/fragment_shared_space_destination">
+    </fragment>
 </navigation>

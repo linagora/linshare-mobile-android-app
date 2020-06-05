@@ -64,7 +64,7 @@
     <dimen name="progress_dialog_message_text_size">16sp</dimen>
     <dimen name="margin_top_divider">6dp</dimen>
     <dimen name="pick_destination_text_size">16sp</dimen>
-    <dimen name="choose_destination_label_text_size">20sp</dimen>
+    <dimen name="choose_destination_label_text_size">18sp</dimen>
 
     <!-- permission popup -->
     <dimen name="request_permission_popup_padding">24dp</dimen>

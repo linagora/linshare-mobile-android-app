@@ -13,6 +13,7 @@ import com.linagora.android.linshare.view.search.SearchModule
 import com.linagora.android.linshare.view.share.ShareFragmentModule
 import com.linagora.android.linshare.view.sharedspace.SharedSpacePresentationModule
 import com.linagora.android.linshare.view.sharedspace.details.SharedSpaceDetailsModule
+import com.linagora.android.linshare.view.sharedspacedestination.SharedSpaceDestinationModule
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentPresentationModule
 import com.linagora.android.linshare.view.splash.SplashActivity
 import com.linagora.android.linshare.view.splash.SplashActivityModule
@@ -42,7 +43,8 @@ abstract class ActivityBindingModule {
         ReceivedSharesModule::class,
         SharedSpacePresentationModule::class,
         SharedSpaceDocumentPresentationModule::class,
-        SharedSpaceDetailsModule::class
+        SharedSpaceDetailsModule::class,
+        SharedSpaceDestinationModule::class
     ])
     internal abstract fun mainActivity(): MainActivity
 }

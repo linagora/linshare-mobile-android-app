@@ -259,5 +259,6 @@
         <item name="android:drawablePadding">@dimen/share_add_recipients_drawer_padding</item>
         <item name="android:textColor">@color/add_recipient_text</item>
         <item name="android:textSize">@dimen/pick_destination_text_size</item>
+        <item name="android:singleLine">true</item>
     </style>
 </resources>
