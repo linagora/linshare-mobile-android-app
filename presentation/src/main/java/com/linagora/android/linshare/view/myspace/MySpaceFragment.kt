@@ -29,7 +29,6 @@ import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
-import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
@@ -195,8 +194,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun navigateToUpload(uri: Uri) {
-        val bundle = UploadFragmentArgs(INSIDE_APP).toBundle()
-        bundle.putParcelable(Constant.UPLOAD_URI_BUNDLE_KEY, uri)
+        val bundle = UploadFragmentArgs(INSIDE_APP, uri).toBundle()
         findNavController().navigate(R.id.uploadFragment, bundle)
     }
 

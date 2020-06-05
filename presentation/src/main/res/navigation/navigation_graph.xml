@@ -62,6 +62,9 @@
             android:name="uploadType"
             app:argType="com.linagora.android.linshare.view.Navigation$UploadType" />
         <argument
+            android:name="uri"
+            app:argType="android.net.Uri" />
+        <argument
             android:name="uploadDestinationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
             app:nullable="true"

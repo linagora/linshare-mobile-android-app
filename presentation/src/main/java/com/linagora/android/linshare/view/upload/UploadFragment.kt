@@ -53,7 +53,6 @@ import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowReadContact
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.model.upload.toDocumentRequest
-import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NetworkConnectivity
 import com.linagora.android.linshare.util.binding.addMailingListView
@@ -201,10 +200,8 @@ class UploadFragment : MainNavigationFragment() {
 
     private suspend fun extractArgument() {
         LOGGER.info("extractArgument()")
-        val bundle = requireArguments()
-        bundle.getParcelable<Uri>(Constant.UPLOAD_URI_BUNDLE_KEY)
-            ?.let { uri -> buildUploadDocumentRequest(uri) }
-            ?.let { uploadFragmentViewModel.dispatchState(Either.right(ExtractInfoSuccess(it))) }
+        buildUploadDocumentRequest(args.uri)
+            .let { uploadFragmentViewModel.dispatchState(Either.right(ExtractInfoSuccess(it))) }
     }
 
     private fun handlePreUploadError(throwable: Throwable) {
@@ -249,7 +246,7 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun needToShowReadContactPermissionRequest(): Boolean {
-        return args.uploadType != Navigation.UploadType.INSIDE_APP_TO_WORKGROUP &&
+        return isUploadToMySpace() &&
             mainActivityViewModel.checkReadContactPermission(requireContext()) == PermissionResult.PermissionDenied
     }
 
@@ -292,6 +289,8 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun uploadOutsideToMySpace() {
         childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
+        binding.uploadType = Navigation.UploadType.OUTSIDE_APP
+        binding.pickDestination.text = getString(R.string.my_space)
     }
 
     private fun uploadOutsideToSharedSpace() {
@@ -342,7 +341,7 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun createUploadRequest(): UploadWorkerRequest {
         return when (args.uploadType) {
-            Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> createSharedSpaceUploadRequest(args)
+            Navigation.UploadType.INSIDE_APP_TO_WORKGROUP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> createSharedSpaceUploadRequest(args)
             else -> createMySpaceUploadRequest()
         }
     }
@@ -402,7 +401,7 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun navigateAfterUpload() {
         when (args.uploadType) {
-            Navigation.UploadType.OUTSIDE_APP -> requireActivity().onBackPressed()
+            Navigation.UploadType.OUTSIDE_APP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> requireActivity().onBackPressed()
             Navigation.UploadType.INSIDE_APP, Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> findNavController().popBackStack()
         }
     }
