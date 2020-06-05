@@ -164,4 +164,8 @@
     <dimen name="tag_padding_side">8dp</dimen>
     <dimen name="tag_padding_vertical">2dp</dimen>
     <dimen name="member_avatar_size">40dp</dimen>
+
+    <!--select destination -->
+    <dimen name="choose_destination_button_textsize">14dp</dimen>
+    <dimen name="choose_destination_button_margin_end">28dp</dimen>
 </resources>

@@ -261,4 +261,10 @@
         <item name="android:textSize">@dimen/pick_destination_text_size</item>
         <item name="android:singleLine">true</item>
     </style>
+
+    <style name="ChooseDestinationButtonStyle">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/choose_destination_button_textsize</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
 </resources>

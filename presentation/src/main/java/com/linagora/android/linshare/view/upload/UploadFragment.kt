@@ -295,7 +295,8 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun uploadOutsideToSharedSpace() {
         childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
-        findNavController().navigate(R.id.navigationSharedSpaceDestination)
+        val action = UploadFragmentDirections.actionUploadFragmentToNavigationDestination(binding.uploadType!!, args.uri, args.uploadDestinationInfo)
+        findNavController().navigate(action)
     }
 
     private fun showPickDestinationDialog() {

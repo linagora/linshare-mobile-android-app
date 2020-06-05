@@ -142,4 +142,5 @@
     <string name="contributor_role_name" translatable="false">Contributor</string>
     <string name="admin_role_name" translatable="false">Admin</string>
     <string name="pick_the_destination">Pick the destination</string>
+    <string name="choose">Choose</string>
 </resources>

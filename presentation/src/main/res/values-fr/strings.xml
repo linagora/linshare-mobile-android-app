@@ -136,4 +136,5 @@
     <string name="copy_to_my_space_error_file_size_exceed">Le fichier a dépassé la taille limite.</string>
     <string name="copy_to_my_space_error">Une erreur s\'est produite, impossible de copier.</string>
     <string name="pick_the_destination">Choisissez la destination</string>
+    <string name="choose">Choisir</string>
 </resources>
