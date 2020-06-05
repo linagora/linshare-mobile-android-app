@@ -137,7 +137,8 @@
             android:layout_marginEnd="@dimen/share_label_margin_start"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:visibilityPickDestinationContainer="@{uploadType}">
 
             <TextView
                 android:id="@+id/pickTheDestinationLabel"

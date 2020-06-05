@@ -9,6 +9,7 @@ class Navigation {
 
     enum class UploadType {
         OUTSIDE_APP,
+        OUTSIDE_APP_TO_WORKGROUP,
         INSIDE_APP,
         INSIDE_APP_TO_WORKGROUP
     }
