@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel"/>
+
+        <variable
+            name="viewModel"
+            type="UploadFragmentViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/padding_top_bottom_sheet">
+
+        <TextView
+            style="@style/RowLinerBottomSheetStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_the_destination"
+            android:textColor="@color/file_name_color"
+            android:textSize="@dimen/choose_destination_label_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_marginTop="@dimen/padding_top_bottom_sheet"
+            style="@style/DivideView"/>
+
+        <LinearLayout
+            android:onClick="@{() -> viewModel.uploadOutsideToMySpace()}"
+            style="@style/RowLinerBottomSheetStyle">
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/my_space" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:onClick="@{() -> viewModel.uploadOutsideToSharedSpace()}"
+            style="@style/RowLinerBottomSheetStyle">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_shared_space_item" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/shared_space" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

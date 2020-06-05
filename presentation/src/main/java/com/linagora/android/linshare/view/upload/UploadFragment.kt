@@ -38,6 +38,9 @@ import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
+import com.linagora.android.linshare.domain.usecases.share.OpenPickDestinationDialog
+import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToMySpace
+import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToSharedSpace
 import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -280,8 +283,23 @@ class UploadFragment : MainNavigationFragment() {
             is AddRecipient -> addRecipientView(viewEvent.user)
             is AddMailingList -> addMailingListView(viewEvent.mailingList)
             is OnUploadButtonClick -> preUpload(viewEvent.uploadDocumentRequest)
+            is OpenPickDestinationDialog -> showPickDestinationDialog()
+            is UploadOutsideToMySpace -> uploadOutsideToMySpace()
+            is UploadOutsideToSharedSpace -> uploadOutsideToSharedSpace()
         }
         uploadFragmentViewModel.dispatchState(Either.right(Success.Idle))
+    }
+
+    private fun uploadOutsideToMySpace() {
+        childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
+    }
+
+    private fun uploadOutsideToSharedSpace() {
+        childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
+    }
+
+    private fun showPickDestinationDialog() {
+        PickDestinationDialog().show(childFragmentManager, PickDestinationDialog.TAG)
     }
 
     private fun addRecipientView(user: GenericUser) {

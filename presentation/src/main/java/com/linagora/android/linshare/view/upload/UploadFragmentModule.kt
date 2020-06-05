@@ -24,4 +24,8 @@ internal abstract class UploadFragmentModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeProgressUploadDialog(): UploadProgressDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributePickDestinationDialog(): PickDestinationDialog
 }

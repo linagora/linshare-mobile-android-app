@@ -7,6 +7,9 @@ import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
+import com.linagora.android.linshare.domain.usecases.share.OpenPickDestinationDialog
+import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToMySpace
+import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToSharedSpace
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
@@ -57,6 +60,18 @@ class UploadFragmentViewModel @Inject constructor(
 
     fun onUploadButtonClick(uploadDocumentRequest: UploadDocumentRequest) {
         dispatchState(Either.right(OnUploadButtonClick(uploadDocumentRequest)))
+    }
+
+    fun openPickDestinationDialog() {
+        dispatchState(Either.right(OpenPickDestinationDialog))
+    }
+
+    fun uploadOutsideToMySpace() {
+        dispatchState(Either.right(UploadOutsideToMySpace))
+    }
+
+    fun uploadOutsideToSharedSpace() {
+        dispatchState(Either.right(UploadOutsideToSharedSpace))
     }
 
     fun resetRecipientManager() = shareRecipientsManager.resetShareRecipientManager()
