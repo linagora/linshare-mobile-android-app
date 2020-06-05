@@ -156,6 +156,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/share_add_recipients_margin_side"
+                android:onClick="@{() -> viewModel.openPickDestinationDialog()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/pickTheDestinationLabel"
                 app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel" />
