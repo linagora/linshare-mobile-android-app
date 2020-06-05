@@ -15,6 +15,7 @@ import com.linagora.android.linshare.view.sharedspace.SharedSpacePresentationMod
 import com.linagora.android.linshare.view.sharedspace.details.SharedSpaceDetailsModule
 import com.linagora.android.linshare.view.sharedspacedestination.SharedSpaceDestinationModule
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentPresentationModule
+import com.linagora.android.linshare.view.sharedspacedocumentdestination.SharedSpaceDocumentDestinantionModule
 import com.linagora.android.linshare.view.splash.SplashActivity
 import com.linagora.android.linshare.view.splash.SplashActivityModule
 import com.linagora.android.linshare.view.upload.UploadFragmentModule
@@ -44,7 +45,8 @@ abstract class ActivityBindingModule {
         SharedSpacePresentationModule::class,
         SharedSpaceDocumentPresentationModule::class,
         SharedSpaceDetailsModule::class,
-        SharedSpaceDestinationModule::class
+        SharedSpaceDestinationModule::class,
+        SharedSpaceDocumentDestinantionModule::class
     ])
     internal abstract fun mainActivity(): MainActivity
 }

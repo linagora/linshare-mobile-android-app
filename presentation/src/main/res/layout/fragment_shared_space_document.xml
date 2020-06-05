@@ -6,6 +6,7 @@
     <data>
         <import type="com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentViewModel" />
         <import type="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <import type="com.linagora.android.linshare.adapter.sharedspace.AdapterType"/>
 
         <variable
             name="navigationInfo"
@@ -82,6 +83,7 @@
                     app:layoutManager="LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:listItemBehavior="@{viewModel.listItemBehavior}"
+                    app:adapterType="@{AdapterType.NORMAL}"
                     app:sharedSpaceDocumentState="@{viewModel.viewState}" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

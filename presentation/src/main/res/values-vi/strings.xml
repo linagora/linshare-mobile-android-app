@@ -135,4 +135,5 @@
     <string name="copy_to_my_space_error_file_size_exceed">Kích thước tệp vượt quá giới hạn.</string>
     <string name="copy_to_my_space_error">Có lỗi xảy ra, không thể thực hiện sao chép.</string>
     <string name="pick_the_destination">Chọn thư mục</string>
+    <string name="choose">Chọn</string>
 </resources>

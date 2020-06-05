@@ -17,6 +17,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.canUpload
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentNoResult
@@ -30,28 +31,33 @@ import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModif
 import com.linagora.android.linshare.util.getDrawableIcon
 import com.linagora.android.linshare.view.base.ListItemBehavior
 
-@BindingAdapter("sharedSpaceDocumentState", "listItemBehavior", requireAll = true)
+@BindingAdapter("sharedSpaceDocumentState", "listItemBehavior", "adapterType", requireAll = true)
 fun bindingSharedSpaceDocumentList(
     recyclerView: RecyclerView,
     sharedSpaceDocumentState: Either<Failure, Success>,
-    listItemBehavior: ListItemBehavior<WorkGroupNode>
+    listItemBehavior: ListItemBehavior<WorkGroupNode>,
+    adapterType: AdapterType
 ) {
     if (recyclerView.adapter == null) {
-        recyclerView.adapter = SharedSpaceDocumentAdapter(listItemBehavior)
+        recyclerView.adapter = SharedSpaceDocumentAdapter(listItemBehavior, adapterType)
     }
 
     sharedSpaceDocumentState.fold(
         ifLeft = { recyclerView.isVisible = false },
         ifRight = { success ->
             recyclerView.isVisible = true
-            submitSharedSpaceDocumentList(recyclerView, success)
+            submitSharedSpaceDocumentList(recyclerView, success, adapterType)
         }
     )
 }
 
-private fun submitSharedSpaceDocumentList(recyclerView: RecyclerView, success: Success) {
+private fun submitSharedSpaceDocumentList(recyclerView: RecyclerView, success: Success, adapterType: AdapterType) {
     val documents = when (success) {
-        is SharedSpaceDocumentViewState -> success.documents
+        is SharedSpaceDocumentViewState -> {
+            adapterType.takeIf { it == AdapterType.SHARE_SPACE_DESTINATION_PICKER }
+                ?.let { success.documents.filterIsInstance<WorkGroupFolder>() }
+                ?: success.documents
+        }
         is SearchSharedSpaceDocumentViewState -> success.documents
         else -> emptyList()
     }

@@ -40,4 +40,5 @@
     <color name="text_primary_color">#7B7B7B</color>
 
     <color name="tag_background_color">#66C190</color>
+    <color name="toolbar_primary_color">#7B7B7B</color>
 </resources>

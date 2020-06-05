@@ -69,6 +69,9 @@
             app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_uploadFragment_to_navigation_destination"
+            app:destination="@id/navigationSharedSpaceDestination" />
     </fragment>
     <fragment
         android:id="@id/navigation_my_space"
@@ -119,5 +122,46 @@
         android:id="@+id/navigationSharedSpaceDestination"
         android:name="com.linagora.android.linshare.view.sharedspacedestination.SharedSpaceDestinationFragment"
         tools:layout="@layout/fragment_shared_space_destination">
+        <argument
+            android:name="uploadType"
+            app:argType="com.linagora.android.linshare.view.Navigation$UploadType" />
+        <argument
+            android:name="uri"
+            app:argType="android.net.Uri" />
+        <argument
+            android:name="uploadDestinationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_navigation_destination_to_navigation_pick_destination"
+            app:destination="@id/navigationSharedSpaceDocumentDestination" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationSharedSpaceDocumentDestination"
+        android:name="com.linagora.android.linshare.view.sharedspacedocumentdestination.SharedSpaceDocumentDestinationFragment"
+        tools:layout="@layout/fragment_shared_space_document_destination" >
+        <argument
+            android:name="uploadType"
+            app:argType="com.linagora.android.linshare.view.Navigation$UploadType" />
+        <argument
+            android:name="uri"
+            app:argType="android.net.Uri" />
+        <argument
+            android:name="uploadDestinationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="navigationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <action
+            android:id="@+id/action_navigation_pick_destination_to_uploadFragment"
+            app:destination="@id/uploadFragment"
+            app:popUpTo="@+id/uploadFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_navigation_pick_destination_to_pick_destination"
+            app:destination="@id/navigationSharedSpaceDocumentDestination" />
     </fragment>
 </navigation>

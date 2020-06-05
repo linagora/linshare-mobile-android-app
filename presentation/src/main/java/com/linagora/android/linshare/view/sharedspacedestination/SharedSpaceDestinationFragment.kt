@@ -9,14 +9,19 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDestinationBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
+import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
+import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.Navigation
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -28,6 +33,8 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
     private lateinit var sharedSpaceDestinationViewModel: SharedSpaceDestinationViewModel
 
     private lateinit var binding: FragmentSharedSpaceDestinationBinding
+
+    private val args: SharedSpaceDestinationFragmentArgs by navArgs()
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceDestinationFragment::class.java)
@@ -87,5 +94,20 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
         sharedSpaceDestinationViewModel.getSharedSpace()
     }
 
-    private fun navigateIntoSharedSpace(sharedSpaceNodeNested: SharedSpaceNodeNested) { }
+    private fun navigateIntoSharedSpace(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        val action = SharedSpaceDestinationFragmentDirections.actionNavigationDestinationToNavigationPickDestination(
+            args.uploadType,
+            args.uri,
+            args.uploadDestinationInfo,
+            generateNavigationInfoForSharedSpaceRoot(sharedSpaceNodeNested))
+        findNavController().navigate(action)
+    }
+
+    private fun generateNavigationInfoForSharedSpaceRoot(sharedSpaceNodeNested: SharedSpaceNodeNested): SharedSpaceNavigationInfo {
+        return SharedSpaceNavigationInfo(
+            sharedSpaceIdParcelable = sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
+            fileType = Navigation.FileType.ROOT,
+            nodeIdParcelable = WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)
+        )
+    }
 }
