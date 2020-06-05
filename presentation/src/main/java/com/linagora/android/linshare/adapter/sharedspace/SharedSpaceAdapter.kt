@@ -10,7 +10,8 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNes
 import com.linagora.android.linshare.view.base.ListItemBehavior
 
 class SharedSpaceAdapter(
-    private val itemBehavior: ListItemBehavior<SharedSpaceNodeNested>
+    private val itemBehavior: ListItemBehavior<SharedSpaceNodeNested>,
+    private val adapterType: AdapterType
 ) : ListAdapter<SharedSpaceNodeNested, SharedSpaceViewHolder>(SharedSpaceNodeNestedDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SharedSpaceViewHolder {
@@ -19,7 +20,7 @@ class SharedSpaceAdapter(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ), itemBehavior
+            ), itemBehavior, adapterType
         )
     }
 
@@ -30,10 +31,12 @@ class SharedSpaceAdapter(
 
 class SharedSpaceViewHolder(
     private val binding: SharedSpaceRowItemBinding,
-    private val itemBehavior: ListItemBehavior<SharedSpaceNodeNested>
+    private val itemBehavior: ListItemBehavior<SharedSpaceNodeNested>,
+    private val adapterType: AdapterType
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        binding.adapterType = adapterType
         binding.sharedSpaceNodeNested = sharedSpaceNodeNested
         binding.executePendingBindings()
         binding.listItemBehavior = itemBehavior

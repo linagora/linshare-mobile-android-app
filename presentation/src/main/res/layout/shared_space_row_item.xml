@@ -7,6 +7,7 @@
         <import type="android.view.View"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested"/>
         <import type="com.linagora.android.linshare.view.base.ListItemBehavior"/>
+        <import type="com.linagora.android.linshare.adapter.sharedspace.AdapterType"/>
 
         <variable
             name="listItemBehavior"
@@ -15,6 +16,10 @@
         <variable
             name="sharedSpaceNodeNested"
             type="SharedSpaceNodeNested" />
+
+        <variable
+            name="adapterType"
+            type="AdapterType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,6 +76,7 @@
             android:layout_width="@dimen/my_space_item_menu_container_width"
             android:layout_height="@dimen/my_space_item_menu_container_width"
             android:onClick="@{() -> listItemBehavior.onContextMenuClick(sharedSpaceNodeNested)}"
+            app:visibilityMenuContainer="@{adapterType}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">

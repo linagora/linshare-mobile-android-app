@@ -1,5 +1,6 @@
 package com.linagora.android.linshare.adapter.sharedspace
 
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -26,7 +27,7 @@ fun bindingSharedSpaceList(
     itemBehavior: ListItemBehavior<SharedSpaceNodeNested>
 ) {
     if (recyclerView.adapter == null) {
-        recyclerView.adapter = SharedSpaceAdapter(itemBehavior)
+        recyclerView.adapter = SharedSpaceAdapter(itemBehavior, AdapterType.NORMAL)
     }
 
     sharedSpaceState?.fold(
@@ -117,4 +118,11 @@ fun bindingTextEmptyMessage(textView: TextView, state: Either<Failure, Success>?
             else -> textView.setText(R.string.do_not_have_any_workgroup)
         }
     }
+}
+
+@BindingAdapter("visibilityMenuContainer")
+fun bindingVisibilityMenuContainer(view: View, adapterType: AdapterType) {
+    view.visibility = adapterType.takeIf { it == AdapterType.SHARE_SPACE_DESTINATION_PICKER }
+        ?.let { View.GONE }
+        ?: View.VISIBLE
 }
