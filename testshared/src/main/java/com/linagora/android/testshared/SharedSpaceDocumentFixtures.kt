@@ -10,10 +10,15 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleNam
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccount
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersSuccess
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA_UUID
 import okhttp3.MediaType
 import java.util.Date
@@ -104,4 +109,41 @@ object SharedSpaceDocumentFixtures {
         listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2))
     )
     val REMOVE_SHARED_SPACE_DOCUMENT_SUCCESS_VIEW_STATE = Either.Right(RemoveSharedSpaceNodeSuccessViewState(WORK_GROUP_DOCUMENT_1))
+
+    private val JOHN_DOE_ACCOUNT = SharedSpaceAccount(
+        SharedSpaceAccountId(UUID.fromString("8bfe33a5-1cc3-49b8-8442-efb9dffdc989")),
+        "John Doe",
+        "John",
+        "Doe",
+        "john@linshare.com"
+    )
+
+    val JOHN_DOE_MEMBER = SharedSpaceMember(
+        SharedSpaceMemberId(UUID.fromString("bfdf5b4c-2fff-4abd-b139-323b8ad91790")),
+        SharedSpaceFixtures.SHARED_SPACE_1,
+        SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.READER),
+        JOHN_DOE_ACCOUNT,
+        Date(1585499403825),
+        Date(1585499715142)
+    )
+
+    private val BAR_FOO_ACCOUNT = SharedSpaceAccount(
+        SharedSpaceAccountId(UUID.fromString("b1980d34-8dc2-4278-9600-07b9515e7839")),
+        "Jane Smith",
+        "Jane",
+        "Smith",
+        "jane@linshare.com"
+    )
+
+    val BAR_FOO_MEMBER = SharedSpaceMember(
+        SharedSpaceMemberId(UUID.fromString("86c05687-dbd8-4cdf-bece-76d2dd4b2fc4")),
+        SharedSpaceFixtures.SHARED_SPACE_1,
+        SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.ADMIN),
+        BAR_FOO_ACCOUNT,
+        Date(1584032316455),
+        Date(1584032316455)
+    )
+
+    val GET_MEMBERS_SUCCESS_STATE = Either.right(
+        GetMembersSuccess(listOf(JOHN_DOE_MEMBER, BAR_FOO_MEMBER)))
 }
