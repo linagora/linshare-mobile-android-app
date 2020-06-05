@@ -11,7 +11,9 @@ import com.linagora.android.linshare.data.network.adapter.MediaTypeDeserializer
 import com.linagora.android.linshare.data.network.adapter.QuotaIdAdapter
 import com.linagora.android.linshare.data.network.adapter.QuotaSizeDeserializer
 import com.linagora.android.linshare.data.network.adapter.ShareIdDeserializer
+import com.linagora.android.linshare.data.network.adapter.SharedSpaceAccountIdAdapter
 import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdAdapter
+import com.linagora.android.linshare.data.network.adapter.SharedSpaceMemberIdAdapter
 import com.linagora.android.linshare.data.network.adapter.WorkGroupNodeIdAdapter
 import com.linagora.android.linshare.data.network.factory.RuntimeTypeAdapterFactory
 import com.linagora.android.linshare.domain.model.BaseErrorCode
@@ -29,6 +31,8 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
 import com.linagora.android.linshare.network.AuthorizationInterceptor
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.Constant
@@ -108,10 +112,11 @@ class NetworkModule {
             .registerTypeAdapter(DocumentId::class.java, DocumentIdDeserializer())
             .registerTypeAdapter(ShareId::class.java, ShareIdDeserializer())
             .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
-            .registerTypeAdapter(SharedSpaceId::class.java, SharedSpaceIdAdapter())
             .registerTypeAdapter(WorkGroupNodeId::class.java, WorkGroupNodeIdAdapter())
             .registerTypeAdapter(QuotaId::class.java, QuotaIdAdapter())
             .registerTypeAdapter(MailingListId::class.java, MailingListIdAdapter())
+            .registerTypeAdapter(SharedSpaceMemberId::class.java, SharedSpaceMemberIdAdapter())
+            .registerTypeAdapter(SharedSpaceAccountId::class.java, SharedSpaceAccountIdAdapter())
             .registerTypeAdapterFactory(workGroupNodeTypeAdapterFactory)
             .registerTypeAdapterFactory(autoCompleteTypeAdapterFactory)
             .create()
