@@ -19,7 +19,6 @@
             type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -131,12 +130,53 @@
 
         </androidx.cardview.widget.CardView>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pickDestinationContainer"
+            app:layout_constraintTop_toBottomOf="@id/fileInfoContainer"
+            android:layout_marginStart="@dimen/share_label_margin_start"
+            android:layout_marginEnd="@dimen/share_label_margin_start"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pickTheDestinationLabel"
+                style="@style/Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/share_label_margin_top"
+                android:text="@string/pick_the_destination" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/pickDestination"
+                style="@style/PickTheDestinationStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/share_add_recipients_margin_side"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/pickTheDestinationLabel"
+                app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel" />
+
+            <View
+                android:id="@+id/dividerPickDestination"
+                style="@style/DivideView"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_top_divider"
+                app:layout_constraintEnd_toEndOf="@+id/pickDestination"
+                app:layout_constraintStart_toStartOf="@+id/pickDestination"
+                app:layout_constraintTop_toBottomOf="@id/pickDestination" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <include
             android:id="@+id/addRecipientContainer"
             layout="@layout/add_recipients_view"
             android:layout_height="0dp"
             android:layout_width="match_parent"
-            app:layout_constraintTop_toBottomOf="@id/fileInfoContainer"
+            app:layout_constraintTop_toBottomOf="@id/pickDestinationContainer"
             app:layout_constraintBottom_toTopOf="@+id/btnUpload"
             android:layout_marginBottom="@dimen/share_label_margin_top"
             app:suggestions="@{viewModel.shareRecipientsManager.suggestions}"

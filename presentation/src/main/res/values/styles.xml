@@ -252,4 +252,12 @@
         <item name="android:paddingTop">@dimen/tag_padding_vertical</item>
         <item name="android:paddingBottom">@dimen/tag_padding_vertical</item>
     </style>
+
+    <style name="PickTheDestinationStyle">
+        <item name="android:drawableStart">@drawable/ic_home</item>
+        <item name="android:drawableEnd">@drawable/ic_arrow_right</item>
+        <item name="android:drawablePadding">@dimen/share_add_recipients_drawer_padding</item>
+        <item name="android:textColor">@color/add_recipient_text</item>
+        <item name="android:textSize">@dimen/pick_destination_text_size</item>
+    </style>
 </resources>
