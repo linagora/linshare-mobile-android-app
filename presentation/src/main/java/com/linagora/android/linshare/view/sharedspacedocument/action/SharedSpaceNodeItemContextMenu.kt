@@ -9,4 +9,8 @@ import com.linagora.android.linshare.view.base.ItemContextMenu
 class SharedSpaceNodeItemContextMenu(private val viewModel: BaseViewModel) : ItemContextMenu<WorkGroupNode> {
 
     override fun remove(data: WorkGroupNode) = viewModel.dispatchUIState(Either.right(RemoveSharedSpaceNodeClick(data)))
+
+    override fun details(data: WorkGroupNode) {
+        TODO("Not yet implemented")
+    }
 }

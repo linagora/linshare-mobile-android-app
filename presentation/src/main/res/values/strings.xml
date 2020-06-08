@@ -134,4 +134,6 @@
     <string name="copy_to_my_space_error_quota_reach">Not enough space in My Space to copy</string>
     <string name="copy_to_my_space_error_file_size_exceed">The file has exceeded size limit.</string>
     <string name="copy_to_my_space_error">An error occurred, can not copy.</string>
+    
+    <string name="details" translatable="false">Details</string>
 </resources>

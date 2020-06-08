@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested" />
+        <variable
+            name="sharedSpaceNodeNested"
+            type="SharedSpaceNodeNested" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/RowLinerBottomSheetStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/previewShareSpaceIcon"
+            style="@style/ImageInRowBottomSheet"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_shared_space_item"
+            />
+
+        <TextView
+            android:id="@+id/shareSpaceName"
+            style="@style/DocumentInfoHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/previewShareSpaceIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{sharedSpaceNodeNested.name}"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

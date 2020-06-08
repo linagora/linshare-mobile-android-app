@@ -16,6 +16,7 @@ import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
+import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -24,6 +25,7 @@ import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.util.Constant.CLEAR_QUERY_STRING
 import com.linagora.android.linshare.util.Constant.NOT_SUBMIT_TEXT
+import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.showKeyboard
@@ -85,7 +87,8 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is SharedSpaceItemClick -> navigateIntoSharedSpace(viewEvent.sharedSpaceNodeNested)
             is OpenSearchView -> handleOpenSearch()
             is CloseSearchView -> handleCloseSearch()
-            is SharedSpaceContextMenuClick -> { }
+            is SharedSpaceContextMenuClick -> showContextMenu(viewEvent.sharedSpaceNodeNested)
+            is DetailsSharedSpaceItem -> navigateToDetails()
         }
         sharedSpaceViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -148,10 +151,22 @@ class SharedSpaceFragment : MainNavigationFragment() {
         binding.swipeLayoutSharedSpace.setColorSchemeResources(R.color.colorPrimary)
     }
 
+    private fun showContextMenu(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        dismissContextMenu()
+        SharedSpaceContextMenuDialog(sharedSpaceNodeNested)
+            .show(childFragmentManager, SharedSpaceContextMenuDialog.TAG)
+    }
+
+    private fun dismissContextMenu() {
+        childFragmentManager.dismissDialogFragmentByTag(SharedSpaceContextMenuDialog.TAG)
+    }
+
     private fun getSharedSpace() {
         LOGGER.info("getSharedSpaces")
         sharedSpaceViewModel.getSharedSpace()
     }
+
+    private fun navigateToDetails() {}
 
     private fun navigateIntoSharedSpace(sharedSpaceNodeNested: SharedSpaceNodeNested) {
         val navigationBundle = bundleOf(

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested"/>
+        <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
+
+        <variable
+            name="sharedSpaceNodeNested"
+            type="SharedSpaceNodeNested" />
+
+        <variable
+            name="itemContextMenu"
+            type="ItemContextMenu&lt;SharedSpaceNodeNested&gt;" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/padding_top_bottom_sheet"
+        android:paddingBottom="@dimen/padding_top_bottom_sheet">
+
+        <include
+            android:id="@+id/sharedSpaceHeaderContainer"
+            layout="@layout/header_shared_space_info"
+            bind:sharedSpaceNodeNested="@{sharedSpaceNodeNested}" />
+
+        <View
+            android:layout_marginTop="@dimen/padding_top_bottom_sheet"
+            style="@style/DivideView"
+            app:layout_constraintTop_toBottomOf="@id/sharedSpaceHeaderContainer" />
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> itemContextMenu.details(sharedSpaceNodeNested)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_detail" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/details" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

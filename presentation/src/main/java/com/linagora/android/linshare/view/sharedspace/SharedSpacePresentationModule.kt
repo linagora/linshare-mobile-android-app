@@ -19,4 +19,8 @@ internal abstract class SharedSpacePresentationModule {
     @IntoMap
     @ViewModelKey(SharedSpaceViewModel::class)
     abstract fun bindSharedSpaceViewModel(receivedSharesViewModel: SharedSpaceViewModel): ViewModel
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeSharedSpaceContextMenuDialog(): SharedSpaceContextMenuDialog
 }

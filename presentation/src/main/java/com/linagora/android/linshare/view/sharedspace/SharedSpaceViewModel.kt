@@ -14,6 +14,7 @@ import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior
+import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemContextMenu
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SharedSpaceViewModel @Inject constructor(
@@ -34,9 +34,7 @@ class SharedSpaceViewModel @Inject constructor(
 
     val searchAction = SearchActionImp(this)
 
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(SharedSpaceViewModel::class.java)
-    }
+    val sharedSpaceItemContextMenu = SharedSpaceItemContextMenu(this)
 
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 
