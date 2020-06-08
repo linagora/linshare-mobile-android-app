@@ -16,3 +16,4 @@ data class GetSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewSta
 data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()
 object NoResultsSearchSharedSpace : Failure.FeatureFailure()
 object SearchSharedSpaceInitial : Success.ViewState()
+data class DetailsSharedSpaceItem(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()

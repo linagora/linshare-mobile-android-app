@@ -9,4 +9,8 @@ import com.linagora.android.linshare.view.base.ItemContextMenu
 class MySpaceItemContextMenu(private val viewModel: BaseViewModel) : ItemContextMenu<Document> {
 
     override fun remove(data: Document) = viewModel.dispatchUIState(Either.right(RemoveClick(data)))
+
+    override fun details(data: Document) {
+        TODO("Not yet implemented")
+    }
 }
