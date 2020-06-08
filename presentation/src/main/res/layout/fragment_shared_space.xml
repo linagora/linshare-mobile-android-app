@@ -124,7 +124,7 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
             android:backgroundTint="@color/bottom_app_bar_background"
-            android:elevation="6dp"
+            app:elevation="6dp"
             app:contentInsetStart="16dp"
             app:fabAlignmentMode="center"
             app:hideOnScroll="true">

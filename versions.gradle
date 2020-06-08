@@ -29,6 +29,7 @@ versions.ktlint = "0.34.2"
 
 versions.lifecycle = "2.2.0"
 
+versions.material = "1.1.0"
 versions.mockito = "3.1.0"
 
 versions.navigation = "2.2.1"
@@ -150,6 +151,10 @@ lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecy
 lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
 lifecycle.live_data = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
 deps.lifecycle = lifecycle
+
+def material = [:]
+material.google = "com.google.android.material:material:$versions.material"
+deps.material = material
 
 def mockito = [:]
 mockito.core = "org.mockito:mockito-inline:$versions.mockito"

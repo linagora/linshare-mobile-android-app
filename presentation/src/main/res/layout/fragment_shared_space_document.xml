@@ -108,7 +108,7 @@
             android:layout_gravity="bottom"
             app:hideOnScroll="true"
             app:contentInsetStart="16dp"
-            android:elevation="6dp"
+            app:elevation="6dp"
             app:fabAlignmentMode="center">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -141,6 +141,8 @@
             android:visibility="invisible"
             app:layout_anchor="@id/sharedSpaceDocumentBottomBar"
             app:rippleColor="@color/divide_view"
+            app:backgroundTint="@color/colorPrimary"
+            app:tint="@color/white"
             app:sharedSpaceDocumentAddButton="@{viewModel.currentSharedSpace}"
             app:isSearchingState="@{viewModel.searchAction.isSearching()}"
             android:onClick="@{() -> viewModel.onAddButtonClick()}"/>

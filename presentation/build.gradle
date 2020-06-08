@@ -161,6 +161,8 @@ dependencies {
 
     implementation deps.kotlin.reflect
 
+    implementation deps.material.google
+
     implementation deps.okhttp.logging_interceptor
     implementation deps.okhttp.runtime
 
