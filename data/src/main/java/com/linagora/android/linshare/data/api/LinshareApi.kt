@@ -143,6 +143,7 @@ interface LinshareApi {
     ): WorkGroupNode
 
     @GET("/shared_spaces/{sharedSpaceUuid}/members")
+    @Headers("Accept: application/json")
     suspend fun getMembers(
         @Path("sharedSpaceUuid") sharedSpaceUuid: String
     ): List<SharedSpaceMember>

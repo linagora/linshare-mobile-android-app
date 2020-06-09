@@ -88,7 +88,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is OpenSearchView -> handleOpenSearch()
             is CloseSearchView -> handleCloseSearch()
             is SharedSpaceContextMenuClick -> showContextMenu(viewEvent.sharedSpaceNodeNested)
-            is DetailsSharedSpaceItem -> navigateToDetails()
+            is DetailsSharedSpaceItem -> navigateToDetails(viewEvent.sharedSpaceNodeNested)
         }
         sharedSpaceViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -166,7 +166,12 @@ class SharedSpaceFragment : MainNavigationFragment() {
         sharedSpaceViewModel.getSharedSpace()
     }
 
-    private fun navigateToDetails() {}
+    private fun navigateToDetails(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        dismissContextMenu()
+        val actionToDetails = SharedSpaceFragmentDirections
+            .actionToNavigationSharedSpaceDetails(sharedSpaceNodeNested.sharedSpaceId.toParcelable())
+        findNavController().navigate(actionToDetails)
+    }
 
     private fun navigateIntoSharedSpace(sharedSpaceNodeNested: SharedSpaceNodeNested) {
         val navigationBundle = bundleOf(
