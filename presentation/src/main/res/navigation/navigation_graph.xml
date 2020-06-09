@@ -88,6 +88,13 @@
         android:id="@id/navigation_shared_space"
         android:name="com.linagora.android.linshare.view.sharedspace.SharedSpaceFragment"
         tools:layout="@layout/fragment_shared_space">
+        <action
+            android:id="@+id/actionToNavigationSharedSpaceDetails"
+            app:destination="@id/navigationSharedSpaceDetails"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/navigation_shared_spaced_document"
@@ -96,5 +103,13 @@
         <argument
             android:name="navigationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationSharedSpaceDetails"
+        android:name="com.linagora.android.linshare.view.sharedspace.details.SharedSpaceDetailsFragment"
+        tools:layout="@layout/fragment_shared_space_details">
+        <argument
+            android:name="sharedSpaceId"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable"/>
     </fragment>
 </navigation>

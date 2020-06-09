@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--common-->
+    <dimen name="margin_normal">16dp</dimen>
+
     <!--wizard-->
     <dimen name="page_indicator_margin_top">10dp</dimen>
     <dimen name="margin_top_wizard">20dp</dimen>
@@ -150,4 +153,12 @@
     <dimen name="shared_space_navigation_path_text_size">16sp</dimen>
     <dimen name="shared_space_path_margin_start">16dp</dimen>
     <dimen name="result_count_margin">24dp</dimen>
+
+    <!--details-->
+    <dimen name="details_page_margin">17dp</dimen>
+    <dimen name="tag_round_corner">8dp</dimen>
+    <dimen name="tag_text_size">9dp</dimen>
+    <dimen name="tag_padding_side">8dp</dimen>
+    <dimen name="tag_padding_vertical">2dp</dimen>
+    <dimen name="member_avatar_size">40dp</dimen>
 </resources>
