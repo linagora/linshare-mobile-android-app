@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember"/>
+        <variable
+            name="member"
+            type="SharedSpaceMember" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/my_space_item_padding"
+        android:paddingBottom="@dimen/my_space_item_padding"
+        android:paddingStart="@dimen/my_space_item_padding_start"
+        android:paddingEnd="@dimen/my_space_item_padding_start">
+
+        <TextView
+            android:id="@+id/memberAvatar"
+            android:layout_width="@dimen/member_avatar_size"
+            android:layout_height="@dimen/member_avatar_size"
+            style="@style/CharacterAvatarStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:memberAvatar="@{member}" />
+
+        <TextView
+            android:id="@+id/memberName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            android:singleLine="true"
+            android:textSize="@dimen/my_space_item_primary_text_size"
+            android:textColor="@color/file_name_color"
+            app:layout_constraintEnd_toStartOf="@id/memberTag"
+            app:layout_constraintStart_toEndOf="@id/memberAvatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{member.sharedSpaceAccount.name}"/>
+
+        <TextView
+            android:id="@+id/memberTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            android:text="Me"
+            style="@style/TagStyle"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/memberName"/>
+
+        <TextView
+            android:id="@+id/memberMail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/file_size_color"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:singleLine="true"
+            android:textStyle="italic"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            app:layout_constraintTop_toBottomOf="@id/memberName"
+            app:layout_constraintStart_toEndOf="@id/memberAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@{member.sharedSpaceAccount.mail}"/>
+
+        <TextView
+            android:id="@+id/memberRole"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            app:layout_constraintTop_toBottomOf="@id/memberMail"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            app:layout_constraintStart_toEndOf="@id/memberAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:memberRole="@{member}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

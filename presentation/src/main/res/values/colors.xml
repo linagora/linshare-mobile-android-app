@@ -38,4 +38,6 @@
     <color name="recipient_background_color">#F7F7F7</color>
 
     <color name="text_primary_color">#7B7B7B</color>
+
+    <color name="tag_background_color">#66C190</color>
 </resources>
