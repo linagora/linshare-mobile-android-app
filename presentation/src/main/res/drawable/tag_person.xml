@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <corners android:topLeftRadius="@dimen/tag_round_corner"
+        android:topRightRadius="@dimen/tag_round_corner"
+        android:bottomLeftRadius="@dimen/tag_round_corner"
+        android:bottomRightRadius="@dimen/tag_round_corner"/>
+    <solid android:color="@color/tag_background_color"/>
+</shape>

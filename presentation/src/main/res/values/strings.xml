@@ -136,4 +136,9 @@
     <string name="copy_to_my_space_error">An error occurred, can not copy.</string>
     
     <string name="details" translatable="false">Details</string>
+    <string name="members" translatable="false">Members</string>
+    <string name="reader_role_name" translatable="false">Reader</string>
+    <string name="writer_role_name" translatable="false">Writer</string>
+    <string name="contributor_role_name" translatable="false">Contributor</string>
+    <string name="admin_role_name" translatable="false">Admin</string>
 </resources>
