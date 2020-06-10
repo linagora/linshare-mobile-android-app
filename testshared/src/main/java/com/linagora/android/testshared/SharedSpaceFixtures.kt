@@ -51,4 +51,24 @@ object SharedSpaceFixtures {
     val NOT_FOUND_SHARED_SPACE_STATE = Either.left(NoResultsSearchSharedSpace)
 
     val QUERY_STRING_SHARED_SPACE = QueryString("query_string")
+
+    val ADMIN_ROLE = SharedSpaceRole(
+        uuid = UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"),
+        name = SharedSpaceRoleName.ADMIN
+    )
+
+    val WRITER_ROLE = SharedSpaceRole(
+        uuid = UUID.fromString("8839654d-cb33-4633-bf3f-f9e805f97f84"),
+        name = SharedSpaceRoleName.WRITER
+    )
+
+    val CONTRIBUTOR_ROLE = SharedSpaceRole(
+        uuid = UUID.fromString("b206c2ba-37de-491e-8e9c-88ed3be70682"),
+        name = SharedSpaceRoleName.CONTRIBUTOR
+    )
+
+    val READER_ROLE = SharedSpaceRole(
+        uuid = UUID.fromString("4ccbed61-71da-42a0-a513-92211953ac95"),
+        name = SharedSpaceRoleName.READER
+    )
 }

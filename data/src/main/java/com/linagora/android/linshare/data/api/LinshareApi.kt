@@ -12,6 +12,7 @@ import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import okhttp3.MultipartBody
@@ -147,4 +148,8 @@ interface LinshareApi {
     suspend fun getMembers(
         @Path("sharedSpaceUuid") sharedSpaceUuid: String
     ): List<SharedSpaceMember>
+
+    @GET("/shared_space_roles")
+    @Headers("Accept: application/json")
+    suspend fun getSharedSpaceRoles(): List<SharedSpaceRole>
 }
