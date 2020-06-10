@@ -1,13 +1,5 @@
-image: jangrewe/gitlab-ci-android
-
-before_script:
-  - export GRADLE_USER_HOME=$(pwd)/.gradle
-  - chmod +x ./gradlew
-
-cache:
-  key: "$CI_PIPELINE_ID"
-  paths:
-    - .gradle/
+# The image used in the jobs is generated from the Dockerfile available here:
+# https://ci.linagora.com/linagora/lgs/openpaas/ci/blob/master/Dockerfile
 
 stages:
   - linter
@@ -15,40 +7,49 @@ stages:
   - test
   - publish
 
+variables:
+  LC_ALL: "en_US.UTF-8"
+  LANG: "en_US.UTF-8"
+
 lintDebug:
+  image: docker-registry.linagora.com:5000/lgs-sandbox/fastlane-android-29
   stage: linter
   tags:
     - docker
   script:
-    - ./gradlew -Pci --console=plain :presentation:lintDebug -PbuildDir=lint
+    - bundle exec fastlane lintDebug
 
 ktlint:
+  image: docker-registry.linagora.com:5000/lgs-sandbox/fastlane-android-29
   stage: linter
   tags:
     - docker
   script:
-    - ./gradlew -Pci --console=plain ktlint
+    - bundle exec fastlane ktlint
 
 assembleDebug:
+  image: docker-registry.linagora.com:5000/lgs-sandbox/fastlane-android-29
   stage: build
   tags:
     - docker
   script:
-    - ./gradlew assembleDebug
+    - bundle exec fastlane assembleDebug
 
 testDebug:
+  image: docker-registry.linagora.com:5000/lgs-sandbox/fastlane-android-29
   stage: test
   tags:
     - docker
   script:
-    - ./gradlew -Pci --console=plain clean :domain:testDebug :presentation:testDebug :data:testDebug
+    - bundle exec fastlane testDebug
 
 publishAPK:
+  image: docker-registry.linagora.com:5000/lgs-sandbox/fastlane-android-29
   stage: publish
   tags:
     - docker
   script:
-    - ./gradlew -Pci --console=plain clean assemble
+    - bundle exec fastlane assemble
   environment:
     name: master
   artifacts:
