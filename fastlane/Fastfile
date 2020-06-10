@@ -1,0 +1,44 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs lintDebug"
+  lane :lintDebug do
+    gradle(task: ":presentation:lintDebug")
+  end
+
+  desc "Runs ktlint"
+  lane :ktlint do
+    gradle(task: "ktlint")
+  end
+
+  desc "Assemble Debug"
+  lane :assembleDebug do
+    gradle(task: "assembleDebug")
+  end
+
+  desc "Test Debug"
+  lane :testDebug do
+    gradle(tasks: ["clean", ":domain:testDebug", ":presentation:testDebug", ":data:testDebug"])
+  end
+
+  desc "Publish APK in Gitlab artifact"
+  lane :publishAPK do
+    gradle(tasks: ["clean", "assemble"])
+  end
+
+end
