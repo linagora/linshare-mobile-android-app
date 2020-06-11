@@ -4,6 +4,7 @@
     <data>
         <import type="com.linagora.android.linshare.model.upload.UploadDocumentRequest"/>
         <import type="com.linagora.android.linshare.view.Navigation.UploadType"/>
+        <import type="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"/>
         <import type="android.view.View"/>
 
         <variable
@@ -13,6 +14,10 @@
         <variable
             name="uploadDocument"
             type="UploadDocumentRequest" />
+
+        <variable
+            name="uploadDestinationInfo"
+            type="UploadDestinationInfo" />
 
         <variable
             name="viewModel"
@@ -159,7 +164,8 @@
                 android:onClick="@{() -> viewModel.openPickDestinationDialog()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/pickTheDestinationLabel"
-                app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel"
+                app:uploadDestination="@{uploadDestinationInfo}" />
 
             <View
                 android:id="@+id/dividerPickDestination"
