@@ -94,6 +94,8 @@ class UploadFragment : MainNavigationFragment() {
         private val EMPTY_SELECTION_ARGS = null
 
         private val DEFAULT_SORT_ORDER = null
+
+        private val UPLOAD_TO_MY_SPACE_DESTINATION_INFO = null
     }
 
     @Inject
@@ -123,6 +125,7 @@ class UploadFragment : MainNavigationFragment() {
         binding = FragmentUploadBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.uploadType = args.uploadType
+        binding.uploadDestinationInfo = args.uploadDestinationInfo
         initViewModel()
         initAutoComplete()
         return binding.root
@@ -290,12 +293,14 @@ class UploadFragment : MainNavigationFragment() {
     private fun uploadOutsideToMySpace() {
         childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
         binding.uploadType = Navigation.UploadType.OUTSIDE_APP
-        binding.pickDestination.text = getString(R.string.my_space)
+        binding.uploadDestinationInfo = UPLOAD_TO_MY_SPACE_DESTINATION_INFO
     }
 
     private fun uploadOutsideToSharedSpace() {
-        childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
-        val action = UploadFragmentDirections.actionUploadFragmentToNavigationDestination(binding.uploadType!!, args.uri, args.uploadDestinationInfo)
+        val action = UploadFragmentDirections.actionUploadFragmentToNavigationDestination(
+            binding.uploadType!!,
+            args.uri,
+            args.uploadDestinationInfo)
         findNavController().navigate(action)
     }
 
@@ -342,7 +347,7 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun createUploadRequest(): UploadWorkerRequest {
-        return when (args.uploadType) {
+        return when (binding.uploadType) {
             Navigation.UploadType.INSIDE_APP_TO_WORKGROUP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> createSharedSpaceUploadRequest(args)
             else -> createMySpaceUploadRequest()
         }
@@ -402,7 +407,7 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun navigateAfterUpload() {
-        when (args.uploadType) {
+        when (binding.uploadType) {
             Navigation.UploadType.OUTSIDE_APP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> requireActivity().onBackPressed()
             Navigation.UploadType.INSIDE_APP, Navigation.UploadType.INSIDE_APP_TO_WORKGROUP -> findNavController().popBackStack()
         }
