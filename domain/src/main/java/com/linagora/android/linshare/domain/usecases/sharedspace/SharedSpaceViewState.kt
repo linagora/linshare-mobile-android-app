@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.domain.usecases.sharedspace
 
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
@@ -17,3 +18,4 @@ data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()
 object NoResultsSearchSharedSpace : Failure.FeatureFailure()
 object SearchSharedSpaceInitial : Success.ViewState()
 data class DetailsSharedSpaceItem(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
+data class OpenAddMembers(val sharedSpaceId: SharedSpaceId) : Success.ViewEvent()

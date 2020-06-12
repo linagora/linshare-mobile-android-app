@@ -49,6 +49,7 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
     private fun initViewModel(binding: FragmentSharedSpaceDetailsBinding) {
         viewModel = getViewModel(viewModelFactory)
         binding.viewModel = viewModel
+        binding.sharedSpaceId = sharedSpaceDetailsArgs.sharedSpaceId.toSharedSpaceId()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

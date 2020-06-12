@@ -117,6 +117,17 @@
         <argument
             android:name="sharedSpaceId"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable"/>
+        <action
+            android:id="@+id/action_navigation_shared_space_to_sharedSpaceAddMemberFragment"
+            app:destination="@id/navigationAddMembersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationAddMembersFragment"
+        android:name="com.linagora.android.linshare.view.sharedspace.details.SharedSpaceAddMemberFragment"
+        tools:layout="@layout/fragment_add_member" >
+        <argument
+            android:name="sharedSpaceId"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable" />
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceDestination"

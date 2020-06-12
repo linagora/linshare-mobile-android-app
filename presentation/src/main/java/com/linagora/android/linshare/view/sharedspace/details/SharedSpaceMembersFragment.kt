@@ -4,10 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceMemberBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.usecases.sharedspace.OpenAddMembers
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.util.getParentViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -35,6 +40,21 @@ class SharedSpaceMembersFragment(private val sharedSpaceId: SharedSpaceId) : Dag
     private fun initViewModel(binding: FragmentSharedSpaceMemberBinding) {
         sharedSpaceDetailsViewModel = getParentViewModel(viewModelFactory)
         binding.viewModel = sharedSpaceDetailsViewModel
+        observeViewState()
+    }
+
+    private fun observeViewState() {
+        sharedSpaceDetailsViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
+            state.map { success -> when (success) {
+                is Success.ViewEvent -> reactToViewEvent(success)
+            } }
+        })
+    }
+
+    private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (viewEvent) {
+            is OpenAddMembers -> navigateToAddMembersFragment(viewEvent.sharedSpaceId)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,5 +65,11 @@ class SharedSpaceMembersFragment(private val sharedSpaceId: SharedSpaceId) : Dag
 
     private fun setUpSwipeRefreshLayout() {
         binding.swipeLayoutMember.setColorSchemeResources(R.color.colorPrimary)
+    }
+
+    private fun navigateToAddMembersFragment(sharedSpaceId: SharedSpaceId) {
+        val action = SharedSpaceDetailsFragmentDirections
+            .actionNavigationSharedSpaceToSharedSpaceAddMemberFragment(sharedSpaceId.toParcelable())
+        findNavController().navigate(action)
     }
 }

@@ -5,6 +5,10 @@
 
     <data>
         <import type="com.linagora.android.linshare.view.sharedspace.details.SharedSpaceDetailsViewModel"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId"/>
+        <variable
+            name="sharedSpaceId"
+            type="SharedSpaceId" />
         <variable
             name="viewModel"
             type="SharedSpaceDetailsViewModel" />
@@ -54,6 +58,21 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layout_constraintTop_toBottomOf="@id/app_bar"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addMemberButton"
+                android:layout_width="wrap_content"
+                android:theme="@style/FloatingUploadButton"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_add_person"
+                app:tint="@color/white"
+                app:backgroundTint="@color/colorPrimary"
+                app:rippleColor="@color/divide_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="@dimen/add_member_button_margin_bottom"
+                android:onClick="@{() -> viewModel.onAddMembersButtonClick(sharedSpaceId)}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
