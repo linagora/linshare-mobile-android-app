@@ -143,6 +143,13 @@
         <item name="android:backgroundTint">@color/add_recipient_gray</item>
     </style>
 
+    <style name="AddMembersStyle">
+        <item name="android:drawableEnd">@drawable/ic_arrow_down</item>
+        <item name="android:drawablePadding">@dimen/share_add_recipients_drawer_padding</item>
+        <item name="android:textColor">@color/add_recipient_text</item>
+        <item name="android:backgroundTint">@color/add_recipient_gray</item>
+    </style>
+
     <style name="ShareIconInRowItem">
         <item name="android:layout_width">@dimen/my_space_item_user_share_icon_width</item>
         <item name="android:layout_height">@dimen/my_space_item_user_share_icon_height</item>

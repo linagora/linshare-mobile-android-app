@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/share_label_margin_top"
+        android:paddingBottom="@dimen/share_label_margin_top">
+
+        <TextView
+            android:id="@+id/addMemberLabel"
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/share_label_margin_start"
+            android:text="@string/add_members"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/addMembers"
+            style="@style/AddRecipientsStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/share_add_recipients_margin_side"
+            android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
+            android:layout_marginTop="@dimen/share_add_recipients_margin_top"
+            android:hint="@string/add_people"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:textColorHint="@color/disable_state_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/selectRoles"
+            app:layout_constraintTop_toBottomOf="@+id/addMemberLabel" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/selectRoles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/AddMembersStyle"
+            android:drawableEnd="@drawable/ic_arrow_down"
+            app:layout_constraintBaseline_toBaselineOf="@+id/addMembers"
+            android:maxLines="1"
+            android:text="@string/reader_role_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
+            android:textColor="@color/colorPrimary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
