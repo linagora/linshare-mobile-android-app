@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.OpenAddMembers
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.util.getParentViewModel
+import com.linagora.android.linshare.util.getViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -23,6 +24,8 @@ class SharedSpaceMembersFragment(private val sharedSpaceId: SharedSpaceId) : Dag
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var sharedSpaceDetailsViewModel: SharedSpaceDetailsViewModel
+
+    private lateinit var sharedSpaceMemberViewModel: SharedSpaceMemberViewModel
 
     private lateinit var binding: FragmentSharedSpaceMemberBinding
 
@@ -39,7 +42,8 @@ class SharedSpaceMembersFragment(private val sharedSpaceId: SharedSpaceId) : Dag
 
     private fun initViewModel(binding: FragmentSharedSpaceMemberBinding) {
         sharedSpaceDetailsViewModel = getParentViewModel(viewModelFactory)
-        binding.viewModel = sharedSpaceDetailsViewModel
+        sharedSpaceMemberViewModel = getViewModel(viewModelFactory)
+        binding.viewModel = sharedSpaceMemberViewModel
         observeViewState()
     }
 
@@ -60,7 +64,7 @@ class SharedSpaceMembersFragment(private val sharedSpaceId: SharedSpaceId) : Dag
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
-        sharedSpaceDetailsViewModel.getAllMembers(sharedSpaceId)
+        sharedSpaceMemberViewModel.getAllMembers(sharedSpaceId)
     }
 
     private fun setUpSwipeRefreshLayout() {
