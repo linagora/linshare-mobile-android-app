@@ -1,6 +1,7 @@
 package com.linagora.android.linshare.inject
 
 import com.linagora.android.linshare.inject.sharedspace.member.SharedSpaceMemberModule
+import com.linagora.android.linshare.inject.sharedspace.role.SharedSpaceRoleModule
 import com.linagora.android.linshare.inject.worker.WorkerBindingModule
 import com.linagora.android.linshare.inject.worker.WorkerFactoryModule
 import com.linagora.android.linshare.view.LinShareApplication
@@ -28,7 +29,8 @@ import javax.inject.Singleton
         ShareModule::class,
         SharedSpaceModule::class,
         AutoCompleteModule::class,
-        SharedSpaceMemberModule::class
+        SharedSpaceMemberModule::class,
+        SharedSpaceRoleModule::class
     ]
 )
 interface AppComponent : AndroidInjector<LinShareApplication> {

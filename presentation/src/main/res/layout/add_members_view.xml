@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole"/>
+        <import type="arrow.core.Either"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
+
+        <variable
+            name="addMembersState"
+            type="Either&lt;Failure,Success&gt;" />
+
+        <variable
+            name="selectedRole"
+            type="SharedSpaceRole" />
+
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/share_label_margin_top"
-        android:paddingBottom="@dimen/share_label_margin_top">
+        android:paddingBottom="@dimen/share_label_margin_top"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:visibleAddMember="@{addMembersState}">
 
         <TextView
             android:id="@+id/addMemberLabel"
@@ -24,7 +44,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/share_add_recipients_margin_side"
-            android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
             android:layout_marginTop="@dimen/share_add_recipients_margin_top"
             android:hint="@string/add_people"
             android:inputType="textEmailAddress"
@@ -38,14 +57,13 @@
             android:id="@+id/selectRoles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AddMembersStyle"
+            style="@style/SelectRoleStyle"
             android:drawableEnd="@drawable/ic_arrow_down"
             app:layout_constraintBaseline_toBaselineOf="@+id/addMembers"
             android:maxLines="1"
-            android:text="@string/reader_role_name"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
-            android:textColor="@color/colorPrimary" />
+            app:selectedRole="@{selectedRole}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
