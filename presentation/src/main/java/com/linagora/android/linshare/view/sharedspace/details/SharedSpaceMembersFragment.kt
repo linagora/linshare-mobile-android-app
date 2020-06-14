@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceMemberBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
@@ -59,6 +60,7 @@ class SharedSpaceMembersFragment(private val sharedSpaceId: SharedSpaceId) : Dag
         when (viewEvent) {
             is OpenAddMembers -> navigateToAddMembersFragment(viewEvent.sharedSpaceId)
         }
+        sharedSpaceDetailsViewModel.dispatchState(Either.right(Success.Idle))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

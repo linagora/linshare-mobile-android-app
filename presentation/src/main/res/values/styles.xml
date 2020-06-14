@@ -132,7 +132,7 @@
 
     <style name="Label">
         <item name="android:textColor">@color/file_name_color</item>
-        <item name="android:textSize">@dimen/file_name_text_size</item>
+        <item name="android:textSize">@dimen/common_primary_text_size</item>
         <item name="android:singleLine">true</item>
     </style>
 
@@ -141,13 +141,17 @@
         <item name="android:drawablePadding">@dimen/share_add_recipients_drawer_padding</item>
         <item name="android:textColor">@color/add_recipient_text</item>
         <item name="android:backgroundTint">@color/add_recipient_gray</item>
+        <item name="android:textSize">@dimen/my_space_item_primary_text_size</item>
     </style>
 
-    <style name="AddMembersStyle">
+    <style name="SelectRoleStyle">
         <item name="android:drawableEnd">@drawable/ic_arrow_down</item>
         <item name="android:drawablePadding">@dimen/share_add_recipients_drawer_padding</item>
-        <item name="android:textColor">@color/add_recipient_text</item>
-        <item name="android:backgroundTint">@color/add_recipient_gray</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/my_space_item_secondary_text_size</item>
+        <item name="android:background">@drawable/gray_button_background</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/share_add_recipients_drawer_padding</item>
     </style>
 
     <style name="ShareIconInRowItem">
