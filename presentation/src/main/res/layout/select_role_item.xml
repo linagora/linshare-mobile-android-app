@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole" />
+        <import type="com.linagora.android.linshare.view.base.OnSelectRoles"/>
+
+        <variable
+            name="thisRole"
+            type="SharedSpaceRole" />
+
+        <variable
+            name="lastSelectedRole"
+            type="SharedSpaceRole" />
+
+        <variable
+            name="onSelectRoleBehavior"
+            type="OnSelectRoles" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/RowLinerBottomSheetStyle"
+        android:onClick="@{() -> onSelectRoleBehavior.onSelectedRoles(thisRole)}">
+
+        <ImageView
+            android:id="@+id/checkedRole"
+            style="@style/ImageInRowLinerBottomSheetStyle"
+            android:tint="@color/colorPrimary"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_check"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roleName="@{thisRole}"
+            app:lastSelectedRole="@{lastSelectedRole}"/>
+
+        <TextView
+            style="@style/TextInRowLinerBottomSheetStyle"
+            android:layout_marginStart="@dimen/role_name_item_margin_side"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roleName="@{thisRole}"
+            app:lastSelectedRole="@{lastSelectedRole}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

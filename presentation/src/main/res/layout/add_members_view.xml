@@ -4,18 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.linagora.android.linshare.view.base.OnSelectRoles"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole"/>
         <import type="arrow.core.Either"/>
         <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
         <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
+        <import type="java.util.List"/>
 
         <variable
             name="addMembersState"
             type="Either&lt;Failure,Success&gt;" />
 
         <variable
+            name="sharedSpaceRoles"
+            type="List&lt;SharedSpaceRole&gt;" />
+
+        <variable
             name="selectedRole"
             type="SharedSpaceRole" />
+
+        <variable
+            name="selectRoleBehavior"
+            type="OnSelectRoles" />
 
     </data>
 
@@ -44,6 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/share_add_recipients_margin_side"
+            android:layout_marginEnd="@dimen/share_add_recipients_drawer_padding"
             android:layout_marginTop="@dimen/share_add_recipients_margin_top"
             android:hint="@string/add_people"
             android:inputType="textEmailAddress"
@@ -58,12 +69,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/SelectRoleStyle"
-            android:drawableEnd="@drawable/ic_arrow_down"
             app:layout_constraintBaseline_toBaselineOf="@+id/addMembers"
             android:maxLines="1"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/share_add_recipients_margin_side"
-            app:selectedRole="@{selectedRole}" />
+            app:selectedRole="@{selectedRole}"
+            android:onClick="@{() -> selectRoleBehavior.onSelectRoles(selectedRole)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

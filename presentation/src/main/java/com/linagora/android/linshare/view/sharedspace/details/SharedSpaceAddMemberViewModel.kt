@@ -3,6 +3,7 @@ package com.linagora.android.linshare.view.sharedspace.details
 import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRoles
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.action.OnSelectRolesBehavior
 import com.linagora.android.linshare.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
@@ -18,6 +19,8 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceAddMemberViewModel::class.java)
     }
+
+    val onSelectRoleBehavior = OnSelectRolesBehavior(this)
 
     fun getSharedSpaceRoles() {
         LOGGER.info("getSharedSpaceRoles()")

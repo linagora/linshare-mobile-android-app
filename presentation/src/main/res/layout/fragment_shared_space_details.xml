@@ -6,9 +6,13 @@
     <data>
         <import type="com.linagora.android.linshare.view.sharedspace.details.SharedSpaceDetailsViewModel"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
+
         <variable
             name="sharedSpaceId"
             type="SharedSpaceId" />
+
         <variable
             name="viewModel"
             type="SharedSpaceDetailsViewModel" />
@@ -71,8 +75,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 android:layout_marginBottom="@dimen/add_member_button_margin_bottom"
-                android:onClick="@{() -> viewModel.onAddMembersButtonClick(sharedSpaceId)}"/>
+                app:contextActionVisible="@{viewModel.viewState}"
+                app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.addMembersRole}"
+                android:onClick="@{() -> viewModel.onAddMembersButtonClick(sharedSpaceId)}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

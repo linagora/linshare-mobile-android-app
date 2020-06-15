@@ -6,3 +6,5 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 
 data class GetAllSharedSpaceRolesSuccess(val roles: List<SharedSpaceRole>) : Success.ViewState()
 data class GetAllSharedSpaceRolesFailed(val throwable: Throwable) : Failure.FeatureFailure()
+data class OnSelectRoleClick(val lastSelectedRole: SharedSpaceRole) : Success.ViewEvent()
+data class OnSelectedRole(val selectedRole: SharedSpaceRole) : Success.ViewEvent()
