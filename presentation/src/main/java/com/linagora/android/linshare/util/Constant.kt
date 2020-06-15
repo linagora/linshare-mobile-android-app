@@ -31,4 +31,6 @@ object Constant {
     const val AUTO_COMPLETE_RESULT_TYPE_MAILING_LIST = "mailinglist"
 
     const val AUTO_COMPLETE_RESULT_TYPE_THREAD_MEMBER = "threadmember"
+
+    const val DEFAULT_AVATAR_CHARACTER = "U"
 }

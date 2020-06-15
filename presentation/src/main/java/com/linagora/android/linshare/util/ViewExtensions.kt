@@ -6,9 +6,17 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatImageView
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
+import com.linagora.android.linshare.domain.model.autocomplete.ThreadMemberAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.model.resources.StringId
+import com.linagora.android.linshare.util.Constant.DEFAULT_AVATAR_CHARACTER
 
 fun View.showKeyboard() {
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -45,3 +53,19 @@ fun SharedSpaceMember.getAvatarCharacter(): Char {
         .getFirstLetter()?.get(0)
         ?: sharedSpaceAccount.mail[0]
 }
+
+fun UserAutoCompleteResult.getAvatarCharacter(): String {
+    return firstName?.getFirstLetter()
+        ?: display.getFirstLetter()
+        ?: DEFAULT_AVATAR_CHARACTER
+}
+
+fun ThreadMemberAutoCompleteResult.getAvatarCharacter(): String {
+    return firstName.getFirstLetter()
+        ?: display.getFirstLetter()
+        ?: DEFAULT_AVATAR_CHARACTER
+}
+
+typealias OnRequestMemberAutoComplete = (AutoCompletePattern, AutoCompleteType, SharedSpaceId) -> Unit
+
+typealias OnAddMember = (AutoCompleteResult, SharedSpaceRole) -> Unit

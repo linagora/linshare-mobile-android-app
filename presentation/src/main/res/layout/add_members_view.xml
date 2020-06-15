@@ -4,12 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId"/>
         <import type="com.linagora.android.linshare.view.base.OnSelectRoles"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole"/>
         <import type="arrow.core.Either"/>
         <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
         <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
         <import type="java.util.List"/>
+
+        <variable
+            name="sharedSpaceId"
+            type="SharedSpaceId" />
 
         <variable
             name="addMembersState"
@@ -26,6 +31,10 @@
         <variable
             name="selectRoleBehavior"
             type="OnSelectRoles" />
+
+        <variable
+            name="suggestions"
+            type="Either&lt;Failure,Success&gt;" />
 
     </data>
 
@@ -62,7 +71,8 @@
             android:textColorHint="@color/disable_state_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/selectRoles"
-            app:layout_constraintTop_toBottomOf="@+id/addMemberLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/addMemberLabel"
+            app:memberAutoCompleteQueryState="@{suggestions}"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/selectRoles"

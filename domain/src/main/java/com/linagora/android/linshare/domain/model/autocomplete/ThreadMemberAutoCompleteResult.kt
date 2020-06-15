@@ -13,3 +13,8 @@ data class ThreadMemberAutoCompleteResult(
     val mail: String,
     val isMember: Boolean
 ) : AutoCompleteResult
+
+fun ThreadMemberAutoCompleteResult.fullName(): String? {
+    return firstName.takeIf { it.isNotBlank() }
+        ?.let { "$it $lastName" }
+}
