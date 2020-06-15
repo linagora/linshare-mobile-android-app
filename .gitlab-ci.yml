@@ -49,7 +49,7 @@ publishAPK:
   tags:
     - docker
   script:
-    - bundle exec fastlane assemble
+    - bundle exec fastlane publishAPK 
   environment:
     name: master
   artifacts:
