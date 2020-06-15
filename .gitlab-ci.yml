@@ -5,7 +5,7 @@ stages:
   - linter
   - build
   - test
-  - publish
+  - upload
 
 variables:
   LC_ALL: "en_US.UTF-8"
@@ -43,19 +43,28 @@ testDebug:
   script:
     - bundle exec fastlane testDebug
 
-publishAPK:
+# This job is uploading APK to Google Play (internal track)
+# It can only be triggered manually on master branch pipeline builds
+# Process to  promote the APK in Google Play is manual
+# This job needs several protected variables:
+# KEYSTORE: the content of the keystore in base 64 (hack, no way to store binary files in Gitlab without having it in the git repository)
+# KEY_ALIAS: name of the key in the keystore
+# KEY_PASSWORD: password of this key
+# STORE_PASSWORD: password of the keystore
+uploadInternal:
   image: docker-registry.linagora.com:5000/lgs-sandbox/fastlane-android-29
-  stage: publish
+  stage: upload
   tags:
     - docker
+  when: manual
+  # Add Google Play connection information needed by Fastlane
+  before_script:
+    - echo $JSON_KEY > google_play_api_key.json
+    - echo $KEYSTORE | base64 -d > keystore.jks
+  # finally remove them
+  after_script:
+    - rm google_play_api_key.json keystore.jks
   script:
-    - bundle exec fastlane publishAPK 
-  environment:
-    name: master
-  artifacts:
-    name: "linshare-apk-for-test"
-    expire_in: 1 month
-    paths:
-      - presentation/build/outputs/apk/develop/LinShare*.apk
+    - bundle exec fastlane uploadInternal
   only:
     - master

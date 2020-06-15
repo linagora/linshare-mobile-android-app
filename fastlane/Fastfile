@@ -36,9 +36,14 @@ platform :android do
     gradle(tasks: ["clean", ":domain:testDebug", ":presentation:testDebug", ":data:testDebug"])
   end
 
-  desc "Publish APK in Gitlab artifact"
-  lane :publishAPK do
+  desc "Submit a new Internal Build to Play Store"
+  lane :uploadInternal do
     gradle(tasks: ["clean", "assemble"])
+    Dir.chdir ".." do
+        sh("cp", "presentation/build/outputs/apk/release/LinShare-release.apk", "LinShare.apk")
+    end
+    upload_to_play_store(track: 'internal', apk: 'LinShare.apk')
+    upload_to_play_store_internal_app_sharing(apk: 'LinShare.apk')
   end
 
 end

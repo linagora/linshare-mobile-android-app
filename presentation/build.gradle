@@ -19,8 +19,9 @@ android {
         applicationId "com.linagora.android.linshare"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 2
-        versionName "1.0.0-beta03"
+        // Each time you need to upload the APK to Google Play, you need to manually increment the two following variables
+        versionCode 4
+        versionName "1.0.0-beta05"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -52,7 +53,12 @@ android {
             keyAlias = 'linshareAndroid'
             keyPassword 'linshare'
         }
-        release
+        release {
+            storeFile file('../keystore.jks')
+            storePassword "$System.env.STORE_PASSWORD"
+            keyAlias "$System.env.KEY_ALIAS"
+            keyPassword "$System.env.KEY_PASSWORD"
+        }
     }
 
     dataBinding {
@@ -70,7 +76,7 @@ android {
                     "$rootProject.rootDir.absolutePath/domain/proguard-rules.pro",
                     "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
             signingConfig signingConfigs.debug
-            applicationVariants.all { variant -> renameAPK(variant, defaultConfig, name) }
+            applicationVariants.all { variant -> renameAPK(variant, name) }
         }
         debug {
             applicationIdSuffix ".debug"
@@ -83,7 +89,6 @@ android {
                     "$rootProject.rootDir.absolutePath/domain/proguard-rules.pro",
                     "$rootProject.rootDir.absolutePath/data/proguard-rules.pro"
             signingConfig signingConfigs.release
-            applicationVariants.all { variant -> renameAPK(variant, defaultConfig, name) }
         }
     }
 
@@ -105,31 +110,9 @@ configurations {
     ktlint
 }
 
-Properties props = new Properties()
-def propFile = new File('keystore.properties')
-if (propFile.exists()) {
-    props.load(new FileInputStream(propFile))
-
-    if (hasKeystoreProperties(props)) {
-        android.signingConfigs.release.storeFile = rootProject.file(props['STORE_FILE'])
-        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
-        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
-        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
-    } else {
-        println 'keystore.properties found but some entries are missing'
-        android.buildTypes.release.signingConfig = null
-    }
-} else {
-    println 'keystore.properties not found. Using debug key'
-    android.signingConfigs.release.storeFile = rootProject.file('debugKeystore.jks')
-    android.signingConfigs.release.storePassword = 'linshare'
-    android.signingConfigs.release.keyAlias = 'linshareAndroid'
-    android.signingConfigs.release.keyPassword = 'linshare'
-}
-
-def renameAPK(variant, defaultConfig, buildTypes) {
+def renameAPK(variant, buildTypes) {
     variant.outputs.all { output ->
-        output.outputFileName = applicationName + "_v" + defaultConfig.versionName + "-" + buildTypes + ".apk"
+        output.outputFileName = applicationName + "-" + buildTypes + ".apk"
     }
 }
 
