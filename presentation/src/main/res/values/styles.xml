@@ -78,7 +78,7 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="android:layout_width">@dimen/size_icon_bottom_sheet</item>
         <item name="android:layout_height">@dimen/size_icon_bottom_sheet</item>
-        <item name="android:layout_marginRight">@dimen/page_indicator_margin_top</item>
+        <item name="android:layout_marginRight">@dimen/bottom_sheet_item_margin_side</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -145,13 +145,16 @@
     </style>
 
     <style name="SelectRoleStyle">
-        <item name="android:drawableEnd">@drawable/ic_arrow_down</item>
+        <item name="android:drawableEnd">@drawable/ic_drop_down</item>
         <item name="android:drawablePadding">@dimen/share_add_recipients_drawer_padding</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/my_space_item_secondary_text_size</item>
         <item name="android:background">@drawable/gray_button_background</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingStart">@dimen/share_add_recipients_drawer_padding</item>
+        <item name="android:paddingStart">@dimen/select_role_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/select_role_padding_horizontal</item>
+        <item name="android:paddingTop">@dimen/select_role_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/select_role_padding_vertical</item>
     </style>
 
     <style name="ShareIconInRowItem">

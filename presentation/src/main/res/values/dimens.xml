@@ -3,6 +3,7 @@
     <!--common-->
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="common_primary_text_size">16sp</dimen>
+    <dimen name="item_bottom_sheet_padding_vertical">8dp</dimen>
 
     <!--wizard-->
     <dimen name="page_indicator_margin_top">10dp</dimen>
@@ -106,8 +107,9 @@
     <dimen name="padding_vertical_row_bottom_sheet">8dp</dimen>
     <dimen name="padding_horizontal_row_bottom_sheet">24dp</dimen>
     <dimen name="size_icon_bottom_sheet">20dp</dimen>
-    <dimen name="height_bottom_sheet">48dp</dimen>
+    <dimen name="height_bottom_sheet">56dp</dimen>
     <dimen name="padding_top_bottom_sheet">12dp</dimen>
+    <dimen name="bottom_sheet_item_margin_side">10dp</dimen>
 
     <!--custom toast-->
     <dimen name="margin_toast">16dp</dimen>
@@ -173,4 +175,9 @@
 
     <!--add members-->
     <dimen name="list_counter_container_height">48dp</dimen>
+
+    <dimen name="role_name_item_margin_side">48dp</dimen>
+    <dimen name="select_role_dialog_padding_top">24dp</dimen>
+    <dimen name="select_role_padding_horizontal">8dp</dimen>
+    <dimen name="select_role_padding_vertical">4dp</dimen>
 </resources>
