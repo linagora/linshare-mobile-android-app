@@ -152,4 +152,11 @@ interface LinshareApi {
     @GET("/shared_space_roles")
     @Headers("Accept: application/json")
     suspend fun getSharedSpaceRoles(): List<SharedSpaceRole>
+
+    @GET("/autocomplete/{pattern}?type=THREAD_MEMBERS")
+    @Headers("Accept: application/json")
+    suspend fun getAutoCompleteThreadMembers(
+        @Path("pattern") pattern: String,
+        @Query("threadUuid") threadUuid: String
+    ): List<AutoCompleteResult>
 }

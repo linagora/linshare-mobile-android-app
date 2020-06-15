@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.repository.autocomplete.AutoCompleteRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -17,12 +18,16 @@ class GetAutoCompleteSharingInteractor @Inject constructor(
     private val autoCompleteRepository: AutoCompleteRepository
 ) {
 
-    operator fun invoke(autoCompletePattern: AutoCompletePattern): Flow<Either<Failure, Success>> {
+    operator fun invoke(
+        autoCompletePattern: AutoCompletePattern,
+        autoCompleteType: AutoCompleteType,
+        threadId: SharedSpaceId? = null
+    ): Flow<Either<Failure, Success>> {
         return flow<Either<Failure, Success>> {
             emit(Either.right(Success.Loading))
 
             val autoCompleteState = Either
-                .catch { autoCompleteRepository.getAutoComplete(autoCompletePattern, AutoCompleteType.SHARING) }
+                .catch { autoCompleteRepository.getAutoComplete(autoCompletePattern, autoCompleteType, threadId) }
                 .fold(
                     ifLeft = { Either.left(AutoCompleteFailure(it)) },
                     ifRight = { getAutoCompleteState(autoCompletePattern, it) })

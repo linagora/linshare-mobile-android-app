@@ -29,4 +29,6 @@ object Constant {
     const val AUTO_COMPLETE_RESULT_TYPE_USER = "user"
 
     const val AUTO_COMPLETE_RESULT_TYPE_MAILING_LIST = "mailinglist"
+
+    const val AUTO_COMPLETE_RESULT_TYPE_THREAD_MEMBER = "threadmember"
 }
