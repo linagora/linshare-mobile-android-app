@@ -10,9 +10,11 @@ import androidx.core.content.ContextCompat
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.SimpleAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.ThreadMemberAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.fullName
 import com.linagora.android.linshare.model.resources.LayoutId
+import com.linagora.android.linshare.util.getAvatarCharacter
 import com.linagora.android.linshare.util.getFirstLetter
 import java.util.concurrent.atomic.AtomicReference
 
@@ -79,6 +81,7 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
     private fun getSuggestionName(autoCompleteResult: AutoCompleteResult?): String? {
         return when (autoCompleteResult) {
             is UserAutoCompleteResult -> autoCompleteResult.fullName() ?: autoCompleteResult.display
+            is ThreadMemberAutoCompleteResult -> autoCompleteResult.fullName() ?: autoCompleteResult.display
             else -> autoCompleteResult?.display
         }
     }
@@ -99,6 +102,7 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
         return when (autoCompleteResult) {
             is UserAutoCompleteResult -> autoCompleteResult.mail ?: autoCompleteResult.display
             is SimpleAutoCompleteResult -> autoCompleteResult.identifier
+            is ThreadMemberAutoCompleteResult -> autoCompleteResult.mail ?: autoCompleteResult.display
             else -> autoCompleteResult?.display
         }
     }
@@ -111,16 +115,11 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
 
     private fun getAvatarCharacter(autoCompleteResult: AutoCompleteResult?): String {
         return when (autoCompleteResult) {
-            is UserAutoCompleteResult -> getAvatarForUser(autoCompleteResult)
+            is UserAutoCompleteResult -> autoCompleteResult.getAvatarCharacter()
+            is ThreadMemberAutoCompleteResult -> autoCompleteResult.getAvatarCharacter()
             else -> autoCompleteResult?.display?.getFirstLetter()
                 ?: DEFAULT_AVATAR_CHARACTER
         }
-    }
-
-    private fun getAvatarForUser(userAutoCompleteResult: UserAutoCompleteResult): String {
-        return userAutoCompleteResult.firstName?.getFirstLetter()
-            ?: userAutoCompleteResult.display.getFirstLetter()
-            ?: DEFAULT_AVATAR_CHARACTER
     }
 
     fun submitList(newSuggestions: List<AutoCompleteResult>) {

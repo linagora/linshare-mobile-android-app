@@ -5,6 +5,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRole
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.OnSelectRolesBehavior
 import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.widget.AddMemberSuggestionManager
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -13,7 +14,8 @@ import javax.inject.Singleton
 @Singleton
 class SharedSpaceAddMemberViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
-    private val getAllRoles: GetAllRoles
+    private val getAllRoles: GetAllRoles,
+    val addMemberSuggestionManager: AddMemberSuggestionManager
 ) : BaseViewModel(dispatcherProvider) {
 
     companion object {
