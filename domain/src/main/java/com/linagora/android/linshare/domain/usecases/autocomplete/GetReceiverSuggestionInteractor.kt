@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.combineK
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
 import com.linagora.android.linshare.domain.model.contact.Contact
 import com.linagora.android.linshare.domain.model.contact.toAutoCompleteResult
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -20,7 +21,7 @@ class GetReceiverSuggestionInteractor @Inject constructor(
 ) {
 
     operator fun invoke(autoCompletePattern: AutoCompletePattern): Flow<Either<Failure, Success>> {
-        val autoCompleteFlow = getAutoCompleteSharingInteractor(autoCompletePattern)
+        val autoCompleteFlow = getAutoCompleteSharingInteractor(autoCompletePattern, AutoCompleteType.SHARING)
         val contactSuggestionFlow = getContactSuggestionInteractor(autoCompletePattern)
         return autoCompleteFlow.combine(contactSuggestionFlow) { autoCompleteState, contactSuggestionState ->
             combineReceiverSuggestionState(autoCompletePattern, autoCompleteState, contactSuggestionState) }

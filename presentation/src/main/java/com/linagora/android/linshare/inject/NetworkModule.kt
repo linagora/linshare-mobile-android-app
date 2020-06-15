@@ -21,6 +21,7 @@ import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResul
 import com.linagora.android.linshare.domain.model.autocomplete.MailingListAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.MailingListId
 import com.linagora.android.linshare.domain.model.autocomplete.SimpleAutoCompleteResult
+import com.linagora.android.linshare.domain.model.autocomplete.ThreadMemberAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.quota.QuotaId
@@ -94,6 +95,7 @@ class NetworkModule {
             .registerSubtype(SimpleAutoCompleteResult::class.java, Constant.AUTO_COMPLETE_RESULT_TYPE_SIMPLE)
             .registerSubtype(UserAutoCompleteResult::class.java, Constant.AUTO_COMPLETE_RESULT_TYPE_USER)
             .registerSubtype(MailingListAutoCompleteResult::class.java, Constant.AUTO_COMPLETE_RESULT_TYPE_MAILING_LIST)
+            .registerSubtype(ThreadMemberAutoCompleteResult::class.java, Constant.AUTO_COMPLETE_RESULT_TYPE_THREAD_MEMBER)
     }
 
     @Singleton

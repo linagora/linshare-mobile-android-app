@@ -3,6 +3,7 @@ package com.linagora.android.linshare.domain.usecases.autocomplete
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
+import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
 import com.linagora.android.linshare.domain.model.contact.SimpleContact
 import com.linagora.android.linshare.domain.model.contact.toAutoCompleteResult
 import com.linagora.android.testshared.AutoCompleteFixtures.USER_AUTOCOMPLETE_RESULTS
@@ -52,7 +53,7 @@ class GetReceiverSuggestionInteractorTest {
                     emit(CONTACT_SUGGESTION_STATE)
                 } }
 
-        `when`(getAutoCompleteSharingInteractor(pattern))
+        `when`(getAutoCompleteSharingInteractor(pattern, AutoCompleteType.SHARING))
             .thenAnswer {
                 flow {
                     emit(LOADING_STATE)
@@ -80,7 +81,7 @@ class GetReceiverSuggestionInteractorTest {
                     emit(CONTACT_SUGGESTION_STATE)
                 } }
 
-        `when`(getAutoCompleteSharingInteractor(pattern))
+        `when`(getAutoCompleteSharingInteractor(pattern, AutoCompleteType.SHARING))
             .thenAnswer {
                 flow {
                     emit(LOADING_STATE)
@@ -109,7 +110,7 @@ class GetReceiverSuggestionInteractorTest {
                     emit(CONTACT_SUGGESTION_STATE)
                 } }
 
-        `when`(getAutoCompleteSharingInteractor(pattern))
+        `when`(getAutoCompleteSharingInteractor(pattern, AutoCompleteType.SHARING))
             .thenAnswer {
                 flow {
                     emit(LOADING_STATE)
@@ -136,7 +137,7 @@ class GetReceiverSuggestionInteractorTest {
                     emit(CONTACT_SUGGESTION_STATE)
                 } }
 
-        `when`(getAutoCompleteSharingInteractor(pattern))
+        `when`(getAutoCompleteSharingInteractor(pattern, AutoCompleteType.SHARING))
             .thenAnswer {
                 flow {
                     emit(LOADING_STATE)
@@ -163,7 +164,7 @@ class GetReceiverSuggestionInteractorTest {
                     emit(Either.left(AutoCompleteNoResult(pattern)))
                 } }
 
-        `when`(getAutoCompleteSharingInteractor(pattern))
+        `when`(getAutoCompleteSharingInteractor(pattern, AutoCompleteType.SHARING))
             .thenAnswer {
                 flow {
                     emit(LOADING_STATE)
@@ -190,7 +191,7 @@ class GetReceiverSuggestionInteractorTest {
                     emit(Either.left(ContactSuggestionFailure(RuntimeException())))
                 } }
 
-        `when`(getAutoCompleteSharingInteractor(pattern))
+        `when`(getAutoCompleteSharingInteractor(pattern, AutoCompleteType.SHARING))
             .thenAnswer {
                 flow {
                     emit(LOADING_STATE)
