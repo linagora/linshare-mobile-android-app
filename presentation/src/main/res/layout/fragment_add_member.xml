@@ -54,20 +54,24 @@
             app:selectRoleBehavior="@{viewModel.onSelectRoleBehavior}"
             app:suggestions="@{viewModel.addMemberSuggestionManager.suggestions}"/>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/memberCountContainer"
             app:layout_constraintTop_toBottomOf="@id/addMembersContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_counter_container_height"
             android:background="@color/search_result_container_background_color"
-            android:paddingTop="@dimen/share_label_margin_top"
-            android:paddingBottom="@dimen/share_label_margin_top">
+            android:paddingStart="@dimen/share_label_margin_start"
+            android:paddingEnd="@dimen/share_label_margin_start">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Label"/>
-        </LinearLayout>
+                style="@style/Label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:countMembers="@{viewModel.viewState}"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeLayoutMember"
@@ -85,7 +89,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 app:layoutManager="LinearLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:sharedSpaceMemberState="@{viewModel.viewState}"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

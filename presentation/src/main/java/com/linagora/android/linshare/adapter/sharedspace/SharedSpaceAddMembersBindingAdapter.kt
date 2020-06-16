@@ -4,12 +4,14 @@ import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter.StateSuggestionUser
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllSharedSpaceRolesFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllSharedSpaceRolesSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -63,5 +65,20 @@ fun bindingMemberSuggestion(
     queryState?.fold(
         ifLeft = { textView.submitStateSuggestions(StateSuggestionUser.NOT_FOUND) },
         ifRight = { textView.reactOnSuccessQuerySuggestion(it) }
+    )
+}
+
+@BindingAdapter("countMembers")
+fun bindingMemberCount(textView: TextView, sharedSpaceMemberState: Either<Failure, Success>) {
+    sharedSpaceMemberState.fold(
+        ifLeft = { textView.isVisible = false },
+        ifRight = { success ->
+            textView.isVisible = true
+            if (success is GetMembersSuccess) {
+                val totalMembers = success.members.size
+                textView.text = textView.context.resources
+                    .getQuantityString(R.plurals.existing_member, totalMembers, totalMembers)
+            }
+        }
     )
 }

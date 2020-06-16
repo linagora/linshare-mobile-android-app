@@ -146,4 +146,9 @@
     <string name="choose">Choose</string>
 
     <string name="add_members" translatable="false">Add Members</string>
+
+    <plurals name="existing_member">
+        <item quantity="one">Existing member: %d</item>
+        <item quantity="other">Existing members: %d</item>
+    </plurals>
 </resources>
