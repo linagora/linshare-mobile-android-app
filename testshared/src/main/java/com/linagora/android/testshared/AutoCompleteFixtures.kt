@@ -6,6 +6,7 @@ import com.linagora.android.linshare.domain.model.autocomplete.ThreadMemberAutoC
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.usecases.autocomplete.AutoCompleteNoResult
 import com.linagora.android.linshare.domain.usecases.autocomplete.AutoCompleteViewState
+import com.linagora.android.linshare.domain.usecases.autocomplete.ThreadMembersAutoCompleteViewState
 import java.util.UUID
 
 object AutoCompleteFixtures {
@@ -60,5 +61,5 @@ object AutoCompleteFixtures {
     )
 
     val THREAD_MEMBER_AUTO_COMPLETE_STATE = Either.right(
-        AutoCompleteViewState(listOf(THREAD_MEMBER_AUTO_COMPLETE_RESULT_1, THREAD_MEMBER_AUTO_COMPLETE_RESULT_2)))
+        ThreadMembersAutoCompleteViewState(listOf(THREAD_MEMBER_AUTO_COMPLETE_RESULT_1, THREAD_MEMBER_AUTO_COMPLETE_RESULT_2)))
 }

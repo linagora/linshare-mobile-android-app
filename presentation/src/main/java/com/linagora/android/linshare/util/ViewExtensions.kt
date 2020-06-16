@@ -68,4 +68,4 @@ fun ThreadMemberAutoCompleteResult.getAvatarCharacter(): String {
 
 typealias OnRequestMemberAutoComplete = (AutoCompletePattern, AutoCompleteType, SharedSpaceId) -> Unit
 
-typealias OnAddMember = (AutoCompleteResult, SharedSpaceRole) -> Unit
+typealias OnAddMember = (SharedSpaceId, AutoCompleteResult, SharedSpaceRole) -> Unit

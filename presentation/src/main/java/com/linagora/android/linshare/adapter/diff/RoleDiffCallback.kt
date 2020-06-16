@@ -5,7 +5,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 
 object RoleDiffCallback : DiffUtil.ItemCallback<SharedSpaceRole>() {
     override fun areItemsTheSame(oldItem: SharedSpaceRole, newItem: SharedSpaceRole): Boolean {
-        return oldItem.uuid == newItem.uuid
+        return oldItem.sharedSpaceRoleId == newItem.sharedSpaceRoleId
     }
 
     override fun areContentsTheSame(oldItem: SharedSpaceRole, newItem: SharedSpaceRole): Boolean {

@@ -6,6 +6,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
@@ -100,7 +101,7 @@ object SharedSpaceDocumentFixtures {
         creationDate = Date(1588664667969),
         modificationDate = Date(1588928300716),
         nodeType = LinShareNodeType.WORK_GROUP,
-        role = SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.ADMIN),
+        role = SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e")), SharedSpaceRoleName.ADMIN),
         quotaId = QUOTA_UUID
     )
 
@@ -124,7 +125,7 @@ object SharedSpaceDocumentFixtures {
     val JOHN_DOE_MEMBER = SharedSpaceMember(
         JOHN_DOE_ACCOUNT_ID,
         SharedSpaceFixtures.SHARED_SPACE_1,
-        SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.READER),
+        SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e")), SharedSpaceRoleName.READER),
         JOHN_DOE_ACCOUNT,
         Date(1585499403825),
         Date(1585499715142)
@@ -143,7 +144,7 @@ object SharedSpaceDocumentFixtures {
     val BAR_FOO_MEMBER = SharedSpaceMember(
         SharedSpaceMemberId(UUID.fromString("86c05687-dbd8-4cdf-bece-76d2dd4b2fc4")),
         SharedSpaceFixtures.SHARED_SPACE_1,
-        SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.ADMIN),
+        SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e")), SharedSpaceRoleName.ADMIN),
         BAR_FOO_ACCOUNT,
         Date(1584032316455),
         Date(1584032316455)
@@ -155,6 +156,6 @@ object SharedSpaceDocumentFixtures {
     val ADD_BAR_FOO_MEMBER_REQUEST = AddMemberRequest(
         BAR_FOO_ACCOUNT_ID,
         SHARED_SPACE_ID_1,
-        UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e")
+        SharedSpaceRoleId(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"))
     )
 }

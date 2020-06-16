@@ -1,9 +1,13 @@
 package com.linagora.android.linshare.domain.model.sharedspace
 
+import com.google.gson.annotations.SerializedName
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole.UploadRoles
-import java.util.UUID
 
-data class SharedSpaceRole(val uuid: UUID, val name: SharedSpaceRoleName)
+data class SharedSpaceRole(
+    @SerializedName("uuid")
+    val sharedSpaceRoleId: SharedSpaceRoleId,
+    val name: SharedSpaceRoleName
+)
 
 object SharedSpaceOperationRole {
     val UploadRoles = listOf(

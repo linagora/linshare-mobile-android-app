@@ -8,6 +8,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailur
 import com.linagora.android.linshare.domain.usecases.utils.Success.ViewState
 
 data class AutoCompleteViewState(val results: List<AutoCompleteResult>) : ViewState()
+data class ThreadMembersAutoCompleteViewState(val results: List<AutoCompleteResult>) : ViewState()
 data class UserAutoCompleteViewState(val results: List<UserAutoCompleteResult>) : ViewState()
 data class AutoCompleteNoResult(val pattern: AutoCompletePattern) : FeatureFailure()
 data class AutoCompleteFailure(val throwable: Throwable) : FeatureFailure()

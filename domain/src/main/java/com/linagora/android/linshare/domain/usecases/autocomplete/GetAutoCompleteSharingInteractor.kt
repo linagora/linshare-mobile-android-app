@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
+import com.linagora.android.linshare.domain.model.autocomplete.ThreadMemberAutoCompleteResult
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.repository.autocomplete.AutoCompleteRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -30,7 +31,7 @@ class GetAutoCompleteSharingInteractor @Inject constructor(
                 .catch { autoCompleteRepository.getAutoComplete(autoCompletePattern, autoCompleteType, threadId) }
                 .fold(
                     ifLeft = { Either.left(AutoCompleteFailure(it)) },
-                    ifRight = { getAutoCompleteState(autoCompletePattern, it) })
+                    ifRight = { getAutoCompleteState(autoCompletePattern, autoCompleteType, it) })
 
             emit(autoCompleteState)
         }
@@ -38,12 +39,31 @@ class GetAutoCompleteSharingInteractor @Inject constructor(
 
     private fun getAutoCompleteState(
         pattern: AutoCompletePattern,
+        autoCompleteType: AutoCompleteType,
         userAutoCompleteResults: List<AutoCompleteResult>
     ): Either<Failure, Success> {
         return userAutoCompleteResults
             .takeIf { it.isNotEmpty() }
-            ?.let(::AutoCompleteViewState)
+            ?.let { generateStateBaseOnAutoCompleteType(autoCompleteType, userAutoCompleteResults) }
             ?.let { Either.right(it) }
             ?: Either.left(AutoCompleteNoResult(pattern))
+    }
+
+    private fun generateStateBaseOnAutoCompleteType(
+        autoCompleteType: AutoCompleteType,
+        userAutoCompleteResults: List<AutoCompleteResult>
+    ): Success.ViewState {
+        return when (autoCompleteType) {
+            AutoCompleteType.SHARING -> AutoCompleteViewState(userAutoCompleteResults)
+            AutoCompleteType.THREAD_MEMBERS -> ThreadMembersAutoCompleteViewState(
+                userAutoCompleteResults.filterNot(this::isMember))
+        }
+    }
+
+    private fun isMember(autoCompleteResult: AutoCompleteResult): Boolean {
+        if (autoCompleteResult is ThreadMemberAutoCompleteResult) {
+            return autoCompleteResult.isMember
+        }
+        return false
     }
 }

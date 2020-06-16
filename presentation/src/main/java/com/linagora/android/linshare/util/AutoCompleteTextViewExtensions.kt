@@ -4,6 +4,7 @@ import android.widget.AutoCompleteTextView
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter.StateSuggestionUser
 import com.linagora.android.linshare.domain.usecases.autocomplete.AutoCompleteViewState
+import com.linagora.android.linshare.domain.usecases.autocomplete.ThreadMembersAutoCompleteViewState
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.binding.AddRecipientsViewBindingExtension
 
@@ -24,9 +25,15 @@ private fun AutoCompleteTextView.showSuggestion() {
 fun AutoCompleteTextView.reactOnSuccessQuerySuggestion(success: Success) {
     if (adapter is UserAutoCompleteAdapter) {
         val adapter = adapter as UserAutoCompleteAdapter
-        if (success is AutoCompleteViewState) {
-            adapter.submitList(success.results)
-            submitStateSuggestions(StateSuggestionUser.FOUND)
+        when (success) {
+            is AutoCompleteViewState -> {
+                adapter.submitList(success.results)
+                submitStateSuggestions((StateSuggestionUser.FOUND))
+            }
+            is ThreadMembersAutoCompleteViewState -> {
+                adapter.submitList(success.results)
+                submitStateSuggestions((StateSuggestionUser.FOUND))
+            }
         }
     }
 }

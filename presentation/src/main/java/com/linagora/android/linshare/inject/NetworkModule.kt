@@ -14,6 +14,7 @@ import com.linagora.android.linshare.data.network.adapter.ShareIdDeserializer
 import com.linagora.android.linshare.data.network.adapter.SharedSpaceAccountIdAdapter
 import com.linagora.android.linshare.data.network.adapter.SharedSpaceIdAdapter
 import com.linagora.android.linshare.data.network.adapter.SharedSpaceMemberIdAdapter
+import com.linagora.android.linshare.data.network.adapter.SharedSpaceRoleIdAdapter
 import com.linagora.android.linshare.data.network.adapter.WorkGroupNodeIdAdapter
 import com.linagora.android.linshare.data.network.factory.RuntimeTypeAdapterFactory
 import com.linagora.android.linshare.domain.model.BaseErrorCode
@@ -28,6 +29,7 @@ import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
@@ -119,6 +121,7 @@ class NetworkModule {
             .registerTypeAdapter(MailingListId::class.java, MailingListIdAdapter())
             .registerTypeAdapter(SharedSpaceMemberId::class.java, SharedSpaceMemberIdAdapter())
             .registerTypeAdapter(SharedSpaceAccountId::class.java, SharedSpaceAccountIdAdapter())
+            .registerTypeAdapter(SharedSpaceRoleId::class.java, SharedSpaceRoleIdAdapter())
             .registerTypeAdapterFactory(workGroupNodeTypeAdapterFactory)
             .registerTypeAdapterFactory(autoCompleteTypeAdapterFactory)
             .create()
