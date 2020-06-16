@@ -20,6 +20,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRole
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -93,7 +94,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getSharedSpaceRoles()
+        initData(arguments.sharedSpaceId.toSharedSpaceId())
     }
 
     private fun reactToViewState(viewState: Success.ViewState) {
@@ -101,6 +102,9 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
             showKeyBoard(viewState)
             bindingRoles(viewState)
             bindingDefaultSelectedRole(viewState)
+        }
+        when (viewState) {
+            is AddMemberSuccess -> getAllMembers()
         }
     }
 
@@ -110,6 +114,14 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
             is OnSelectedRole -> onSelectedRole(viewEvent.selectedRole)
         }
         viewModel.dispatchState(Either.right(Success.Idle))
+    }
+
+    private fun initData(sharedSpaceId: SharedSpaceId) {
+        viewModel.initData(sharedSpaceId)
+    }
+
+    private fun getAllMembers() {
+        viewModel.getAllMembers(arguments.sharedSpaceId.toSharedSpaceId())
     }
 
     private fun selectRoles(lastSelectedRole: SharedSpaceRole) {
