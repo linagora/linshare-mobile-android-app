@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -159,4 +160,11 @@ interface LinshareApi {
         @Path("pattern") pattern: String,
         @Query("threadUuid") threadUuid: String
     ): List<AutoCompleteResult>
+
+    @POST("/shared_spaces/{sharedSpaceId}/members")
+    @Headers("Accept: application/json")
+    suspend fun addMember(
+        @Path("sharedSpaceId") sharedSpaceId: String,
+        @Body addMemberRequest: AddMemberRequest
+    ): SharedSpaceMember
 }

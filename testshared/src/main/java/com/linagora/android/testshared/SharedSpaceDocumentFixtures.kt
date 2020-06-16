@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleNam
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccount
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
@@ -118,8 +119,10 @@ object SharedSpaceDocumentFixtures {
         "john@linshare.com"
     )
 
+    private val JOHN_DOE_ACCOUNT_ID = SharedSpaceMemberId(UUID.fromString("bfdf5b4c-2fff-4abd-b139-323b8ad91790"))
+
     val JOHN_DOE_MEMBER = SharedSpaceMember(
-        SharedSpaceMemberId(UUID.fromString("bfdf5b4c-2fff-4abd-b139-323b8ad91790")),
+        JOHN_DOE_ACCOUNT_ID,
         SharedSpaceFixtures.SHARED_SPACE_1,
         SharedSpaceRole(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"), SharedSpaceRoleName.READER),
         JOHN_DOE_ACCOUNT,
@@ -127,8 +130,10 @@ object SharedSpaceDocumentFixtures {
         Date(1585499715142)
     )
 
+    private val BAR_FOO_ACCOUNT_ID = SharedSpaceAccountId(UUID.fromString("b1980d34-8dc2-4278-9600-07b9515e7839"))
+
     private val BAR_FOO_ACCOUNT = SharedSpaceAccount(
-        SharedSpaceAccountId(UUID.fromString("b1980d34-8dc2-4278-9600-07b9515e7839")),
+        BAR_FOO_ACCOUNT_ID,
         "Jane Smith",
         "Jane",
         "Smith",
@@ -146,4 +151,10 @@ object SharedSpaceDocumentFixtures {
 
     val GET_MEMBERS_SUCCESS_STATE = Either.right(
         GetMembersSuccess(listOf(JOHN_DOE_MEMBER, BAR_FOO_MEMBER)))
+
+    val ADD_BAR_FOO_MEMBER_REQUEST = AddMemberRequest(
+        BAR_FOO_ACCOUNT_ID,
+        SHARED_SPACE_ID_1,
+        UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e")
+    )
 }

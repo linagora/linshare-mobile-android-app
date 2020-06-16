@@ -3,6 +3,7 @@ package com.linagora.android.linshare.data.repository.sharedspace
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.sharedspace.member.SharedSpaceMemberDataSource
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.ADD_BAR_FOO_MEMBER_REQUEST
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.BAR_FOO_MEMBER
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.JOHN_DOE_MEMBER
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_ID_1
@@ -55,5 +56,16 @@ class SharedSpaceMemberRepositoryImpTest {
 
         assertThrows<RuntimeException> { runBlockingTest {
             sharedSpaceMemberRepositoryImp.getAllMembers(SHARED_SPACE_ID_1) } }
+    }
+
+    @Test
+    fun addMemberShouldAddMemberToSharedSpaceWhenAddMemberRequestValid() = runBlockingTest {
+        `when`(linSharedSpaceMemberDataSource.addMember(ADD_BAR_FOO_MEMBER_REQUEST))
+            .thenAnswer { BAR_FOO_MEMBER }
+
+        val addedMember = sharedSpaceMemberRepositoryImp
+            .addMember(ADD_BAR_FOO_MEMBER_REQUEST)
+
+        assertThat(addedMember).isEqualTo(BAR_FOO_MEMBER)
     }
 }
