@@ -46,7 +46,7 @@ fun AddMembersViewBinding.onSelectedMember(onAddMember: OnAddMember) {
     addMembers.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
         addMembers.text.clear()
         val selectedUser = parent.getItemAtPosition(position) as AutoCompleteResult
-        onAddMember(selectedUser, selectedRole!!)
+        onAddMember(sharedSpaceId!!, selectedUser, selectedRole!!)
     }
 }
 

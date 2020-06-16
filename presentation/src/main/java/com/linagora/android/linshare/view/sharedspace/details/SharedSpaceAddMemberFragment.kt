@@ -18,6 +18,8 @@ import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
 import com.linagora.android.linshare.domain.model.autocomplete.ThreadMemberAutoCompleteRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRole
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -35,6 +37,7 @@ import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.dialog.SelectRoleDialog
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
+import java.util.UUID
 import javax.inject.Inject
 
 class SharedSpaceAddMemberFragment : MainNavigationFragment() {
@@ -135,8 +138,13 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
         }
     }
 
-    private fun onAddMember(autoCompleteResult: AutoCompleteResult, role: SharedSpaceRole) {
-        LOGGER.info("onAddMember(): $autoCompleteResult - $role")
+    private fun onAddMember(sharedSpaceId: SharedSpaceId, autoCompleteResult: AutoCompleteResult, role: SharedSpaceRole) {
+        val addMemberRequest = AddMemberRequest(
+            SharedSpaceAccountId(UUID.fromString(autoCompleteResult.identifier)),
+            sharedSpaceId,
+            role.sharedSpaceRoleId
+        )
+        viewModel.addMemberToSharedSpace(addMemberRequest)
     }
 
     override fun configureToolbar(toolbar: Toolbar) {
