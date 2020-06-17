@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">LinShare</string>
 
     <string name="already_have_account">Vous avez déjà un compte LinShare?</string>
@@ -45,12 +45,12 @@
     <string name="upload_and_download_channel_description">Notification de transfert et de téléchargement</string>
 
     <plurals name="file_in_waiting_list">
-        <item quantity="one" tools:ignore="ImpliedQuantity">Les fichiers sont ajoutés à la liste d\'attente.</item>
-        <item quantity="other"> %s les fichiers sont ajoutés à la liste d\'attente.</item>
+        <item quantity="one">%s les fichiers sont ajoutés à la liste d\'attente.</item>
+        <item quantity="other">%s les fichiers sont ajoutés à la liste d\'attente.</item>
     </plurals>
 
     <plurals name="notify_count_file_upload">
-        <item quantity="one" tools:ignore="ImpliedQuantity">Transfert de fichier</item>
+        <item quantity="one">Transfert %s de fichier</item>
         <item quantity="other">Transfert %s de fichiers</item>
     </plurals>
 
@@ -61,7 +61,7 @@
     <string name="upload_and_share_failed">Transfert et Partage échoués</string>
     <string name="upload_success_but_share_failed">Le fichier n\'est pas partagé avec succès</string>
     <plurals name="file_is_shared_with_people">
-        <item quantity="one" tools:ignore="ImpliedQuantity">Le fichier est partagé avec 1 personne</item>
+        <item quantity="one">Le fichier est partagé avec %d personne</item>
         <item quantity="other">Le fichier est partagé avec %d personnes</item>
     </plurals>
     <string name="can_not_perform_upload">Impossible d\'effectuer le transfert. Veuillez réessayer</string>
@@ -91,7 +91,7 @@
     <string name="download_success">Téléchargement échoué</string>
     <string name="error_can_not_resume_download">Impossible de reprendre le téléchargement</string>
     <string name="error_insufficient_space">L\'appareil n\'a pas suffisamment d\'espace. Libérez de l\'espace et réessayez</string>
-    <string name="downloaded">Downloaded: %s</string>Téléchargé: %s
+    <string name="downloaded">Téléchargé: %s</string>
 
     <string name="file_not_found">Le fichier est introuvable à télécharger.</string>
     <string name="you_are_offline">Vous n\'êtes pas connecté</string>
