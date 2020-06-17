@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LinShare</string>
+
+    <string name="already_have_account">У вас уже есть LinShare аккаунт?</string>
+    <string name="login">Вход</string>
+
+    <!--Wizard-->
+    <string name="wizard_title_one">Linshare</string>
+    <string name="wizard_intro_one">Создайте другое рабочее пространство для вашего проекта</string>
+
+    <string name="wizard_title_two">Linshare</string>
+    <string name="wizard_intro_two">Создайте другое рабочее пространство для вашего проекта</string>
+
+    <string name="wizard_title_three">Linshare</string>
+    <string name="wizard_intro_three">Создайте другое рабочее пространство для вашего проекта</string>
+
+    <!--Login-->
+    <string name="linshare_slogan">Храните и делитесь своими файлами, где бы вы ни находились.</string>
+    <string name="please_enter_credential">Пожалуйста, введите ваш логин</string>
+    <string name="https">https://</string>
+    <string name="email">электронный адрес</string>
+    <string name="email_title">Электронная почта:</string>
+    <string name="first_name_title">Имя:</string>
+    <string name="last_name_title">Фамилия:</string>
+    <string name="password">пароль</string>
+    <string name="server_not_found">Аутентификация не прошла, сервер не найден, пожалуйста попробуйте еще раз</string>
+    <string name="credential_error_message">Аутентификация не прошла, электронная почта или пароль неверны, пожалуйста попробуйте еще раз</string>
+    <string name="email_is_required">Аутентификация не прошла, электронная почта неверна, пожалуйста попробуйте еще раз</string>
+    <string name="wrong_url">URL-адрес сервера неверен, пожалуйста попробуйте еще раз</string>
+    <string name="unknow_error">Произошла неизвестная ошибка, пожалуйста попробуйте еще раз</string>
+    <string name="logout_account">Забыть аккаунт</string>
+    <string name="last_login_title">Последний логин:</string>
+    <string name="available_space_title">Место доступно:</string>
+    <string name="notification">Уведомление</string>
+    <string name="available_space">%s из %s</string>
+
+    <string name="confirm_remove_account_title">Вы действительно хотите выйти из этого аккаунта?</string>
+    <string name="cancel">Отменить</string>
+    <string name="remove">Удалить</string>
+    <string name="logout">Выход из системы</string>
+
+    <!--Notification-->
+    <string name="upload_and_download_channel_name">Загрузки и Скачивание</string>
+    <string name="upload_and_download_channel_description"> Уведомление для загрузки и скачивания</string>
+
+    <plurals name="file_in_waiting_list">
+        <item quantity="one">%s файл добавляется в список ожидания.</item>
+	    <item quantity="few">%s файла добавляются в список ожидания.</item>
+        <item quantity="many">%s файлов добавляются в список ожидания.</item>
+    </plurals>
+
+    <plurals name="notify_count_file_upload"> 
+        <item quantity="one">Загрузка %s файла</item>
+	    <item quantity="few">Загрузка %s файла</item>
+        <item quantity="many">Загрузка %s файлов</item>
+    </plurals>
+
+    <string name="upload">Загрузка</string>
+    <string name="upload_success">Загрузка завершена</string>
+    <string name="upload_failed">Не удалось загрузить</string>
+    <string name="upload_and_share_success">Загрузка завершена и Доступ предоставлен</string>
+    <string name="upload_and_share_failed">Не удалось загрузить и предоставить доступ</string>
+    <string name="upload_success_but_share_failed">Не удалось поделиться файлом</string>
+    <plurals name="file_is_shared_with_people">
+        <item quantity="one">Файл доступен %d пользователю</item>
+	    <item quantity="few">Файл доступен %d пользователям</item>
+        <item quantity="many">Файл доступен %d пользователям</item>
+    </plurals>
+    <string name="can_not_perform_upload">Загружать не удается. Пожалуйста, попробуйте еще раз</string>
+    <string name="no_more_space_avalable">Вы превысили вашу квоту на хранение на сервере LinShare. Освободите место и повторите попытку загрузки.</string>
+    <string name="exceed_max_file_size">Размер загруженного файла превышает допустимый предел. Пожалуйста, попробуйте другой файл.</string>
+    <string name="extrac_info_failed">Неожиданная ошибка при попытке доступа к этому документу через стороннее приложение.</string>
+    <string name="executing">Подготовка к загрузке</string>
+
+    <string name="upload_file">Загрузка файла</string>
+    <string name="upload_to_my_space">Загрузить в Моё Пространство</string>
+    <string name="upload_and_share">Загрузить и Поделиться</string>
+
+    <string name="unable_to_upload_explanation">Для выполнения загрузки приложение LinShare должно иметь доступ к хранилищу Вашего устройства. Вы можете настроить доступ в настройках системы.</string>
+    <string name="go_to_setting">Перейти к настройкам</string>
+    <string name="permission_refuse">Разрешение отказано</string>
+
+    <!--MySpace-->
+    <string name="my_space">Моё Пространство</string>
+    <string name="account_details">Данные аккаунта</string>
+
+    <string name="unable_to_perform_download">Для выполнения скачивания приложение LinShare должно иметь доступ к хранилищу Вашего устройства. Вы можете настроить доступ в настройках системы.</string>
+    <string name="download_failed">Не удалось скачать</string>
+
+    <string name="download_to_device">Скачать на устройство</string>
+    <string name="delete">Delete</string>
+
+    <string name="download_success">Скачано</string>
+    <string name="error_can_not_resume_download">Не могу возобновить скачивание</string>
+    <string name="error_insufficient_space">В устройстве недостаточно места. Освободите место и повторите попытку</string>
+    <string name="downloaded">Скачано: %s</string>
+
+    <string name="file_not_found">Файл не найден для загрузки.</string>
+    <string name="you_are_offline">Вы отключены от сети.</string>
+    <string name="internet_not_available">Интернет недоступен.</string>
+    <string name="file_ready_to_upload">Файл %s готов к загрузке.</string>
+    <string name="file_added_to_waiting_list">Файл %s добавляется в список ожидания.</string>
+    <string name="confirm_delete_file">Вы уверены, что хотите удалить \"%s\"?</string>
+
+    <string name="last_modified">Изменен %s</string>
+
+    <string name="search_in_my_space">Поиск в Моём Пространстве</string>
+    <string name="search_no_results">Результаты не найдены</string>
+    <plurals name="search_total_results">
+        <item quantity="one">%d результат</item>
+	    <item quantity="few">%d результата </item>
+        <item quantity="many">%d результатов </item>
+    </plurals>
+
+    <string name="preparing">Подготовка ...</string>
+
+    <string name="quick_share">Быстро поделиться</string>
+    <string name="share">Поделиться</string>
+    <string name="add_recipients">Добавить получателей</string>
+    <string name="share_failed">Не удалось поделиться файлом.</string>
+    <string name="share_success">Успешно поделидись файлом.</string>
+    <string name="created">Создан %s</string>
+    <string name="received">Получен</string>
+    <string name="received_shares">Получили доступы</string>
+    <string name="unknown_user">Неизвестный пользователь</string>
+    <string name="add_people"><i>Добавить пользователей</i></string>
+    <string name="copy_to_my_space">Скопировать на Моё Пространство</string>
+    <string name="copied_in_my_space">Файл %s был скопирован в Моё Пространство.</string>
+    <string name="view">Посмотреть</string>
+    <string name="unable_to_prepare_file_for_upload">Невозможно подготовить файл к загрузке</string>
+    <string name="shared_space">Общее Пространство</string>
+    <string name="do_not_have_any_workgroup">У вас еще нет рабочей группы.</string>
+    <string name="search_in_shared_space">Поиск в Общем Пространстве</string>
+
+    <string name="do_not_have_any_document">У вас еще нет документов</string>
+
+    <string name="copy_to_my_space_error_quota_reach">Недостаточно места в Моём Пространстве, чтобы скопировать</string>
+    <string name="copy_to_my_space_error_file_size_exceed">Файл превысил ограничение по размеру.</string>
+    <string name="copy_to_my_space_error">Произошла ошибка, не возможно скопировать.</string>
+
+    <string name="pick_the_destination">Выберите пункт назначения</string>
+    <string name="choose">Выберите</string>
+</resources>
