@@ -86,12 +86,9 @@ fun bindingSharedSpaceDocumentLastModified(
     textView: TextView,
     workGroupNode: WorkGroupNode
 ) {
-    textView.text = runCatching {
-        textView.context.getString(
-            R.string.last_modified,
-            TimeUtils.convertToLocalTime(workGroupNode.modificationDate, LastModifiedFormat)
-        )
-    }.getOrNull()
+    textView.text = runCatching { with(textView.context) {
+            getString(R.string.last_modified, TimeUtils(this).convertToLocalTime(workGroupNode.modificationDate, LastModifiedFormat)) } }
+        .getOrNull()
 }
 
 @BindingAdapter("sharedSpaceDocumentIcon")

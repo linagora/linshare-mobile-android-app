@@ -195,6 +195,7 @@ dependencies {
     androidTestImplementation deps.instrumentationTest.test_runner
 
     testImplementation deps.androidx.core_testing
+    testImplementation deps.androidx.test_core
     testImplementation deps.coroutines.test
     testImplementation deps.junit5.api
     testImplementation deps.mockito.core
