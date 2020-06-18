@@ -21,7 +21,7 @@
     <string name="https">https://</string>
     <string name="email">email</string>
     <string name="email_title">Email:</string>
-    <string name="first_name_title">FPrénom:</string>
+    <string name="first_name_title">Prénom:</string>
     <string name="last_name_title">Nom:</string>
     <string name="password">mot de passe</string>
     <string name="server_not_found">Authentification échouée, serveur introuvable, veuillez réessayer</string>
@@ -122,11 +122,11 @@
     <string name="received_shares">Partages reçus</string>
     <string name="unknown_user">Utilisateur inconnu</string>
     <string name="add_people"><i>Ajouter des personnes</i></string>
-    <string name="copy_to_my_space">Copier à Mon Espace</string>
+    <string name="copy_to_my_space">Copier vers Mon Espace</string>
     <string name="copied_in_my_space">Le fichier %s a été copié dans Mon Espace</string>
     <string name="view">Voir</string>
     <string name="unable_to_prepare_file_for_upload">Impossible de préparer le fichier pour le transfert</string>
-    <string name="shared_space">Espace Partagé</string>
+    <string name="shared_space">Espaces Partagés</string>
     <string name="do_not_have_any_workgroup">Vous n\'avez pas encore de groupe de travail</string>
     <string name="search_in_shared_space">Rechercher dans l\'Espace Partagé</string>
 
