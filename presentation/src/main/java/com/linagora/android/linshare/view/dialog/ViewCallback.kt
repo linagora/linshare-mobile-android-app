@@ -3,6 +3,7 @@ package com.linagora.android.linshare.view.dialog
 import android.view.View
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.MailingList
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 
 typealias OnNegativeCallback = (View) -> Unit
 
@@ -18,3 +19,7 @@ object NoOpCallback : (View) -> Unit {
 typealias OnRemoveRecipient = (GenericUser) -> Unit
 
 typealias OnRemoveMailingList = (MailingList) -> Unit
+
+typealias OnPositiveWithEnteredCharactersCallback = (String) -> Unit
+
+typealias OnNewNameRequestChange = (NewNameRequest) -> Unit

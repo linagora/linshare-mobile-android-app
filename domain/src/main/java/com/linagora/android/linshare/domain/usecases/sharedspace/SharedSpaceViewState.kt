@@ -3,6 +3,7 @@ package com.linagora.android.linshare.domain.usecases.sharedspace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -22,3 +23,8 @@ data class OpenAddMembers(val sharedSpaceId: SharedSpaceId) : Success.ViewEvent(
 data class CreateWorkGroupSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
 data class CreateWorkGroupFailed(val throwable: Throwable) : FeatureFailure()
 object CreateWorkGroupButtonBottomBarClick : Success.ViewEvent()
+object CancelCreateWorkGroupViewState : Success.ViewEvent()
+data class CreateWorkGroupViewState(val nameWorkGroup: NewNameRequest) : Success.ViewEvent()
+object BlankNameError : Failure.FeatureFailure()
+object NameContainSpecialCharacter : Failure.FeatureFailure()
+data class ValidName(val nameWorkGroup: String) : Success.ViewState()

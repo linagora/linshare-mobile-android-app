@@ -14,9 +14,12 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceBinding
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
@@ -78,9 +81,16 @@ class SharedSpaceFragment : MainNavigationFragment() {
             it.map { success ->
                 when (success) {
                     is Success.ViewEvent -> reactToViewEvent(success)
+                    is Success.ViewState -> reactToViewState(success)
                 }
             }
         })
+    }
+
+    private fun reactToViewState(viewState: Success.ViewState) {
+        when (viewState) {
+            is CreateWorkGroupSuccess -> getSharedSpace()
+        }
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
@@ -91,13 +101,24 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is SharedSpaceContextMenuClick -> showContextMenu(viewEvent.sharedSpaceNodeNested)
             is DetailsSharedSpaceItem -> navigateToDetails(viewEvent.sharedSpaceNodeNested)
             is CreateWorkGroupButtonBottomBarClick -> showCreateWorkGroupDialog()
+            is CreateWorkGroupViewState -> handleCreateWorkGroup(viewEvent.nameWorkGroup)
         }
         sharedSpaceViewModel.dispatchState(Either.right(Success.Idle))
     }
 
+    private fun handleCreateWorkGroup(nameWorkGroup: NewNameRequest) {
+        dismissCreateWorkGroupDialog()
+        sharedSpaceViewModel.createWorkGroup(nameWorkGroup)
+    }
+
     private fun showCreateWorkGroupDialog() {
         dismissCreateWorkGroupDialog()
-        CreateWorkGroupDialog(sharedSpaceViewModel.listSharedSpaceNodeNested).show(childFragmentManager, CreateWorkGroupDialog.TAG)
+        CreateWorkGroupDialog(
+                listSharedSpaceNodeNestedData = sharedSpaceViewModel.listSharedSpaceNodeNested,
+                onCreateWorkGroup = { text -> sharedSpaceViewModel.createWorkGroupBehavior.onCreate(NewNameRequest(text)) },
+                onNewNameRequestChange = { name -> sharedSpaceViewModel.validName(name) },
+                viewState = sharedSpaceViewModel.viewState)
+            .show(childFragmentManager, CreateWorkGroupDialog.TAG)
     }
 
     private fun dismissCreateWorkGroupDialog() {

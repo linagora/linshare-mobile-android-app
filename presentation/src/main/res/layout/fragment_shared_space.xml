@@ -114,7 +114,7 @@
                 android:textSize="@dimen/empty_shared_space_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:visibleEmptyMessage="@{viewModel.viewState}"
+                app:visibleEmptyMessageSharedSpace="@{viewModel.viewState}"
                 app:bindingTextEmptyMessage="@{viewModel.viewState}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -13,6 +13,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNes
 import com.linagora.android.linshare.domain.usecases.sharedspace.EmptySharedSpaceState
 import com.linagora.android.linshare.domain.usecases.sharedspace.NoResultsSearchSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceViewState
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -31,7 +32,12 @@ fun bindingSharedSpaceList(
     }
 
     sharedSpaceState?.fold(
-        ifLeft = { recyclerView.isVisible = false },
+        ifLeft = { failure ->
+            when (failure) {
+                is SharedSpaceFailure, EmptySharedSpaceState -> false
+                else -> recyclerView.isVisible = true
+            }
+        },
         ifRight = {
             recyclerView.isVisible = true
             when (it) {
@@ -123,4 +129,17 @@ fun bindingVisibilityMenuContainer(view: View, adapterType: AdapterType) {
     view.visibility = adapterType.takeIf { it == AdapterType.SHARE_SPACE_DESTINATION_PICKER }
         ?.let { View.GONE }
         ?: View.VISIBLE
+}
+
+@BindingAdapter("visibleEmptyMessageSharedSpace")
+fun bindingEmptyMessageSharedSpace(textView: TextView, state: Either<Failure, Success>?) {
+    val visible = state?.fold(
+        ifLeft = { failure ->
+            when (failure) {
+                is SharedSpaceFailure, EmptySharedSpaceState -> true
+                else -> false
+            }
+        },
+        ifRight = { false })
+    textView.isVisible = visible ?: false
 }

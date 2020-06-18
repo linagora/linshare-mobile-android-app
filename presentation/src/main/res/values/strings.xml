@@ -154,6 +154,7 @@
 
     <string name="create_new_workgroup" translatable="false">Create New Workgroup</string>
     <string name="new_workgroup" translatable="false">New Workgroup</string>
+    <string name="new_workgroup_original_name" translatable="false">New workgroup</string>
     <string name="create" translatable="false">Create</string>
     <string name="workgroup_name_already_exists" translatable="false">Workgroup name already exists</string>
     <string name="workgroup_name_index" translatable="false">New workgroup(%s)</string>

@@ -7,14 +7,23 @@
         <import type="com.linagora.android.linshare.view.sharedspace.SharedSpaceViewModel"/>
         <import type="java.util.List"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested"/>
-
-        <variable
-            name="viewModel"
-            type="SharedSpaceViewModel" />
+        <import type="com.linagora.android.linshare.domain.model.workgroup.NewNameRequest"/>
+        <import type="arrow.core.Either"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
+        <import type="androidx.lifecycle.LiveData"/>
 
         <variable
             name="listSharedSpaceNodeNested"
-            type="List&lt;SharedSpaceNodeNested&gt;" />
+            type="LiveData&lt;List&lt;SharedSpaceNodeNested&gt;&gt;" />
+
+        <variable
+            name="state"
+            type="LiveData&lt;Either&lt;Failure, Success&gt;&gt;" />
+
+        <variable
+            name="newNameRequest"
+            type="NewNameRequest" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +62,7 @@
             android:textColor="@color/error_border_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:errorMessageEnterNameWorkGroup="@{viewModel.nameEnteredState}"
+            app:errorMessageEnterNameWorkGroup="@{state}"
             app:layout_constraintTop_toBottomOf="@+id/nameWorkGroup"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -63,10 +72,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/create"
-            android:onClick="@{() -> viewModel.createWorkGroupBehavior.onCreate(nameWorkGroup.getText().toString())}"
             android:layout_marginTop="@dimen/upload_button_margin_top"
             android:layout_marginBottom="@dimen/upload_button_margin_top"
-            app:enableCreateWorkGroupButton="@{viewModel.nameEnteredState}"
+            app:enableCreateWorkGroupButton="@{state}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nameWorkGroup" />
@@ -77,7 +85,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:onClick="@{() -> viewModel.createWorkGroupBehavior.onCancel()}"
             android:layout_marginEnd="@dimen/select_button_margin_end"
             app:layout_constraintEnd_toStartOf="@+id/createButton"
             app:layout_constraintTop_toTopOf="@+id/createButton" />

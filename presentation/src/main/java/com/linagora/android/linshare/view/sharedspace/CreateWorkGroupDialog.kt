@@ -7,15 +7,25 @@ import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import arrow.core.Either
 import com.linagora.android.linshare.databinding.DialogCreateWorkgroupBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.domain.model.workgroup.NameString
-import com.linagora.android.linshare.util.getParentViewModel
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
+import com.linagora.android.linshare.view.dialog.NoOpCallback
+import com.linagora.android.linshare.view.dialog.OnNegativeCallback
+import com.linagora.android.linshare.view.dialog.OnNewNameRequestChange
+import com.linagora.android.linshare.view.dialog.OnPositiveWithEnteredCharactersCallback
 import javax.inject.Inject
 
 class CreateWorkGroupDialog(
-    private val listSharedSpaceNodeNested: LiveData<List<SharedSpaceNodeNested>>
+    private val listSharedSpaceNodeNestedData: LiveData<List<SharedSpaceNodeNested>>,
+    private val onNegativeCallback: OnNegativeCallback = NoOpCallback,
+    private val onCreateWorkGroup: OnPositiveWithEnteredCharactersCallback,
+    private val onNewNameRequestChange: OnNewNameRequestChange,
+    private val viewState: LiveData<Either<Failure, Success>>
 ) : DaggerBottomSheetDialogFragment() {
 
     companion object {
@@ -25,34 +35,40 @@ class CreateWorkGroupDialog(
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var sharedSpaceViewModel: SharedSpaceViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = DialogCreateWorkgroupBinding.inflate(inflater, container, false)
-        initViewModel(binding)
+        initView(binding)
         return binding.root
     }
 
-    private fun initViewModel(binding: DialogCreateWorkgroupBinding) {
-        binding.lifecycleOwner = this
-        sharedSpaceViewModel = getParentViewModel(viewModelFactory)
-        binding.viewModel = sharedSpaceViewModel
-        binding.listSharedSpaceNodeNested = listSharedSpaceNodeNested.value
-        binding.nameWorkGroup.apply {
-            doAfterTextChanged { text -> validEnterTextNameWorkGroup(text.toString()) }
+    private fun initView(binding: DialogCreateWorkgroupBinding) {
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            listSharedSpaceNodeNested = listSharedSpaceNodeNestedData
+
+            nameWorkGroup.apply {
+                doAfterTextChanged { text ->
+                    binding.newNameRequest = NewNameRequest(text.toString())
+                    onNewNameRequest(text.toString()) }
+            }
+            cancelButton.setOnClickListener {
+                onNegativeCallback.invoke(it)
+                dismiss()
+            }
+            createButton.setOnClickListener {
+                onCreateWorkGroup.invoke(binding.nameWorkGroup.text.toString())
+                dismiss()
+            }
+            state = viewState
+            executePendingBindings()
         }
     }
 
-    private fun validEnterTextNameWorkGroup(enterText: String) {
-        enterText.let(::NameString).let(::sendEnterText)
-    }
-
-    private fun sendEnterText(name: NameString) {
-        sharedSpaceViewModel.validName(name)
+    private fun onNewNameRequest(enterText: String) {
+        onNewNameRequestChange(enterText.let(::NewNameRequest))
     }
 }

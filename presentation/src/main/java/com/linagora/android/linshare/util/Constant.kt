@@ -33,4 +33,8 @@ object Constant {
     const val AUTO_COMPLETE_RESULT_TYPE_THREAD_MEMBER = "threadmember"
 
     const val DEFAULT_AVATAR_CHARACTER = "U"
+
+    const val INDEX_1 = 1
+
+    const val UP_TO_NEXT_INDEX = 1
 }
