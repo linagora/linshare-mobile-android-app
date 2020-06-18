@@ -113,8 +113,9 @@ fun bindingSubjectFromDecodedToken(textView: TextView, accountDetailsViewState: 
 @BindingAdapter("lastLogin")
 fun bindingLastLogin(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
     textView.text = runCatching {
-        TimeUtils.convertToLocalTime(accountDetailsViewState.lastLogin!!.date, LastLoginFormat)
-    }.getOrNull()
+        TimeUtils(textView.context)
+            .convertToLocalTime(accountDetailsViewState.lastLogin!!.date, LastLoginFormat) }
+        .getOrNull()
 }
 
 @BindingAdapter("availableSpace")

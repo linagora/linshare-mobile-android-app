@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
 import com.linagora.android.linshare.util.TimeUtils
+import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
 import com.linagora.android.linshare.util.getDrawableIcon
 import com.linagora.android.linshare.view.base.ListItemBehavior
 
@@ -50,7 +51,9 @@ fun bindingReceivedListLoading(swipeRefreshLayout: SwipeRefreshLayout, receivedL
 
 @BindingAdapter("receivedCreationDate")
 fun bindingReceivedLastModified(textView: TextView, share: Share) {
-    textView.text = runCatching { textView.context.getString(R.string.created, TimeUtils.convertToLocalTime(share.creationDate, TimeUtils.LinShareTimeFormat.LastModifiedFormat)) }.getOrNull()
+    textView.text = runCatching { with(textView.context) {
+            getString(R.string.created, TimeUtils(this).convertToLocalTime(share.creationDate, LastModifiedFormat)) } }
+        .getOrNull()
 }
 
 @BindingAdapter("receivedMediaType")

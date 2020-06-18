@@ -4,6 +4,7 @@ ext.deps = [:]
 def versions = [:]
 versions.appcompat = "1.1.0"
 versions.android_gradle_plugin = "3.5.0"
+versions.androidx_test_core = "1.2.0"
 versions.arrow = "0.10.0"
 
 versions.commons_io = "2.6"
@@ -67,6 +68,7 @@ androidx.navigation_fragment = "androidx.navigation:navigation-fragment-ktx:$ver
 androidx.navigation_ui = "androidx.navigation:navigation-ui-ktx:$versions.navigation"
 androidx.preference = "androidx.preference:preference-ktx:$versions.preference"
 androidx.safe_args = "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
+androidx.test_core = "androidx.test:core:$versions.androidx_test_core"
 
 deps.androidx = androidx
 

@@ -62,11 +62,9 @@ fun bindingSharedSpaceItemLastModified(
     sharedSpaceNodeNested: SharedSpaceNodeNested
 ) {
     textView.text = runCatching {
-        textView.context.getString(
-            R.string.last_modified,
-            TimeUtils.convertToLocalTime(sharedSpaceNodeNested.modificationDate, LastModifiedFormat)
-        )
-    }.getOrNull()
+        with(textView.context) {
+            getString(R.string.last_modified, TimeUtils(this).convertToLocalTime(sharedSpaceNodeNested.modificationDate, LastModifiedFormat)) } }
+        .getOrNull()
 }
 
 @BindingAdapter("resultsCountSharedSpace")
