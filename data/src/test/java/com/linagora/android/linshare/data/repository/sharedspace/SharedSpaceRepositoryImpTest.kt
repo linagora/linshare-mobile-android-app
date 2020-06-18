@@ -5,14 +5,17 @@ import com.linagora.android.linshare.data.datasource.SharedSpaceDataSource
 import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
 import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceException
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_1
+import com.linagora.android.testshared.SharedSpaceFixtures.CREATE_WORK_GROUP_REQUEST
 import com.linagora.android.testshared.SharedSpaceFixtures.QUERY_STRING_SHARED_SPACE
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_2
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
@@ -92,6 +95,31 @@ class SharedSpaceRepositoryImpTest {
 
             val documents = sharedSpaceRepositoryImp.search(QUERY_STRING_SHARED_SPACE)
             assertThat(documents).isEmpty()
+        }
+    }
+
+    @Test
+    fun createSharedSpaceShouldReturnNewWorkGroup() {
+        runBlockingTest {
+            `when`(sharedSpaceDataSource.createWorkGroup(CREATE_WORK_GROUP_REQUEST))
+                .thenAnswer { SharedSpaceDocumentFixtures.SHARED_SPACE_1 }
+
+            val sharedSpace = sharedSpaceRepositoryImp.createWorkGroup(CREATE_WORK_GROUP_REQUEST)
+            assertThat(sharedSpace).isEqualTo(SharedSpaceDocumentFixtures.SHARED_SPACE_1)
+        }
+    }
+
+    @Test
+    fun createSharedSpaceShouldThrowWhenDataSourceFailedToCreateWorkGroup() {
+        runBlockingTest {
+            `when`(sharedSpaceDataSource.createWorkGroup(CREATE_WORK_GROUP_REQUEST))
+                .thenThrow(CreateSharedSpaceException(RuntimeException()))
+
+            assertThrows<CreateSharedSpaceException> {
+                runBlockingTest {
+                    sharedSpaceRepositoryImp.createWorkGroup(CREATE_WORK_GROUP_REQUEST)
+                }
+            }
         }
     }
 }

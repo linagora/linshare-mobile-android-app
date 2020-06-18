@@ -2,12 +2,14 @@ package com.linagora.android.testshared
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.EmptySharedSpaceState
 import com.linagora.android.linshare.domain.usecases.sharedspace.NoResultsSearchSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceViewState
@@ -72,4 +74,8 @@ object SharedSpaceFixtures {
         sharedSpaceRoleId = SharedSpaceRoleId(UUID.fromString("4ccbed61-71da-42a0-a513-92211953ac95")),
         name = SharedSpaceRoleName.READER
     )
+
+    val CREATE_WORK_GROUP_REQUEST = CreateWorkGroupRequest("WorkGroup 1", LinShareNodeType.WORK_GROUP)
+
+    val CREATE_WORK_GROUP_SUCCESS_STATE = Either.Right(CreateWorkGroupSuccess(SharedSpaceDocumentFixtures.SHARED_SPACE_1))
 }

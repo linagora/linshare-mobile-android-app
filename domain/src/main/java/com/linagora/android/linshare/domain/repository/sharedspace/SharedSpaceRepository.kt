@@ -1,10 +1,11 @@
 package com.linagora.android.linshare.domain.repository.sharedspace
 
+import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
 import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 
 interface SharedSpaceRepository {
@@ -18,4 +19,6 @@ interface SharedSpaceRepository {
     ): SharedSpace
 
     suspend fun search(query: QueryString): List<SharedSpaceNodeNested>
+
+    suspend fun createWorkGroup(createWorkGroupRequest: CreateWorkGroupRequest): SharedSpace
 }

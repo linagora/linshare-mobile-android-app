@@ -1,13 +1,14 @@
 package com.linagora.android.linshare.data.repository.sharedspace
 
 import com.linagora.android.linshare.data.datasource.SharedSpaceDataSource
+import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
 import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
-import com.linagora.android.linshare.domain.model.search.QueryString
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,5 +30,9 @@ class SharedSpaceRepositoryImp @Inject constructor(
 
     override suspend fun search(query: QueryString): List<SharedSpaceNodeNested> {
         return sharedSpaceDataSource.searchSharedSpaces(query)
+    }
+
+    override suspend fun createWorkGroup(createWorkGroupRequest: CreateWorkGroupRequest): SharedSpace {
+        return sharedSpaceDataSource.createWorkGroup(createWorkGroupRequest)
     }
 }
