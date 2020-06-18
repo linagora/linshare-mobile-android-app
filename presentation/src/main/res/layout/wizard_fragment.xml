@@ -35,8 +35,7 @@
 
         <TextView
             android:id="@+id/wizardTxtAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/CenterLabel"
             android:layout_marginBottom="@dimen/margin_top_wizard"
             android:text="@string/already_have_account"
             android:textColor="@color/colorAccent"
