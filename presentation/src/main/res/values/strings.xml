@@ -151,4 +151,11 @@
         <item quantity="one">Existing member: %d</item>
         <item quantity="other">Existing members: %d</item>
     </plurals>
+
+    <string name="create_new_workgroup" translatable="false">Create New Workgroup</string>
+    <string name="new_workgroup" translatable="false">New Workgroup</string>
+    <string name="create" translatable="false">Create</string>
+    <string name="workgroup_name_already_exists" translatable="false">Workgroup name already exists</string>
+    <string name="workgroup_name_index" translatable="false">New workgroup(%s)</string>
+    <string name="workgroup_name_not_contain_special_char" translatable="false">File name can not contain &#8220;&lt;&#8220;, &#8220;&gt;&#8220;, &#8220;.&#8220;, &#8220;,&#8220;, &#8220;/&#8220;, &#8220;\\&#8220;, &#8220;|&#8220;, &#8220;?&#8220;, &#8220;*&#8220;</string>
 </resources>

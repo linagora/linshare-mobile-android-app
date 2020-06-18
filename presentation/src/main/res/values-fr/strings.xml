@@ -145,11 +145,15 @@
 
     <string name="pick_the_destination">Choisissez la destination</string>
     <string name="choose">Choisir</string>
-    
+
     <string name="add_members">Ajouter des membres</string>
 
     <plurals name="existing_member">
         <item quantity="one">Membre existant : %d</item>
         <item quantity="other">Membres existants : %d</item>
     </plurals>
+    <string name="create_new_workgroup"> Créer un nouveau groupe de travail </string>
+    <string name="new_workgroup">Nouveau groupe de travail</string>
+    <string name="create">Créer</string>
+    <string name="workgroup_name_already_exists">Le nom du groupe de travail existe déjà</string>
 </resources>

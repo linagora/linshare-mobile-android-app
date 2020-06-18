@@ -150,4 +150,9 @@
         <item quantity="one">Thành viên hiện có: %d</item>
         <item quantity="other">Thành viên hiện có: %d</item>
     </plurals>
+    <string name="create_new_workgroup">Tạo nhóm làm việc mới</string>
+    <string name="new_workgroup">Nhóm làm việc mới</string>
+    <string name="create">Tạo</string>
+    <string name="workgroup_name_already_exists">Tên nhóm làm việc đã tồn tại</string>
+
 </resources>

@@ -1,10 +1,15 @@
 package com.linagora.android.linshare.view.sharedspace
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -36,6 +41,9 @@ class SharedSpaceViewModel @Inject constructor(
 
     val sharedSpaceItemContextMenu = SharedSpaceItemContextMenu(this)
 
+    private val mutableListSharedSpaceNodeNested = MutableLiveData<List<SharedSpaceNodeNested>>()
+    val listSharedSpaceNodeNested: LiveData<List<SharedSpaceNodeNested>> = mutableListSharedSpaceNodeNested
+
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 
     fun onSwipeRefresh() {
@@ -61,6 +69,16 @@ class SharedSpaceViewModel @Inject constructor(
     fun getSharedSpace() {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getSharedSpaceInteractor())
+        }
+    }
+
+    fun onUploadBottomBarClick() {
+        dispatchState(Either.right(CreateWorkGroupButtonBottomBarClick))
+    }
+
+    override fun onSuccessDispatched(success: Success) {
+        when (success) {
+            is SharedSpaceViewState -> mutableListSharedSpaceNodeNested.value = success.sharedSpace
         }
     }
 }

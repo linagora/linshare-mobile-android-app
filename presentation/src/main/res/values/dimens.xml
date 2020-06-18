@@ -180,4 +180,10 @@
     <dimen name="select_role_dialog_padding_top">24dp</dimen>
     <dimen name="select_role_padding_horizontal">8dp</dimen>
     <dimen name="select_role_padding_vertical">4dp</dimen>
+
+    <dimen name="title_dialog_text_size">20sp</dimen>
+    <dimen name="select_button_text_size">14sp</dimen>
+    <dimen name="select_button_margin_end">28dp</dimen>
+    <dimen name="error_workgroup_name_blank">11sp</dimen>
+
 </resources>

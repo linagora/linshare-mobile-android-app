@@ -21,3 +21,4 @@ data class DetailsSharedSpaceItem(val sharedSpaceNodeNested: SharedSpaceNodeNest
 data class OpenAddMembers(val sharedSpaceId: SharedSpaceId) : Success.ViewEvent()
 data class CreateWorkGroupSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
 data class CreateWorkGroupFailed(val throwable: Throwable) : FeatureFailure()
+object CreateWorkGroupButtonBottomBarClick : Success.ViewEvent()

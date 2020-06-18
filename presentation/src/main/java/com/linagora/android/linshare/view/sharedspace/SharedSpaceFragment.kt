@@ -16,6 +16,7 @@ import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
@@ -89,8 +90,18 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is CloseSearchView -> handleCloseSearch()
             is SharedSpaceContextMenuClick -> showContextMenu(viewEvent.sharedSpaceNodeNested)
             is DetailsSharedSpaceItem -> navigateToDetails(viewEvent.sharedSpaceNodeNested)
+            is CreateWorkGroupButtonBottomBarClick -> showCreateWorkGroupDialog()
         }
         sharedSpaceViewModel.dispatchState(Either.right(Success.Idle))
+    }
+
+    private fun showCreateWorkGroupDialog() {
+        dismissCreateWorkGroupDialog()
+        CreateWorkGroupDialog(sharedSpaceViewModel.listSharedSpaceNodeNested).show(childFragmentManager, CreateWorkGroupDialog.TAG)
+    }
+
+    private fun dismissCreateWorkGroupDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(CreateWorkGroupDialog.TAG)
     }
 
     private fun handleOpenSearch() {

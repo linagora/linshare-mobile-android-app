@@ -23,4 +23,8 @@ internal abstract class SharedSpacePresentationModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeSharedSpaceContextMenuDialog(): SharedSpaceContextMenuDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeCreateWorkGroupDialog(): CreateWorkGroupDialog
 }

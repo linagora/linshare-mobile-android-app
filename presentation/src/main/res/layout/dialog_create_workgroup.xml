@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.view.sharedspace.SharedSpaceViewModel"/>
+        <import type="java.util.List"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested"/>
+
+        <variable
+            name="viewModel"
+            type="SharedSpaceViewModel" />
+
+        <variable
+            name="listSharedSpaceNodeNested"
+            type="List&lt;SharedSpaceNodeNested&gt;" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingStart="@dimen/padding_horizontal_row_bottom_sheet"
+        android:paddingEnd="@dimen/padding_horizontal_row_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/padding_top_bottom_sheet">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleCreateWorkGroup"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:textSize="@dimen/title_dialog_text_size"
+            android:textColor="@color/file_name_color"
+            android:text="@string/create_new_workgroup"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/nameWorkGroup"
+            style="@style/TextInRowLinerBottomSheetStyle"
+            android:hint="@string/new_workgroup"
+            android:textStyle="italic"
+            app:suggestNameWorkGroup="@{listSharedSpaceNodeNested}"
+            android:backgroundTint="@color/file_name_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/titleCreateWorkGroup"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/errorMessage"
+            android:textSize="@dimen/error_workgroup_name_blank"
+            android:textColor="@color/error_border_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:errorMessageEnterNameWorkGroup="@{viewModel.nameEnteredState}"
+            app:layout_constraintTop_toBottomOf="@+id/nameWorkGroup"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/createButton"
+            style="@style/SelectButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create"
+            android:onClick="@{() -> viewModel.createWorkGroupBehavior.onCreate(nameWorkGroup.getText().toString())}"
+            android:layout_marginTop="@dimen/upload_button_margin_top"
+            android:layout_marginBottom="@dimen/upload_button_margin_top"
+            app:enableCreateWorkGroupButton="@{viewModel.nameEnteredState}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameWorkGroup" />
+
+        <TextView
+            android:id="@+id/cancelButton"
+            style="@style/SelectButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:onClick="@{() -> viewModel.createWorkGroupBehavior.onCancel()}"
+            android:layout_marginEnd="@dimen/select_button_margin_end"
+            app:layout_constraintEnd_toStartOf="@+id/createButton"
+            app:layout_constraintTop_toTopOf="@+id/createButton" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

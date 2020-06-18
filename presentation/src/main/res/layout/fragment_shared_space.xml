@@ -149,5 +149,17 @@
 
         </com.google.android.material.bottomappbar.BottomAppBar>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sharedSpaceUploadButton"
+            android:layout_width="wrap_content"
+            android:theme="@style/FloatingUploadButton"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_add"
+            app:tint="@color/white"
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_anchor="@id/sharedSpaceBottomBar"
+            app:rippleColor="@color/divide_view"
+            android:onClick="@{() -> viewModel.onUploadBottomBarClick()}"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

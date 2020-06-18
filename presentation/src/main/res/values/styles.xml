@@ -63,6 +63,9 @@
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
@@ -288,6 +291,11 @@
     <style name="ChooseDestinationButtonStyle">
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">@dimen/choose_destination_button_textsize</item>
+    </style>
+
+    <style name="SelectButtonStyle">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/select_button_text_size</item>
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 </resources>
