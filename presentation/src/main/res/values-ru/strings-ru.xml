@@ -155,6 +155,6 @@
     <plurals name="existing_member">
         <item quantity="one">Участник: %d</item>
 	    <item quantity="few">Участника: %d</item>
-        <item quantity="other">Участников: %d</item>
+        <item quantity="many">Участников: %d</item>
     </plurals>
 </resources>
