@@ -114,6 +114,7 @@
     </plurals>
 
     <string name="preparing">Подготовка ...</string>
+    <string name="prepare_create_upload_request">Подготовка файла, пожалуйста, подождите.</string>
 
     <string name="quick_share">Быстро поделиться</string>
     <string name="share">Поделиться</string>
@@ -139,6 +140,21 @@
     <string name="copy_to_my_space_error_file_size_exceed">Файл превысил ограничение по размеру.</string>
     <string name="copy_to_my_space_error">Произошла ошибка, не возможно скопировать.</string>
 
+    <string name="details">Подробности</string>
+    <string name="members">Участники</string>
+    <string name="reader_role_name">Просмотр</string>
+    <string name="writer_role_name">Редактирование</string>
+    <string name="contributor_role_name">Комментирование</string>
+    <string name="admin_role_name">Администратор</string>
+
     <string name="pick_the_destination">Выберите пункт назначения</string>
     <string name="choose">Выберите</string>
+
+    <string name="add_members">Добавить участников</string>
+
+    <plurals name="existing_member">
+        <item quantity="one">Участник: %d</item>
+	    <item quantity="few">Участника: %d</item>
+        <item quantity="other">Участников: %d</item>
+    </plurals>
 </resources>

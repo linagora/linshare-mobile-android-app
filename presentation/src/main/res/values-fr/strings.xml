@@ -135,6 +135,21 @@
     <string name="copy_to_my_space_error_quota_reach">Espace insuffisant dans Mon Espace pour copier</string>
     <string name="copy_to_my_space_error_file_size_exceed">Le fichier a dépassé la taille limite.</string>
     <string name="copy_to_my_space_error">Une erreur s\'est produite, impossible de copier.</string>
+
+    <string name="details">Détails</string>
+    <string name="members">Membres</string>
+    <string name="reader_role_name">Lecture</string>
+    <string name="writer_role_name">Ecriture</string>
+    <string name="contributor_role_name">Contribution</string>
+    <string name="admin_role_name">Admin</string>
+
     <string name="pick_the_destination">Choisissez la destination</string>
     <string name="choose">Choisir</string>
+    
+    <string name="add_members">Ajouter des membres</string>
+
+    <plurals name="existing_member">
+        <item quantity="one">Membre existant : %d</item>
+        <item quantity="other">Membres existants : %d</item>
+    </plurals>
 </resources>
