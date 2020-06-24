@@ -136,4 +136,18 @@
     <string name="copy_to_my_space_error">Có lỗi xảy ra, không thể thực hiện sao chép.</string>
     <string name="pick_the_destination">Chọn thư mục</string>
     <string name="choose">Chọn</string>
+
+    <string name="details">Chi tiết</string>
+    <string name="members">Các thành viên</string>
+    <string name="reader_role_name">Người đọc</string>
+    <string name="writer_role_name">Người sửa</string>
+    <string name="contributor_role_name">Người cộng tác</string>
+    <string name="admin_role_name">Quản trị viên</string>
+
+    <string name="add_members">Thêm Thành Viên </string>
+
+    <plurals name="existing_member">
+        <item quantity="one">Thành viên hiện có: %d</item>
+        <item quantity="other">Thành viên hiện có: %d</item>
+    </plurals>
 </resources>

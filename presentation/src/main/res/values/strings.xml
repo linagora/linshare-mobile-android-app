@@ -135,17 +135,17 @@
     <string name="copy_to_my_space_error_file_size_exceed">The file has exceeded size limit.</string>
     <string name="copy_to_my_space_error">An error occurred, can not copy.</string>
 
-    <string name="details" translatable="false">Details</string>
-    <string name="members" translatable="false">Members</string>
-    <string name="reader_role_name" translatable="false">Reader</string>
-    <string name="writer_role_name" translatable="false">Writer</string>
-    <string name="contributor_role_name" translatable="false">Contributor</string>
-    <string name="admin_role_name" translatable="false">Admin</string>
+    <string name="details">Details</string>
+    <string name="members">Members</string>
+    <string name="reader_role_name">Reader</string>
+    <string name="writer_role_name">Writer</string>
+    <string name="contributor_role_name">Contributor</string>
+    <string name="admin_role_name">Admin</string>
 
     <string name="pick_the_destination">Pick the destination</string>
     <string name="choose">Choose</string>
 
-    <string name="add_members" translatable="false">Add Members</string>
+    <string name="add_members">Add Members</string>
 
     <plurals name="existing_member">
         <item quantity="one">Existing member: %d</item>
