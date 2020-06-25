@@ -121,14 +121,14 @@
     <string name="received">Reçu</string>
     <string name="received_shares">Partages reçus</string>
     <string name="unknown_user">Utilisateur inconnu</string>
-    <string name="add_people"><i>Ajouter des personnes</i></string>
+    <string name="add_people"><i>Ajouter des utilisateurs</i></string>
     <string name="copy_to_my_space">Copier vers Mon Espace</string>
     <string name="copied_in_my_space">Le fichier %s a été copié dans Mon Espace</string>
     <string name="view">Voir</string>
     <string name="unable_to_prepare_file_for_upload">Impossible de préparer le fichier pour le transfert</string>
-    <string name="shared_space">Espaces Partagés</string>
+    <string name="shared_space">Espace commun</string>
     <string name="do_not_have_any_workgroup">Vous n\'avez pas encore de groupe de travail</string>
-    <string name="search_in_shared_space">Rechercher dans l\'Espace Partagé</string>
+    <string name="search_in_shared_space">Rechercher dans l\'Espace commun</string>
 
     <string name="do_not_have_any_document">Vous n\'avez pas encore de document</string>
 
@@ -139,7 +139,7 @@
     <string name="details">Détails</string>
     <string name="members">Membres</string>
     <string name="reader_role_name">Lecture</string>
-    <string name="writer_role_name">Ecriture</string>
+    <string name="writer_role_name">Écriture</string>
     <string name="contributor_role_name">Contribution</string>
     <string name="admin_role_name">Admin</string>
 
