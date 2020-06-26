@@ -39,6 +39,7 @@
 
         <import type="com.linagora.android.linshare.view.sharedspacedestination.SharedSpaceDestinationViewModel" />
         <import type="com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior" />
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
 
         <variable
             name="viewModel"
@@ -110,6 +111,7 @@
                     app:itemBehaviorDestination="@{viewModel.sharedSpaceItemBehavior}"
                     app:layoutManager="LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:operationRolesDestination="@{SharedSpaceOperationRole.INSTANCE.uploadRoles}"
                     app:sharedSpaceDestinationState="@{viewModel.viewState}"/>
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

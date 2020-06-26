@@ -63,11 +63,33 @@ object SharedSpaceFixtures {
         nodeType = LinShareNodeType.WORK_GROUP
     )
 
-    val SHARED_SPACE_ID_2 = SharedSpaceId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa"))
+    private val SHARED_SPACE_ID_2 = SharedSpaceId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa"))
 
     val SHARED_SPACE_2 = SharedSpaceNodeNested(
         sharedSpaceId = SHARED_SPACE_ID_2,
         role = SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa")), SharedSpaceRoleName.READER),
+        name = "workgroup 2",
+        creationDate = Date(1574837876965),
+        modificationDate = Date(1574837876965),
+        nodeType = LinShareNodeType.WORK_GROUP
+    )
+
+    private val SHARED_SPACE_ID_3 = SharedSpaceId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa"))
+
+    val SHARED_SPACE_3 = SharedSpaceNodeNested(
+        sharedSpaceId = SHARED_SPACE_ID_3,
+        role = SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa")), SharedSpaceRoleName.CONTRIBUTOR),
+        name = "workgroup 2",
+        creationDate = Date(1574837876965),
+        modificationDate = Date(1574837876965),
+        nodeType = LinShareNodeType.WORK_GROUP
+    )
+
+    private val SHARED_SPACE_ID_4 = SharedSpaceId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa"))
+
+    val SHARED_SPACE_4 = SharedSpaceNodeNested(
+        sharedSpaceId = SHARED_SPACE_ID_4,
+        role = SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa")), SharedSpaceRoleName.WRITER),
         name = "workgroup 2",
         creationDate = Date(1574837876965),
         modificationDate = Date(1574837876965),
