@@ -19,9 +19,8 @@ android {
         applicationId "com.linagora.android.linshare"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        // Each time you need to upload the APK to Google Play, you need to manually increment the two following variables
-        versionCode 4
-        versionName "1.0.0-beta05"
+        versionCode 5
+        versionName "1.0.0-beta06"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
