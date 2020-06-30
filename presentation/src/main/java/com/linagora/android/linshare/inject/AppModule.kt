@@ -36,6 +36,7 @@ import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification
 import com.linagora.android.linshare.operator.download.DownloadManagerOperator
 import com.linagora.android.linshare.operator.download.DownloadOperator
+import com.linagora.android.linshare.util.DeviceStorageStats
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.upload.controller.UploadController
 import dagger.Module
@@ -160,5 +161,11 @@ open class AppModule {
     @Singleton
     fun provideContentResolver(context: Context): ContentResolver {
         return context.contentResolver
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeviceStorageStats(): DeviceStorageStats {
+        return DeviceStorageStats()
     }
 }

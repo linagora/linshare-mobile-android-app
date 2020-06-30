@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.error.NotEnoughFreeDeviceStorageException
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.download.DownloadingTask
@@ -16,6 +17,8 @@ import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification
 import com.linagora.android.linshare.notification.disableProgressBar
+import com.linagora.android.linshare.util.DeviceStorageStats
+import com.linagora.android.linshare.util.DeviceStorageStats.Companion.INTERNAL_ROOT
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -23,7 +26,8 @@ class DownloadManagerOperator @Inject constructor(
     private val context: Context,
     private val uploadAndDownloadNotification: UploadAndDownloadNotification,
     private val systemNotifier: SystemNotifier,
-    private val downloadingRepository: DownloadingRepository
+    private val downloadingRepository: DownloadingRepository,
+    private val deviceStorageStats: DeviceStorageStats
 ) : DownloadOperator {
 
     companion object {
@@ -32,29 +36,36 @@ class DownloadManagerOperator @Inject constructor(
 
     override suspend fun download(credential: Credential, token: Token, downloadRequest: DownloadRequest) {
         LOGGER.info("download() $downloadRequest")
-
         try {
-            val downloadUri = Uri.parse(credential.serverUrl
-                .withServicePath(downloadRequest.toServicePath())
-                .toString())
-            val request = DownloadManager.Request(downloadUri)
-                .addRequestHeader("Authorization", "Bearer ${token.token}")
-                .setTitle(downloadRequest.downloadName)
-                .setDescription(context.getString(R.string.app_name))
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, downloadRequest.downloadName)
-
-            (context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
-                .enqueue(request)
-                .let(::EnqueuedDownloadId)
-                .also { storeDownloadTask(it, downloadRequest) }
+            preCheckDownloadRequest(downloadRequest)
+            execute(credential, token, downloadRequest)
         } catch (exp: Exception) {
             LOGGER.error("download() $exp - ${exp.printStackTrace()}")
-            notifyDownloadFailure(
-                notificationId = systemNotifier.generateNotificationId(),
-                title = downloadRequest.downloadName,
-                message = context.getString(R.string.download_failed)
-            )
+            notifyDownloadOnFailure(downloadRequest, exp)
         }
+    }
+
+    private fun preCheckDownloadRequest(downloadRequest: DownloadRequest) {
+        val deviceFreeSpace = deviceStorageStats.getDeviceStorageFreeSpace(INTERNAL_ROOT)
+        if (downloadRequest.downloadSize >= deviceFreeSpace) {
+            throw NotEnoughFreeDeviceStorageException
+        }
+    }
+
+    private suspend fun execute(credential: Credential, token: Token, downloadRequest: DownloadRequest) {
+        val downloadUri = Uri.parse(credential.serverUrl
+            .withServicePath(downloadRequest.toServicePath())
+            .toString())
+        val request = DownloadManager.Request(downloadUri)
+            .addRequestHeader("Authorization", "Bearer ${token.token}")
+            .setTitle(downloadRequest.downloadName)
+            .setDescription(context.getString(R.string.app_name))
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, downloadRequest.downloadName)
+
+        (context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
+            .enqueue(request)
+            .let(::EnqueuedDownloadId)
+            .also { storeDownloadTask(it, downloadRequest) }
     }
 
     private suspend fun storeDownloadTask(enqueuedDownloadId: EnqueuedDownloadId, downloadRequest: DownloadRequest) {
@@ -68,6 +79,19 @@ class DownloadManagerOperator @Inject constructor(
                 downloadType = downloadRequest.downloadType,
                 sharedSpaceId = downloadRequest.sharedSpaceId
             )
+        )
+    }
+
+    private fun notifyDownloadOnFailure(downloadRequest: DownloadRequest, exception: Exception) {
+        val messageId = when (exception) {
+            NotEnoughFreeDeviceStorageException -> R.string.error_insufficient_space
+            else -> R.string.download_failed
+        }
+
+        notifyDownloadFailure(
+            notificationId = systemNotifier.generateNotificationId(),
+            title = downloadRequest.downloadName,
+            message = context.getString(messageId)
         )
     }
 
