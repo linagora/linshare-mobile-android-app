@@ -52,6 +52,7 @@ fun bindingMySpaceLoading(
         ifLeft = { swipeRefreshLayout.isRefreshing = false },
         ifRight = {
             when (it) {
+                is Success.Idle -> swipeRefreshLayout.isRefreshing = false
                 is Success.Loading -> swipeRefreshLayout.isRefreshing = true
                 is MySpaceViewState -> swipeRefreshLayout.isRefreshing = false
             }

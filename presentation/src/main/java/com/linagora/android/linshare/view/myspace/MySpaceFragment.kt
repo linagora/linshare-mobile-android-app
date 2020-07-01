@@ -13,8 +13,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import arrow.core.Either
+import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
@@ -24,6 +26,8 @@ import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSucce
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.ShareItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Failure.CannotExecuteWithoutNetwork
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.model.parcelable.toParcelable
@@ -39,6 +43,7 @@ import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.share.ShareFragment.Companion.SHARE_DOCUMENT_BUNDLE_KEY
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
+import com.linagora.android.linshare.view.widget.errorLayout
 import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -53,6 +58,8 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private lateinit var mySpaceViewModel: MySpaceViewModel
 
+    private lateinit var binding: FragmentMySpaceBinding
+
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceFragment::class.java)
     }
@@ -62,7 +69,7 @@ class MySpaceFragment : MainNavigationFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentMySpaceBinding.inflate(inflater, container, false)
+        binding = FragmentMySpaceBinding.inflate(inflater, container, false)
         initViewModel(binding)
         return binding.root
     }
@@ -78,12 +85,23 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun observeViewState() {
-        mySpaceViewModel.viewState.observe(viewLifecycleOwner, Observer {
-            it.map { success -> when (success) {
-                is Success.ViewEvent -> reactToViewEvent(success)
-                is RemoveDocumentSuccessViewState -> getAllDocuments()
-            } }
-        })
+        mySpaceViewModel.viewState.observe(viewLifecycleOwner, Observer { it.fold(
+            ifLeft = this@MySpaceFragment::reactToFailure,
+            ifRight = this@MySpaceFragment::reactToSuccess
+        ) })
+    }
+
+    private fun reactToFailure(failure: Failure) {
+        when (failure) {
+            is CannotExecuteWithoutNetwork -> handleCannotExecuteWithoutNetwork(failure.operatorType)
+        }
+    }
+
+    private fun reactToSuccess(success: Success) {
+        when (success) {
+            is Success.ViewEvent -> reactToViewEvent(success)
+            is RemoveDocumentSuccessViewState -> getAllDocuments()
+        }
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
@@ -192,6 +210,18 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private fun dismissContextMenu() {
         childFragmentManager.dismissDialogFragmentByTag(MySpaceContextMenuDialog.TAG)
+    }
+
+    private fun handleCannotExecuteWithoutNetwork(operatorType: OperatorType) {
+        val messageId = when (operatorType) {
+            is OperatorType.SwiftRefresh -> R.string.can_not_refresh_without_network
+            else -> R.string.can_not_process_without_network
+        }
+        Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.mySpaceUploadButton)
+            .show()
+        mySpaceViewModel.dispatchResetState()
     }
 
     private fun navigateToUpload(uri: Uri) {
