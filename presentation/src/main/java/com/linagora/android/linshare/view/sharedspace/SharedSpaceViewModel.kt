@@ -18,6 +18,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.Constant.MIN_LENGTH_CHARACTERS_TO_SEARCH
 import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
@@ -39,12 +40,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SharedSpaceViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val searchSharedSpaceInteractor: SearchSharedSpaceInteractor,
     private val getSharedSpaceInteractor: GetSharedSpaceInteractor,
     private val createWorkGroupInteractor: CreateWorkGroupInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val nameValidator: NameValidator
-) : BaseViewModel(dispatcherProvider) {
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     val sharedSpaceItemBehavior = SharedSpaceItemBehavior(this)
 

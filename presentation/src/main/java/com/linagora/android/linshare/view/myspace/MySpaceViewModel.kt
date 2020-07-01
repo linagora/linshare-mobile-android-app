@@ -3,6 +3,7 @@ package com.linagora.android.linshare.view.myspace
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.Credential
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
@@ -12,6 +13,7 @@ import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomB
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
@@ -25,11 +27,12 @@ import javax.inject.Inject
 
 class MySpaceViewModel @Inject constructor(
     application: LinShareApplication,
+    override val internetAvailable: ConnectionLiveData,
     private val getAllDocumentsInteractor: GetAllDocumentsInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor
-) : LinShareViewModel(application, dispatcherProvider),
+) : LinShareViewModel(internetAvailable, application, dispatcherProvider),
     ListItemBehavior<Document> {
 
     companion object {
@@ -51,7 +54,9 @@ class MySpaceViewModel @Inject constructor(
     }
 
     fun onSwipeRefresh() {
-        getAllDocuments()
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(OperatorType.SwiftRefresh) { getAllDocumentsInteractor() }
+        }
     }
 
     override fun onContextMenuClick(document: Document) {

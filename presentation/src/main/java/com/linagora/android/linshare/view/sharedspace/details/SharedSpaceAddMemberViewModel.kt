@@ -6,6 +6,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRe
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetAllMembersInSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRoles
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.OnSelectRolesBehavior
 import com.linagora.android.linshare.view.base.BaseViewModel
@@ -17,12 +18,13 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SharedSpaceAddMemberViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val getAllRoles: GetAllRoles,
     private val addMember: AddMember,
     private val getAllMembersInSharedSpace: GetAllMembersInSharedSpaceInteractor,
     val addMemberSuggestionManager: AddMemberSuggestionManager
-) : BaseViewModel(dispatcherProvider) {
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceAddMemberViewModel::class.java)

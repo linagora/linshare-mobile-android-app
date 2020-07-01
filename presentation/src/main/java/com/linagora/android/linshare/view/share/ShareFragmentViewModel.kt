@@ -13,6 +13,7 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.share.ShareButtonClick
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.base.LinShareViewModel
@@ -28,10 +29,11 @@ import javax.inject.Singleton
 
 @Singleton
 class ShareFragmentViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     application: LinShareApplication,
     dispatcherProvider: CoroutinesDispatcherProvider,
     val recipientsManager: ShareRecipientsManager
-) : LinShareViewModel(application, dispatcherProvider) {
+) : LinShareViewModel(internetAvailable, application, dispatcherProvider) {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ShareFragmentViewModel::class.java)

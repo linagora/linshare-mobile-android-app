@@ -29,14 +29,14 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject constructor(
-    val internetAvailable: ConnectionLiveData,
+    override val internetAvailable: ConnectionLiveData,
     private val getAuthenticatedInfo: GetAuthenticatedInfoInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
     private val authorizationManager: AuthorizationManager,
     private val writeStoragePermission: WriteStoragePermission,
     private val readContactPermission: ReadContactPermission
-) : BaseViewModel(dispatcherProvider) {
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MainActivityViewModel::class.java)

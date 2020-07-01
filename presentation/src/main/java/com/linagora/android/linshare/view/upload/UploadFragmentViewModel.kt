@@ -11,6 +11,7 @@ import com.linagora.android.linshare.domain.usecases.share.OpenPickDestinationDi
 import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToMySpace
 import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToSharedSpace
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.widget.ShareRecipientsManager
@@ -19,10 +20,11 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class UploadFragmentViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val enoughAccountQuotaInteractor: EnoughAccountQuotaInteractor,
     val shareRecipientsManager: ShareRecipientsManager
-) : BaseViewModel(dispatcherProvider) {
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(UploadFragmentViewModel::class.java)

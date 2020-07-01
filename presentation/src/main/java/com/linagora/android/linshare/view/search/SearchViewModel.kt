@@ -16,6 +16,7 @@ import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
@@ -34,11 +35,12 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val searchInteractor: SearchInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor
-) : BaseViewModel(dispatcherProvider),
+) : BaseViewModel(internetAvailable, dispatcherProvider),
     ListItemBehavior<Document> {
 
     companion object {

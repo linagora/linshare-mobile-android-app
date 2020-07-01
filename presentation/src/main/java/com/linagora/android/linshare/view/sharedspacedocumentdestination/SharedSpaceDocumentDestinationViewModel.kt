@@ -16,6 +16,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.getParentNodeId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
@@ -24,11 +25,12 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SharedSpaceDocumentDestinationViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val getSharedSpaceChildDocumentsInteractor: GetSharedSpaceChildDocumentsInteractor,
     private val getSharedSpaceNodeInteractor: GetSharedSpaceNodeInteractor,
     private val getSingleSharedSpaceInteractor: GetSingleSharedSpaceInteractor
-) : BaseViewModel(dispatcherProvider) {
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceDocumentDestinationViewModel::class.java)

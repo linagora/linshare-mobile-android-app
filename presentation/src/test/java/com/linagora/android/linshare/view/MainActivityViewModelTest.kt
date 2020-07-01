@@ -14,6 +14,7 @@ import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.permission.ReadContactPermission
 import com.linagora.android.linshare.permission.WriteStoragePermission
 import com.linagora.android.linshare.runBlockingTest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.testshared.TestFixtures
 import kotlinx.coroutines.flow.flow
@@ -52,6 +53,9 @@ class MainActivityViewModelTest {
     @Mock
     lateinit var readContactPermission: ReadContactPermission
 
+    @Mock
+    lateinit var internetAvailable: ConnectionLiveData
+
     private lateinit var viewModel: MainActivityViewModel
 
     @BeforeEach
@@ -59,6 +63,7 @@ class MainActivityViewModelTest {
         MockitoAnnotations.initMocks(this)
         viewModel =
             MainActivityViewModel(
+                internetAvailable = internetAvailable,
                 getAuthenticatedInfo = getAuthenticatedInfoInteractor,
                 dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher),
                 dynamicBaseUrlInterceptor = dynamicBaseUrlInterceptor,

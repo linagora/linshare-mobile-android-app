@@ -10,6 +10,7 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticateInteractor
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import kotlinx.coroutines.launch
@@ -18,10 +19,11 @@ import java.net.URL
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val baseUrlInterceptor: DynamicBaseUrlInterceptor,
     private val authenticateInteractor: AuthenticateInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider
-) : BaseViewModel(dispatcherProvider) {
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
         private const val HTTPS_PREFIX = "https://"

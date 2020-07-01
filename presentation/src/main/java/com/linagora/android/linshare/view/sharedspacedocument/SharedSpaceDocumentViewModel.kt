@@ -29,6 +29,7 @@ import com.linagora.android.linshare.model.parcelable.getParentNodeId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SharedSpaceDocumentViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val getSharedSpaceChildDocumentsInteractor: GetSharedSpaceChildDocumentsInteractor,
     private val getSharedSpaceNodeInteractor: GetSharedSpaceNodeInteractor,
@@ -54,7 +56,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val searchSharedSpaceDocumentInteractor: SearchSharedSpaceDocumentInteractor,
     private val removeSharedSpaceNodeInteractor: RemoveSharedSpaceNodeInteractor,
     private val downloadOperator: DownloadOperator
-) : BaseViewModel(dispatcherProvider) {
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
         val NO_DOWNLOADING_SHARED_SPACE_DOCUMENT = null

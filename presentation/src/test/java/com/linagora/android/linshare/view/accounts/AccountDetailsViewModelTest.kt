@@ -14,6 +14,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.runBlockingTest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.testshared.TestFixtures.Credentials.CREDENTIAL
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
@@ -50,6 +51,9 @@ class AccountDetailsViewModelTest {
     @Mock
     lateinit var authorizationManager: AuthorizationManager
 
+    @Mock
+    lateinit var internetAvailable: ConnectionLiveData
+
     private lateinit var accountDetailsViewModel: AccountDetailsViewModel
 
     companion object {
@@ -63,6 +67,7 @@ class AccountDetailsViewModelTest {
         MockitoAnnotations.initMocks(this)
 
         accountDetailsViewModel = AccountDetailsViewModel(
+            internetAvailable = internetAvailable,
             getAccountDetails = getAccountDetails,
             dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher),
             removeAccountInteractor = removeAccount,

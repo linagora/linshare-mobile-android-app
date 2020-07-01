@@ -12,6 +12,7 @@ import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuRe
 import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesInteractor
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
@@ -21,11 +22,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ReceivedSharesViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
     private val getReceivedSharesInteractor: GetReceivedSharesInteractor,
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator
-) : BaseViewModel(dispatcherProvider),
+) : BaseViewModel(internetAvailable, dispatcherProvider),
     ListItemBehavior<Share> {
 
     val downloadContextMenu = ReceivedShareDownloadContextMenu(this)

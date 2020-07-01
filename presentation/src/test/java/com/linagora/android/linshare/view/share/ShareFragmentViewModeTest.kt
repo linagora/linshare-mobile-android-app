@@ -3,11 +3,13 @@ package com.linagora.android.linshare.view.share
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import androidx.test.core.app.ApplicationProvider
 import arrow.core.Either
 import com.linagora.android.linshare.TestApplication
 import com.linagora.android.linshare.domain.usecases.autocomplete.GetReceiverSuggestionInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.widget.ShareRecipientsManager
 import com.linagora.android.testshared.ShareFixtures.ADD_RECIPIENT_1_STATE
@@ -39,6 +41,8 @@ class ShareFragmentViewModeTest {
     @Mock
     lateinit var getReceiverSuggestionInteractor: GetReceiverSuggestionInteractor
 
+    private lateinit var internetAvailable: ConnectionLiveData
+
     private lateinit var shareRecipientsManager: ShareRecipientsManager
 
     private lateinit var shareFragmentViewModel: ShareFragmentViewModel
@@ -46,8 +50,10 @@ class ShareFragmentViewModeTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        internetAvailable = ConnectionLiveData(ApplicationProvider.getApplicationContext())
         shareRecipientsManager = ShareRecipientsManager(getReceiverSuggestionInteractor)
         shareFragmentViewModel = ShareFragmentViewModel(
+            internetAvailable = internetAvailable,
             application = TestApplication(),
             dispatcherProvider = provideFakeCoroutinesDispatcherProvider(TestCoroutineDispatcher()),
             recipientsManager = shareRecipientsManager

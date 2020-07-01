@@ -12,6 +12,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.runBlockingTest
+import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.utils.provideFakeCoroutinesDispatcherProvider
 import com.linagora.android.testshared.TestFixtures.Authentications.LINSHARE_PASSWORD1
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD
@@ -48,6 +49,9 @@ class LoginViewModelTest {
     @Mock
     lateinit var viewObserver: Observer<Either<Failure, Success>>
 
+    @Mock
+    lateinit var internetAvailable: ConnectionLiveData
+
     private lateinit var loginViewModel: LoginViewModel
 
     companion object {
@@ -60,12 +64,12 @@ class LoginViewModelTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        loginViewModel =
-            LoginViewModel(
-                baseUrlInterceptor = baseUrlInterceptor,
-                authenticateInteractor = authenticateInteractor,
-                dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher)
-            )
+        loginViewModel = LoginViewModel(
+            internetAvailable = internetAvailable,
+            baseUrlInterceptor = baseUrlInterceptor,
+            authenticateInteractor = authenticateInteractor,
+            dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher)
+        )
     }
 
     @Test
