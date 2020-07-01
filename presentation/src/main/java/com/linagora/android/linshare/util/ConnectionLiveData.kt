@@ -7,9 +7,11 @@ import android.net.Network
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
 
-class ConnectionLiveData(val context: Context) : LiveData<NetworkConnectivity>() {
+class ConnectionLiveData(val context: Context) :
+    LiveData<NetworkConnectivity>(NetworkConnectivity.DISCONNECTED) {
 
-    private val connectivityManager: ConnectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val connectivityManager: ConnectivityManager =
+        context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
     private val connectivityManagerCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) {

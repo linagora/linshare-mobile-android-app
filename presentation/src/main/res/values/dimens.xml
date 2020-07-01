@@ -4,6 +4,7 @@
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="common_primary_text_size">16sp</dimen>
     <dimen name="item_bottom_sheet_padding_vertical">8dp</dimen>
+    <dimen name="padding_vertical_common">16dp</dimen>
 
     <!--wizard-->
     <dimen name="page_indicator_margin_top">10dp</dimen>

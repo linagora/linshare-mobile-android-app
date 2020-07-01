@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+        <import type="com.linagora.android.linshare.util.NetworkConnectivity"/>
+        <import type="android.view.View"/>
+        <variable
+            name="connectionState"
+            type="ConnectionLiveData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/networkBanner"
+        android:background="@color/greyPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="@{connectionState == NetworkConnectivity.DISCONNECTED ? View.VISIBLE : View.GONE}"
+        android:paddingTop="@dimen/padding_vertical_common"
+        android:paddingBottom="@dimen/padding_vertical_common">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Label"
+            android:text="@string/can_not_connect_network"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -4,11 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+
+        <variable
+            name="internetAvailable"
+            type="ConnectionLiveData" />
 
         <variable
             name="viewModel"
             type="com.linagora.android.linshare.view.myspace.MySpaceViewModel" />
-
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -46,15 +50,24 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
+            <include
+                android:id="@+id/networkBannerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/network_banner_layout"
+                app:connectionState="@{internetAvailable}"
+                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeLayoutMySpace"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:layout_constraintTop_toBottomOf="@id/networkBannerContainer"
                 app:mySpaceState="@{viewModel.viewState}"
                 app:onRefreshListener="@{() -> viewModel.onSwipeRefresh()}">
 

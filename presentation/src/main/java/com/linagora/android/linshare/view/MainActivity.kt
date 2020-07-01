@@ -27,7 +27,6 @@ import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.S
 import com.linagora.android.linshare.model.resources.MenuId
 import com.linagora.android.linshare.model.resources.MenuResource
 import com.linagora.android.linshare.model.resources.ViewId
-import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.Constant.LINSHARE_APPLICATION_ID
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.base.BaseActivity
@@ -77,17 +76,6 @@ class MainActivity : BaseActivity(), NavigationHost {
         handleStoragePermissionRequest()
 
         handleIntent(intent)
-
-        observeConnectionState()
-    }
-
-    private fun observeConnectionState() {
-        val connectionLiveData = ConnectionLiveData(this)
-        connectionLiveData.observe(this, Observer { networkConnectivity ->
-            networkConnectivity?.let {
-                viewModel.internetAvailable.value = networkConnectivity
-            }
-        })
     }
 
     override fun onNewIntent(intent: Intent?) {

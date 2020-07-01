@@ -159,4 +159,6 @@
     <string name="workgroup_name_already_exists" translatable="false">Workgroup name already exists</string>
     <string name="workgroup_name_index" translatable="false">New workgroup(%s)</string>
     <string name="workgroup_name_not_contain_special_char" translatable="false">File name can not contain &#8220;&lt;&#8220;, &#8220;&gt;&#8220;, &#8220;.&#8220;, &#8220;,&#8220;, &#8220;/&#8220;, &#8220;\\&#8220;, &#8220;|&#8220;, &#8220;?&#8220;, &#8220;*&#8220;</string>
+
+    <string name="can_not_connect_network" translatable="false">Cannot connect to the network</string>
 </resources>
