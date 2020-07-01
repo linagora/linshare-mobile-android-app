@@ -41,7 +41,6 @@
         android:id="@+id/titleDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="2"
         android:paddingStart="@dimen/guide_padding_side"
         android:paddingEnd="@dimen/guide_padding_side"
         android:textAlignment="center"
