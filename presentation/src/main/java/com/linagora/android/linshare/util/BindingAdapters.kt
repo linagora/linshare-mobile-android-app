@@ -45,7 +45,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import arrow.core.Either
-import arrow.core.orNull
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
@@ -172,12 +171,12 @@ fun bindingFileSize(textView: TextView, document: UploadDocumentRequest?) {
 
 @BindingAdapter("uploadInfo", "uploadErrorStateInfo")
 fun bindingUploadInfo(textView: TextView, document: UploadDocumentRequest?, uploadErrorState: Either<Failure, Success>) {
-    textView.text = uploadErrorState.map { success ->
-        when (success) {
-            PreUploadExecuting -> textView.context.resources.getString(R.string.executing)
-            else -> document?.uploadFileName
-        }
-    }.orNull()
+    textView.text = uploadErrorState.fold(
+        ifLeft = { document?.uploadFileName },
+        ifRight = { success ->
+            when (success) {
+                PreUploadExecuting -> textView.context.resources.getString(R.string.executing)
+                else -> document?.uploadFileName } })
 }
 
 @BindingAdapter("documentIcon", "uploadErrorStateIcon")
