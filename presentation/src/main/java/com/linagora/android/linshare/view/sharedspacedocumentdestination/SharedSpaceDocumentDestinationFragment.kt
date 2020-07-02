@@ -33,6 +33,7 @@ import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.Navigation.FileType
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
@@ -45,6 +46,10 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     private lateinit var binding: FragmentSharedSpaceDocumentDestinationBinding
 
     private val arguments: SharedSpaceDocumentDestinationFragmentArgs by navArgs()
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(SharedSpaceDocumentDestinationFragment::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,16 +93,11 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         when (viewEvent) {
             is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
             is CancelPickDestinationViewState -> navigateToUpload(arguments.uploadType, arguments.uri, arguments.uploadDestinationInfo)
-            is ChoosePickDestinationViewState -> navigateToUpload(Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP, arguments.uri, createUploadDestination())
+            is ChoosePickDestinationViewState -> handleChooseDestination()
             SharedSpaceDocumentOnBackClick -> navigateBack()
         }
 
         viewModel.dispatchState(Either.right(Success.Idle))
-    }
-
-    private fun navigateToUpload(uploadType: Navigation.UploadType, uri: Uri, uploadDestinationInfo: UploadDestinationInfo?) {
-        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToUploadFragment(uploadType, uri, uploadDestinationInfo)
-        findNavController().navigate(action)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -156,6 +156,12 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         )
     }
 
+    private fun handleChooseDestination() {
+        runCatching { createUploadDestination() }
+            .onFailure { LOGGER.error("handleChooseDestination(): ${it.printStackTrace()} - ${it.message}") }
+            .map { navigateToUpload(Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP, arguments.uri, it) }
+    }
+
     private fun navigateIntoSubFolder(workGroupNode: WorkGroupNode) {
         if (workGroupNode is WorkGroupDocument) {
             return
@@ -179,5 +185,10 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
 
     private fun navigateBack() {
         findNavController().popBackStack()
+    }
+
+    private fun navigateToUpload(uploadType: Navigation.UploadType, uri: Uri, uploadDestinationInfo: UploadDestinationInfo?) {
+        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToUploadFragment(uploadType, uri, uploadDestinationInfo)
+        findNavController().navigate(action)
     }
 }
