@@ -2,9 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
         <import type="com.linagora.android.linshare.model.upload.UploadDocumentRequest"/>
         <import type="com.linagora.android.linshare.view.Navigation.UploadType"/>
         <import type="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"/>
+        <import type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel"/>
         <import type="android.view.View"/>
 
         <variable
@@ -21,7 +23,7 @@
 
         <variable
             name="viewModel"
-            type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel" />
+            type="UploadFragmentViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -51,13 +53,23 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <include
+            android:id="@+id/networkBannerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/network_banner_layout"
+            app:connectionState="@{viewModel.internetAvailable}"
+            app:layout_constraintTop_toBottomOf="@id/upload_app_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/fileInfoContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="0dp"
             app:cardElevation="@dimen/info_elevation"
-            app:layout_constraintTop_toBottomOf="@id/upload_app_bar">
+            app:layout_constraintTop_toBottomOf="@id/networkBannerContainer">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
