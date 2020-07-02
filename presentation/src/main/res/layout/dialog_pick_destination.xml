@@ -35,7 +35,7 @@
             style="@style/DivideView"/>
 
         <LinearLayout
-            android:onClick="@{() -> viewModel.uploadOutsideToMySpace()}"
+            android:onClick="@{() -> viewModel.selectUploadOutsideToMySpace()}"
             style="@style/RowLinerBottomSheetStyle">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
@@ -48,7 +48,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:onClick="@{() -> viewModel.uploadOutsideToSharedSpace()}"
+            android:onClick="@{() -> viewModel.selectUploadOutsideToSharedSpace()}"
             style="@style/RowLinerBottomSheetStyle">
 
             <ImageView

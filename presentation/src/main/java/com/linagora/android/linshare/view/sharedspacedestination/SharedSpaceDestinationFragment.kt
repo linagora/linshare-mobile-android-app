@@ -95,15 +95,18 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
     }
 
     private fun navigateIntoSharedSpace(sharedSpaceNodeNested: SharedSpaceNodeNested) {
-        val action = SharedSpaceDestinationFragmentDirections.actionNavigationDestinationToNavigationPickDestination(
-            args.uploadType,
-            args.uri,
-            args.uploadDestinationInfo,
-            generateNavigationInfoForSharedSpaceRoot(sharedSpaceNodeNested))
+        val action = SharedSpaceDestinationFragmentDirections
+            .actionNavigationDestinationToNavigationPickDestination(
+                args.uploadType,
+                args.uri,
+                args.uploadDestinationInfo,
+                generateNavigationInfoForSharedSpaceRoot(sharedSpaceNodeNested))
         findNavController().navigate(action)
     }
 
-    private fun generateNavigationInfoForSharedSpaceRoot(sharedSpaceNodeNested: SharedSpaceNodeNested): SharedSpaceNavigationInfo {
+    private fun generateNavigationInfoForSharedSpaceRoot(
+        sharedSpaceNodeNested: SharedSpaceNodeNested
+    ): SharedSpaceNavigationInfo {
         return SharedSpaceNavigationInfo(
             sharedSpaceIdParcelable = sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
             fileType = Navigation.FileType.ROOT,

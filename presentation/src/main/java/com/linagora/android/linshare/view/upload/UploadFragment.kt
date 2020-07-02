@@ -39,8 +39,8 @@ import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
 import com.linagora.android.linshare.domain.usecases.share.OpenPickDestinationDialog
-import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToMySpace
-import com.linagora.android.linshare.domain.usecases.share.UploadOutsideToSharedSpace
+import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToMySpace
+import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToSharedSpace
 import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -284,21 +284,21 @@ class UploadFragment : MainNavigationFragment() {
             is AddMailingList -> addMailingListView(viewEvent.mailingList)
             is OnUploadButtonClick -> preUpload(viewEvent.uploadDocumentRequest)
             is OpenPickDestinationDialog -> showPickDestinationDialog()
-            is UploadOutsideToMySpace -> uploadOutsideToMySpace()
-            is UploadOutsideToSharedSpace -> uploadOutsideToSharedSpace()
+            is SelectUploadOutsideToMySpace -> updateOutsideToMySpaceDestination()
+            is SelectUploadOutsideToSharedSpace -> navigateToDestinationPicker()
         }
         uploadFragmentViewModel.dispatchState(Either.right(Success.Idle))
     }
 
-    private fun uploadOutsideToMySpace() {
+    private fun updateOutsideToMySpaceDestination() {
         childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
         binding.uploadType = Navigation.UploadType.OUTSIDE_APP
         binding.uploadDestinationInfo = UPLOAD_TO_MY_SPACE_DESTINATION_INFO
     }
 
-    private fun uploadOutsideToSharedSpace() {
+    private fun navigateToDestinationPicker() {
         val action = UploadFragmentDirections.actionUploadFragmentToNavigationDestination(
-            binding.uploadType!!,
+            args.uploadType,
             args.uri,
             args.uploadDestinationInfo)
         findNavController().navigate(action)
