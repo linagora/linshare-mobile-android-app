@@ -46,6 +46,16 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
+            <include
+                android:id="@+id/networkBannerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/network_banner_layout"
+                app:connectionState="@{viewModel.internetAvailable}"
+                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeLayoutReceivedList"
                 android:layout_width="match_parent"
@@ -54,7 +64,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:layout_constraintTop_toBottomOf="@id/networkBannerContainer"
                 app:onRefreshListener="@{() -> viewModel.onSwipeRefresh()}"
                 app:receivedListLoadingState="@{viewModel.viewState}">
 
