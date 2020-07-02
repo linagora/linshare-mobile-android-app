@@ -10,6 +10,7 @@ interface WorkGroupNode {
     val modificationDate: Date
     val description: String?
     val name: String
+    val treePath: List<TreePath>
 }
 
 fun WorkGroupNode.nameContains(query: String): Boolean {

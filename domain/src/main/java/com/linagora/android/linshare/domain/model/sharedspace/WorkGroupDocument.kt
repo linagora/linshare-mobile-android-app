@@ -20,5 +20,6 @@ data class WorkGroupDocument(
     val hasThumbnail: Boolean,
     val uploadDate: Date,
     val hasRevision: Boolean,
-    val sha256sum: String
+    val sha256sum: String,
+    override val treePath: List<TreePath>
 ) : WorkGroupNode

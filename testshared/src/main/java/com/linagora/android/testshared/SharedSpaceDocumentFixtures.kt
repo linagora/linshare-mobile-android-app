@@ -8,6 +8,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
+import com.linagora.android.linshare.domain.model.sharedspace.TreePath
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
@@ -44,7 +45,8 @@ object SharedSpaceDocumentFixtures {
         sharedSpaceId = SHARED_SPACE_ID_1,
         modificationDate = Date(1574837876965),
         description = "test description",
-        name = "FOLDER1"
+        name = "FOLDER1",
+        treePath = emptyList()
     )
 
     val WORK_GROUP_FOLDER_2 = WorkGroupFolder(
@@ -54,7 +56,8 @@ object SharedSpaceDocumentFixtures {
         sharedSpaceId = SHARED_SPACE_ID_1,
         modificationDate = Date(1574837876965),
         description = "test description 2",
-        name = "FOLDER2"
+        name = "FOLDER2",
+        treePath = listOf(TreePath(PARENT_NODE_ID_1, "FOLDER1"))
     )
 
     val WORK_GROUP_DOCUMENT_1 = WorkGroupDocument(
@@ -70,7 +73,8 @@ object SharedSpaceDocumentFixtures {
         hasRevision = false,
         sha256sum = "d6747b1e2516e8ff545a9d454aebe1e89b6f55f720cae0625a2a767259559842",
         uploadDate = Date(1588664701182),
-        hasThumbnail = true
+        hasThumbnail = true,
+        treePath = emptyList()
     )
 
     val WORK_GROUP_DOCUMENT_2 = WorkGroupDocument(
@@ -86,7 +90,8 @@ object SharedSpaceDocumentFixtures {
         hasRevision = false,
         sha256sum = "1bc66785d75d22f7aa0cf7870b2baa8187f0bf7cd3eed65fd590b73cc8d56794",
         uploadDate = Date(1588664701275),
-        hasThumbnail = true
+        hasThumbnail = true,
+        treePath = listOf(TreePath(PARENT_NODE_ID_1, "FOLDER1"))
     )
 
     val STATE_SHARED_DOCUMENT_IN_SPACE_1 = Either.right(SharedSpaceDocumentViewState(
