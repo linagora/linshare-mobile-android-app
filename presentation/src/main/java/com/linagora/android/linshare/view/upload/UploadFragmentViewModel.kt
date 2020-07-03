@@ -7,7 +7,7 @@ import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
-import com.linagora.android.linshare.domain.usecases.share.OpenPickDestinationDialog
+import com.linagora.android.linshare.domain.usecases.share.SelectDesinationClick
 import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToMySpace
 import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToSharedSpace
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
@@ -64,8 +64,8 @@ class UploadFragmentViewModel @Inject constructor(
         dispatchState(Either.right(OnUploadButtonClick(uploadDocumentRequest)))
     }
 
-    fun openPickDestinationDialog() {
-        dispatchState(Either.right(OpenPickDestinationDialog))
+    fun navigateDestination() {
+        dispatchState(Either.right(SelectDesinationClick))
     }
 
     fun selectUploadOutsideToMySpace() {

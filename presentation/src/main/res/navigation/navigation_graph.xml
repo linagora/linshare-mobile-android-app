@@ -72,6 +72,9 @@
         <action
             android:id="@+id/action_uploadFragment_to_navigation_destination"
             app:destination="@id/navigationSharedSpaceDestination" />
+        <action
+            android:id="@+id/action_uploadFragment_to_navigation_pick_destination"
+            app:destination="@id/navigationSharedSpaceDocumentDestination" />
     </fragment>
     <fragment
         android:id="@id/navigation_my_space"
@@ -165,7 +168,9 @@
             android:defaultValue="@null" />
         <argument
             android:name="navigationInfo"
-            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo"
+            app:nullable="true"
+            android:defaultValue="@null"/>
         <action
             android:id="@+id/action_navigation_pick_destination_to_uploadFragment"
             app:destination="@id/uploadFragment"

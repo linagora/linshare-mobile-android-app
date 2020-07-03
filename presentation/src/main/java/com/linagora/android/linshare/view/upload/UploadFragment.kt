@@ -38,7 +38,7 @@ import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
-import com.linagora.android.linshare.domain.usecases.share.OpenPickDestinationDialog
+import com.linagora.android.linshare.domain.usecases.share.SelectDesinationClick
 import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToMySpace
 import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToSharedSpace
 import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
@@ -283,11 +283,22 @@ class UploadFragment : MainNavigationFragment() {
             is AddRecipient -> addRecipientView(viewEvent.user)
             is AddMailingList -> addMailingListView(viewEvent.mailingList)
             is OnUploadButtonClick -> preUpload(viewEvent.uploadDocumentRequest)
-            is OpenPickDestinationDialog -> showPickDestinationDialog()
+            is SelectDesinationClick -> selectDestination()
             is SelectUploadOutsideToMySpace -> updateOutsideToMySpaceDestination()
             is SelectUploadOutsideToSharedSpace -> navigateToDestinationPicker()
         }
         uploadFragmentViewModel.dispatchState(Either.right(Success.Idle))
+    }
+
+    private fun selectDestination() {
+        args.uploadDestinationInfo
+            ?.let { reSelectDestination() }
+            ?: showPickDestinationDialog()
+    }
+
+    private fun reSelectDestination() {
+        val action = UploadFragmentDirections.actionUploadFragmentToNavigationPickDestination(args.uploadType, args.uri, args.uploadDestinationInfo)
+        findNavController().navigate(action)
     }
 
     private fun updateOutsideToMySpaceDestination() {

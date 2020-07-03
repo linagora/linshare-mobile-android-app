@@ -15,8 +15,10 @@ import androidx.navigation.fragment.navArgs
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentDestinationBinding
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -50,6 +52,10 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceDocumentDestinationFragment::class.java)
+
+        private const val ONLY_ROOT_ITEM = 1
+
+        private val EMPTY_PARENT_NODE_ID = null
     }
 
     override fun onCreateView(
@@ -59,7 +65,6 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     ): View? {
         binding = FragmentSharedSpaceDocumentDestinationBinding.inflate(inflater, container, false)
         initViewModel(binding)
-        setUpOnBackPressed()
         return binding.root
     }
 
@@ -73,8 +78,40 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         viewModel = getViewModel(viewModelFactory)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        binding.navigationInfo = arguments.navigationInfo
+        bindingNavigationInfo()
         observeViewState()
+    }
+
+    private fun bindingNavigationInfo() {
+        binding.navigationInfo = arguments.navigationInfo
+            ?.let { it }
+            ?: arguments.uploadDestinationInfo
+                ?.let { generateNavigationInfo(it) }
+    }
+
+    private fun generateNavigationInfo(uploadDestinationInfo: UploadDestinationInfo): SharedSpaceNavigationInfo {
+        val fileType = generateFileTypeByUploadDestinationInfo(uploadDestinationInfo)
+        return SharedSpaceNavigationInfo(
+            uploadDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable,
+            fileType,
+            getParentNodeIdFromUploadDestinationInfo(fileType, uploadDestinationInfo)
+        )
+    }
+
+    private fun getParentNodeIdFromUploadDestinationInfo(fileType: FileType, uploadDestinationInfo: UploadDestinationInfo): WorkGroupNodeIdParcelable {
+        return fileType.takeIf { it == FileType.NORMAL }
+            ?.let { uploadDestinationInfo.parentDestinationInfo.parentNodeId }
+            ?: WorkGroupNodeIdParcelable(uploadDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid)
+    }
+
+    private fun generateFileTypeByUploadDestinationInfo(uploadDestinationInfo: UploadDestinationInfo): FileType {
+        return takeIf { isRootFileType(uploadDestinationInfo) }
+            ?.let { FileType.ROOT }
+            ?: FileType.NORMAL
+    }
+
+    private fun isRootFileType(uploadDestinationInfo: UploadDestinationInfo): Boolean {
+        return uploadDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid == uploadDestinationInfo.parentDestinationInfo.parentNodeId.uuid
     }
 
     private fun observeViewState() {
@@ -105,31 +142,69 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
-        getAllNodes()
-        getCurrentNode()
-        getCurrentSharedSpace()
+        initData()
+        setUpOnBackPressed()
     }
 
-    private fun getCurrentNode() {
-        viewModel.getCurrentNode(
-            sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
-            currentNodeId = arguments.navigationInfo.nodeIdParcelable.toWorkGroupNodeId())
+    private fun initData() {
+        val sharedSpaceId = extractSharedSpaceId()
+        val currentNodeId = extractCurrentNodeId()
+        sharedSpaceId?.let {
+            getAllNodes(it)
+            getCurrentSharedSpace(it)
+            currentNodeId?.let { workGroupNodeId ->
+                getCurrentNode(it, workGroupNodeId)
+            }
+        }
     }
 
-    private fun getCurrentSharedSpace() {
-        viewModel.getCurrentSharedSpace(
-            sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId())
+    private fun extractSharedSpaceId(): SharedSpaceId? {
+        return arguments.navigationInfo
+            ?.let { it.sharedSpaceIdParcelable.toSharedSpaceId() }
+            ?: arguments.uploadDestinationInfo
+                ?.let { it.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.toSharedSpaceId() }
+    }
+
+    private fun extractCurrentNodeId(): WorkGroupNodeId? {
+        return arguments.navigationInfo
+            ?.let { it.nodeIdParcelable.toWorkGroupNodeId() }
+            ?: arguments.uploadDestinationInfo
+                ?.let { it.parentDestinationInfo.parentNodeId.toWorkGroupNodeId() }
+    }
+
+    private fun getCurrentNode(sharedSpaceId: SharedSpaceId, currentNodeId: WorkGroupNodeId) {
+        viewModel.getCurrentNode(sharedSpaceId = sharedSpaceId, currentNodeId = currentNodeId)
+    }
+
+    private fun getCurrentSharedSpace(sharedSpaceId: SharedSpaceId) {
+        viewModel.getCurrentSharedSpace(sharedSpaceId = sharedSpaceId)
     }
 
     private fun setUpSwipeRefreshLayout() {
         binding.swipeLayoutSharedSpace.setColorSchemeResources(R.color.colorPrimary)
     }
 
-    private fun getAllNodes() {
-        viewModel.getAllChildNodes(
-            arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
-            arguments.navigationInfo.getParentNodeId()
-        )
+    private fun getAllNodes(sharedSpaceId: SharedSpaceId) {
+        viewModel.getAllChildNodes(sharedSpaceId, getParentNodeId())
+    }
+
+    private fun getParentNodeId(): WorkGroupNodeId? {
+        val navigationInfo = arguments.navigationInfo
+        navigationInfo?.let { return getParentNodeIdFromNavigationInfo(it) }
+            ?: return getParentNodeIdFromUploadDestination()
+    }
+
+    private fun getParentNodeIdFromNavigationInfo(navigationInfo: SharedSpaceNavigationInfo): WorkGroupNodeId? {
+        return navigationInfo.getParentNodeId()
+    }
+
+    private fun getParentNodeIdFromUploadDestination(): WorkGroupNodeId? {
+        val uploadDestinationInfo = arguments.uploadDestinationInfo
+        return uploadDestinationInfo?.let { getParentNodeIdFromGenerateNavigationInfo(it) } ?: EMPTY_PARENT_NODE_ID
+    }
+
+    private fun getParentNodeIdFromGenerateNavigationInfo(uploadDestinationInfo: UploadDestinationInfo): WorkGroupNodeId? {
+        return generateNavigationInfo(uploadDestinationInfo)?.getParentNodeId()
     }
 
     private fun bindingFolderName(viewState: Success.ViewState) {
@@ -187,17 +262,22 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
 
     private fun generateNavigationInfoForPreviousFolder(workGroupNode: WorkGroupNode): SharedSpaceNavigationInfo {
         val lastTreePath = workGroupNode.treePath.last()
+        val destinationFileType = workGroupNode.treePath.takeIf { it.size == ONLY_ROOT_ITEM }
+            ?.let { FileType.ROOT }
+            ?: FileType.NORMAL
         return SharedSpaceNavigationInfo(
             sharedSpaceIdParcelable = workGroupNode.sharedSpaceId.toParcelable(),
-            fileType = FileType.NORMAL,
+            fileType = destinationFileType,
             nodeIdParcelable = WorkGroupNodeIdParcelable(lastTreePath.workGroupNodeId.uuid)
         )
     }
 
     private fun navigateBack() {
-        viewModel.currentNode.value?.treePath.takeIf { it.isNullOrEmpty() }
-            ?.let { navigateToWorkGroup() }
-            ?: navigateToPreviousFolder(viewModel.currentNode.value!!)
+        viewModel.currentNode.value?.let { node ->
+            node.treePath.takeIf { it.isNullOrEmpty() }
+                ?.let { navigateToWorkGroup() }
+                ?: navigateToPreviousFolder(node)
+        }
     }
 
     private fun setUpOnBackPressed() {
