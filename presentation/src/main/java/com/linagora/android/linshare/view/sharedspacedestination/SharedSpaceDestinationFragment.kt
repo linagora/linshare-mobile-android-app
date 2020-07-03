@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
@@ -22,6 +24,7 @@ import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.upload.UploadFragment
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -53,6 +56,7 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
     override fun configureToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_navigation_back)
         toolbar.navigationIcon?.setTint(ContextCompat.getColor(context!!, R.color.toolbar_primary_color))
+        toolbar.setNavigationOnClickListener { navigateToUpload() }
     }
 
     private fun initViewModel(binding: FragmentSharedSpaceDestinationBinding) {
@@ -66,6 +70,7 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
         getSharedSpace()
+        setUpOnBackPressed()
     }
 
     private fun observeViewState() {
@@ -104,13 +109,39 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
         findNavController().navigate(action)
     }
 
-    private fun generateNavigationInfoForSharedSpaceRoot(
-        sharedSpaceNodeNested: SharedSpaceNodeNested
-    ): SharedSpaceNavigationInfo {
+    private fun generateNavigationInfoForSharedSpaceRoot(sharedSpaceNodeNested: SharedSpaceNodeNested): SharedSpaceNavigationInfo {
         return SharedSpaceNavigationInfo(
             sharedSpaceIdParcelable = sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
             fileType = Navigation.FileType.ROOT,
             nodeIdParcelable = WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)
         )
+    }
+
+    private fun setUpOnBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { navigateToUpload() }
+    }
+
+    private fun navigateToUpload() {
+        val uploadDestinationInfo = args.uploadDestinationInfo
+
+        val action = uploadDestinationInfo
+            ?.let { navigateUpLoadToDestination() }
+            ?: navigateUploadToMySpace()
+
+        findNavController().navigate(action)
+    }
+
+    private fun navigateUploadToMySpace(): NavDirections {
+        return SharedSpaceDestinationFragmentDirections.actionNavigationDestinationToUploadFragment(
+            Navigation.UploadType.OUTSIDE_APP,
+            args.uri,
+            UploadFragment.UPLOAD_TO_MY_SPACE_DESTINATION_INFO)
+    }
+
+    private fun navigateUpLoadToDestination(): NavDirections {
+        return SharedSpaceDestinationFragmentDirections.actionNavigationDestinationToUploadFragment(
+            args.uploadType,
+            args.uri,
+            args.uploadDestinationInfo)
     }
 }

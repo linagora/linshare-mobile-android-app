@@ -150,6 +150,11 @@
         <action
             android:id="@+id/action_navigation_destination_to_navigation_pick_destination"
             app:destination="@id/navigationSharedSpaceDocumentDestination" />
+        <action
+            android:id="@+id/action_navigation_destination_to_uploadFragment"
+            app:destination="@id/uploadFragment"
+            app:popUpTo="@+id/uploadFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceDocumentDestination"
