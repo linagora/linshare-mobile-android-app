@@ -23,6 +23,7 @@ import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceNodeClick
@@ -201,15 +202,20 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun download(workGroupNode: WorkGroupNode) {
         LOGGER.info("download() $workGroupNode")
         mainActivityViewModel.currentAuthentication.value
-            ?.let { authentication ->
-                workGroupNode.takeIf { it is WorkGroupDocument }
-                    ?.let {
-                        sharedSpacesDocumentViewModel.downloadSharedSpaceDocument(
-                            authentication.credential,
-                            authentication.token,
-                            workGroupNode as WorkGroupDocument
-                        )
-                    }
+            ?.let { authentication -> downloadDocument(authentication, workGroupNode) }
+    }
+
+    private fun downloadDocument(
+        authentication: AuthenticationViewState,
+        workGroupNode: WorkGroupNode
+    ) {
+        workGroupNode.takeIf { it is WorkGroupDocument }
+            ?.let {
+                sharedSpacesDocumentViewModel.downloadSharedSpaceDocument(
+                    authentication.credential,
+                    authentication.token,
+                    workGroupNode as WorkGroupDocument
+                )
             }
     }
 

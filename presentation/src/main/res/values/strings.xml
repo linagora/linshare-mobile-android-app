@@ -163,4 +163,6 @@
     <string name="can_not_connect_network" translatable="false">Cannot connect to the network</string>
     <string name="can_not_refresh_without_network" translatable="false">Cannot refresh while offline</string>
     <string name="can_not_process_without_network" translatable="false">Cannot process while offline</string>
+
+    <string name="file_ready_for_download_once_connection_available" translatable="false">The file will be ready for download once connection is available</string>
 </resources>

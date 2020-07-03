@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.widget.Toast
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.error.NotEnoughFreeDeviceStorageException
 import com.linagora.android.linshare.domain.model.Credential
@@ -17,17 +18,24 @@ import com.linagora.android.linshare.notification.NotificationId
 import com.linagora.android.linshare.notification.SystemNotifier
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification
 import com.linagora.android.linshare.notification.disableProgressBar
+import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.DeviceStorageStats
 import com.linagora.android.linshare.util.DeviceStorageStats.Companion.INTERNAL_ROOT
+import com.linagora.android.linshare.util.NetworkConnectivity
+import com.linagora.android.linshare.view.widget.makeCustomToast
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class DownloadManagerOperator @Inject constructor(
     private val context: Context,
+    private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val uploadAndDownloadNotification: UploadAndDownloadNotification,
     private val systemNotifier: SystemNotifier,
     private val downloadingRepository: DownloadingRepository,
-    private val deviceStorageStats: DeviceStorageStats
+    private val deviceStorageStats: DeviceStorageStats,
+    private val internetAvailable: ConnectionLiveData
 ) : DownloadOperator {
 
     companion object {
@@ -39,6 +47,7 @@ class DownloadManagerOperator @Inject constructor(
         try {
             preCheckDownloadRequest(downloadRequest)
             execute(credential, token, downloadRequest)
+            alertDownloadInWaitingList()
         } catch (exp: Exception) {
             LOGGER.error("download() $exp - ${exp.printStackTrace()}")
             notifyDownloadOnFailure(downloadRequest, exp)
@@ -82,7 +91,20 @@ class DownloadManagerOperator @Inject constructor(
         )
     }
 
+    private suspend fun alertDownloadInWaitingList() {
+        withContext(dispatcherProvider.main) {
+            internetAvailable.value
+                ?.takeIf { it == NetworkConnectivity.DISCONNECTED }
+                ?.let {
+                    Toast(context)
+                        .makeCustomToast(context, context.getString(R.string.file_ready_for_download_once_connection_available), Toast.LENGTH_SHORT)
+                        .show()
+                }
+        }
+    }
+
     private fun notifyDownloadOnFailure(downloadRequest: DownloadRequest, exception: Exception) {
+        LOGGER.error("notifyDownloadOnFailure(): $exception")
         val messageId = when (exception) {
             NotEnoughFreeDeviceStorageException -> R.string.error_insufficient_space
             else -> R.string.download_failed

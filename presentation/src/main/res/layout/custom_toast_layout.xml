@@ -17,5 +17,5 @@
         android:gravity="left"
         android:padding="@dimen/margin_toast"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/file_name_text_size" />
+        android:textSize="@dimen/common_primary_text_size" />
 </LinearLayout>
