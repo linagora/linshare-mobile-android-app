@@ -95,7 +95,7 @@ class UploadFragment : MainNavigationFragment() {
 
         private val DEFAULT_SORT_ORDER = null
 
-        private val UPLOAD_TO_MY_SPACE_DESTINATION_INFO = null
+        val UPLOAD_TO_MY_SPACE_DESTINATION_INFO = null
     }
 
     @Inject

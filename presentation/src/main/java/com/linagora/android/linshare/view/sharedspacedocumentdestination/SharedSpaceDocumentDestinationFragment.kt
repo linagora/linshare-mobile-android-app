@@ -33,6 +33,7 @@ import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.Navigation.FileType
+import com.linagora.android.linshare.view.upload.UploadFragment.Companion.UPLOAD_TO_MY_SPACE_DESTINATION_INFO
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -94,7 +95,7 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
-            is CancelPickDestinationViewState -> navigateToUpload(arguments.uploadType, arguments.uri, arguments.uploadDestinationInfo)
+            is CancelPickDestinationViewState -> navigateToUpload(Navigation.UploadType.OUTSIDE_APP, arguments.uri, UPLOAD_TO_MY_SPACE_DESTINATION_INFO)
             is ChoosePickDestinationViewState -> handleChooseDestination()
         }
 
