@@ -173,6 +173,11 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_navigation_pick_destination_to_pick_destination"
-            app:destination="@id/navigationSharedSpaceDocumentDestination" />
+            app:destination="@id/navigationSharedSpaceDocumentDestination"
+            app:popUpTo="@+id/navigationSharedSpaceDocumentDestination" />
+        <action
+            android:id="@+id/action_navigation_pick_destination_to_navigation_destination"
+            app:destination="@id/navigationSharedSpaceDestination"
+            app:popUpTo="@+id/navigationSharedSpaceDestination" />
     </fragment>
 </navigation>

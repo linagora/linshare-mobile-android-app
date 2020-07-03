@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -18,7 +19,6 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
-import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnBackClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
@@ -58,12 +58,14 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     ): View? {
         binding = FragmentSharedSpaceDocumentDestinationBinding.inflate(inflater, container, false)
         initViewModel(binding)
+        setUpOnBackPressed()
         return binding.root
     }
 
     override fun configureToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_navigation_back)
         toolbar.navigationIcon?.setTint(ContextCompat.getColor(context!!, R.color.toolbar_primary_color))
+        toolbar.setNavigationOnClickListener { navigateBack() }
     }
 
     private fun initViewModel(binding: FragmentSharedSpaceDocumentDestinationBinding) {
@@ -94,7 +96,6 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
             is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
             is CancelPickDestinationViewState -> navigateToUpload(arguments.uploadType, arguments.uri, arguments.uploadDestinationInfo)
             is ChoosePickDestinationViewState -> handleChooseDestination()
-            SharedSpaceDocumentOnBackClick -> navigateBack()
         }
 
         viewModel.dispatchState(Either.right(Success.Idle))
@@ -183,12 +184,44 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         )
     }
 
+    private fun generateNavigationInfoForPreviousFolder(workGroupNode: WorkGroupNode): SharedSpaceNavigationInfo {
+        val lastTreePath = workGroupNode.treePath.last()
+        return SharedSpaceNavigationInfo(
+            sharedSpaceIdParcelable = workGroupNode.sharedSpaceId.toParcelable(),
+            fileType = FileType.NORMAL,
+            nodeIdParcelable = WorkGroupNodeIdParcelable(lastTreePath.workGroupNodeId.uuid)
+        )
+    }
+
     private fun navigateBack() {
-        findNavController().popBackStack()
+        viewModel.currentNode.value?.treePath.takeIf { it.isNullOrEmpty() }
+            ?.let { navigateToWorkGroup() }
+            ?: navigateToPreviousFolder(viewModel.currentNode.value!!)
+    }
+
+    private fun setUpOnBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { navigateBack() }
     }
 
     private fun navigateToUpload(uploadType: Navigation.UploadType, uri: Uri, uploadDestinationInfo: UploadDestinationInfo?) {
         val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToUploadFragment(uploadType, uri, uploadDestinationInfo)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToPreviousFolder(workGroupNode: WorkGroupNode) {
+        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToPickDestination(
+            arguments.uploadType,
+            arguments.uri,
+            arguments.uploadDestinationInfo,
+            generateNavigationInfoForPreviousFolder(workGroupNode))
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToWorkGroup() {
+        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToNavigationDestination(
+            arguments.uploadType,
+            arguments.uri,
+            arguments.uploadDestinationInfo)
         findNavController().navigate(action)
     }
 }
