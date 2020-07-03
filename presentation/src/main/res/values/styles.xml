@@ -288,6 +288,7 @@
 
     <style name="ChooseDestinationButtonStyle">
         <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/choose_destination_button_textsize</item>
     </style>
 
