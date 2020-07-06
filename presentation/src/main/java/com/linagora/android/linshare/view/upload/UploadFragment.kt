@@ -43,6 +43,7 @@ import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
@@ -162,6 +163,11 @@ class UploadFragment : MainNavigationFragment() {
         initViewModel()
         initAutoComplete()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        activity?.window?.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
     }
 
     override fun configureToolbar(toolbar: Toolbar) {

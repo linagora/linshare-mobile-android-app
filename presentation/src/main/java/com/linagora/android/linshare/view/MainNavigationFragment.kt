@@ -36,6 +36,7 @@ package com.linagora.android.linshare.view
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import androidx.appcompat.widget.Toolbar
 import com.linagora.android.linshare.R
 import dagger.android.support.DaggerFragment
@@ -65,6 +66,7 @@ open class MainNavigationFragment : DaggerFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setDefaultSoftInput()
         val host = navigationHost ?: return
         val mainToolbar: Toolbar = view.findViewById(R.id.toolbar) ?: return
         mainToolbar.apply {
@@ -75,5 +77,9 @@ open class MainNavigationFragment : DaggerFragment() {
 
     open fun configureToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_linshare_menu)
+    }
+
+    private fun setDefaultSoftInput() {
+        activity?.window?.setSoftInputMode(SOFT_INPUT_ADJUST_RESIZE)
     }
 }
