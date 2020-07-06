@@ -161,8 +161,15 @@ class UserAutoCompleteAdapter(context: Context, private val layoutId: LayoutId) 
     }
 
     fun submitStateSuggestions(state: StateSuggestionUser) {
+        if (state == StateSuggestionUser.NOT_FOUND) {
+            suggestions = emptyList()
+        }
         stateSuggestions.set(state)
         notifyDataSetChanged()
+    }
+
+    fun getStateSuggestion(): StateSuggestionUser {
+        return stateSuggestions.get()
     }
 
     private fun inflateView(parent: ViewGroup): Pair<View, UserAutoCompleteViewHolder> {

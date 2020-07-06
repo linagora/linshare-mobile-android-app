@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory
 import timber.log.Timber
 
 private val LOGGER = LoggerFactory.getLogger(BindingAdapter::class.java)
+private const val NO_RESOURCE = -1
 
 @BindingAdapter("guide")
 fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {

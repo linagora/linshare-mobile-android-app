@@ -35,6 +35,7 @@ package com.linagora.android.linshare.util.binding
 
 import android.content.Context
 import android.view.View
+import android.widget.Adapter
 import android.widget.AdapterView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -42,6 +43,8 @@ import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter
+import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter.StateSuggestionUser
 import com.linagora.android.linshare.databinding.AddRecipientsViewBinding
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
@@ -113,10 +116,20 @@ fun AddRecipientsViewBinding.queryAfterTextChange(action: (AutoCompletePattern) 
 
 fun AddRecipientsViewBinding.onSelectedRecipient(action: (AutoCompleteResult) -> Unit) {
     addRecipients.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+        if (parent.adapter?.filterFreezeSuggestionState() == true) {
+            return@OnItemClickListener
+        }
         addRecipients.text.clear()
         val selectedUser = parent.getItemAtPosition(position) as AutoCompleteResult
         action(selectedUser)
     }
+}
+
+fun Adapter.filterFreezeSuggestionState(): Boolean {
+    if (this is UserAutoCompleteAdapter) {
+        return getStateSuggestion() == StateSuggestionUser.NOT_FOUND
+    }
+    return false
 }
 
 fun AddRecipientsViewBinding.createChip(context: Context): Chip {
