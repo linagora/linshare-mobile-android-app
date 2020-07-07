@@ -48,10 +48,12 @@ import arrow.core.Either
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
+import com.linagora.android.linshare.domain.usecases.quota.CheckingQuota
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
+import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -63,6 +65,7 @@ import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLogin
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
+import com.linagora.android.linshare.view.upload.BuildDocumentRequestSuccess
 import org.slf4j.LoggerFactory
 import timber.log.Timber
 
@@ -207,11 +210,12 @@ fun bindingUploadProgressIcon(imageView: AppCompatImageView, uploadErrorState: E
 @BindingAdapter("uploadErrorMessage")
 fun bindingUploadError(textView: TextView, uploadErrorState: Either<Failure, Success>) {
     LOGGER.info("uploadErrorMessage() $uploadErrorState")
-    textView.visibility = View.GONE
     uploadErrorState.mapLeft(::getUploadErrorMessageId)
-        .mapLeft {
-            textView.setText(it)
-            textView.visibility = View.VISIBLE
+        .mapLeft { messageId ->
+            textView.setText(messageId)
+            textView.visibility = messageId.takeIf { it > 0 }
+                ?.let { View.VISIBLE }
+                ?: View.GONE
         }
 }
 
@@ -220,7 +224,7 @@ private fun getUploadErrorMessageId(failure: Failure): Int {
         QuotaAccountNoMoreSpaceAvailable -> R.string.no_more_space_avalable
         ExceedMaxFileSize -> R.string.exceed_max_file_size
         ExtractInfoFailed -> R.string.extrac_info_failed
-        else -> R.string.unable_to_prepare_file_for_upload
+        else -> NO_RESOURCE
     }
 }
 
@@ -244,15 +248,10 @@ fun bindingUploadButtonText(button: Button, shareReceiversCount: Int, uploadType
 
 private fun bindingUploadButtonWhenSuccess(success: Success, button: Button) {
     when (success) {
-        PreUploadExecuting -> disableButtonPreUploadExecuting(button)
-        else -> enableButtonUpload(button)
+        PreUploadExecuting, CheckingQuota -> disableButtonUpload(button)
+        ValidAccountQuota -> enableButtonUpload(button)
+        is BuildDocumentRequestSuccess -> enableButtonUpload(button)
     }
-}
-
-private fun disableButtonPreUploadExecuting(button: Button) {
-    button.isEnabled = false
-    button.setTextColor(ContextCompat.getColor(button.context, R.color.disable_state_color))
-    button.setBackgroundResource(R.drawable.round_with_border_loading_button_layout)
 }
 
 private fun enableButtonUpload(button: Button) {
@@ -264,7 +263,7 @@ private fun enableButtonUpload(button: Button) {
 private fun disableButtonUpload(button: Button) {
     button.isEnabled = false
     button.setTextColor(ContextCompat.getColor(button.context, R.color.white))
-    button.setBackgroundResource(R.drawable.round_with_border_disable_button_layout)
+    button.setBackgroundResource(R.drawable.round_with_border_loading_button_layout)
 }
 
 @BindingAdapter("visibleEmptyMessage")

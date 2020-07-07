@@ -40,6 +40,7 @@ import com.linagora.android.linshare.domain.utils.BusinessErrorCode
 
 object ValidAccountQuota : ViewState()
 object PreUploadExecuting : ViewState()
+object CheckingQuota : ViewState()
 object ExceedMaxFileSize : FeatureFailure()
 object QuotaAccountNoMoreSpaceAvailable :
     QuotaAccountError(BusinessErrorCode.QuotaAccountNoMoreSpaceErrorCode)

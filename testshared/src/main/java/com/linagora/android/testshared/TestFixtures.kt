@@ -62,6 +62,7 @@ import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
+import com.linagora.android.linshare.domain.usecases.quota.CheckingQuota
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
 import com.linagora.android.linshare.domain.usecases.quota.ValidAccountQuota
@@ -249,6 +250,8 @@ object TestFixtures {
             QuotaSize(6000),
             false
         )
+
+        val CHECKING_QUOTA_STATE = Either.right(CheckingQuota)
     }
 
     object Documents {

@@ -43,7 +43,6 @@ import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -56,7 +55,7 @@ class EnoughAccountQuotaInteractor @Inject constructor(
 
     operator fun invoke(fileSize: Long): Flow<State<Either<Failure, Success>>> {
         return channelFlow<State<Either<Failure, Success>>> {
-            send(State { Either.right(Loading) })
+            send(State { Either.right(CheckingQuota) })
             userRepository.getAuthorizedUser()
                 ?.let { user -> enoughQuota(this, user, fileSize) }
                 ?: send(State { Either.left(QuotaAccountNoMoreSpaceAvailable) })

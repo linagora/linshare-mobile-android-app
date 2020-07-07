@@ -39,12 +39,12 @@ import com.linagora.android.linshare.domain.DomainFixtures.BIG_FILE_SIZE
 import com.linagora.android.linshare.domain.DomainFixtures.FILE_SIZE
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
 import com.linagora.android.linshare.domain.repository.user.UserRepository
+import com.linagora.android.testshared.TestFixtures.Accounts.CHECKING_QUOTA_STATE
 import com.linagora.android.testshared.TestFixtures.Accounts.LINSHARE_USER
 import com.linagora.android.testshared.TestFixtures.Accounts.LOW_QUOTA
 import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
 import com.linagora.android.testshared.TestFixtures.State.EXCEED_MAX_FILE_SIZE
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
-import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
 import com.linagora.android.testshared.TestFixtures.State.QUOTA_ACCOUNT_NO_MORE_AVAILABLE_SPACE
 import com.linagora.android.testshared.TestFixtures.State.VALID_QUOTA_ACCOUNT_STATE
 import kotlinx.coroutines.flow.toList
@@ -89,9 +89,9 @@ class EnoughAccountQuotaInteractorTest {
 
             assertThat(states).hasSize(2)
             assertThat(states[0](INIT_STATE))
-                .isEqualTo(LOADING_STATE)
+                .isEqualTo(CHECKING_QUOTA_STATE)
 
-            assertThat(states[1](LOADING_STATE))
+            assertThat(states[1](CHECKING_QUOTA_STATE))
                 .isEqualTo(VALID_QUOTA_ACCOUNT_STATE)
         }
     }
@@ -109,9 +109,9 @@ class EnoughAccountQuotaInteractorTest {
 
             assertThat(states).hasSize(2)
             assertThat(states[0](INIT_STATE))
-                .isEqualTo(LOADING_STATE)
+                .isEqualTo(CHECKING_QUOTA_STATE)
 
-            assertThat(states[1](LOADING_STATE))
+            assertThat(states[1](CHECKING_QUOTA_STATE))
                 .isEqualTo(EXCEED_MAX_FILE_SIZE)
         }
     }
@@ -129,9 +129,9 @@ class EnoughAccountQuotaInteractorTest {
 
             assertThat(states).hasSize(2)
             assertThat(states[0](INIT_STATE))
-                .isEqualTo(LOADING_STATE)
+                .isEqualTo(CHECKING_QUOTA_STATE)
 
-            assertThat(states[1](LOADING_STATE))
+            assertThat(states[1](CHECKING_QUOTA_STATE))
                 .isEqualTo(QUOTA_ACCOUNT_NO_MORE_AVAILABLE_SPACE)
         }
     }
