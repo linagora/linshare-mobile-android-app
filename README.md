@@ -10,7 +10,7 @@ simple solution completely intuitive.
    
 More information on http://www.linshare.org/
 
-## Compilation Guide
+### Compilation Guide
 
 You will require Android Studio 3.5
 
@@ -18,11 +18,13 @@ You will require Android Studio 3.5
 ./gradlew build
 ```
 
-# Deployed APK file
+### License:
 
-We are deploying the APK file related to `master` builds.  
-They are available under the `master` environment:  
-```Operations > Environments > master```
+[Affero GPL v3](http://www.gnu.org/licenses/agpl-3.0.html)
 
-then you have to chose the job corresponding of the build you want (last build always first) and 
-click on the `Download` button on the `Job artifacts` section (right side panel). 
+### Demo:
+
+In order to test the demo you'll need to use the following credentials :
+- Server: https://demo.linshare.org/
+- Mail: user1@linshare.org
+- Password: password1
