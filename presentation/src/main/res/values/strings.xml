@@ -198,4 +198,7 @@
     <string name="can_not_process_without_network" translatable="false">Cannot process while offline</string>
 
     <string name="file_ready_for_download_once_connection_available" translatable="false">The file will be ready for download once connection is available</string>
+    <string name="success_deleted" translatable="false">The %s is successfully deleted</string>
+    <string name="file" translatable="false">file</string>
+    <string name="folder" translatable="false">folder</string>
 </resources>

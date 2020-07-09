@@ -49,6 +49,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
+import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentBinding
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
@@ -95,6 +96,7 @@ import com.linagora.android.linshare.view.Navigation.UploadType
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
+import com.linagora.android.linshare.view.widget.withLinShare
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -161,10 +163,23 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     private fun reactToViewState(viewState: Success.ViewState) {
         when (viewState) {
-            is RemoveSharedSpaceNodeSuccessViewState -> getAllNodes()
+            is RemoveSharedSpaceNodeSuccessViewState -> {
+                alertRemoveSuccess(viewState.workGroupNode)
+                getAllNodes()
+            }
         }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
+    }
+
+    private fun alertRemoveSuccess(workGroupNode: WorkGroupNode) {
+        val fileType = workGroupNode.takeIf { it is WorkGroupFolder }
+            ?.let { getString(R.string.folder) }
+            ?: getString(R.string.file)
+        Snackbar.make(binding.root, requireContext().resources.getString(R.string.success_deleted, fileType), Snackbar.LENGTH_SHORT)
+            .withLinShare(requireContext())
+            .setAnchorView(binding.sharedSpaceDocumentAddButton)
+            .show()
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
