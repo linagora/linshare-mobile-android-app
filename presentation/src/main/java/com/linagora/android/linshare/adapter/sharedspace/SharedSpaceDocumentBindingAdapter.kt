@@ -55,6 +55,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.canUpload
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentNoResult
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -92,9 +93,15 @@ private fun submitSharedSpaceDocumentList(recyclerView: RecyclerView, success: S
                 ?: success.documents
         }
         is SearchSharedSpaceDocumentViewState -> success.documents
-        else -> emptyList()
+        is SharedSpaceDocumentEmpty -> emptyList()
+        else -> null
     }
-    if (recyclerView.adapter is SharedSpaceDocumentAdapter && documents.isNotEmpty()) {
+
+    documents?.let { submitListSharedSpaceDocument(documents, recyclerView) }
+}
+
+private fun submitListSharedSpaceDocument(documents: List<WorkGroupNode>, recyclerView: RecyclerView) {
+    if (recyclerView.adapter is SharedSpaceDocumentAdapter) {
         (recyclerView.adapter as SharedSpaceDocumentAdapter).submitList(documents)
     }
 }
