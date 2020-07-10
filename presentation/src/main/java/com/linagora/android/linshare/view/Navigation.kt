@@ -51,4 +51,9 @@ class Navigation {
         ROOT,
         NORMAL
     }
+
+    enum class MainNavigationType {
+        MAIN,
+        RELOAD
+    }
 }

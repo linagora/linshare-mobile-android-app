@@ -43,7 +43,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
@@ -71,6 +70,7 @@ import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.Navigation.MainNavigationType
 import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
@@ -79,12 +79,8 @@ import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import com.linagora.android.linshare.view.widget.errorLayout
 import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class MySpaceFragment : MainNavigationFragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
@@ -102,6 +98,7 @@ class MySpaceFragment : MainNavigationFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentMySpaceBinding.inflate(inflater, container, false)
         initViewModel(binding)
         return binding.root
@@ -255,6 +252,22 @@ class MySpaceFragment : MainNavigationFragment() {
             .setAnchorView(binding.mySpaceUploadButton)
             .show()
         mySpaceViewModel.dispatchResetState()
+    }
+
+    override fun onUnAuthenticatedState() {
+        LOGGER.info("onUnAuthenticatedState()")
+        navigateToReload()
+    }
+
+    override fun onInvalidAuthentication() {
+        LOGGER.info("onInvalidAuthentication()")
+        navigateToReload()
+    }
+
+    private fun navigateToReload() {
+        val action = MySpaceFragmentDirections
+            .actionNavigationMySpaceToMainFragment(MainNavigationType.RELOAD)
+        findNavController().navigate(action)
     }
 
     private fun navigateToUpload(uri: Uri) {

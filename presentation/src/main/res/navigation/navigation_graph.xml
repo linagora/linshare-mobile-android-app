@@ -86,6 +86,10 @@
             app:destination="@id/navigation_my_space"
             app:popUpTo="@+id/navigation_graph"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="mainNavigationType"
+            app:argType="com.linagora.android.linshare.view.Navigation$MainNavigationType"
+            android:defaultValue="MAIN" />
     </fragment>
     <fragment
         android:id="@+id/uploadFragment"
@@ -112,7 +116,11 @@
     <fragment
         android:id="@id/navigation_my_space"
         android:name="com.linagora.android.linshare.view.myspace.MySpaceFragment"
-        tools:layout="@layout/fragment_my_space" />
+        tools:layout="@layout/fragment_my_space" >
+        <action
+            android:id="@+id/action_navigation_my_space_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigationSearch"
         android:name="com.linagora.android.linshare.view.search.SearchFragment"

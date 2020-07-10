@@ -22,6 +22,7 @@
 -keep enum com.linagora.android.linshare.view.Navigation$LoginFlow
 -keep enum com.linagora.android.linshare.view.Navigation$UploadType
 -keep enum com.linagora.android.linshare.view.Navigation$FolderType
+-keep enum com.linagora.android.linshare.view.Navigation$MainNavigationType
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.

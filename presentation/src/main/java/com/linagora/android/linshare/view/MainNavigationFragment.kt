@@ -35,11 +35,19 @@ package com.linagora.android.linshare.view
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState
 import dagger.android.support.DaggerFragment
+import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
 /**
  * To be implemented by components that host top-level navigation destinations.
@@ -51,6 +59,17 @@ interface NavigationHost {
 }
 
 open class MainNavigationFragment : DaggerFragment() {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(MainNavigationFragment::class.java)
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val mainActivityViewModel: MainActivityViewModel
+            by activityViewModels { viewModelFactory }
+
     protected var navigationHost: NavigationHost? = null
 
     override fun onAttach(context: Context) {
@@ -64,6 +83,32 @@ open class MainNavigationFragment : DaggerFragment() {
         super.onDetach()
         navigationHost = null
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        observeAuthenticatedState()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    private fun observeAuthenticatedState() {
+        mainActivityViewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticateState ->
+            LOGGER.info("observeAuthenticatedState(): $authenticateState")
+            when (authenticateState) {
+                AuthenticationState.AUTHENTICATED -> onAuthenticatedState()
+                AuthenticationState.INVALID_AUTHENTICATION -> onInvalidAuthentication()
+                AuthenticationState.UNAUTHENTICATED -> onUnAuthenticatedState()
+            }
+        })
+    }
+
+    open fun onUnAuthenticatedState() {}
+
+    open fun onAuthenticatedState() {}
+
+    open fun onInvalidAuthentication() {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setDefaultSoftInput()

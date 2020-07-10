@@ -39,15 +39,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.linagora.android.linshare.databinding.FragmentMainBinding
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.Navigation.LoginFlow
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class MainFragment : MainNavigationFragment() {
 
@@ -55,11 +55,10 @@ class MainFragment : MainNavigationFragment() {
         private val LOGGER = LoggerFactory.getLogger(MainFragment::class.java)
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
+
+    private val args: MainFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,9 +89,20 @@ class MainFragment : MainNavigationFragment() {
     }
 
     private fun jumpIn() {
+        when (args.mainNavigationType) {
+            Navigation.MainNavigationType.MAIN -> jumpInMainNavigation()
+            Navigation.MainNavigationType.RELOAD -> navigateReloadApplication()
+        }
+    }
+
+    private fun jumpInMainNavigation() {
         LOGGER.info("jumpIn()")
         val action = MainFragmentDirections
             .actionMainFragmentToMySpaceFragment()
         findNavController().navigate(action)
+    }
+
+    private fun navigateReloadApplication() {
+        findNavController().popBackStack()
     }
 }
