@@ -202,7 +202,7 @@
                 android:layout_marginTop="@dimen/share_label_margin_top"
                 android:text="@string/pick_the_destination" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/pickDestination"
                 style="@style/PickTheDestinationStyle"
                 android:layout_width="0dp"
@@ -210,6 +210,7 @@
                 android:layout_marginTop="@dimen/share_add_recipients_margin_side"
                 android:onClick="@{() -> viewModel.navigateDestination()}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:drawableTint="@color/file_size_color"
                 app:layout_constraintStart_toStartOf="@+id/pickTheDestinationLabel"
                 app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel"
                 app:uploadDestination="@{uploadDestinationInfo}" />

@@ -33,8 +33,15 @@
 
 package com.linagora.android.linshare.util
 
+import com.linagora.android.linshare.R
 import com.linagora.android.linshare.model.parcelable.UploadDestinationInfo
 
 fun UploadDestinationInfo.isRootFileType(): Boolean {
     return this.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid == this.parentDestinationInfo.parentNodeId.uuid
+}
+
+fun UploadDestinationInfo.generateDestinationDrawable(): Int {
+    return this.takeIf { it.isRootFileType() }
+        ?.let { R.drawable.ic_shared_space_item }
+        ?: R.drawable.ic_folder
 }

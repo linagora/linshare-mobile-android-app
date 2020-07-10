@@ -39,7 +39,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -71,6 +70,8 @@ import timber.log.Timber
 
 private val LOGGER = LoggerFactory.getLogger(BindingAdapter::class.java)
 private const val NO_RESOURCE = -1
+private const val EMPTY_TOP_DRAWABLE_RESOURCE = 0
+private const val EMPTY_BOTTOM_DRAWABLE_RESOURCE = 0
 
 @BindingAdapter("guide")
 fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {
@@ -283,9 +284,15 @@ fun bindingVisibilityPickDestinationContainer(constraintLayout: ConstraintLayout
 }
 
 @BindingAdapter("uploadDestination")
-fun bindingUploadDestination(appCompatTextView: AppCompatTextView, uploadDestinationInfo: UploadDestinationInfo?) {
-    appCompatTextView.text = uploadDestinationInfo
+fun bindingUploadDestination(textView: TextView, uploadDestinationInfo: UploadDestinationInfo?) {
+    textView.text = uploadDestinationInfo
         ?.parentDestinationInfo
         ?.parentNodeName
-        ?: appCompatTextView.context.getString(R.string.my_space)
+        ?: textView.context.getString(R.string.my_space)
+
+    val leftDrawableResource = uploadDestinationInfo
+        ?.let { it.generateDestinationDrawable() }
+        ?: R.drawable.ic_home
+
+    textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawableResource, EMPTY_TOP_DRAWABLE_RESOURCE, R.drawable.ic_arrow_right, EMPTY_BOTTOM_DRAWABLE_RESOURCE)
 }
