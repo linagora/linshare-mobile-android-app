@@ -64,6 +64,7 @@ import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.util.isRootFileType
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.Navigation.FileType
@@ -133,13 +134,9 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     }
 
     private fun generateFileTypeByUploadDestinationInfo(uploadDestinationInfo: UploadDestinationInfo): FileType {
-        return takeIf { isRootFileType(uploadDestinationInfo) }
+        return takeIf { uploadDestinationInfo.isRootFileType() }
             ?.let { FileType.ROOT }
             ?: FileType.NORMAL
-    }
-
-    private fun isRootFileType(uploadDestinationInfo: UploadDestinationInfo): Boolean {
-        return uploadDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid == uploadDestinationInfo.parentDestinationInfo.parentNodeId.uuid
     }
 
     private fun observeViewState() {
