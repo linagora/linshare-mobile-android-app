@@ -45,7 +45,6 @@ import android.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
@@ -98,7 +97,6 @@ import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import com.linagora.android.linshare.view.widget.withLinShare
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
@@ -107,9 +105,6 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
         const val NAVIGATION_INFO_KEY = "navigationInfo"
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }

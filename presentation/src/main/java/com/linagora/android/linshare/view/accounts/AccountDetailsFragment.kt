@@ -41,7 +41,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
@@ -59,16 +58,12 @@ import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.dialog.ConfirmRemoveAccountDialog
 import kotlinx.android.synthetic.main.fragment_account_detail.imgBtnRemoveAcc
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class AccountDetailsFragment : MainNavigationFragment() {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(AccountDetailsFragment::class.java)
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var accountDetailViewModel: AccountDetailsViewModel
 

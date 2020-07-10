@@ -42,7 +42,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import arrow.core.Either
@@ -80,7 +79,6 @@ import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.ReadContactPermissionRequestCode
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class ShareFragment : MainNavigationFragment() {
 
@@ -93,9 +91,6 @@ class ShareFragment : MainNavigationFragment() {
 
         const val NO_RECIPIENT_ATTRIBUTES_RESOURCE = 0
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }

@@ -40,7 +40,6 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.linagora.android.linshare.R
@@ -70,12 +69,8 @@ import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentFragment.Companion.NAVIGATION_INFO_KEY
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class SharedSpaceFragment : MainNavigationFragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var sharedSpaceViewModel: SharedSpaceViewModel
 

@@ -48,7 +48,6 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -134,9 +133,6 @@ class UploadFragment : MainNavigationFragment() {
 
     @Inject
     lateinit var workManager: WorkManager
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var dispatcherProvider: CoroutinesDispatcherProvider

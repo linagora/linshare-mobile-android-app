@@ -39,7 +39,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
@@ -72,16 +71,12 @@ import com.linagora.android.linshare.view.dialog.SelectRoleDialog
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import java.util.UUID
-import javax.inject.Inject
 
 class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceAddMemberFragment::class.java)
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: SharedSpaceAddMemberViewModel
 

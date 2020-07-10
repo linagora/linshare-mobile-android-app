@@ -41,7 +41,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
@@ -69,12 +68,8 @@ import com.linagora.android.linshare.view.widget.errorLayout
 import com.linagora.android.linshare.view.widget.withLinShare
 import kotlinx.android.synthetic.main.fragment_received_shares.swipeLayoutReceivedList
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class ReceivedSharesFragment : MainNavigationFragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }

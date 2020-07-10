@@ -39,7 +39,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -49,7 +48,6 @@ import com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
-import javax.inject.Inject
 
 class SharedSpaceDetailsFragment : MainNavigationFragment() {
 
@@ -58,9 +56,6 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
             R.string.members
         )
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: SharedSpaceDetailsViewModel
 

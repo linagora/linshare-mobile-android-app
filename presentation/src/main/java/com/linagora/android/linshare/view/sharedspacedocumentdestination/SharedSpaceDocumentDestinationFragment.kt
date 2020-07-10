@@ -42,7 +42,6 @@ import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
@@ -70,12 +69,8 @@ import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.Navigation.FileType
 import com.linagora.android.linshare.view.upload.UploadFragment.Companion.UPLOAD_TO_MY_SPACE_DESTINATION_INFO
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: SharedSpaceDocumentDestinationViewModel
 

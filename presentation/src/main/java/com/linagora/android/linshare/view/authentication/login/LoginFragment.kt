@@ -43,7 +43,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ObservableField
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
@@ -64,17 +63,12 @@ import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.LoginFlow.DIRECT
-import com.linagora.android.linshare.view.authentication.login.LoginFormState.Companion
 import kotlinx.android.synthetic.main.login_fragment.btnLogin
 import kotlinx.android.synthetic.main.login_fragment.edtLoginPassword
 import kotlinx.android.synthetic.main.login_fragment.edtLoginUrl
 import kotlinx.android.synthetic.main.login_fragment.edtLoginUsername
-import javax.inject.Inject
 
 class LoginFragment : MainNavigationFragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var loginViewModel: LoginViewModel
 
@@ -124,12 +118,12 @@ class LoginFragment : MainNavigationFragment() {
         }
 
         edtLoginUsername.afterTextChanged {
-            loginFormState.set(Companion.INIT_STATE)
+            loginFormState.set(LoginFormState.INIT_STATE)
         }
 
         edtLoginPassword.apply {
             afterTextChanged {
-                loginFormState.set(Companion.INIT_STATE)
+                loginFormState.set(LoginFormState.INIT_STATE)
             }
 
             setOnEditorActionListener { _, actionId, _ ->

@@ -43,7 +43,6 @@ import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import arrow.core.Either
@@ -73,16 +72,12 @@ import kotlinx.android.synthetic.main.fragment_search.searchView
 import kotlinx.android.synthetic.main.fragment_search.view.searchView
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 class SearchFragment : MainNavigationFragment() {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SearchFragment::class.java)
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
