@@ -27,6 +27,22 @@ ktlint:
   script:
     - bundle exec fastlane ktlint
 
+check_author:
+  image: docker-registry.linagora.com:5000/lgs-releases/gitlab-integrity-checks:latest
+  stage: linter
+  variables:
+    GIT_DEPTH: "1"
+  tags:
+    - ultralight
+  script:
+    - check_author.py check "$GITLAB_USER_EMAIL" "$GITLAB_USER_NAME" --no-accents
+  except:
+    refs:
+      - master@linagora/lgs/linshare/products/linshare-mobile-android-app
+      - tags@linagora/lgs/linshare/products/linshare-mobile-android-app
+      - /^release-.*/@linagora/lgs/linshare/products/linshare-mobile-android-app
+
+
 assembleDebug:
   image: docker-registry.linagora.com:5000/lgs-sandbox/fastlane-android-29
   stage: build
