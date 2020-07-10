@@ -252,10 +252,16 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
                 currentSharedSpace.quotaId.toParcelable()
             ),
             parentDestinationInfo = ParentDestinationInfo(
-                currentNode.workGroupNodeId.toParcelable(),
+                generateNodeIdByFileType(currentNode).toParcelable(),
                 currentNode.name
             )
         )
+    }
+
+    private fun generateNodeIdByFileType(currentNode: WorkGroupNode): WorkGroupNodeId {
+        return arguments.navigationInfo.takeIf { it?.fileType == FileType.ROOT }
+            ?.let { currentNode.parentWorkGroupNodeId }
+            ?: currentNode.workGroupNodeId
     }
 
     private fun handleChooseDestination() {
