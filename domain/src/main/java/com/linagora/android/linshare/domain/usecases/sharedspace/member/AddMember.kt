@@ -54,9 +54,15 @@ class AddMember @Inject constructor(
             emitState { Either.right(Success.Loading) }
 
             val addMemberState = Either.catch { sharedSpaceMemberRepository.addMember(addMemberRequest) }
-                .bimap(::AddMemberFailed, ::AddMemberSuccess)
+                .bimap({ generateFailureState(it) }, ::AddMemberSuccess)
 
             emitState { addMemberState }
         }
+    }
+
+    private fun generateFailureState(throwable: Throwable): Failure.FeatureFailure {
+        return throwable.takeIf { it is AddExistingMemberException }
+            ?.let { AddExistingMemberState }
+            ?: AddMemberFailed(throwable)
     }
 }

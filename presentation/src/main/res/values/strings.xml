@@ -201,4 +201,5 @@
     <string name="success_deleted" translatable="false">The %s is successfully deleted</string>
     <string name="file" translatable="false">file</string>
     <string name="folder" translatable="false">folder</string>
+    <string name="add_member_failed" translatable="false">Add member failed</string>
 </resources>

@@ -89,4 +89,19 @@ class AddMemberTest {
         assertThat(addMemberStates)
             .containsExactly(LOADING_STATE, Either.left(AddMemberFailed(exception)))
     }
+
+    @Test
+    fun addMemberShouldGetAddExistingMemberStateWhenAddExistingMember() = runBlockingTest {
+        val exception = AddExistingMemberException
+        `when`(sharedSpaceMemberRepository.addMember(ADD_BAR_FOO_MEMBER_REQUEST))
+            .thenThrow(exception)
+
+        val addMemberStates = addMember(ADD_BAR_FOO_MEMBER_REQUEST)
+            .map { it(INIT_STATE) }
+            .toList(ArrayList())
+
+        assertThat(addMemberStates).hasSize(2)
+        assertThat(addMemberStates)
+            .containsExactly(LOADING_STATE, Either.left(AddExistingMemberState))
+    }
 }

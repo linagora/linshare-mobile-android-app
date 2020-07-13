@@ -31,33 +31,10 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.data.datasource.network
+package com.linagora.android.linshare.domain.usecases.sharedspace.member
 
-import com.linagora.android.linshare.data.api.LinshareApi
-import com.linagora.android.linshare.data.datasource.sharedspace.member.SharedSpaceMemberDataSource
-import com.linagora.android.linshare.data.network.NetworkExecutor
-import com.linagora.android.linshare.data.network.handler.AddMemberNetworkRequestHandler
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
-import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.linagora.android.linshare.domain.model.ErrorResponse
+import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.ADD_EXISTING_MEMBER_ERROR_RESPONSE
 
-@Singleton
-class LinShareSharedSpaceMemberDataSource @Inject constructor(
-    private val linShareApi: LinshareApi,
-    private val networkExecutor: NetworkExecutor,
-    private val addMemberNetworkRequestHandler: AddMemberNetworkRequestHandler
-) : SharedSpaceMemberDataSource {
-
-    override suspend fun getAllMembers(sharedSpaceId: SharedSpaceId): List<SharedSpaceMember> {
-        return linShareApi.getMembers(sharedSpaceId.uuid.toString())
-    }
-
-    override suspend fun addMember(addMemberRequest: AddMemberRequest): SharedSpaceMember {
-        return networkExecutor.execute(
-            networkRequest = { linShareApi.addMember(addMemberRequest.sharedSpaceId.uuid.toString(), addMemberRequest) },
-            onFailure = { addMemberNetworkRequestHandler(it) }
-        )
-    }
-}
+open class AddMemberException(val errorResponse: ErrorResponse) : RuntimeException()
+object AddExistingMemberException : AddMemberException(ADD_EXISTING_MEMBER_ERROR_RESPONSE)
