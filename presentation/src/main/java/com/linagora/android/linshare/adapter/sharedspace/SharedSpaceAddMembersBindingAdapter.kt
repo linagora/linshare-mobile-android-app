@@ -44,6 +44,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter.StateSuggestionUser
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllSharedSpaceRolesFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllSharedSpaceRolesSuccess
@@ -104,7 +105,12 @@ fun bindingMemberSuggestion(
 @BindingAdapter("countMembers")
 fun bindingMemberCount(textView: TextView, sharedSpaceMemberState: Either<Failure, Success>) {
     sharedSpaceMemberState.fold(
-        ifLeft = { textView.isVisible = false },
+        ifLeft = { failure ->
+            when (failure) {
+                is GetMembersFailed -> textView.isVisible = false
+                else -> textView.isVisible = true
+            }
+        },
         ifRight = { success ->
             textView.isVisible = true
             if (success is GetMembersSuccess) {

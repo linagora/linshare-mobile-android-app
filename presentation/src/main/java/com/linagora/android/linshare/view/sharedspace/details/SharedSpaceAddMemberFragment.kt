@@ -42,6 +42,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import arrow.core.Either
+import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentAddMemberBinding
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
@@ -52,9 +53,11 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRole
+import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.util.binding.bindingDefaultSelectedRole
@@ -68,6 +71,7 @@ import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.dialog.SelectRoleDialog
+import com.linagora.android.linshare.view.widget.errorLayout
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import java.util.UUID
@@ -105,10 +109,14 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     private fun observeViewState() {
         viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
-            state.map { success -> when (success) {
-                is Success.ViewState -> reactToViewState(success)
-                is Success.ViewEvent -> reactToViewEvent(success)
-            } }
+            state.fold(
+                ifLeft = { failure -> reactToFailure(failure) },
+                ifRight = { success ->
+                    when (success) {
+                        is Success.ViewState -> reactToViewState(success)
+                        is Success.ViewEvent -> reactToViewEvent(success)
+                    } }
+            )
         })
     }
 
@@ -134,6 +142,19 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
         when (viewState) {
             is AddMemberSuccess -> getAllMembers()
         }
+    }
+
+    private fun reactToFailure(failure: Failure) {
+        when (failure) {
+            is AddMemberFailed -> alertAddMemberFailed()
+        }
+    }
+
+    private fun alertAddMemberFailed() {
+        Snackbar.make(binding.root, requireContext().resources.getString(R.string.add_member_failed), Snackbar.LENGTH_SHORT)
+            .setAnchorView(binding.swipeLayoutMember)
+            .errorLayout(requireContext())
+            .show()
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {

@@ -39,6 +39,8 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersFailed
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersNoResult
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -55,7 +57,12 @@ fun bindingSharedSpaceMember(
     }
 
     sharedSpaceMemberState.fold(
-        ifLeft = { recyclerView.isVisible = false },
+        ifLeft = { failure ->
+            when (failure) {
+                is GetMembersFailed, GetMembersNoResult -> recyclerView.isVisible = false
+                else -> recyclerView.isVisible = true
+            }
+        },
         ifRight = { success ->
             recyclerView.isVisible = true
             if (success is GetMembersSuccess) {
