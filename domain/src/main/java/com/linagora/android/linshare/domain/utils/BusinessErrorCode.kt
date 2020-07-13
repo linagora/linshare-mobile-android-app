@@ -49,4 +49,6 @@ object BusinessErrorCode {
     val EmptyDocumentErrorCode = ClientErrorCode(1200)
 
     val WorkGroupNodeNotFoundErrorCode = LinShareErrorCode(26007)
+
+    val AddExistingMemberErrorCode = LinShareErrorCode(62003)
 }
