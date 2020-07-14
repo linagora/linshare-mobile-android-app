@@ -39,6 +39,11 @@
         <import type="arrow.core.Either"/>
         <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
         <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
+        <import type="com.linagora.android.linshare.view.Navigation.UploadType"/>
+
+        <variable
+            name="uploadType"
+            type="UploadType" />
 
         <variable
             name="suggestions"
@@ -47,7 +52,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:visibilityAddRecipientContainer="@{uploadType}" >
 
         <TextView
             android:id="@+id/addRecipientLabel"

@@ -300,3 +300,11 @@ fun bindingUploadDestination(textView: TextView, uploadDestinationInfo: UploadDe
 
     textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawableResource, EMPTY_TOP_DRAWABLE_RESOURCE, R.drawable.ic_arrow_right, EMPTY_BOTTOM_DRAWABLE_RESOURCE)
 }
+
+@BindingAdapter("visibilityAddRecipientContainer")
+fun bindingVisibilityAddRecipientContainer(constraintLayout: ConstraintLayout, uploadType: Navigation.UploadType) {
+    when (uploadType) {
+        Navigation.UploadType.INSIDE_APP_TO_WORKGROUP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> constraintLayout.visibility = View.GONE
+        else -> constraintLayout.visibility = View.VISIBLE
+    }
+}

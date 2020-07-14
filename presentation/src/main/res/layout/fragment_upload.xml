@@ -235,9 +235,8 @@
             app:layout_constraintTop_toBottomOf="@id/pickDestinationContainer"
             app:layout_constraintBottom_toTopOf="@+id/btnUpload"
             android:layout_marginBottom="@dimen/share_label_margin_top"
-            app:suggestions="@{viewModel.shareRecipientsManager.suggestions}"
-            android:visibility="@{uploadType == UploadType.INSIDE_APP_TO_WORKGROUP ? View.INVISIBLE : View.VISIBLE}"
-            />
+            app:uploadType="@{uploadType}"
+            app:suggestions="@{viewModel.shareRecipientsManager.suggestions}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnUpload"
