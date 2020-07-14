@@ -75,6 +75,7 @@ import com.linagora.android.linshare.domain.usecases.share.SelectDesinationClick
 import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToMySpace
 import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToSharedSpace
 import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
+import com.linagora.android.linshare.domain.usecases.upload.NotEnoughDeviceStorageException
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -220,10 +221,14 @@ class UploadFragment : MainNavigationFragment() {
 
     private fun observeViewState() {
         uploadFragmentViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
-            state.map { success -> when (success) {
-                is Success.ViewEvent -> reactToViewEvent(success)
-                is Success.ViewState -> reactToViewState(success)
-            } }
+            state.fold(
+                ifLeft = { dismissUploadProgressDialog() },
+                ifRight = { success ->
+                    when (success) {
+                        is Success.ViewEvent -> reactToViewEvent(success)
+                        is Success.ViewState -> reactToViewState(success)
+                    }
+                })
         })
     }
 
@@ -370,12 +375,21 @@ class UploadFragment : MainNavigationFragment() {
         UploadProgressDialog()
             .show(childFragmentManager, UploadProgressDialog.TAG)
         viewLifecycleOwner.lifecycleScope.launch(dispatcherProvider.io) {
-            val documentRequest = uploadDocumentRequest
-                .toDocumentRequest(requireContext())
+            val documentRequestState = Either
+                .catch { uploadDocumentRequest.toDocumentRequest(requireContext()) }
+                .bimap(
+                    leftOperation = { throwable -> generatePreUploadFailureState(throwable) },
+                    rightOperation = { BuildDocumentRequestSuccess(it) })
 
-            uploadFragmentViewModel.dispatchUIState(Either.right(
-                BuildDocumentRequestSuccess(documentRequest)))
+            uploadFragmentViewModel.dispatchUIState(documentRequestState)
         }
+    }
+
+    private fun generatePreUploadFailureState(throwable: Throwable): Failure {
+        LOGGER.error("handleConvertToDocumentRequest(): $throwable - ${throwable.printStackTrace()}")
+        return takeIf { throwable is NotEnoughDeviceStorageException }
+            ?.let { NotEnoughDeviceStorageViewState }
+            ?: CanNotCreateFileViewState
     }
 
     private fun executeUpload(documentRequest: DocumentRequest) {
