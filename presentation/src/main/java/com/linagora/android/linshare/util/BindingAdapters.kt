@@ -65,6 +65,8 @@ import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
 import com.linagora.android.linshare.view.upload.BuildDocumentRequestSuccess
+import com.linagora.android.linshare.view.upload.CanNotCreateFileViewState
+import com.linagora.android.linshare.view.upload.NotEnoughDeviceStorageViewState
 import org.slf4j.LoggerFactory
 import timber.log.Timber
 
@@ -225,6 +227,8 @@ private fun getUploadErrorMessageId(failure: Failure): Int {
         QuotaAccountNoMoreSpaceAvailable -> R.string.no_more_space_avalable
         ExceedMaxFileSize -> R.string.exceed_max_file_size
         ExtractInfoFailed -> R.string.extrac_info_failed
+        NotEnoughDeviceStorageViewState -> R.string.lack_of_device_storage
+        CanNotCreateFileViewState -> R.string.unable_to_prepare_file_for_upload
         else -> NO_RESOURCE
     }
 }
