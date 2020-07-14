@@ -31,52 +31,74 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view
+package com.linagora.android.linshare.network
 
-import android.util.Log
-import androidx.work.Configuration
-import androidx.work.WorkerFactory
-import com.jakewharton.threetenabp.AndroidThreeTen
-import com.linagora.android.linshare.BuildConfig
+import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.session.JSessionId
-import com.linagora.android.linshare.inject.DaggerAppComponent
-import com.linagora.android.linshare.util.Constant.Session.NO_SESSION_ID
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
-import timber.log.Timber
-import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
+import okhttp3.Headers
+import org.junit.jupiter.api.Test
 
-open class LinShareApplication : DaggerApplication(), Configuration.Provider {
+class ExtensionsTest {
 
-    @Inject lateinit var workerFactory: WorkerFactory
+    @Test
+    fun extractJSessionIdSuccessWhenHeadersHasSetCookie() {
+        val expectedSessionId = JSessionId("AE8F331D26B2BEAEEE6C9938DE1DE6DA")
 
-    private val jSessionId = AtomicReference<JSessionId?>(NO_SESSION_ID)
-
-    override fun onCreate() {
-        super.onCreate()
-
-        AndroidThreeTen.init(this)
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
-    }
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.factory().create(this)
-    }
-
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .setMinimumLoggingLevel(Log.INFO)
+        val headers = Headers.Builder()
+            .add("Set-cookie", "JSESSIONID=AE8F331D26B2BEAEEE6C9938DE1DE6DA; Path=/; HttpOnly; Secure;")
             .build()
+
+        val jSessionId = headers.extractJSessionId()
+        assertThat(jSessionId).isEqualTo(expectedSessionId)
     }
 
-    fun setSessionId(newSession: JSessionId?) {
-        jSessionId.set(newSession)
+    @Test
+    fun extractJSessionIdShouldReturnNullWhenHeadersHasSetCookieButJSessionIdInvalid() {
+        val headers = Headers.Builder()
+            .add("Set-cookie", "JSESSIONID=; Path=/; HttpOnly; Secure;")
+            .build()
+
+        val jSessionId = headers.extractJSessionId()
+        assertThat(jSessionId).isNull()
     }
 
-    fun getSessionId(): JSessionId? = jSessionId.get()
+    @Test
+    fun extractJSessionIdShouldReturnNullWhenHeadersHasSetCookieButJSessionIdHasOnlyName() {
+        val headers = Headers.Builder()
+            .add("Set-cookie", "JSESSIONID; Path=/; HttpOnly; Secure;")
+            .build()
+
+        val jSessionId = headers.extractJSessionId()
+        assertThat(jSessionId).isNull()
+    }
+
+    @Test
+    fun extractJSessionIdShouldReturnNullWhenHeadersHasSetCookieButNotIncludeJSessionId() {
+        val headers = Headers.Builder()
+            .add("Set-cookie", "Path=/; HttpOnly; Secure;")
+            .build()
+
+        val jSessionId = headers.extractJSessionId()
+        assertThat(jSessionId).isNull()
+    }
+
+    @Test
+    fun extractJSessionIdShouldReturnNullWhenHeadersHasEmptySetCookie() {
+        val headers = Headers.Builder()
+            .add("Set-cookie", "")
+            .build()
+
+        val jSessionId = headers.extractJSessionId()
+        assertThat(jSessionId).isNull()
+    }
+
+    @Test
+    fun extractJSessionIdShouldReturnNullWhenHeadersNotIncludeCookie() {
+        val headers = Headers.Builder()
+            .add("status", "401")
+            .build()
+
+        val jSessionId = headers.extractJSessionId()
+        assertThat(jSessionId).isNull()
+    }
 }

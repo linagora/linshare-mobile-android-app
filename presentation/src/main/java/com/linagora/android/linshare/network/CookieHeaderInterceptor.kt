@@ -31,52 +31,25 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view
+package com.linagora.android.linshare.network
 
-import android.util.Log
-import androidx.work.Configuration
-import androidx.work.WorkerFactory
-import com.jakewharton.threetenabp.AndroidThreeTen
-import com.linagora.android.linshare.BuildConfig
-import com.linagora.android.linshare.domain.model.session.JSessionId
-import com.linagora.android.linshare.inject.DaggerAppComponent
-import com.linagora.android.linshare.util.Constant.Session.NO_SESSION_ID
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
-import timber.log.Timber
-import java.util.concurrent.atomic.AtomicReference
+import com.linagora.android.linshare.domain.model.session.asHeaderValue
+import com.linagora.android.linshare.view.LinShareApplication
+import okhttp3.Interceptor
+import okhttp3.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
-open class LinShareApplication : DaggerApplication(), Configuration.Provider {
+@Singleton
+class CookieHeaderInterceptor @Inject constructor(
+    private val linShareApplication: LinShareApplication
+) : Interceptor {
 
-    @Inject lateinit var workerFactory: WorkerFactory
-
-    private val jSessionId = AtomicReference<JSessionId?>(NO_SESSION_ID)
-
-    override fun onCreate() {
-        super.onCreate()
-
-        AndroidThreeTen.init(this)
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val newRequest = linShareApplication.getSessionId()
+            ?.let { chain.request().newBuilder().addHeader("cookie", it.asHeaderValue()) }
+            ?.build()
+            ?: chain.request()
+        return chain.proceed(newRequest)
     }
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.factory().create(this)
-    }
-
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .setMinimumLoggingLevel(Log.INFO)
-            .build()
-    }
-
-    fun setSessionId(newSession: JSessionId?) {
-        jSessionId.set(newSession)
-    }
-
-    fun getSessionId(): JSessionId? = jSessionId.get()
 }

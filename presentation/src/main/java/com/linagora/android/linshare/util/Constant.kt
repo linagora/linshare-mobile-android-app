@@ -70,4 +70,13 @@ object Constant {
     const val INDEX_1 = 1
 
     const val UP_TO_NEXT_INDEX = 1
+
+    object Session {
+        val NO_SESSION_ID = null
+        const val J_SESSION_ID = "JSESSIONID"
+    }
+
+    object Tokens {
+        val NO_TOKEN = null
+    }
 }

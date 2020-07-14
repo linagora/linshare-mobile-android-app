@@ -40,14 +40,14 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthorizationManagerImp @Inject constructor(
-    private val authorizationInterceptor: AuthorizationInterceptor
+    private val cookieAuthenticator: CookieAuthenticator
 ) : AuthorizationManager {
 
     override fun updateToken(token: Token) {
-        authorizationInterceptor.updateToken(token)
+        cookieAuthenticator.updateToken(token)
     }
 
     override fun reset() {
-        authorizationInterceptor.reset()
+        cookieAuthenticator.reset()
     }
 }

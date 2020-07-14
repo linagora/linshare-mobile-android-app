@@ -31,52 +31,37 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view
+package com.linagora.android.linshare.network
 
-import android.util.Log
-import androidx.work.Configuration
-import androidx.work.WorkerFactory
-import com.jakewharton.threetenabp.AndroidThreeTen
-import com.linagora.android.linshare.BuildConfig
-import com.linagora.android.linshare.domain.model.session.JSessionId
-import com.linagora.android.linshare.inject.DaggerAppComponent
-import com.linagora.android.linshare.util.Constant.Session.NO_SESSION_ID
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
-import timber.log.Timber
+import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.util.Constant.Tokens.NO_TOKEN
+import okhttp3.Authenticator
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.Route
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
+import javax.inject.Singleton
 
-open class LinShareApplication : DaggerApplication(), Configuration.Provider {
+@Singleton
+class CookieAuthenticator @Inject constructor() : Authenticator {
 
-    @Inject lateinit var workerFactory: WorkerFactory
-
-    private val jSessionId = AtomicReference<JSessionId?>(NO_SESSION_ID)
-
-    override fun onCreate() {
-        super.onCreate()
-
-        AndroidThreeTen.init(this)
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
+    companion object {
+        private const val MAX_RETRY_BEFORE_REFRESH_COOKIE = 1
     }
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.factory().create(this)
+    private val currentTokenStored = AtomicReference<Token?>(NO_TOKEN)
+
+    fun updateToken(token: Token) {
+        currentTokenStored.set(token)
     }
 
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .setMinimumLoggingLevel(Log.INFO)
-            .build()
+    fun reset() {
+        currentTokenStored.set(NO_TOKEN)
     }
 
-    fun setSessionId(newSession: JSessionId?) {
-        jSessionId.set(newSession)
+    override fun authenticate(route: Route?, response: Response): Request? = when {
+        response.retryCount >= MAX_RETRY_BEFORE_REFRESH_COOKIE -> response.createRequestWithPermanentToken(currentTokenStored.get())
+        else -> response.request
     }
-
-    fun getSessionId(): JSessionId? = jSessionId.get()
 }

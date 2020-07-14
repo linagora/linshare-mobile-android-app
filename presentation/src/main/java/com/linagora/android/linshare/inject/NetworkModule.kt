@@ -69,7 +69,9 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
-import com.linagora.android.linshare.network.AuthorizationInterceptor
+import com.linagora.android.linshare.network.CookieAuthenticator
+import com.linagora.android.linshare.network.CookieHeaderInterceptor
+import com.linagora.android.linshare.network.CookieReceiverInterceptor
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.Constant.DEFAULT_LINSHARE_BASE_URL
@@ -92,13 +94,17 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideHttpClientBuilder(
-        dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
-        authorizationInterceptor: AuthorizationInterceptor
+        cookieAuthenticator: CookieAuthenticator,
+        cookieReceiverInterceptor: CookieReceiverInterceptor,
+        cookieHeaderInterceptor: CookieHeaderInterceptor,
+        dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor
     ): OkHttpClient.Builder {
 
         val builder = OkHttpClient.Builder()
-        builder.addInterceptor(dynamicBaseUrlInterceptor)
-            .addInterceptor(authorizationInterceptor)
+        builder.authenticator(cookieAuthenticator)
+            .addInterceptor(dynamicBaseUrlInterceptor)
+            .addInterceptor(cookieHeaderInterceptor)
+            .addInterceptor(cookieReceiverInterceptor)
             .connectTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)
             .readTimeout(NO_TIMEOUT, SECONDS)
             .writeTimeout(DEFAULT_TIMEOUT_SECONDS, SECONDS)

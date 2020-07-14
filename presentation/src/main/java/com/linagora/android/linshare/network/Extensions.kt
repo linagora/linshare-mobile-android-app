@@ -31,52 +31,52 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view
+package com.linagora.android.linshare.network
 
-import android.util.Log
-import androidx.work.Configuration
-import androidx.work.WorkerFactory
-import com.jakewharton.threetenabp.AndroidThreeTen
-import com.linagora.android.linshare.BuildConfig
+import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.session.JSessionId
-import com.linagora.android.linshare.inject.DaggerAppComponent
-import com.linagora.android.linshare.util.Constant.Session.NO_SESSION_ID
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
-import timber.log.Timber
-import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
+import com.linagora.android.linshare.network.Extensions.LOGGER
+import com.linagora.android.linshare.util.Constant.Session.J_SESSION_ID
+import okhttp3.Headers
+import okhttp3.Request
+import okhttp3.Response
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-open class LinShareApplication : DaggerApplication(), Configuration.Provider {
+object Extensions {
+    val LOGGER: Logger = LoggerFactory.getLogger(Extensions::class.java)
+}
 
-    @Inject lateinit var workerFactory: WorkerFactory
-
-    private val jSessionId = AtomicReference<JSessionId?>(NO_SESSION_ID)
-
-    override fun onCreate() {
-        super.onCreate()
-
-        AndroidThreeTen.init(this)
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+val Response.retryCount: Int
+    get() {
+        var currentResponse = priorResponse
+        var result = 0
+        while (currentResponse != null) {
+            result++
+            currentResponse = currentResponse.priorResponse
         }
+        return result
     }
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.factory().create(this)
-    }
+fun Response.createRequestWithPermanentToken(token: Token?): Request? {
+    return token?.let(this::buildRequestWithBearer)
+}
 
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .setMinimumLoggingLevel(Log.INFO)
-            .build()
-    }
+fun Response.buildRequestWithBearer(token: Token): Request {
+    return runCatching {
+        request.newBuilder()
+            .addHeader("Authorization", token.asBearerHeader())
+            .build() }
+        .onFailure { LOGGER.error("buildRequestWithBearer(): ${it.message} - ${it.printStackTrace()}") }
+        .getOrDefault(request)
+}
 
-    fun setSessionId(newSession: JSessionId?) {
-        jSessionId.set(newSession)
-    }
-
-    fun getSessionId(): JSessionId? = jSessionId.get()
+fun Headers.extractJSessionId(): JSessionId? {
+    return values("Set-Cookie")
+        .flatMap { it.split(";") }
+        .firstOrNull { it.contains("$J_SESSION_ID=") }
+        ?.takeIf { it.length > J_SESSION_ID.length + 1 }
+        ?.substring(J_SESSION_ID.length + 1)
+        ?.takeIf { it.isNotBlank() }
+        ?.let(::JSessionId)
 }
