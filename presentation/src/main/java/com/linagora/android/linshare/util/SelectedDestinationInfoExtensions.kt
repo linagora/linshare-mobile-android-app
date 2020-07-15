@@ -52,3 +52,7 @@ fun SelectedDestinationInfo.generateFileType(): Navigation.FileType {
         ?.let { Navigation.FileType.ROOT }
         ?: Navigation.FileType.NORMAL
 }
+
+fun Navigation.UploadType.isUploadInsideAppToWorkGroup(): Boolean {
+    return this == Navigation.UploadType.INSIDE_APP_TO_WORKGROUP
+}
