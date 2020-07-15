@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.util
 
+import android.graphics.drawable.Drawable
 import android.text.format.Formatter
 import android.view.View
 import android.widget.Button
@@ -66,18 +67,21 @@ import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP_TO_WO
 import com.linagora.android.linshare.view.Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
+import com.linagora.android.linshare.view.canShowPickDestination
 import com.linagora.android.linshare.view.upload.BuildDocumentRequestSuccess
 import com.linagora.android.linshare.view.upload.CanNotCreateFileViewState
 import com.linagora.android.linshare.view.upload.NotEnoughDeviceStorageViewState
-import com.linagora.android.linshare.view.uploadFromOutsideApp
 import com.linagora.android.linshare.view.uploadToWorkgroup
 import org.slf4j.LoggerFactory
 import timber.log.Timber
 
 private val LOGGER = LoggerFactory.getLogger(BindingAdapter::class.java)
 private const val NO_RESOURCE = -1
-private const val EMPTY_TOP_DRAWABLE_RESOURCE = 0
-private const val EMPTY_BOTTOM_DRAWABLE_RESOURCE = 0
+private val EMPTY_TOP_DRAWABLE_RESOURCE = null
+private val EMPTY_BOTTOM_DRAWABLE_RESOURCE = null
+private val EMPTY_RIGHT_DRAWABLE_RESOURCE = null
+private const val DISABLE_CLICK = false
+private const val ENABLE_CLICK = true
 
 @BindingAdapter("guide")
 fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {
@@ -285,24 +289,43 @@ fun bindingEmptyMessage(textView: TextView, state: Either<Failure, Success>?) {
 
 @BindingAdapter("visibilityPickDestinationContainer")
 fun bindingVisibilityPickDestinationContainer(constraintLayout: ConstraintLayout, uploadType: Navigation.UploadType) {
-    val visibility = uploadType.takeIf(Navigation.UploadType::uploadFromOutsideApp)
+    val visibility = uploadType.takeIf(Navigation.UploadType::canShowPickDestination)
         ?.let { View.VISIBLE }
         ?: View.GONE
     constraintLayout.visibility = visibility
 }
 
-@BindingAdapter("uploadDestination")
-fun bindingUploadDestination(textView: TextView, selectedDestinationInfo: SelectedDestinationInfo?) {
+@BindingAdapter("selectedDestinationInfo", "uploadTypeForTextSelectedDestination")
+fun bindingUploadDestination(textView: TextView, selectedDestinationInfo: SelectedDestinationInfo?, uploadType: Navigation.UploadType) {
     textView.text = selectedDestinationInfo
         ?.parentDestinationInfo
         ?.parentNodeName
         ?: textView.context.getString(R.string.my_space)
 
-    val leftDrawableResource = selectedDestinationInfo
-        ?.let { it.generateDestinationDrawable() }
-        ?: R.drawable.ic_home
+    val leftDrawable = ContextCompat.getDrawable(textView.context, selectedDestinationInfo?.generateDestinationDrawable()
+        ?: R.drawable.ic_home)
 
-    textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawableResource, EMPTY_TOP_DRAWABLE_RESOURCE, R.drawable.ic_arrow_right, EMPTY_BOTTOM_DRAWABLE_RESOURCE)
+    leftDrawable?.let { checkUploadTypeToSetUpTextView(textView, leftDrawable, uploadType) }
+}
+
+private fun checkUploadTypeToSetUpTextView(textView: TextView, leftDrawable: Drawable, uploadType: Navigation.UploadType) {
+    val arrowRightDrawable = ContextCompat.getDrawable(textView.context, R.drawable.ic_arrow_right)
+    uploadType.takeIf { it.isUploadInsideAppToWorkGroup() }
+        ?.let { setupTextViewDestination(textView, leftDrawable, EMPTY_RIGHT_DRAWABLE_RESOURCE, R.color.disable_state_color, DISABLE_CLICK) }
+        ?: setupTextViewDestination(textView, leftDrawable, arrowRightDrawable, R.color.greyPrimary, ENABLE_CLICK)
+}
+
+private fun setupTextViewDestination(textView: TextView, leftDrawable: Drawable, rightDrawable: Drawable?, colorRes: Int, isClickAble: Boolean) {
+    textView.isClickable = isClickAble
+
+    val colorTint = ContextCompat.getColor(textView.context, colorRes)
+    colorTint.apply {
+        textView.setTextColor(this)
+        rightDrawable?.setTint(this)
+        leftDrawable.setTint(this)
+    }
+
+    textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, EMPTY_TOP_DRAWABLE_RESOURCE, rightDrawable, EMPTY_BOTTOM_DRAWABLE_RESOURCE)
 }
 
 @BindingAdapter("visibilityAddRecipientContainer")

@@ -71,3 +71,8 @@ fun Navigation.UploadType.uploadFromOutsideApp() = when (this) {
     OUTSIDE_APP, OUTSIDE_APP_TO_WORKGROUP -> true
     else -> false
 }
+
+fun Navigation.UploadType.canShowPickDestination() = when (this) {
+    OUTSIDE_APP, OUTSIDE_APP_TO_WORKGROUP, INSIDE_APP_TO_WORKGROUP -> true
+    else -> false
+}

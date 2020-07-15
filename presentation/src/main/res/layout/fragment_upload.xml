@@ -213,7 +213,8 @@
                 app:drawableTint="@color/file_size_color"
                 app:layout_constraintStart_toStartOf="@+id/pickTheDestinationLabel"
                 app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel"
-                app:uploadDestination="@{selectedDestinationInfo}" />
+                app:selectedDestinationInfo="@{selectedDestinationInfo}"
+                app:uploadTypeForTextSelectedDestination="@{uploadType}"/>
 
             <View
                 android:id="@+id/dividerPickDestination"
