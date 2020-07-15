@@ -33,6 +33,10 @@
 
 package com.linagora.android.linshare.view
 
+import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP_TO_WORKGROUP
+import com.linagora.android.linshare.view.Navigation.UploadType.OUTSIDE_APP
+import com.linagora.android.linshare.view.Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP
+
 class Navigation {
 
     enum class LoginFlow {
@@ -56,4 +60,14 @@ class Navigation {
         MAIN,
         RELOAD
     }
+}
+
+fun Navigation.UploadType.uploadToWorkgroup() = when (this) {
+    OUTSIDE_APP_TO_WORKGROUP, INSIDE_APP_TO_WORKGROUP -> true
+    else -> false
+}
+
+fun Navigation.UploadType.uploadFromOutsideApp() = when (this) {
+    OUTSIDE_APP, OUTSIDE_APP_TO_WORKGROUP -> true
+    else -> false
 }

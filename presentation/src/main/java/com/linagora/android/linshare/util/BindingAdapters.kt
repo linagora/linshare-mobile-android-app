@@ -62,11 +62,15 @@ import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.util.FileSize.SizeFormat.SHORT
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP_TO_WORKGROUP
+import com.linagora.android.linshare.view.Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP
 import com.linagora.android.linshare.view.authentication.login.ErrorType
 import com.linagora.android.linshare.view.authentication.login.LoginFormState
 import com.linagora.android.linshare.view.upload.BuildDocumentRequestSuccess
 import com.linagora.android.linshare.view.upload.CanNotCreateFileViewState
 import com.linagora.android.linshare.view.upload.NotEnoughDeviceStorageViewState
+import com.linagora.android.linshare.view.uploadFromOutsideApp
+import com.linagora.android.linshare.view.uploadToWorkgroup
 import org.slf4j.LoggerFactory
 import timber.log.Timber
 
@@ -244,7 +248,7 @@ fun bindingUploadButton(button: Button, uploadState: Either<Failure, Success>) {
 @BindingAdapter("shareReceiversCount", "uploadType", requireAll = true)
 fun bindingUploadButtonText(button: Button, shareReceiversCount: Int, uploadType: Navigation.UploadType) {
     when (uploadType) {
-        Navigation.UploadType.INSIDE_APP_TO_WORKGROUP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> button.setText(R.string.upload)
+        INSIDE_APP_TO_WORKGROUP, OUTSIDE_APP_TO_WORKGROUP -> button.setText(R.string.upload)
         else -> shareReceiversCount.takeIf { it > 0 }
             ?.run { button.setText(R.string.upload_and_share) }
             ?: button.setText(R.string.upload_to_my_space)
@@ -281,10 +285,10 @@ fun bindingEmptyMessage(textView: TextView, state: Either<Failure, Success>?) {
 
 @BindingAdapter("visibilityPickDestinationContainer")
 fun bindingVisibilityPickDestinationContainer(constraintLayout: ConstraintLayout, uploadType: Navigation.UploadType) {
-    when (uploadType) {
-        Navigation.UploadType.OUTSIDE_APP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> constraintLayout.visibility = View.VISIBLE
-        else -> constraintLayout.visibility = View.GONE
-    }
+    val visibility = uploadType.takeIf(Navigation.UploadType::uploadFromOutsideApp)
+        ?.let { View.VISIBLE }
+        ?: View.GONE
+    constraintLayout.visibility = visibility
 }
 
 @BindingAdapter("uploadDestination")
@@ -302,9 +306,10 @@ fun bindingUploadDestination(textView: TextView, uploadDestinationInfo: UploadDe
 }
 
 @BindingAdapter("visibilityAddRecipientContainer")
-fun bindingVisibilityAddRecipientContainer(constraintLayout: ConstraintLayout, uploadType: Navigation.UploadType) {
-    when (uploadType) {
-        Navigation.UploadType.INSIDE_APP_TO_WORKGROUP, Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP -> constraintLayout.visibility = View.GONE
-        else -> constraintLayout.visibility = View.VISIBLE
-    }
+fun bindingVisibilityAddRecipientContainer(constraintLayout: ConstraintLayout, uploadType: Navigation.UploadType?) {
+    val visibility = uploadType
+        ?.takeIf(Navigation.UploadType::uploadToWorkgroup)
+        ?.let { View.GONE }
+        ?: View.VISIBLE
+    constraintLayout.visibility = visibility
 }
