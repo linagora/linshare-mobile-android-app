@@ -295,6 +295,13 @@ fun bindingVisibilityPickDestinationContainer(constraintLayout: ConstraintLayout
     constraintLayout.visibility = visibility
 }
 
+@BindingAdapter("pickDestinationLabel")
+fun bindingTextPickTheDestinationLabel(textView: TextView, uploadType: Navigation.UploadType) {
+    textView.text = uploadType.takeIf { it.isUploadInsideAppToWorkGroup() }
+        ?.let { textView.context.getString(R.string.destination) }
+        ?: textView.context.getString(R.string.pick_the_destination)
+}
+
 @BindingAdapter("selectedDestinationInfo", "uploadTypeForTextSelectedDestination")
 fun bindingUploadDestination(textView: TextView, selectedDestinationInfo: SelectedDestinationInfo?, uploadType: Navigation.UploadType) {
     textView.text = selectedDestinationInfo

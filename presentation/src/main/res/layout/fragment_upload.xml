@@ -200,7 +200,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="@dimen/share_label_margin_top"
-                android:text="@string/pick_the_destination" />
+                app:pickDestinationLabel="@{uploadType}"/>
 
             <TextView
                 android:id="@+id/pickDestination"
