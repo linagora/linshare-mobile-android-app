@@ -19,8 +19,8 @@ android {
         applicationId "com.linagora.android.linshare"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 5
-        versionName "1.0.0-beta06"
+        versionCode 9
+        versionName "1.0.0-beta09"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
