@@ -55,8 +55,8 @@ fun bindingSuggestNameWorkGroup(
     listSharedSpaceNodeNested: List<SharedSpaceNodeNested>
 ) {
     val suggestName = SuggestNewNameUtils(editText.context).suggestNewName(
-            listSharedSpaceNodeNested.map { it.name },
-            SuggestNameType.WORKGROUP
+        listSharedSpaceNodeNested.map { it.name },
+        SuggestNameType.WORKGROUP
     )
     editText.setText(suggestName)
     editText.setSelection(suggestName.length)

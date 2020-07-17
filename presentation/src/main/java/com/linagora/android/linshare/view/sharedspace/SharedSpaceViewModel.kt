@@ -87,7 +87,7 @@ class SharedSpaceViewModel @Inject constructor(
 
     val sharedSpaceItemContextMenu = SharedSpaceItemContextMenu(this)
 
-    private val mutableListSharedSpaceNodeNested = MutableLiveData<List<SharedSpaceNodeNested>>()
+    private val mutableListSharedSpaceNodeNested = MutableLiveData<List<SharedSpaceNodeNested>>(emptyList())
     val listSharedSpaceNodeNested: LiveData<List<SharedSpaceNodeNested>> = mutableListSharedSpaceNodeNested
 
     val createWorkGroupBehavior = CreateWorkGroupBehavior(this)
