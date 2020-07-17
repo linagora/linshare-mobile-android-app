@@ -41,9 +41,10 @@ import android.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import arrow.core.Either
+import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceBinding
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
@@ -55,6 +56,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroup
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
+import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
@@ -63,11 +65,13 @@ import com.linagora.android.linshare.util.Constant.CLEAR_QUERY_STRING
 import com.linagora.android.linshare.util.Constant.NOT_SUBMIT_TEXT
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.dismissKeyboard
+import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentFragment.Companion.NAVIGATION_INFO_KEY
+import com.linagora.android.linshare.view.widget.errorLayout
 import org.slf4j.LoggerFactory
 
 class SharedSpaceFragment : MainNavigationFragment() {
@@ -106,13 +110,21 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun observeViewState() {
         sharedSpaceViewModel.viewState.observe(viewLifecycleOwner, Observer {
-            it.map { success ->
-                when (success) {
-                    is Success.ViewEvent -> reactToViewEvent(success)
-                    is Success.ViewState -> reactToViewState(success)
-                }
-            }
+            it.fold(this::reactToFailure, this::reactToSuccess)
         })
+    }
+
+    private fun reactToFailure(failure: Failure) {
+        when (failure) {
+            is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
+        }
+    }
+
+    private fun reactToSuccess(success: Success) {
+        when (success) {
+            is Success.ViewEvent -> reactToViewEvent(success)
+            is Success.ViewState -> reactToViewState(success)
+        }
     }
 
     private fun reactToViewState(viewState: Success.ViewState) {
@@ -122,6 +134,13 @@ class SharedSpaceFragment : MainNavigationFragment() {
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(sharedSpaceViewModel.internetAvailable.value)) {
+            is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
+            else -> handleViewEvent(filteredViewEvent)
+        }
+    }
+
+    private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is SharedSpaceItemClick -> navigateIntoSharedSpace(viewEvent.sharedSpaceNodeNested)
             is OpenSearchView -> handleOpenSearch()
@@ -131,7 +150,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is CreateWorkGroupButtonBottomBarClick -> showCreateWorkGroupDialog()
             is CreateWorkGroupViewState -> handleCreateWorkGroup(viewEvent.nameWorkGroup)
         }
-        sharedSpaceViewModel.dispatchState(Either.right(Success.Idle))
+        sharedSpaceViewModel.dispatchResetState()
     }
 
     private fun handleCreateWorkGroup(nameWorkGroup: NewNameRequest) {
@@ -224,6 +243,18 @@ class SharedSpaceFragment : MainNavigationFragment() {
     private fun getSharedSpace() {
         LOGGER.info("getSharedSpaces")
         sharedSpaceViewModel.getSharedSpace()
+    }
+
+    private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
+        val messageId = when (operatorType) {
+            is OperatorType.CreateWorkGroup -> R.string.can_not_create_shared_space_without_network
+            else -> R.string.can_not_process_without_network
+        }
+        Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.sharedSpaceUploadButton)
+            .show()
+        sharedSpaceViewModel.dispatchResetState()
     }
 
     private fun navigateToDetails(sharedSpaceNodeNested: SharedSpaceNodeNested) {

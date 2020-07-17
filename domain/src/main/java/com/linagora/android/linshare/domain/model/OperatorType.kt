@@ -40,4 +40,8 @@ sealed class OperatorType {
     abstract class OnlineOperatorType : OperatorType()
 
     object SwiftRefresh : OnlineOperatorType()
+
+    object CreateWorkGroup : OnlineOperatorType()
+
+    object OpenContextMenu : OfflineOperatorType()
 }

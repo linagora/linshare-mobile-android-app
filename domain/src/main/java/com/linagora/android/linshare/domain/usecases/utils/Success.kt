@@ -33,6 +33,8 @@
 
 package com.linagora.android.linshare.domain.usecases.utils
 
+import com.linagora.android.linshare.domain.model.OperatorType
+
 /**
  * Base Class for handling success/viewstates/navigation events
  * Every feature specific success should extend [FeatureSuccess] class.
@@ -49,6 +51,9 @@ sealed class Success {
 
     object Loading : ViewState()
 
-    // App wide success view events
-    data class Message(val message: String) : ViewEvent()
+    abstract class NetworkViewEvent(val operatorType: OperatorType) : ViewEvent()
+    abstract class OnlineViewEvent(operatorType: OperatorType) : NetworkViewEvent(operatorType)
+    abstract class OfflineViewEvent(operatorType: OperatorType) : NetworkViewEvent(operatorType)
+    abstract class CancelViewEvent(open val operatorType: OperatorType) : ViewEvent()
+    data class CancelViewEventWithNetworkReason(override val operatorType: OperatorType) : CancelViewEvent(operatorType)
 }

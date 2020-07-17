@@ -33,7 +33,26 @@
 
 package com.linagora.android.linshare.util
 
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.util.NetworkConnectivity.DISCONNECTED
+
 enum class NetworkConnectivity {
     CONNECTED,
     DISCONNECTED
+}
+
+fun Success.ViewEvent.filterNetworkViewEvent(currentNetwork: NetworkConnectivity?): Success.ViewEvent {
+    return when (currentNetwork) {
+        DISCONNECTED -> this.takeIf { it is Success.OnlineViewEvent }
+            ?.let(Success.ViewEvent::transformToCancelViewEventWithNetworkReason)
+            ?: this
+        else -> this
+    }
+}
+
+private fun Success.ViewEvent.transformToCancelViewEventWithNetworkReason(): Success.ViewEvent {
+    if (this is Success.NetworkViewEvent) {
+        return Success.CancelViewEventWithNetworkReason(this.operatorType)
+    }
+    return this
 }

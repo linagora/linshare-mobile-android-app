@@ -31,33 +31,52 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.usecases.sharedspace
+package com.linagora.android.linshare.utils
 
+import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.OperatorType
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
-import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.util.NetworkConnectivity
+import com.linagora.android.linshare.util.filterNetworkViewEvent
+import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
+import org.junit.jupiter.api.Test
 
-data class SharedSpaceViewState(val sharedSpace: List<SharedSpaceNodeNested>) : Success.ViewState()
-data class SharedSpaceFailure(val throwable: Throwable) : FeatureFailure()
-data class SearchSharedSpaceViewState(val sharedSpace: List<SharedSpaceNodeNested>) : Success.ViewState()
-object EmptySharedSpaceState : Failure.FeatureFailure()
-data class SharedSpaceItemClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
-data class SharedSpaceContextMenuClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OfflineViewEvent(OperatorType.OpenContextMenu)
-data class GetSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
-data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()
-object NoResultsSearchSharedSpace : Failure.FeatureFailure()
-object SearchSharedSpaceInitial : Success.ViewState()
-data class DetailsSharedSpaceItem(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
-data class OpenAddMembers(val sharedSpaceId: SharedSpaceId) : Success.ViewEvent()
-data class CreateWorkGroupSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
-data class CreateWorkGroupFailed(val throwable: Throwable) : FeatureFailure()
-object CreateWorkGroupButtonBottomBarClick : Success.OnlineViewEvent(OperatorType.CreateWorkGroup)
-data class CreateWorkGroupViewState(val nameWorkGroup: NewNameRequest) : Success.ViewEvent()
-object BlankNameError : Failure.FeatureFailure()
-object NameContainSpecialCharacter : Failure.FeatureFailure()
-data class ValidName(val nameWorkGroup: String) : Success.ViewState()
+class NetworkConnectivityTest {
+
+    @Test
+    fun filterNetworkViewEventShouldReturnSelfWhenNetworkNull() {
+        assertThat(CreateWorkGroupButtonBottomBarClick
+                .filterNetworkViewEvent(null))
+            .isEqualTo(CreateWorkGroupButtonBottomBarClick)
+    }
+
+    @Test
+    fun filterNetworkViewEventShouldReturnCancelViewEventWhenViewEventIsOnlineSupportedAndNetworkConnected() {
+        assertThat(CreateWorkGroupButtonBottomBarClick
+                .filterNetworkViewEvent(NetworkConnectivity.CONNECTED))
+            .isEqualTo(CreateWorkGroupButtonBottomBarClick)
+    }
+
+    @Test
+    fun filterNetworkViewEventShouldReturnCancelViewEventWhenViewEventIsOnlineSupportedAndNetworkDisconnected() {
+        assertThat(CreateWorkGroupButtonBottomBarClick
+                .filterNetworkViewEvent(NetworkConnectivity.DISCONNECTED))
+            .isEqualTo(Success.CancelViewEventWithNetworkReason(OperatorType.CreateWorkGroup))
+    }
+
+    @Test
+    fun filterNetworkViewEventShouldReturnSelfWhenViewEventIsOfflineSupportedAndNetworkConnected() {
+        assertThat(SharedSpaceContextMenuClick(SHARED_SPACE_1)
+                .filterNetworkViewEvent(NetworkConnectivity.CONNECTED))
+            .isEqualTo(SharedSpaceContextMenuClick(SHARED_SPACE_1))
+    }
+
+    @Test
+    fun filterNetworkViewEventShouldReturnSelfWhenViewEventIsOfflineSupportedAndNetworkDisconnected() {
+        assertThat(SharedSpaceContextMenuClick(SHARED_SPACE_1)
+                .filterNetworkViewEvent(NetworkConnectivity.DISCONNECTED))
+            .isEqualTo(SharedSpaceContextMenuClick(SHARED_SPACE_1))
+    }
+}

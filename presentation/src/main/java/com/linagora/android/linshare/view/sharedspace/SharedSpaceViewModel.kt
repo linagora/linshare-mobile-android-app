@@ -37,6 +37,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
@@ -139,7 +140,11 @@ class SharedSpaceViewModel @Inject constructor(
 
     fun createWorkGroup(nameWorkGroup: NewNameRequest) {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(createWorkGroupInteractor(CreateWorkGroupRequest(nameWorkGroup.value, LinShareNodeType.WORK_GROUP)))
+            consumeStates(OperatorType.CreateWorkGroup) {
+                createWorkGroupInteractor(
+                    CreateWorkGroupRequest(nameWorkGroup.value, LinShareNodeType.WORK_GROUP)
+                )
+            }
         }
     }
 
