@@ -56,6 +56,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.canUpload
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentNoResult
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -77,15 +78,15 @@ fun bindingSharedSpaceDocumentList(
     }
 
     sharedSpaceDocumentState.fold(
-        ifLeft = { recyclerView.isVisible = false },
-        ifRight = { success ->
-            recyclerView.isVisible = true
-            submitSharedSpaceDocumentList(recyclerView, success, adapterType)
-        }
+        ifLeft = { failure -> when (failure) {
+            is SharedSpaceDocumentFailure, SearchSharedSpaceDocumentNoResult -> recyclerView.isVisible = false
+        } },
+        ifRight = { success -> submitSharedSpaceDocumentList(recyclerView, success, adapterType) }
     )
 }
 
 private fun submitSharedSpaceDocumentList(recyclerView: RecyclerView, success: Success, adapterType: AdapterType) {
+    recyclerView.isVisible = true
     val documents = when (success) {
         is SharedSpaceDocumentViewState -> {
             adapterType.takeIf { it == AdapterType.SHARE_SPACE_DESTINATION_PICKER }
@@ -93,7 +94,10 @@ private fun submitSharedSpaceDocumentList(recyclerView: RecyclerView, success: S
                 ?: success.documents
         }
         is SearchSharedSpaceDocumentViewState -> success.documents
-        is SharedSpaceDocumentEmpty -> emptyList()
+        is SharedSpaceDocumentEmpty -> {
+            recyclerView.isVisible = false
+            emptyList()
+        }
         else -> null
     }
 

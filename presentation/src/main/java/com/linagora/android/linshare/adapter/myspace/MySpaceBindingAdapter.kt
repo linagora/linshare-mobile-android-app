@@ -42,6 +42,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.usecases.myspace.MySpaceFailure
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -62,16 +63,14 @@ fun bindingMySpaceList(
     }
 
     mySpaceState.fold(
-        ifLeft = {
-            recyclerView.isVisible = false
+        ifLeft = { when (it) {
+            is MySpaceFailure -> recyclerView.isVisible = false }
         },
-        ifRight = {
-            when (it) {
-                is MySpaceViewState -> {
-                    recyclerView.isVisible = true
-                    (recyclerView.adapter as MySpaceAdapter).submitList(it.documents)
-                }
-            }
+        ifRight = { when (it) {
+            is MySpaceViewState -> {
+                recyclerView.isVisible = true
+                (recyclerView.adapter as MySpaceAdapter).submitList(it.documents)
+            } }
         })
 }
 

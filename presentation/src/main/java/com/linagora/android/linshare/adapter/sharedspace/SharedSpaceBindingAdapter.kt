@@ -67,7 +67,7 @@ fun bindingSharedSpaceList(
     sharedSpaceState?.fold(
         ifLeft = { failure ->
             when (failure) {
-                is SharedSpaceFailure, EmptySharedSpaceState -> false
+                is SharedSpaceFailure, EmptySharedSpaceState, NoResultsSearchSharedSpace -> recyclerView.isVisible = false
                 else -> recyclerView.isVisible = true
             }
         },
