@@ -41,5 +41,7 @@ import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 data class ExtractInfoSuccess(val uploadDocumentRequest: UploadDocumentRequest) : Success.ViewState()
 data class OnUploadButtonClick(val uploadDocumentRequest: UploadDocumentRequest) : Success.ViewEvent()
 data class BuildDocumentRequestSuccess(val documentRequest: DocumentRequest) : Success.ViewState()
+data class CheckLocalDeviceStorage(val documentRequest: UploadDocumentRequest) : Success.ViewState()
+data class EnoughDeviceStorage(val documentRequest: UploadDocumentRequest) : Success.ViewState()
 object NotEnoughDeviceStorageViewState : Failure.FeatureFailure()
 object CanNotCreateFileViewState : Failure.FeatureFailure()

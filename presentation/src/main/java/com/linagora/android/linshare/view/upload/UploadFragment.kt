@@ -276,8 +276,15 @@ class UploadFragment : MainNavigationFragment() {
             ?: throw EmptyDocumentException
     }
 
-    private fun doAfterPreExecuteUpload(uploadDocumentRequest: UploadDocumentRequest) {
+    private fun handleExtractSuccess(uploadDocumentRequest: UploadDocumentRequest) {
         bindingData(uploadDocumentRequest)
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            uploadFragmentViewModel.dispatchState(
+                Either.Right(CheckLocalDeviceStorage(uploadDocumentRequest)))
+        }
+    }
+
+    private fun handleCheckDeviceStorageSuccess(uploadDocumentRequest: UploadDocumentRequest) {
         checkAccountQuota(uploadDocumentRequest)
         showReadContactPermissionRequest()
     }
@@ -304,6 +311,10 @@ class UploadFragment : MainNavigationFragment() {
             uploadFragmentViewModel.checkAccountQuota(uploadDocumentRequest)
     }
 
+    private fun checkLocalDeviceStorage(uploadDocumentRequest: UploadDocumentRequest) {
+        uploadFragmentViewModel.checkLocalDeviceStorage(uploadDocumentRequest)
+    }
+
     private fun queryRecipientAutoComplete(autoCompletePattern: AutoCompletePattern) {
         viewLifecycleOwner.lifecycleScope.launch {
             uploadFragmentViewModel.shareRecipientsManager.query(autoCompletePattern)
@@ -313,7 +324,9 @@ class UploadFragment : MainNavigationFragment() {
     private fun reactToViewState(viewState: Success.ViewState) {
         LOGGER.info("reactToViewState(): $viewState")
         when (viewState) {
-            is ExtractInfoSuccess -> doAfterPreExecuteUpload(viewState.uploadDocumentRequest)
+            is ExtractInfoSuccess -> handleExtractSuccess(viewState.uploadDocumentRequest)
+            is CheckLocalDeviceStorage -> checkLocalDeviceStorage(viewState.documentRequest)
+            is EnoughDeviceStorage -> handleCheckDeviceStorageSuccess(viewState.documentRequest)
             is BuildDocumentRequestSuccess -> executeUpload(viewState.documentRequest)
         }
     }

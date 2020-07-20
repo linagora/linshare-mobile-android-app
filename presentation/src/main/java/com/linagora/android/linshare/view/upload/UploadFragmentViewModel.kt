@@ -46,6 +46,8 @@ import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideTo
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.DeviceStorageStats
+import com.linagora.android.linshare.util.DeviceStorageStats.Companion.INTERNAL_ROOT
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.widget.ShareRecipientsManager
 import kotlinx.coroutines.launch
@@ -56,6 +58,7 @@ class UploadFragmentViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val enoughAccountQuotaInteractor: EnoughAccountQuotaInteractor,
+    private val deviceStorageStats: DeviceStorageStats,
     val shareRecipientsManager: ShareRecipientsManager
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
@@ -66,6 +69,15 @@ class UploadFragmentViewModel @Inject constructor(
     fun checkAccountQuota(documentRequest: UploadDocumentRequest) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(enoughAccountQuotaInteractor(documentRequest.uploadFileSize))
+        }
+    }
+
+    fun checkLocalDeviceStorage(documentRequest: UploadDocumentRequest) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            val deviceFreeSpace = deviceStorageStats.getDeviceStorageFreeSpace(INTERNAL_ROOT)
+            documentRequest.takeIf { it.uploadFileSize >= deviceFreeSpace }
+                ?.let { dispatchUIState(Either.left(NotEnoughDeviceStorageViewState)) }
+                ?: dispatchUIState(Either.right(EnoughDeviceStorage(documentRequest)))
         }
     }
 
