@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.domain.usecases.sharedspace
 
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
@@ -44,7 +45,7 @@ object SharedSpaceDocumentEmpty : Success.ViewState()
 data class SharedSpaceDocumentFailure(val throwable: Throwable) : Failure.FeatureFailure()
 data class GetSharedSpaceNodeFail(val throwable: Throwable) : Failure.FeatureFailure()
 data class GetSharedSpaceNodeSuccess(val node: WorkGroupNode) : Success.ViewState()
-data class SharedSpaceDocumentItemClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
+data class SharedSpaceDocumentItemClick(val workGroupNode: WorkGroupNode) : Success.OnlineViewEvent(OperatorType.OnItemClick)
 data class SharedSpaceDocumentContextMenuClick(val workGroupDocument: WorkGroupDocument) : Success.ViewEvent()
 object SharedSpaceDocumentOnBackClick : Success.ViewEvent()
 data class DownloadSharedSpaceNodeClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()

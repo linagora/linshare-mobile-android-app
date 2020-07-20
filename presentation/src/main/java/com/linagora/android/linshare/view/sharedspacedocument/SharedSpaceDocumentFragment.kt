@@ -51,6 +51,7 @@ import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentBinding
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
@@ -85,6 +86,7 @@ import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.dismissKeyboard
+import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
 import com.linagora.android.linshare.util.showKeyboard
@@ -95,6 +97,7 @@ import com.linagora.android.linshare.view.Navigation.UploadType
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
+import com.linagora.android.linshare.view.widget.errorLayout
 import com.linagora.android.linshare.view.widget.withLinShare
 import org.slf4j.LoggerFactory
 
@@ -152,8 +155,10 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     }
 
     private fun reactToFailureState(failure: Failure) {
-        failure.takeIf { it is RemoveNodeNotFoundSharedSpaceState }
-            ?.let { getAllNodes() }
+        when (failure) {
+            is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
+            is RemoveNodeNotFoundSharedSpaceState -> getAllNodes()
+        }
     }
 
     private fun reactToViewState(viewState: Success.ViewState) {
@@ -178,6 +183,13 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(sharedSpacesDocumentViewModel.internetAvailable.value)) {
+            is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
+            else -> handleViewEvent(filteredViewEvent)
+        }
+    }
+
+    private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
             is SharedSpaceDocumentContextMenuClick -> showContextMenuSharedSpaceDocumentNode(viewEvent.workGroupDocument)
@@ -189,7 +201,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             OpenSearchView -> handleOpenSearch()
             CloseSearchView -> handleCloseSearch()
         }
-        sharedSpacesDocumentViewModel.dispatchState(Either.right(Success.Idle))
+        sharedSpacesDocumentViewModel.dispatchResetState()
     }
 
     private fun confirmRemoveSharedSpaceNode(workGroupNode: WorkGroupNode) {
@@ -413,6 +425,18 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
                 currentNode.name
             )
         )
+    }
+
+    private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
+        val messageId = when (operatorType) {
+            is OperatorType.OnItemClick -> R.string.not_access_folder_while_offline
+            else -> R.string.can_not_process_without_network
+        }
+        Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.sharedSpaceDocumentAddButton)
+            .show()
+        sharedSpacesDocumentViewModel.dispatchResetState()
     }
 
     private fun navigateIntoSubFolder(workGroupNode: WorkGroupNode) {
