@@ -52,7 +52,7 @@ data class GetSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewSta
 data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()
 object NoResultsSearchSharedSpace : Failure.FeatureFailure()
 object SearchSharedSpaceInitial : Success.ViewState()
-data class DetailsSharedSpaceItem(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
+data class DetailsSharedSpaceItem(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OnlineViewEvent(OperatorType.ViewDetails)
 data class OpenAddMembers(val sharedSpaceId: SharedSpaceId) : Success.ViewEvent()
 data class CreateWorkGroupSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
 data class CreateWorkGroupFailed(val throwable: Throwable) : FeatureFailure()

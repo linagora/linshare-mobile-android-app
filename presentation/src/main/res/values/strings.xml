@@ -208,4 +208,5 @@
     <string name="not_access_workgroup_while_offline" translatable="false">Cannot access workgroup while offline</string>
     <string name="not_access_folder_while_offline" translatable="false">Cannot access folder while offline</string>
     <string name="can_not_delete_file_while_offline" translatable="false">Cannot delete file while offline</string>
+    <string name="not_view_workgroup_details_while_offline" translatable="false">Cannot view workgroup details while offline</string>
 </resources>
