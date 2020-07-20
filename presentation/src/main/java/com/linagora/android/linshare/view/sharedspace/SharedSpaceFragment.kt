@@ -248,6 +248,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
     private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
         val messageId = when (operatorType) {
             is OperatorType.CreateWorkGroup -> R.string.can_not_create_shared_space_without_network
+            is OperatorType.OnItemClick -> R.string.not_access_workgroup_while_offline
             else -> R.string.can_not_process_without_network
         }
         Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)

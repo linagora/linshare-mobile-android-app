@@ -44,4 +44,6 @@ sealed class OperatorType {
     object CreateWorkGroup : OnlineOperatorType()
 
     object OpenContextMenu : OfflineOperatorType()
+
+    object OnItemClick : OnlineOperatorType()
 }

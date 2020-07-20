@@ -46,7 +46,7 @@ data class SharedSpaceViewState(val sharedSpace: List<SharedSpaceNodeNested>) : 
 data class SharedSpaceFailure(val throwable: Throwable) : FeatureFailure()
 data class SearchSharedSpaceViewState(val sharedSpace: List<SharedSpaceNodeNested>) : Success.ViewState()
 object EmptySharedSpaceState : Failure.FeatureFailure()
-data class SharedSpaceItemClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.ViewEvent()
+data class SharedSpaceItemClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OnlineViewEvent(OperatorType.OnItemClick)
 data class SharedSpaceContextMenuClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OfflineViewEvent(OperatorType.OpenContextMenu)
 data class GetSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
 data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()

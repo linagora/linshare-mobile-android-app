@@ -205,4 +205,5 @@
     <string name="folder" translatable="false">folder</string>
     <string name="add_member_failed" translatable="false">Add member failed</string>
     <string name="lack_of_device_storage" translatable="false">Unable to upload due to lack of device storage</string>
+    <string name="not_access_workgroup_while_offline" translatable="false">Cannot access workgroup while offline</string>
 </resources>
