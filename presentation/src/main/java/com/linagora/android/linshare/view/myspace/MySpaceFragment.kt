@@ -61,11 +61,11 @@ import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomB
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Failure.CannotExecuteWithoutNetwork
 import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.domain.usecases.utils.Success.Idle
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
+import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
 import com.linagora.android.linshare.view.MainActivityViewModel
@@ -135,6 +135,13 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(mySpaceViewModel.internetAvailable.value)) {
+            is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
+            else -> handleViewEvent(filteredViewEvent)
+        }
+    }
+
+    private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is ContextMenuClick -> showContextMenu(viewEvent.document)
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
@@ -143,7 +150,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is SearchButtonClick -> openSearch()
             is ShareItemClick -> navigateToShare(viewEvent.document)
         }
-        mySpaceViewModel.dispatchState(Either.right(Idle))
+        mySpaceViewModel.dispatchResetState()
     }
 
     private fun confirmRemoveDocument(document: Document) {
@@ -247,6 +254,20 @@ class MySpaceFragment : MainNavigationFragment() {
             is OperatorType.SwiftRefresh -> R.string.can_not_refresh_without_network
             else -> R.string.can_not_process_without_network
         }
+        Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.mySpaceUploadButton)
+            .show()
+        mySpaceViewModel.dispatchResetState()
+    }
+
+    private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
+        val messageId = when (operatorType) {
+            is OperatorType.DeleteDocument -> R.string.can_not_delete_file_while_offline
+            else -> R.string.can_not_process_without_network
+        }
+
+        dismissContextMenu()
         Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
             .errorLayout(requireContext())
             .setAnchorView(binding.mySpaceUploadButton)

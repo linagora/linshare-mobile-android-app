@@ -207,4 +207,5 @@
     <string name="lack_of_device_storage" translatable="false">Unable to upload due to lack of device storage</string>
     <string name="not_access_workgroup_while_offline" translatable="false">Cannot access workgroup while offline</string>
     <string name="not_access_folder_while_offline" translatable="false">Cannot access folder while offline</string>
+    <string name="can_not_delete_file_while_offline" translatable="false">Cannot delete file while offline</string>
 </resources>

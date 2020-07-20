@@ -46,4 +46,8 @@ sealed class OperatorType {
     object OpenContextMenu : OfflineOperatorType()
 
     object OnItemClick : OnlineOperatorType()
+
+    object DeleteDocument : OnlineOperatorType()
+
+    object ViewDetails : OnlineOperatorType()
 }
