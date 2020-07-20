@@ -38,10 +38,15 @@
     <data>
         <import type="androidx.lifecycle.LiveData"/>
         <import type="com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState"/>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
 
         <variable
             name="details"
             type="LiveData&lt;AccountDetailsViewState&gt;" />
+
+        <variable
+            name="internetAvailable"
+            type="ConnectionLiveData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,6 +79,16 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <include
+            android:id="@+id/networkBannerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/network_banner_layout"
+            app:connectionState="@{internetAvailable}"
+            app:layout_constraintTop_toBottomOf="@id/app_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/infoContainer"
             android:layout_width="match_parent"
@@ -82,7 +97,7 @@
             app:contentPaddingRight="@dimen/container_padding_right"
             app:cardCornerRadius="0dp"
             app:cardElevation="@dimen/info_elevation"
-            app:layout_constraintTop_toBottomOf="@+id/app_bar">
+            app:layout_constraintTop_toBottomOf="@+id/networkBannerContainer">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

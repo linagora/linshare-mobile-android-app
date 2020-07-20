@@ -81,6 +81,7 @@ class AccountDetailsFragment : MainNavigationFragment() {
         LOGGER.info("onCreateView()")
         val binding = FragmentAccountDetailBinding.inflate(inflater, container, false)
         binding.details = detailsViewState
+        binding.internetAvailable = mainActivityViewModel.internetAvailable
         binding.lifecycleOwner = this
         initViewModel()
         return binding.root
