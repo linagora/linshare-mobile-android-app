@@ -44,6 +44,8 @@ object BusinessErrorCode {
 
     val InternetNotAvailableErrorCode = ClientErrorCode(1)
 
+    val CancelUploadErrorCode = ClientErrorCode(2)
+
     val DeviceNotEnoughStorageErrorCode = ClientErrorCode(1100)
 
     val EmptyDocumentErrorCode = ClientErrorCode(1200)

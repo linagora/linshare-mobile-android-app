@@ -35,6 +35,7 @@ package com.linagora.android.linshare.data.network.handler
 
 import com.linagora.android.linshare.data.network.parseLinShareErrorResponse
 import com.linagora.android.linshare.domain.usecases.upload.UploadException
+import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.CANCEL_UPLOAD_WORKER
 import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.INTERNET_NOT_AVAILABLE
 import com.linagora.android.linshare.domain.utils.ErrorResponseConstant.UNKNOWN_RESPONSE
 import com.linagora.android.linshare.domain.utils.OnCatch
@@ -43,6 +44,7 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.net.SocketException
 import java.net.UnknownHostException
+import java.util.concurrent.CancellationException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -61,6 +63,7 @@ class UploadNetworkRequestHandler @Inject constructor(
             is HttpException -> reactToHttpErrorResponse(throwable)
             is SocketException -> throw UploadException(INTERNET_NOT_AVAILABLE)
             is UnknownHostException -> throw UploadException(INTERNET_NOT_AVAILABLE)
+            is CancellationException -> throw UploadException(CANCEL_UPLOAD_WORKER)
             else -> throw UploadException(UNKNOWN_RESPONSE)
         }
     }

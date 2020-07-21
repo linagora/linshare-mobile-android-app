@@ -475,7 +475,7 @@ class UploadFragment : MainNavigationFragment() {
                 requireContext(),
                 requireContext().resources
                     .getQuantityString(R.plurals.file_in_waiting_list,
-                uploadFiles), Toast.LENGTH_LONG)
+                uploadFiles), Toast.LENGTH_SHORT)
             .show()
     }
 

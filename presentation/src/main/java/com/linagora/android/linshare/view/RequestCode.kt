@@ -44,3 +44,5 @@ object ReadContactPermissionRequestCode : PermissionRequestCode(1020)
 object OpenDownloadViewRequestCode : PermissionRequestCode(2000)
 
 object OpenFilePickerRequestCode : RequestCode(3000)
+
+object CancelUploadRequestCode : RequestCode(4000)

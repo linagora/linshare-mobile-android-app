@@ -33,6 +33,8 @@
 
 package com.linagora.android.linshare.view.upload.worker
 
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
 import android.widget.Toast
 import androidx.core.app.NotificationCompat.Builder
@@ -71,13 +73,17 @@ import com.linagora.android.linshare.notification.UploadAndDownloadNotification.
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification.Companion.REDUCE_RATIO
 import com.linagora.android.linshare.notification.disableProgressBar
 import com.linagora.android.linshare.notification.showWaitingProgress
+import com.linagora.android.linshare.receiver.CancelUploadRequestReceiver
+import com.linagora.android.linshare.receiver.CancelUploadRequestReceiver.Companion.CANCEL_UPLOAD_INTENT
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.CancelUploadRequestCode
 import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.DOCUMENTS_KEY
 import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.MAILING_LISTS_KEY
 import com.linagora.android.linshare.view.share.worker.ShareWorker.Companion.RECIPIENTS_KEY
 import com.linagora.android.linshare.view.upload.controller.UploadCommand
 import com.linagora.android.linshare.view.upload.controller.UploadController
 import com.linagora.android.linshare.view.widget.makeCustomToast
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -121,11 +127,22 @@ class UploadWorker(
         const val UPLOAD_TO_SHARED_SPACE_QUOTA_ID_KEY = "sharedSpaceQuotaId"
 
         const val UPLOAD_TO_PARENT_NODE_ID_KEY = "uploadToParentNodeId"
+
+        const val UPLOAD_WORKER_UUID = "uploadWorkerUUID"
+
+        const val UPLOAD_WORKER_NOTIFICATION = "uploadWorkerNotification"
+
+        const val UPLOAD_WORKER_FILE_NAME = "uploadWorkerFileName"
     }
 
     override suspend fun doWork(): Result {
         val notificationId = systemNotifier.generateNotificationId()
-        setWaitingForeground(notificationId, appContext.getString(R.string.preparing))
+
+        setWaitingForeground(
+            notificationId,
+            appContext.getString(R.string.preparing),
+            inputData.getString(FILE_NAME_INPUT_KEY))
+
         return withContext(dispatcherProvider.computation) {
             var tempUploadFile: File? = null
             try {
@@ -140,14 +157,16 @@ class UploadWorker(
                 getUploadCompletedResult(documentRequest)
             } catch (throwable: Throwable) {
                 LOGGER.error(throwable.message, throwable)
-                notifyUploadFailure(
-                    notificationId = notificationId,
-                    title = StringId(R.string.upload_failed),
-                    message = when (throwable) {
-                        is UploadException -> handleMessageUploadException(throwable.errorResponse)
-                        else -> StringId(R.string.can_not_perform_upload)
-                    }
-                )
+                if (throwable !is CancellationException) {
+                    notifyUploadFailure(
+                        notificationId = notificationId,
+                        title = StringId(R.string.upload_failed),
+                        message = when (throwable) {
+                            is UploadException -> handleMessageUploadException(throwable.errorResponse)
+                            else -> StringId(R.string.can_not_perform_upload)
+                        }
+                    )
+                }
                 Result.failure()
             } finally {
                 tempUploadFile?.let { FileUtils.deleteQuietly(it) }
@@ -170,11 +189,24 @@ class UploadWorker(
         )
     }
 
-    private suspend fun setWaitingForeground(notificationId: NotificationId, message: String) {
+    private suspend fun setWaitingForeground(
+        notificationId: NotificationId,
+        message: String,
+        uploadFileName: String?
+    ) {
+        val cancelIntent = CANCEL_UPLOAD_INTENT
+            .setClass(appContext, CancelUploadRequestReceiver::class.java)
+            .putExtra(UPLOAD_WORKER_UUID, id.toString())
+            .putExtra(UPLOAD_WORKER_NOTIFICATION, notificationId.value)
+            .putExtra(UPLOAD_WORKER_FILE_NAME, uploadFileName)
+        val cancelUploadPending = PendingIntent
+            .getBroadcast(appContext, CancelUploadRequestCode.code, cancelIntent, FLAG_ONE_SHOT)
+
         setForeground(ForegroundInfo(notificationId.value, uploadNotification.create {
             configUploadingNotificationBuilder(this)
                 .setContentText(message)
                 .showWaitingProgress()
+                .addAction(R.drawable.ic_close, appContext.getString(R.string.cancel), cancelUploadPending)
                 .build()
         }))
     }
@@ -254,7 +286,8 @@ class UploadWorker(
 
     private suspend fun alertDownLoading(fileName: String) {
         withContext(dispatcherProvider.main) {
-            Toast(appContext).makeCustomToast(appContext, String.format(appContext.resources.getString(R.string.file_ready_to_upload), fileName), Toast.LENGTH_LONG).show()
+            Toast(appContext).makeCustomToast(appContext, String.format(appContext.resources.getString(R.string.file_ready_to_upload), fileName), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

@@ -35,6 +35,7 @@ package com.linagora.android.linshare.domain.utils
 
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode.AddExistingMemberErrorCode
+import com.linagora.android.linshare.domain.utils.BusinessErrorCode.CancelUploadErrorCode
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode.DeviceNotEnoughStorageErrorCode
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode.EmptyDocumentErrorCode
 import com.linagora.android.linshare.domain.utils.BusinessErrorCode.InternetNotAvailableErrorCode
@@ -51,6 +52,8 @@ object ErrorResponseConstant {
     val FILE_NOT_FOUND = ErrorResponse("file_not_found", UNKNOWN_LINSHARE_ERROR_CODE)
 
     val INTERNET_NOT_AVAILABLE = ErrorResponse("internet_not_available", InternetNotAvailableErrorCode)
+
+    val CANCEL_UPLOAD_WORKER = ErrorResponse("cancel worker", CancelUploadErrorCode)
 
     val DEVICE_NOT_ENOUGH_STORAGE = ErrorResponse(DEVICE_NOT_ENOUGH_SPACE_MESSAGE, DeviceNotEnoughStorageErrorCode)
 
