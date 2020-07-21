@@ -49,6 +49,11 @@
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".receiver.CancelUploadRequestReceiver">
+            <intent-filter>
+                <action android:name="com.linagora.android.linshare.CANCEL_UPLOAD"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

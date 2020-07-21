@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.inject
 
+import com.linagora.android.linshare.receiver.CancelUploadRequestReceiver
 import com.linagora.android.linshare.receiver.DownloadCompleteReceiver
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -42,4 +43,7 @@ abstract class BroadcastReceiverModule {
 
     @ContributesAndroidInjector
     internal abstract fun downloadCompleteReceiver(): DownloadCompleteReceiver
+
+    @ContributesAndroidInjector
+    internal abstract fun cancelUploadRequestReceiver(): CancelUploadRequestReceiver
 }
