@@ -74,9 +74,9 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFold
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
-import com.linagora.android.linshare.model.parcelable.UploadDestinationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.getParentNodeId
 import com.linagora.android.linshare.model.parcelable.toParcelable
@@ -402,19 +402,19 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         val bundle = UploadFragmentArgs(
                 uploadType = UploadType.INSIDE_APP_TO_WORKGROUP,
                 uri = uri,
-                uploadDestinationInfo = createUploadDestination())
+                selectedDestinationInfo = createUploadDestination())
             .toBundle()
         findNavController().navigate(R.id.uploadFragment, bundle)
     }
 
-    private fun createUploadDestination(): UploadDestinationInfo {
+    private fun createUploadDestination(): SelectedDestinationInfo {
         val currentSharedSpace = sharedSpacesDocumentViewModel.currentSharedSpace.value
         val currentNode = sharedSpacesDocumentViewModel.currentNode.value
 
         require(currentSharedSpace != null) { "sharedSpace is not available" }
         require(currentNode != null) { "workgroup node is not available" }
 
-        return UploadDestinationInfo(
+        return SelectedDestinationInfo(
             sharedSpaceDestinationInfo = SharedSpaceDestinationInfo(
                 currentSharedSpace.sharedSpaceId.toParcelable(),
                 currentSharedSpace.name,

@@ -57,7 +57,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocu
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
-import com.linagora.android.linshare.model.parcelable.UploadDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.util.FileSize.SizeFormat.SHORT
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastLoginFormat
@@ -292,13 +292,13 @@ fun bindingVisibilityPickDestinationContainer(constraintLayout: ConstraintLayout
 }
 
 @BindingAdapter("uploadDestination")
-fun bindingUploadDestination(textView: TextView, uploadDestinationInfo: UploadDestinationInfo?) {
-    textView.text = uploadDestinationInfo
+fun bindingUploadDestination(textView: TextView, selectedDestinationInfo: SelectedDestinationInfo?) {
+    textView.text = selectedDestinationInfo
         ?.parentDestinationInfo
         ?.parentNodeName
         ?: textView.context.getString(R.string.my_space)
 
-    val leftDrawableResource = uploadDestinationInfo
+    val leftDrawableResource = selectedDestinationInfo
         ?.let { it.generateDestinationDrawable() }
         ?: R.drawable.ic_home
 

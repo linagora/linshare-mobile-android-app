@@ -102,8 +102,8 @@
             android:name="uri"
             app:argType="android.net.Uri" />
         <argument
-            android:name="uploadDestinationInfo"
-            app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
+            android:name="selectedDestinationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo"
             app:nullable="true"
             android:defaultValue="@null" />
         <action
@@ -184,8 +184,8 @@
             android:name="uri"
             app:argType="android.net.Uri" />
         <argument
-            android:name="uploadDestinationInfo"
-            app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
+            android:name="selectedDestinationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo"
             app:nullable="true"
             android:defaultValue="@null" />
         <action
@@ -208,8 +208,8 @@
             android:name="uri"
             app:argType="android.net.Uri" />
         <argument
-            android:name="uploadDestinationInfo"
-            app:argType="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"
+            android:name="selectedDestinationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument

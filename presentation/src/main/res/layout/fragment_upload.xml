@@ -38,7 +38,7 @@
         <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
         <import type="com.linagora.android.linshare.model.upload.UploadDocumentRequest"/>
         <import type="com.linagora.android.linshare.view.Navigation.UploadType"/>
-        <import type="com.linagora.android.linshare.model.parcelable.UploadDestinationInfo"/>
+        <import type="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo"/>
         <import type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel"/>
         <import type="android.view.View"/>
 
@@ -51,8 +51,8 @@
             type="UploadDocumentRequest" />
 
         <variable
-            name="uploadDestinationInfo"
-            type="UploadDestinationInfo" />
+            name="selectedDestinationInfo"
+            type="SelectedDestinationInfo" />
 
         <variable
             name="viewModel"
@@ -213,7 +213,7 @@
                 app:drawableTint="@color/file_size_color"
                 app:layout_constraintStart_toStartOf="@+id/pickTheDestinationLabel"
                 app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel"
-                app:uploadDestination="@{uploadDestinationInfo}" />
+                app:uploadDestination="@{selectedDestinationInfo}" />
 
             <View
                 android:id="@+id/dividerPickDestination"

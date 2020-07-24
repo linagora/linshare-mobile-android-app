@@ -55,16 +55,17 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceN
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
-import com.linagora.android.linshare.model.parcelable.UploadDestinationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.getParentNodeId
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
+import com.linagora.android.linshare.util.generateFileType
 import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.util.isRootFileType
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.Navigation.FileType
@@ -114,29 +115,23 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     private fun bindingNavigationInfo() {
         binding.navigationInfo = arguments.navigationInfo
             ?.let { it }
-            ?: arguments.uploadDestinationInfo
+            ?: arguments.selectedDestinationInfo
                 ?.let { generateNavigationInfo(it) }
     }
 
-    private fun generateNavigationInfo(uploadDestinationInfo: UploadDestinationInfo): SharedSpaceNavigationInfo {
-        val fileType = generateFileTypeByUploadDestinationInfo(uploadDestinationInfo)
+    private fun generateNavigationInfo(selectedDestinationInfo: SelectedDestinationInfo): SharedSpaceNavigationInfo {
+        val fileType = selectedDestinationInfo.generateFileType()
         return SharedSpaceNavigationInfo(
-            uploadDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable,
+            selectedDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable,
             fileType,
-            getParentNodeIdFromUploadDestinationInfo(fileType, uploadDestinationInfo)
+            generateParentNodeIdParcelable(fileType, selectedDestinationInfo)
         )
     }
 
-    private fun getParentNodeIdFromUploadDestinationInfo(fileType: FileType, uploadDestinationInfo: UploadDestinationInfo): WorkGroupNodeIdParcelable {
+    private fun generateParentNodeIdParcelable(fileType: FileType, selectedDestinationInfo: SelectedDestinationInfo): WorkGroupNodeIdParcelable {
         return fileType.takeIf { it == FileType.NORMAL }
-            ?.let { uploadDestinationInfo.parentDestinationInfo.parentNodeId }
-            ?: WorkGroupNodeIdParcelable(uploadDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid)
-    }
-
-    private fun generateFileTypeByUploadDestinationInfo(uploadDestinationInfo: UploadDestinationInfo): FileType {
-        return takeIf { uploadDestinationInfo.isRootFileType() }
-            ?.let { FileType.ROOT }
-            ?: FileType.NORMAL
+            ?.let { selectedDestinationInfo.parentDestinationInfo.parentNodeId }
+            ?: WorkGroupNodeIdParcelable(selectedDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid)
     }
 
     private fun observeViewState() {
@@ -184,17 +179,13 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     }
 
     private fun extractSharedSpaceId(): SharedSpaceId? {
-        return arguments.navigationInfo
-            ?.let { it.sharedSpaceIdParcelable.toSharedSpaceId() }
-            ?: arguments.uploadDestinationInfo
-                ?.let { it.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.toSharedSpaceId() }
+        return arguments.navigationInfo?.sharedSpaceIdParcelable?.toSharedSpaceId()
+            ?: arguments.selectedDestinationInfo?.sharedSpaceDestinationInfo?.sharedSpaceIdParcelable?.toSharedSpaceId()
     }
 
     private fun extractCurrentNodeId(): WorkGroupNodeId? {
-        return arguments.navigationInfo
-            ?.let { it.nodeIdParcelable.toWorkGroupNodeId() }
-            ?: arguments.uploadDestinationInfo
-                ?.let { it.parentDestinationInfo.parentNodeId.toWorkGroupNodeId() }
+        return arguments.navigationInfo?.nodeIdParcelable?.toWorkGroupNodeId()
+            ?: arguments.selectedDestinationInfo?.parentDestinationInfo?.parentNodeId?.toWorkGroupNodeId()
     }
 
     private fun getCurrentNode(sharedSpaceId: SharedSpaceId, currentNodeId: WorkGroupNodeId) {
@@ -210,26 +201,26 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     }
 
     private fun getAllNodes(sharedSpaceId: SharedSpaceId) {
-        viewModel.getAllChildNodes(sharedSpaceId, getParentNodeId())
+        viewModel.getAllChildNodes(sharedSpaceId, getCurrentNodeId())
     }
 
-    private fun getParentNodeId(): WorkGroupNodeId? {
+    private fun getCurrentNodeId(): WorkGroupNodeId? {
         val navigationInfo = arguments.navigationInfo
-        navigationInfo?.let { return getParentNodeIdFromNavigationInfo(it) }
-            ?: return getParentNodeIdFromUploadDestination()
+        navigationInfo?.let { return getCurrentNodeIdFromNavigationInfo(it) }
+            ?: return getCurrentNodeIdFromSelectedDestinationInfo()
     }
 
-    private fun getParentNodeIdFromNavigationInfo(navigationInfo: SharedSpaceNavigationInfo): WorkGroupNodeId? {
+    private fun getCurrentNodeIdFromNavigationInfo(navigationInfo: SharedSpaceNavigationInfo): WorkGroupNodeId? {
         return navigationInfo.getParentNodeId()
     }
 
-    private fun getParentNodeIdFromUploadDestination(): WorkGroupNodeId? {
-        val uploadDestinationInfo = arguments.uploadDestinationInfo
-        return uploadDestinationInfo?.let { getParentNodeIdFromGenerateNavigationInfo(it) } ?: EMPTY_PARENT_NODE_ID
+    private fun getCurrentNodeIdFromSelectedDestinationInfo(): WorkGroupNodeId? {
+        val uploadDestinationInfo = arguments.selectedDestinationInfo
+        return uploadDestinationInfo?.let { getCurrentNodeIdFromGeneratedNavigationInfo(it) } ?: EMPTY_PARENT_NODE_ID
     }
 
-    private fun getParentNodeIdFromGenerateNavigationInfo(uploadDestinationInfo: UploadDestinationInfo): WorkGroupNodeId? {
-        return generateNavigationInfo(uploadDestinationInfo)?.getParentNodeId()
+    private fun getCurrentNodeIdFromGeneratedNavigationInfo(selectedDestinationInfo: SelectedDestinationInfo): WorkGroupNodeId? {
+        return generateNavigationInfo(selectedDestinationInfo).getParentNodeId()
     }
 
     private fun bindingFolderName(viewState: Success.ViewState) {
@@ -238,14 +229,14 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         }
     }
 
-    private fun createUploadDestination(): UploadDestinationInfo {
+    private fun createUploadDestination(): SelectedDestinationInfo {
         val currentSharedSpace = viewModel.currentSharedSpace.value
         val currentNode = viewModel.currentNode.value
 
         require(currentSharedSpace != null) { "sharedSpace is not available" }
         require(currentNode != null) { "workgroup node is not available" }
 
-        return UploadDestinationInfo(
+        return SelectedDestinationInfo(
             sharedSpaceDestinationInfo = SharedSpaceDestinationInfo(
                 currentSharedSpace.sharedSpaceId.toParcelable(),
                 currentSharedSpace.name,
@@ -278,7 +269,7 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToPickDestination(
             arguments.uploadType,
             arguments.uri,
-            arguments.uploadDestinationInfo,
+            arguments.selectedDestinationInfo,
             generateNavigationInfoForSubFolder(workGroupNode))
         findNavController().navigate(action)
     }
@@ -315,8 +306,8 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { navigateBack() }
     }
 
-    private fun navigateToUpload(uploadType: Navigation.UploadType, uri: Uri, uploadDestinationInfo: UploadDestinationInfo?) {
-        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToUploadFragment(uploadType, uri, uploadDestinationInfo)
+    private fun navigateToUpload(uploadType: Navigation.UploadType, uri: Uri, selectedDestinationInfo: SelectedDestinationInfo?) {
+        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToUploadFragment(uploadType, uri, selectedDestinationInfo)
         findNavController().navigate(action)
     }
 
@@ -324,7 +315,7 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToPickDestination(
             arguments.uploadType,
             arguments.uri,
-            arguments.uploadDestinationInfo,
+            arguments.selectedDestinationInfo,
             generateNavigationInfoForPreviousFolder(workGroupNode))
         findNavController().navigate(action)
     }
@@ -333,7 +324,7 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToNavigationDestination(
             arguments.uploadType,
             arguments.uri,
-            arguments.uploadDestinationInfo)
+            arguments.selectedDestinationInfo)
         findNavController().navigate(action)
     }
 }

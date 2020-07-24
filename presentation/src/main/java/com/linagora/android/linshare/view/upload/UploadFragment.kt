@@ -156,7 +156,7 @@ class UploadFragment : MainNavigationFragment() {
         binding = FragmentUploadBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.uploadType = args.uploadType
-        binding.uploadDestinationInfo = args.uploadDestinationInfo
+        binding.selectedDestinationInfo = args.selectedDestinationInfo
         initViewModel()
         initAutoComplete()
         return binding.root
@@ -344,27 +344,27 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun selectDestination() {
-        args.uploadDestinationInfo
+        args.selectedDestinationInfo
             ?.let { reSelectDestination() }
             ?: showPickDestinationDialog()
     }
 
     private fun reSelectDestination() {
-        val action = UploadFragmentDirections.actionUploadFragmentToNavigationPickDestination(args.uploadType, args.uri, args.uploadDestinationInfo)
+        val action = UploadFragmentDirections.actionUploadFragmentToNavigationPickDestination(args.uploadType, args.uri, args.selectedDestinationInfo)
         findNavController().navigate(action)
     }
 
     private fun updateOutsideToMySpaceDestination() {
         childFragmentManager.dismissDialogFragmentByTag(PickDestinationDialog.TAG)
         binding.uploadType = Navigation.UploadType.OUTSIDE_APP
-        binding.uploadDestinationInfo = UPLOAD_TO_MY_SPACE_DESTINATION_INFO
+        binding.selectedDestinationInfo = UPLOAD_TO_MY_SPACE_DESTINATION_INFO
     }
 
     private fun navigateToDestinationPicker() {
         val action = UploadFragmentDirections.actionUploadFragmentToNavigationDestination(
             args.uploadType,
             args.uri,
-            args.uploadDestinationInfo)
+            args.selectedDestinationInfo)
         findNavController().navigate(action)
     }
 
@@ -446,17 +446,17 @@ class UploadFragment : MainNavigationFragment() {
     ): UploadWorkerRequest {
         LOGGER.info("createSharedSpaceUploadRequest()")
 
-        val sharedSpaceId = args.uploadDestinationInfo
+        val sharedSpaceId = args.selectedDestinationInfo
             ?.sharedSpaceDestinationInfo
             ?.sharedSpaceIdParcelable
             ?.toSharedSpaceId()
 
-        val sharedSpaceQuotaId = args.uploadDestinationInfo
+        val sharedSpaceQuotaId = args.selectedDestinationInfo
             ?.sharedSpaceDestinationInfo
             ?.sharedSpaceQuotaId
             ?.toQuotaId()
 
-        val parentNodeId = args.uploadDestinationInfo
+        val parentNodeId = args.selectedDestinationInfo
             ?.parentDestinationInfo
             ?.parentNodeId
             ?.toWorkGroupNodeId()

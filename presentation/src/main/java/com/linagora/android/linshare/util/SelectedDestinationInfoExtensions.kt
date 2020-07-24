@@ -31,13 +31,24 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.model.parcelable
+package com.linagora.android.linshare.util
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
+import com.linagora.android.linshare.view.Navigation
 
-@Parcelize
-class UploadDestinationInfo(
-    val sharedSpaceDestinationInfo: SharedSpaceDestinationInfo,
-    val parentDestinationInfo: ParentDestinationInfo
-) : Parcelable
+fun SelectedDestinationInfo.isRootFileType(): Boolean {
+    return this.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid == this.parentDestinationInfo.parentNodeId.uuid
+}
+
+fun SelectedDestinationInfo.generateDestinationDrawable(): Int {
+    return this.takeIf { it.isRootFileType() }
+        ?.let { R.drawable.ic_shared_space_item }
+        ?: R.drawable.ic_folder
+}
+
+fun SelectedDestinationInfo.generateFileType(): Navigation.FileType {
+    return takeIf { this.isRootFileType() }
+        ?.let { Navigation.FileType.ROOT }
+        ?: Navigation.FileType.NORMAL
+}

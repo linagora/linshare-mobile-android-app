@@ -132,7 +132,7 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
             .actionNavigationDestinationToNavigationPickDestination(
                 args.uploadType,
                 args.uri,
-                args.uploadDestinationInfo,
+                args.selectedDestinationInfo,
                 generateNavigationInfoForSharedSpaceRoot(sharedSpaceNodeNested))
         findNavController().navigate(action)
     }
@@ -150,7 +150,7 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
     }
 
     private fun navigateToUpload() {
-        val uploadDestinationInfo = args.uploadDestinationInfo
+        val uploadDestinationInfo = args.selectedDestinationInfo
 
         val action = uploadDestinationInfo
             ?.let { navigateUpLoadToDestination() }
@@ -170,6 +170,6 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
         return SharedSpaceDestinationFragmentDirections.actionNavigationDestinationToUploadFragment(
             args.uploadType,
             args.uri,
-            args.uploadDestinationInfo)
+            args.selectedDestinationInfo)
     }
 }
