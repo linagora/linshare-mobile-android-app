@@ -106,6 +106,10 @@
             app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="destinationPickerEvent"
+            app:argType="com.linagora.android.linshare.view.Event$DestinationPickerEvent"
+            android:defaultValue="NONE" />
         <action
             android:id="@+id/action_uploadFragment_to_navigation_destination"
             app:destination="@id/navigationSharedSpaceDestination" />

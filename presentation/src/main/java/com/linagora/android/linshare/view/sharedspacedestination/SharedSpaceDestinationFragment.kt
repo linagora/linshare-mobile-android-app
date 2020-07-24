@@ -50,6 +50,7 @@ import com.linagora.android.linshare.databinding.FragmentSharedSpaceDestinationB
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.toParcelable
@@ -153,23 +154,26 @@ class SharedSpaceDestinationFragment : MainNavigationFragment() {
         val uploadDestinationInfo = args.selectedDestinationInfo
 
         val action = uploadDestinationInfo
-            ?.let { navigateUpLoadToDestination() }
-            ?: navigateUploadToMySpace()
+            ?.let { navigateBackToUploadToDestination() }
+            ?: navigateBackToUploadToMySpace()
 
         findNavController().navigate(action)
     }
 
-    private fun navigateUploadToMySpace(): NavDirections {
+    private fun navigateBackToUploadToMySpace(): NavDirections {
         return SharedSpaceDestinationFragmentDirections.actionNavigationDestinationToUploadFragment(
             Navigation.UploadType.OUTSIDE_APP,
             args.uri,
-            UploadFragment.UPLOAD_TO_MY_SPACE_DESTINATION_INFO)
+            UploadFragment.UPLOAD_TO_MY_SPACE_DESTINATION_INFO,
+            Event.DestinationPickerEvent.BACK
+        )
     }
 
-    private fun navigateUpLoadToDestination(): NavDirections {
+    private fun navigateBackToUploadToDestination(): NavDirections {
         return SharedSpaceDestinationFragmentDirections.actionNavigationDestinationToUploadFragment(
             args.uploadType,
             args.uri,
-            args.selectedDestinationInfo)
+            args.selectedDestinationInfo,
+            Event.DestinationPickerEvent.BACK)
     }
 }

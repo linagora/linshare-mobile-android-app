@@ -80,6 +80,7 @@ import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.NoOp
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.model.parcelable.toQuotaId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
@@ -159,7 +160,13 @@ class UploadFragment : MainNavigationFragment() {
         binding.selectedDestinationInfo = args.selectedDestinationInfo
         initViewModel()
         initAutoComplete()
+        checkPickerEventToShowPickDestinationDialog()
         return binding.root
+    }
+
+    private fun checkPickerEventToShowPickDestinationDialog() {
+        args.destinationPickerEvent.takeIf { args.destinationPickerEvent == Event.DestinationPickerEvent.BACK }
+            ?.let { showPickDestinationDialog() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -344,7 +351,7 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun selectDestination() {
-        args.selectedDestinationInfo
+        binding.selectedDestinationInfo
             ?.let { reSelectDestination() }
             ?: showPickDestinationDialog()
     }

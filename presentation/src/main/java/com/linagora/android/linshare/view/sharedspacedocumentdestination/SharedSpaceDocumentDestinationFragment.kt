@@ -151,7 +151,7 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
-            is CancelPickDestinationViewState -> navigateToUpload(Navigation.UploadType.OUTSIDE_APP, arguments.uri, arguments.selectedDestinationInfo)
+            is CancelPickDestinationViewState -> navigateToUpload(Navigation.UploadType.OUTSIDE_APP, arguments.uri, arguments.selectedDestinationInfo, Event.DestinationPickerEvent.CANCEL)
             is ChoosePickDestinationViewState -> handleChooseDestination()
         }
 
@@ -257,7 +257,7 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
     private fun handleChooseDestination() {
         runCatching { createUploadDestination() }
             .onFailure { LOGGER.error("handleChooseDestination(): ${it.printStackTrace()} - ${it.message}") }
-            .map { navigateToUpload(Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP, arguments.uri, it) }
+            .map { navigateToUpload(Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP, arguments.uri, it, Event.DestinationPickerEvent.CHOOSE) }
     }
 
     private fun navigateIntoSubFolder(workGroupNode: WorkGroupNode) {
@@ -305,8 +305,8 @@ class SharedSpaceDocumentDestinationFragment : MainNavigationFragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { navigateBack() }
     }
 
-    private fun navigateToUpload(uploadType: Navigation.UploadType, uri: Uri, selectedDestinationInfo: SelectedDestinationInfo?) {
-        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToUploadFragment(uploadType, uri, selectedDestinationInfo)
+    private fun navigateToUpload(uploadType: Navigation.UploadType, uri: Uri, selectedDestinationInfo: SelectedDestinationInfo?, destinationPickerEvent: Event.DestinationPickerEvent) {
+        val action = SharedSpaceDocumentDestinationFragmentDirections.actionNavigationPickDestinationToUploadFragment(uploadType, uri, selectedDestinationInfo, destinationPickerEvent)
         findNavController().navigate(action)
     }
 
