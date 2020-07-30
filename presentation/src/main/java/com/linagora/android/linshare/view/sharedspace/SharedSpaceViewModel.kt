@@ -41,10 +41,12 @@ import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
@@ -78,6 +80,7 @@ class SharedSpaceViewModel @Inject constructor(
     private val searchSharedSpaceInteractor: SearchSharedSpaceInteractor,
     private val getSharedSpaceInteractor: GetSharedSpaceInteractor,
     private val createWorkGroupInteractor: CreateWorkGroupInteractor,
+    private val deleteSharedSpaceInteractor: DeleteSharedSpaceInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val nameValidator: NameValidator
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
@@ -145,6 +148,12 @@ class SharedSpaceViewModel @Inject constructor(
                     CreateWorkGroupRequest(nameWorkGroup.value, LinShareNodeType.WORK_GROUP)
                 )
             }
+        }
+    }
+
+    fun deleteSharedSpace(sharedSpaceId: SharedSpaceId) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(deleteSharedSpaceInteractor(sharedSpaceId))
         }
     }
 

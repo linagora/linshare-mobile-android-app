@@ -35,7 +35,6 @@ package com.linagora.android.linshare.view.sharedspace.action
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnShowConfirmDeleteSharedSpaceClick
 import com.linagora.android.linshare.view.base.BaseViewModel

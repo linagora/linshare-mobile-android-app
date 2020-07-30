@@ -41,6 +41,7 @@ import android.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceBinding
@@ -54,6 +55,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroup
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.DeletedSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnShowConfirmDeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
@@ -132,7 +134,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun reactToViewState(viewState: Success.ViewState) {
         when (viewState) {
-            is CreateWorkGroupSuccess -> getSharedSpace()
+            is CreateWorkGroupSuccess, is DeletedSharedSpaceSuccess -> getSharedSpace()
         }
     }
 
@@ -153,8 +155,13 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is CreateWorkGroupButtonBottomBarClick -> showCreateWorkGroupDialog()
             is CreateWorkGroupViewState -> handleCreateWorkGroup(viewEvent.nameWorkGroup)
             is OnShowConfirmDeleteSharedSpaceClick -> showConfirmDeleteSharedSpaceDialog(viewEvent.sharedSpaceNodeNested)
+            is DeleteSharedSpaceClick -> deleteSharedSpace(viewEvent.sharedSpaceNodeNested)
         }
         sharedSpaceViewModel.dispatchResetState()
+    }
+
+    private fun deleteSharedSpace(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        sharedSpaceViewModel.deleteSharedSpace(sharedSpaceNodeNested.sharedSpaceId)
     }
 
     private fun showConfirmDeleteSharedSpaceDialog(sharedSpaceNodeNested: SharedSpaceNodeNested) {
@@ -163,7 +170,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
             title = getString(R.string.confirm_delete_shared_space, sharedSpaceNodeNested.name),
             negativeText = getString(R.string.cancel),
             positiveText = getString(R.string.delete),
-            onPositiveCallback = { }
+            onPositiveCallback = { sharedSpaceViewModel.dispatchState(Either.right(DeleteSharedSpaceClick(sharedSpaceNodeNested))) }
         ).show(childFragmentManager, "ConfirmDeleteSharedSpaceDialog")
     }
 
@@ -264,6 +271,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is OperatorType.CreateWorkGroup -> R.string.can_not_create_shared_space_without_network
             is OperatorType.OnItemClick -> R.string.not_access_workgroup_while_offline
             is OperatorType.ViewDetails -> R.string.not_view_workgroup_details_while_offline
+            is OperatorType.DeleteSharedSpace -> R.string.can_not_delete_shared_space_without_network
             else -> R.string.can_not_process_without_network
         }
         dismissContextMenu()
