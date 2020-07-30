@@ -39,6 +39,7 @@
     <data>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested"/>
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
 
         <variable
             name="sharedSpaceNodeNested"
@@ -79,6 +80,40 @@
                 android:text="@string/details" />
 
         </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:padding="0dp"
+            app:contextActionVisible="@{sharedSpaceNodeNested.role}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteSharedSpaceRole}">
+
+            <View
+                style="@style/DivideView"
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imgDelete"
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:layout_marginLeft="@dimen/padding_horizontal_row_bottom_sheet"
+                android:layout_marginTop="@dimen/padding_vertical_row_bottom_sheet"
+                android:layout_marginBottom="@dimen/padding_vertical_row_bottom_sheet"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:layout_marginStart="@dimen/my_space_item_padding"
+                android:text="@string/delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgDelete"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
