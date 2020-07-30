@@ -61,3 +61,5 @@ data class CreateWorkGroupViewState(val nameWorkGroup: NewNameRequest) : Success
 object BlankNameError : Failure.FeatureFailure()
 object NameContainSpecialCharacter : Failure.FeatureFailure()
 data class ValidName(val nameWorkGroup: String) : Success.ViewState()
+data class DeletedSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
+data class DeleteSharedSpaceFailure(val throwable: Throwable) : FeatureFailure()

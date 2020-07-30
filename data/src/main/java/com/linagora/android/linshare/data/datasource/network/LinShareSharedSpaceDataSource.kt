@@ -83,4 +83,8 @@ class LinShareSharedSpaceDataSource @Inject constructor(
             networkRequest = { linshareApi.createWorkGroup(createWorkGroupRequest) },
             onFailure = { throw CreateSharedSpaceException(it) })
     }
+
+    override suspend fun deleteSharedSpace(sharedSpaceId: SharedSpaceId): SharedSpace {
+        return linshareApi.deleteSharedSpace(sharedSpaceId.uuid.toString())
+    }
 }

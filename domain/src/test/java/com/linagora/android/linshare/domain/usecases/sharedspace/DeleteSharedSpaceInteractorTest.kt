@@ -31,45 +31,56 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.data.repository.sharedspace
+package com.linagora.android.linshare.domain.usecases.sharedspace
 
-import com.linagora.android.linshare.data.datasource.SharedSpaceDataSource
-import com.linagora.android.linshare.domain.model.search.QueryString
-import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
-import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
-import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import arrow.core.Either
+import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_1
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_1
+import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
+import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 
-@Singleton
-class SharedSpaceRepositoryImp @Inject constructor(
-    private val sharedSpaceDataSource: SharedSpaceDataSource
-) : SharedSpaceRepository {
-    override suspend fun getSharedSpaces(): List<SharedSpaceNodeNested> {
-        return sharedSpaceDataSource.getSharedSpaces()
+class DeleteSharedSpaceInteractorTest {
+    @Mock
+    lateinit var sharedSpaceRepository: SharedSpaceRepository
+
+    private lateinit var deleteSharedSpaceInteractor: DeleteSharedSpaceInteractor
+
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.initMocks(this)
+        deleteSharedSpaceInteractor = DeleteSharedSpaceInteractor(sharedSpaceRepository)
     }
 
-    override suspend fun getSharedSpace(
-        sharedSpaceId: SharedSpaceId,
-        membersParameter: MembersParameter,
-        rolesParameter: RolesParameter
-    ): SharedSpace {
-        return sharedSpaceDataSource.getSharedSpace(sharedSpaceId, membersParameter, rolesParameter)
+    @Test
+    fun deleteShareSpaceShouldReturnStateWithSharedSpace() = runBlockingTest {
+        `when`(sharedSpaceRepository.deleteSharedSpace(SHARED_SPACE_ID_1))
+            .thenAnswer { SHARED_SPACE_1 }
+
+        assertThat(deleteSharedSpaceInteractor(SHARED_SPACE_ID_1)
+            .map { it(INIT_STATE) }
+            .toList(ArrayList())
+        ).containsExactly(LOADING_STATE, Either.right(DeletedSharedSpaceSuccess(SHARED_SPACE_1)))
     }
 
-    override suspend fun search(query: QueryString): List<SharedSpaceNodeNested> {
-        return sharedSpaceDataSource.searchSharedSpaces(query)
-    }
+    @Test
+    fun deleteShareSpaceShouldReturnFailureStateWhenHaveAProblem() = runBlockingTest {
+        val exception = RuntimeException("delete shared space failed")
+        `when`(sharedSpaceRepository.deleteSharedSpace(SHARED_SPACE_ID_1))
+            .thenThrow(exception)
 
-    override suspend fun createWorkGroup(createWorkGroupRequest: CreateWorkGroupRequest): SharedSpace {
-        return sharedSpaceDataSource.createWorkGroup(createWorkGroupRequest)
-    }
-
-    override suspend fun deleteSharedSpace(sharedSpaceId: SharedSpaceId): SharedSpace {
-        return sharedSpaceDataSource.deleteSharedSpace(sharedSpaceId)
+        assertThat(deleteSharedSpaceInteractor(SHARED_SPACE_ID_1)
+            .map { it(INIT_STATE) }
+            .toList(ArrayList())
+        ).containsExactly(LOADING_STATE, Either.left(DeleteSharedSpaceFailure(exception)))
     }
 }

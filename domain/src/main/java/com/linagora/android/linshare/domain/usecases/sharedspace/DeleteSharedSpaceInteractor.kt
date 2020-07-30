@@ -31,29 +31,34 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.data.datasource
+package com.linagora.android.linshare.domain.usecases.sharedspace
 
-import com.linagora.android.linshare.domain.model.search.QueryString
-import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
-import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
-import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface SharedSpaceDataSource {
+@Singleton
+class DeleteSharedSpaceInteractor @Inject constructor(
+    private val sharedSpaceRepository: SharedSpaceRepository
+) {
 
-    suspend fun getSharedSpaces(): List<SharedSpaceNodeNested>
+    operator fun invoke(sharedSpaceId: SharedSpaceId): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Loading) }
 
-    suspend fun getSharedSpace(
-        sharedSpaceId: SharedSpaceId,
-        membersParameter: MembersParameter = MembersParameter.WithoutMembers,
-        rolesParameter: RolesParameter = RolesParameter.WithRole
-    ): SharedSpace
+            val state = Either.catch { sharedSpaceRepository.deleteSharedSpace(sharedSpaceId) }
+                .bimap(::DeleteSharedSpaceFailure, ::DeletedSharedSpaceSuccess)
 
-    suspend fun searchSharedSpaces(query: QueryString): List<SharedSpaceNodeNested>
-
-    suspend fun createWorkGroup(createWorkGroupRequest: CreateWorkGroupRequest): SharedSpace
-
-    suspend fun deleteSharedSpace(sharedSpaceId: SharedSpaceId): SharedSpace
+            emitState { state }
+        }
+    }
 }

@@ -39,6 +39,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
 import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceException
+import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceException
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_ID_1
 import com.linagora.android.testshared.SharedSpaceFixtures.CREATE_WORK_GROUP_REQUEST
@@ -151,6 +152,31 @@ class SharedSpaceRepositoryImpTest {
             assertThrows<CreateSharedSpaceException> {
                 runBlockingTest {
                     sharedSpaceRepositoryImp.createWorkGroup(CREATE_WORK_GROUP_REQUEST)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun deleteSharedSpaceShouldReturnDeletedSharedSpace() {
+        runBlockingTest {
+            `when`(sharedSpaceDataSource.deleteSharedSpace(SHARED_SPACE_1.sharedSpaceId))
+                .thenAnswer { SharedSpaceDocumentFixtures.SHARED_SPACE_1 }
+
+            val sharedSpace = sharedSpaceRepositoryImp.deleteSharedSpace(SHARED_SPACE_1.sharedSpaceId)
+            assertThat(sharedSpace).isEqualTo(SharedSpaceDocumentFixtures.SHARED_SPACE_1)
+        }
+    }
+
+    @Test
+    fun deleteSharedSpaceShouldThrowWhenDataSourceFailedToDeleteWorkGroup() {
+        runBlockingTest {
+            `when`(sharedSpaceDataSource.deleteSharedSpace(SHARED_SPACE_1.sharedSpaceId))
+                .thenThrow(DeleteSharedSpaceException(RuntimeException()))
+
+            assertThrows<DeleteSharedSpaceException> {
+                runBlockingTest {
+                    sharedSpaceRepositoryImp.deleteSharedSpace(SHARED_SPACE_1.sharedSpaceId)
                 }
             }
         }

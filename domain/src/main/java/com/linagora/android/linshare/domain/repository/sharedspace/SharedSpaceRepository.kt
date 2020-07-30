@@ -54,4 +54,6 @@ interface SharedSpaceRepository {
     suspend fun search(query: QueryString): List<SharedSpaceNodeNested>
 
     suspend fun createWorkGroup(createWorkGroupRequest: CreateWorkGroupRequest): SharedSpace
+
+    suspend fun deleteSharedSpace(sharedSpaceId: SharedSpaceId): SharedSpace
 }
