@@ -35,7 +35,9 @@ package com.linagora.android.linshare.view.sharedspace.action
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
+import com.linagora.android.linshare.domain.usecases.sharedspace.OnShowConfirmDeleteSharedSpaceClick
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ItemContextMenu
 
@@ -48,6 +50,6 @@ class SharedSpaceItemContextMenu(
     }
 
     override fun remove(data: SharedSpaceNodeNested) {
-        TODO("Not yet implemented")
+        viewModel.dispatchUIState(Either.right(OnShowConfirmDeleteSharedSpaceClick(data)))
     }
 }

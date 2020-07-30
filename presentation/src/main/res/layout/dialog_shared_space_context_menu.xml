@@ -86,7 +86,8 @@
             style="@style/RowLinerBottomSheetStyle"
             android:padding="0dp"
             app:contextActionVisible="@{sharedSpaceNodeNested.role}"
-            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteSharedSpaceRole}">
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteSharedSpaceRole}"
+            android:onClick="@{() -> itemContextMenu.remove(sharedSpaceNodeNested)}">
 
             <View
                 style="@style/DivideView"

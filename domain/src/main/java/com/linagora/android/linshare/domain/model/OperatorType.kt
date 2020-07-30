@@ -64,4 +64,6 @@ sealed class OperatorType {
     object DeleteWorkGroupMember : OnlineOperatorType()
 
     object ShowConfirmDialogClick : OfflineOperatorType()
+
+    object DeleteSharedSpace : OnlineOperatorType()
 }

@@ -31,38 +31,31 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspace
+package com.linagora.android.linshare.view.dialog
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import com.linagora.android.linshare.view.dialog.ConfirmDeleteSharedSpaceDialog
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.view.View
+import android.widget.TextView
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.model.resources.LayoutId
 
-@Module
-internal abstract class SharedSpacePresentationModule {
+class ConfirmDeleteSharedSpaceDialog(
+    private val title: String,
+    negativeText: String,
+    positiveText: String,
+    onNegativeCallback: OnNegativeCallback = NoOpCallback,
+    onPositiveCallback: OnPositiveCallback = NoOpCallback
+) : BaseConfirmDialogFragment(
+    LayoutId(R.layout.dialog_confirm_layout),
+    negativeText,
+    positiveText,
+    onNegativeCallback,
+    onPositiveCallback
+) {
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceFragment(): SharedSpaceFragment
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceViewModel::class)
-    abstract fun bindSharedSpaceViewModel(receivedSharesViewModel: SharedSpaceViewModel): ViewModel
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceContextMenuDialog(): SharedSpaceContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeCreateWorkGroupDialog(): CreateWorkGroupDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmDeleteSharedSpaceDialog(): ConfirmDeleteSharedSpaceDialog
+    override fun setUpContent(contentView: View) {
+        with(contentView) {
+            val titleDialog = findViewById<TextView>(R.id.titleDialog)
+            titleDialog.text = title
+        }
+    }
 }

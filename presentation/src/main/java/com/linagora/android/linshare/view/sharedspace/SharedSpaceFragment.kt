@@ -53,7 +53,9 @@ import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupViewState
+import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
+import com.linagora.android.linshare.domain.usecases.sharedspace.OnShowConfirmDeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -70,6 +72,7 @@ import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.dialog.ConfirmDeleteSharedSpaceDialog
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentFragment.Companion.NAVIGATION_INFO_KEY
 import com.linagora.android.linshare.view.widget.errorLayout
 import org.slf4j.LoggerFactory
@@ -149,8 +152,19 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is DetailsSharedSpaceItem -> navigateToDetails(viewEvent.sharedSpaceNodeNested)
             is CreateWorkGroupButtonBottomBarClick -> showCreateWorkGroupDialog()
             is CreateWorkGroupViewState -> handleCreateWorkGroup(viewEvent.nameWorkGroup)
+            is OnShowConfirmDeleteSharedSpaceClick -> showConfirmDeleteSharedSpaceDialog(viewEvent.sharedSpaceNodeNested)
         }
         sharedSpaceViewModel.dispatchResetState()
+    }
+
+    private fun showConfirmDeleteSharedSpaceDialog(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        dismissContextMenu()
+        ConfirmDeleteSharedSpaceDialog(
+            title = getString(R.string.confirm_delete_shared_space, sharedSpaceNodeNested.name),
+            negativeText = getString(R.string.cancel),
+            positiveText = getString(R.string.delete),
+            onPositiveCallback = { }
+        ).show(childFragmentManager, "ConfirmDeleteSharedSpaceDialog")
     }
 
     private fun handleCreateWorkGroup(nameWorkGroup: NewNameRequest) {
