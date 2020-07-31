@@ -36,11 +36,23 @@ package com.linagora.android.linshare.data.network.adapter
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import java.lang.reflect.Type
 import java.util.UUID
 
-class WorkGroupNodeIdAdapter : JsonDeserializer<WorkGroupNodeId> {
+class WorkGroupNodeIdAdapter : JsonDeserializer<WorkGroupNodeId>, JsonSerializer<WorkGroupNodeId> {
+
+    override fun serialize(
+        src: WorkGroupNodeId?,
+        typeOfSrc: Type?,
+        context: JsonSerializationContext?
+    ): JsonElement {
+        return JsonPrimitive(src!!.uuid.toString())
+    }
+
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,

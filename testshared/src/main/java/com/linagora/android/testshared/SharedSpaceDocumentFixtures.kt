@@ -35,6 +35,7 @@ package com.linagora.android.testshared
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
@@ -51,6 +52,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceFolderSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentEmpty
@@ -201,4 +203,18 @@ object SharedSpaceDocumentFixtures {
         SHARED_SPACE_ID_1,
         SharedSpaceRoleId(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e"))
     )
+
+    val CREATE_SHARED_SPACE_NODE_REQUEST = CreateSharedSpaceNodeRequest(
+        "NEW FOLDER",
+        PARENT_NODE_ID_1,
+        WorkGroupNodeType.FOLDER
+    )
+
+    val CREATE_SHARED_SPACE_NODE_REQUEST_WITH_PARENT_NULL = CreateSharedSpaceNodeRequest(
+        "NEW FOLDER",
+        null,
+        WorkGroupNodeType.FOLDER
+    )
+
+    val STATE_CREATE_FOLDER_SUCCESS = Either.right(CreateSharedSpaceFolderSuccessViewState(WORK_GROUP_FOLDER_1))
 }

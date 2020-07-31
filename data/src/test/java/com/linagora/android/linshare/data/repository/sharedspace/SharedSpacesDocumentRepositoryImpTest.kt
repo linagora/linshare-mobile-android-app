@@ -36,9 +36,12 @@ package com.linagora.android.linshare.data.repository.sharedspace
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.sharedspacesdocument.SharedSpacesDocumentDataSource
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceNodeException
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNotFoundSharedSpaceDocumentException
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeException
 import com.linagora.android.testshared.CopyFixtures
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.CREATE_SHARED_SPACE_NODE_REQUEST
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.CREATE_SHARED_SPACE_NODE_REQUEST_WITH_PARENT_NULL
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_2
@@ -240,6 +243,39 @@ class SharedSpacesDocumentRepositoryImpTest {
                     CopyFixtures.DESTINATION_PARENT_NODE_ID
                 )
             } }
+        }
+    }
+
+    @Nested
+    inner class CreateSharedSpaceFolder {
+        @Test
+        fun createSharedSpaceFolderSuccess() = runBlockingTest {
+            `when`(sharedSpacesDocumentRepositoryImp.createSharedSpaceFolder(SHARED_SPACE_ID_1, CREATE_SHARED_SPACE_NODE_REQUEST))
+                .thenAnswer { WORK_GROUP_FOLDER_1 }
+
+            val folder = sharedSpacesDocumentRepositoryImp.createSharedSpaceFolder(SHARED_SPACE_ID_1, CREATE_SHARED_SPACE_NODE_REQUEST)
+            assertThat(folder).isEqualTo(WORK_GROUP_FOLDER_1)
+        }
+
+        @Test
+        fun createSharedSpaceFolderSuccessWhenParentWorkGroupNodeIdIsNull() = runBlockingTest {
+            `when`(sharedSpacesDocumentRepositoryImp.createSharedSpaceFolder(SHARED_SPACE_ID_1, CREATE_SHARED_SPACE_NODE_REQUEST_WITH_PARENT_NULL))
+                .thenAnswer { WORK_GROUP_FOLDER_1 }
+
+            val folder = sharedSpacesDocumentRepositoryImp.createSharedSpaceFolder(SHARED_SPACE_ID_1, CREATE_SHARED_SPACE_NODE_REQUEST_WITH_PARENT_NULL)
+            assertThat(folder).isEqualTo(WORK_GROUP_FOLDER_1)
+        }
+
+        @Test
+        fun createSharedSpaceFolderShouldThrowWhenCreateSharedSpaceFolderFailure() {
+            runBlockingTest {
+                `when`(sharedSpacesDocumentDataSource.createSharedSpaceFolder(SHARED_SPACE_ID_1, CREATE_SHARED_SPACE_NODE_REQUEST))
+                    .thenThrow(CreateSharedSpaceNodeException(RuntimeException()))
+
+                assertThrows<CreateSharedSpaceNodeException> {
+                    runBlockingTest { sharedSpacesDocumentRepositoryImp.createSharedSpaceFolder(SHARED_SPACE_ID_1, CREATE_SHARED_SPACE_NODE_REQUEST) }
+                }
+            }
         }
     }
 }

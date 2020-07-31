@@ -31,56 +31,35 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.repository.sharedspacesdocument
+package com.linagora.android.linshare.domain.usecases.sharedspace
 
-import com.linagora.android.linshare.domain.model.copy.CopyRequest
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
-import com.linagora.android.linshare.domain.model.search.QueryString
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
-import com.linagora.android.linshare.domain.model.upload.OnTransfer
+import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface SharedSpacesDocumentRepository {
+@Singleton
+class CreateSharedSpaceNodeInteractor @Inject constructor(
+    private val sharedSpacesDocumentRepository: SharedSpacesDocumentRepository
+) {
 
-    suspend fun getAllChildNodes(
-        sharedSpaceId: SharedSpaceId,
-        parentNodeId: WorkGroupNodeId? = null
-    ): List<WorkGroupNode>
+    operator fun invoke(sharedSpaceId: SharedSpaceId, createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Loading) }
 
-    suspend fun getSharedSpaceNode(
-        sharedSpaceId: SharedSpaceId,
-        nodeId: WorkGroupNodeId
-    ): WorkGroupNode
+            val state = Either.catch { sharedSpacesDocumentRepository.createSharedSpaceFolder(sharedSpaceId, createSharedSpaceNodeRequest) }
+                .bimap(::CreateSharedSpaceFolderFailure, ::CreateSharedSpaceFolderSuccessViewState)
 
-    suspend fun uploadSharedSpaceDocument(
-        documentRequest: DocumentRequest,
-        sharedSpaceId: SharedSpaceId,
-        parentNodeId: WorkGroupNodeId? = null,
-        onTransfer: OnTransfer
-    ): WorkGroupNode
-
-    suspend fun searchSharedSpaceDocuments(
-        sharedSpaceId: SharedSpaceId,
-        parentNodeId: WorkGroupNodeId? = null,
-        query: QueryString
-    ): List<WorkGroupNode>
-
-    suspend fun removeSharedSpaceNode(
-        sharedSpaceId: SharedSpaceId,
-        sharedSpaceNodeId: WorkGroupNodeId
-    ): WorkGroupNode
-
-    suspend fun copyToSharedSpace(
-        copyRequest: CopyRequest,
-        destinationSharedSpaceId: SharedSpaceId,
-        destinationParentNodeId: WorkGroupNodeId? = null
-    ): List<WorkGroupNode>
-
-    suspend fun createSharedSpaceFolder(
-        sharedSpaceId: SharedSpaceId,
-        createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest
-    ): WorkGroupFolder
+            emitState { state }
+        }
+    }
 }

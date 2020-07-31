@@ -44,10 +44,12 @@ import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
+import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
@@ -244,4 +246,11 @@ interface LinshareApi {
     suspend fun deleteSharedSpace(
         @Path("sharedSpaceId") sharedSpaceId: String
     ): SharedSpace
+
+    @POST("/shared_spaces/{sharedSpaceId}/nodes")
+    @Headers("Accept: application/json")
+    suspend fun createSharedSpaceFolder(
+        @Path("sharedSpaceId") sharedSpaceId: String,
+        @Body createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest
+    ): WorkGroupFolder
 }

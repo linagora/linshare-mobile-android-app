@@ -36,7 +36,9 @@ package com.linagora.android.linshare.data.datasource.sharedspacesdocument
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
@@ -78,4 +80,9 @@ interface SharedSpacesDocumentDataSource {
         destinationSharedSpaceId: SharedSpaceId,
         destinationParentNodeId: WorkGroupNodeId? = null
     ): List<WorkGroupNode>
+
+    suspend fun createSharedSpaceFolder(
+        sharedSpaceId: SharedSpaceId,
+        createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest
+    ): WorkGroupFolder
 }

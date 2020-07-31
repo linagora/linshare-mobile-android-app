@@ -59,6 +59,8 @@ data class RemoveSharedSpaceNodeFailure(val throwable: Throwable) : Failure.Feat
 data class RemoveSharedSpaceNodeClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
 object RemoveNodeNotFoundSharedSpaceState : Failure.FeatureFailure()
 data class SharedSpaceFolderContextMenuClick(val workGroupFolder: WorkGroupFolder) : Success.ViewEvent()
+data class CreateSharedSpaceFolderSuccessViewState(val workGroupFolder: WorkGroupFolder) : Success.ViewState()
+data class CreateSharedSpaceFolderFailure(val throwable: Throwable) : Failure.FeatureFailure()
 
 data class CopyToSharedSpaceSuccess(
     val destinationSharedSpaceId: SharedSpaceId,

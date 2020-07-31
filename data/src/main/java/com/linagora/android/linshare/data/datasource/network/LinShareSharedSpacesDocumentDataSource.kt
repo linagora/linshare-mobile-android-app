@@ -41,8 +41,10 @@ import com.linagora.android.linshare.data.network.handler.UploadNetworkRequestHa
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.PartParameter.FILE_PARAMETER_FIELD
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.model.sharedspace.nameContains
@@ -151,5 +153,12 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
             destinationParentNodeId?.uuid.toString(),
             copyRequest
         )
+    }
+
+    override suspend fun createSharedSpaceFolder(
+        sharedSpaceId: SharedSpaceId,
+        createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest
+    ): WorkGroupFolder {
+        return linShareApi.createSharedSpaceFolder(sharedSpaceId.uuid.toString(), createSharedSpaceNodeRequest)
     }
 }
