@@ -36,6 +36,7 @@ package com.linagora.android.linshare.inject
 import com.google.gson.GsonBuilder
 import com.linagora.android.linshare.BuildConfig
 import com.linagora.android.linshare.data.api.LinshareApi
+import com.linagora.android.linshare.data.network.adapter.AuditLogEntryIdAdapter
 import com.linagora.android.linshare.data.network.adapter.BaseErrorCodeDeserializer
 import com.linagora.android.linshare.data.network.adapter.DateLongDeserializer
 import com.linagora.android.linshare.data.network.adapter.DocumentIdDeserializer
@@ -51,6 +52,14 @@ import com.linagora.android.linshare.data.network.adapter.SharedSpaceRoleIdAdapt
 import com.linagora.android.linshare.data.network.adapter.WorkGroupNodeIdAdapter
 import com.linagora.android.linshare.data.network.factory.RuntimeTypeAdapterFactory
 import com.linagora.android.linshare.domain.model.BaseErrorCode
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryId
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryType
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryUser
+import com.linagora.android.linshare.domain.model.audit.workgroup.SharedSpaceMemberAuditLogEntry
+import com.linagora.android.linshare.domain.model.audit.workgroup.SharedSpaceNodeAuditLogEntry
+import com.linagora.android.linshare.domain.model.audit.workgroup.WorkGroupDocumentAuditLogEntry
+import com.linagora.android.linshare.domain.model.audit.workgroup.WorkGroupDocumentRevisionAuditLogEntry
+import com.linagora.android.linshare.domain.model.audit.workgroup.WorkGroupFolderAuditLogEntry
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.MailingListAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.MailingListId
@@ -64,9 +73,11 @@ import com.linagora.android.linshare.domain.model.share.ShareId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocumentRevision
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
 import com.linagora.android.linshare.network.CookieAuthenticator
@@ -123,9 +134,10 @@ class NetworkModule {
     @Provides
     fun provideWorkgroupNodeTypeAdapterFactory(): RuntimeTypeAdapterFactory<WorkGroupNode> {
         return RuntimeTypeAdapterFactory
-            .of(WorkGroupNode::class.java, "type")
-            .registerSubtype(WorkGroupFolder::class.java, Constant.WORK_GROUP_TYPE_FOLDER)
-            .registerSubtype(WorkGroupDocument::class.java, Constant.WORK_GROUP_TYPE_DOCUMENT)
+            .of(WorkGroupNode::class.java, "type", true)
+            .registerSubtype(WorkGroupFolder::class.java, WorkGroupNodeType.FOLDER.name)
+            .registerSubtype(WorkGroupDocument::class.java, WorkGroupNodeType.DOCUMENT.name)
+            .registerSubtype(WorkGroupDocumentRevision::class.java, WorkGroupNodeType.DOCUMENT_REVISION.name)
     }
 
     @Singleton
@@ -141,10 +153,23 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    fun provideAuditLogEntryUserTypeAdapterFactory(): RuntimeTypeAdapterFactory<AuditLogEntryUser> {
+        return RuntimeTypeAdapterFactory
+            .of(AuditLogEntryUser::class.java, "type")
+            .registerSubtype(SharedSpaceNodeAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP.name)
+            .registerSubtype(WorkGroupFolderAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP_FOLDER.name)
+            .registerSubtype(SharedSpaceMemberAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP_MEMBER.name)
+            .registerSubtype(WorkGroupDocumentAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP_DOCUMENT.name)
+            .registerSubtype(WorkGroupDocumentRevisionAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP_DOCUMENT_REVISION.name)
+    }
+
+    @Singleton
+    @Provides
     fun provideLinShareRetrofit(
         clientBuilder: OkHttpClient.Builder,
         autoCompleteTypeAdapterFactory: RuntimeTypeAdapterFactory<AutoCompleteResult>,
-        workGroupNodeTypeAdapterFactory: RuntimeTypeAdapterFactory<WorkGroupNode>
+        workGroupNodeTypeAdapterFactory: RuntimeTypeAdapterFactory<WorkGroupNode>,
+        auditLogEntryUserTypeAdapterFactory: RuntimeTypeAdapterFactory<AuditLogEntryUser>
     ): Retrofit {
 
         val gson = GsonBuilder()
@@ -161,8 +186,10 @@ class NetworkModule {
             .registerTypeAdapter(SharedSpaceMemberId::class.java, SharedSpaceMemberIdAdapter())
             .registerTypeAdapter(SharedSpaceAccountId::class.java, SharedSpaceAccountIdAdapter())
             .registerTypeAdapter(SharedSpaceRoleId::class.java, SharedSpaceRoleIdAdapter())
+            .registerTypeAdapter(AuditLogEntryId::class.java, AuditLogEntryIdAdapter())
             .registerTypeAdapterFactory(workGroupNodeTypeAdapterFactory)
             .registerTypeAdapterFactory(autoCompleteTypeAdapterFactory)
+            .registerTypeAdapterFactory(auditLogEntryUserTypeAdapterFactory)
             .create()
 
         return Retrofit.Builder()

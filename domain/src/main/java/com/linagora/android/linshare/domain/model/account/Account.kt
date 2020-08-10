@@ -31,22 +31,14 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.domain.model.account
 
-import java.util.Date
+import java.util.UUID
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
+data class Account(
+    val uuid: UUID,
+    val firstName: String,
+    val lastName: String,
+    val name: String,
+    val mail: String
+)

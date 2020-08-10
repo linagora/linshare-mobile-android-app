@@ -31,22 +31,22 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.data.network.adapter
 
-import java.util.Date
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryId
+import java.lang.reflect.Type
+import java.util.UUID
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
+class AuditLogEntryIdAdapter : JsonDeserializer<AuditLogEntryId> {
 
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): AuditLogEntryId {
+        return AuditLogEntryId(UUID.fromString(json!!.asString))
+    }
 }

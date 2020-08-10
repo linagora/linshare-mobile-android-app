@@ -47,5 +47,6 @@ data class WorkGroupFolder(
     override val modificationDate: Date,
     override val description: String?,
     override val name: String,
-    override val treePath: List<TreePath>
+    override val treePath: List<TreePath>,
+    override val type: WorkGroupNodeType
 ) : WorkGroupNode

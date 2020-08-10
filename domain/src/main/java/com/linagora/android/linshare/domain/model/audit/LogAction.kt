@@ -31,22 +31,15 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.domain.model.audit
 
-import java.util.Date
-
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
+enum class LogAction {
+    CREATE,
+    UPDATE,
+    DELETE,
+    GET,
+    DOWNLOAD,
+    SUCCESS,
+    FAILURE,
+    PURGE;
 }

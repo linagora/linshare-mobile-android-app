@@ -31,22 +31,19 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.domain.model.audit
 
+import com.linagora.android.linshare.domain.model.account.Account
 import java.util.Date
+import java.util.UUID
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
+interface AuditLogEntry {
+    val auditLogEntryId: AuditLogEntryId
+    val resourceUuid: UUID
+    val fromResourceUuid: UUID?
     val creationDate: Date
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
+    val authUser: Account
+    val type: AuditLogEntryType
+    val action: LogAction
+    val cause: LogActionCause?
 }

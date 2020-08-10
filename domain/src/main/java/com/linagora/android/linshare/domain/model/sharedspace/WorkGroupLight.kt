@@ -33,20 +33,12 @@
 
 package com.linagora.android.linshare.domain.model.sharedspace
 
+import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
+data class WorkGroupLight(
+    @SerializedName("uuid")
+    val workGroupNodeId: WorkGroupNodeId,
+    val creationDate: Date,
     val name: String
-    val treePath: List<TreePath>
-}
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
+)

@@ -31,22 +31,35 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.domain.model.audit.workgroup
 
+import com.google.gson.annotations.SerializedName
+import com.linagora.android.linshare.domain.model.account.Account
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryId
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryType
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryUser
+import com.linagora.android.linshare.domain.model.audit.LogAction
+import com.linagora.android.linshare.domain.model.audit.LogActionCause
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupCopy
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupLight
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import java.util.Date
+import java.util.UUID
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
+data class WorkGroupFolderAuditLogEntry(
+    override val actor: Account,
+    @SerializedName("uuid")
+    override val auditLogEntryId: AuditLogEntryId,
+    override val resourceUuid: UUID,
+    override val fromResourceUuid: UUID? = null,
+    override val creationDate: Date,
+    override val authUser: Account,
+    override val type: AuditLogEntryType,
+    override val action: LogAction,
+    override val cause: LogActionCause? = null,
+    val workGroup: WorkGroupLight,
+    val resource: WorkGroupNode,
+    val resourceUpdated: WorkGroupNode? = null,
+    val copiedTo: WorkGroupCopy? = null,
+    val copiedFrom: WorkGroupCopy? = null
+) : AuditLogEntryUser

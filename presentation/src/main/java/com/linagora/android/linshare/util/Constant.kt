@@ -47,10 +47,6 @@ object Constant {
 
     const val QUERY_INTERVAL_MS = 500L
 
-    const val WORK_GROUP_TYPE_FOLDER = "FOLDER"
-
-    const val WORK_GROUP_TYPE_DOCUMENT = "DOCUMENT"
-
     const val MIN_LENGTH_CHARACTERS_TO_SEARCH = 3
 
     const val CLEAR_QUERY_STRING = ""

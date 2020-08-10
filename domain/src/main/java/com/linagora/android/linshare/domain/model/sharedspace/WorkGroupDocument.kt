@@ -48,6 +48,7 @@ data class WorkGroupDocument(
     override val modificationDate: Date,
     override val description: String?,
     override val name: String,
+    override val type: WorkGroupNodeType,
     val size: Long,
     val mimeType: MediaType,
     val hasThumbnail: Boolean,
