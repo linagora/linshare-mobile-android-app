@@ -38,6 +38,7 @@ import com.linagora.android.linshare.data.model.authentication.PermanentTokenBod
 import com.linagora.android.linshare.domain.model.AccountQuota
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
@@ -205,4 +206,10 @@ interface LinshareApi {
     @POST("/shared_spaces")
     @Headers("Accept: application/json")
     suspend fun createWorkGroup(@Body createWorkGroupRequest: CreateWorkGroupRequest): SharedSpace
+
+    @GET("/work_groups/{workGroupId}/audit")
+    @Headers("Accept: application/json")
+    suspend fun findAllWorkGroupActivities(
+        @Path("workGroupId") workGroupId: String
+    ): List<AuditLogEntryUser>
 }

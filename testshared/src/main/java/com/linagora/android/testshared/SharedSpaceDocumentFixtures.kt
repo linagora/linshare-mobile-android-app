@@ -45,6 +45,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.TreePath
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccount
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
@@ -79,7 +80,8 @@ object SharedSpaceDocumentFixtures {
         modificationDate = Date(1574837876965),
         description = "test description",
         name = "FOLDER1",
-        treePath = emptyList()
+        treePath = emptyList(),
+        type = WorkGroupNodeType.FOLDER
     )
 
     val WORK_GROUP_FOLDER_2 = WorkGroupFolder(
@@ -90,7 +92,8 @@ object SharedSpaceDocumentFixtures {
         modificationDate = Date(1574837876965),
         description = "test description 2",
         name = "FOLDER2",
-        treePath = listOf(TreePath(PARENT_NODE_ID_1, "FOLDER1"))
+        treePath = listOf(TreePath(PARENT_NODE_ID_1, "FOLDER1")),
+        type = WorkGroupNodeType.FOLDER
     )
 
     val WORK_GROUP_DOCUMENT_1 = WorkGroupDocument(
@@ -107,7 +110,8 @@ object SharedSpaceDocumentFixtures {
         sha256sum = "d6747b1e2516e8ff545a9d454aebe1e89b6f55f720cae0625a2a767259559842",
         uploadDate = Date(1588664701182),
         hasThumbnail = true,
-        treePath = emptyList()
+        treePath = emptyList(),
+        type = WorkGroupNodeType.DOCUMENT
     )
 
     val WORK_GROUP_DOCUMENT_2 = WorkGroupDocument(
@@ -124,7 +128,8 @@ object SharedSpaceDocumentFixtures {
         sha256sum = "1bc66785d75d22f7aa0cf7870b2baa8187f0bf7cd3eed65fd590b73cc8d56794",
         uploadDate = Date(1588664701275),
         hasThumbnail = true,
-        treePath = listOf(TreePath(PARENT_NODE_ID_1, "FOLDER1"))
+        treePath = listOf(TreePath(PARENT_NODE_ID_1, "FOLDER1")),
+        type = WorkGroupNodeType.DOCUMENT
     )
 
     val STATE_SHARED_DOCUMENT_IN_SPACE_1 = Either.right(SharedSpaceDocumentViewState(
