@@ -155,7 +155,7 @@ class NetworkModule {
     @Provides
     fun provideAuditLogEntryUserTypeAdapterFactory(): RuntimeTypeAdapterFactory<AuditLogEntryUser> {
         return RuntimeTypeAdapterFactory
-            .of(AuditLogEntryUser::class.java, "type")
+            .of(AuditLogEntryUser::class.java, "type", true)
             .registerSubtype(SharedSpaceNodeAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP.name)
             .registerSubtype(WorkGroupFolderAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP_FOLDER.name)
             .registerSubtype(SharedSpaceMemberAuditLogEntry::class.java, AuditLogEntryType.WORKGROUP_MEMBER.name)
