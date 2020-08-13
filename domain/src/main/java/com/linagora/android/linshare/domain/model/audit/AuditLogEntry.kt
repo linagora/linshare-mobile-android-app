@@ -46,4 +46,6 @@ interface AuditLogEntry {
     val type: AuditLogEntryType
     val action: LogAction
     val cause: LogActionCause?
+
+    fun getActionMessageComponents(): Triple<String, String, String>
 }

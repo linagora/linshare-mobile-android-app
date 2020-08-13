@@ -57,4 +57,8 @@ data class SharedSpaceNodeAuditLogEntry(
     override val actor: Account,
     val resource: SharedSpace,
     val resourceUpdated: SharedSpace? = null
-) : AuditLogEntryUser
+) : AuditLogEntryUser {
+    override fun getActionMessageComponents(): Triple<String, String, String> {
+        return Triple(actor.name, resource.name, resource.name)
+    }
+}

@@ -59,4 +59,9 @@ data class SharedSpaceMemberAuditLogEntry(
     val workGroup: WorkGroupLight,
     val resource: SharedSpaceMember,
     val resourceUpdated: SharedSpaceMember? = null
-) : AuditLogEntryUser
+) : AuditLogEntryUser {
+
+    override fun getActionMessageComponents(): Triple<String, String, String> {
+        return Triple(actor.name, resource.sharedSpaceAccount.name, workGroup.name)
+    }
+}

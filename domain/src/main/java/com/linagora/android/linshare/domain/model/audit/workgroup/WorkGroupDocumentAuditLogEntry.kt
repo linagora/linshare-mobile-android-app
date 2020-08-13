@@ -62,4 +62,8 @@ data class WorkGroupDocumentAuditLogEntry(
     val resourceUpdated: WorkGroupNode? = null,
     val copiedTo: WorkGroupCopy? = null,
     val copiedFrom: WorkGroupCopy? = null
-) : AuditLogEntryUser
+) : AuditLogEntryUser {
+    override fun getActionMessageComponents(): Triple<String, String, String> {
+        return Triple(actor.name, resource.name, workGroup.name)
+    }
+}

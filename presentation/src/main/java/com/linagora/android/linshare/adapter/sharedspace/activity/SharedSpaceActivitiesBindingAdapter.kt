@@ -33,6 +33,10 @@
 
 package com.linagora.android.linshare.adapter.sharedspace.activity
 
+import android.graphics.Typeface.BOLD
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -47,8 +51,10 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembe
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
+import com.linagora.android.linshare.util.Constant.NO_RESOURCE
 import com.linagora.android.linshare.util.TimeUtils
 import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
+import com.linagora.android.linshare.util.getActionDetailsResourceId
 import com.linagora.android.linshare.util.getActionTitleResourceId
 import com.linagora.android.linshare.util.getAuditLogIconResourceId
 import com.linagora.android.linshare.util.getResourceName
@@ -104,8 +110,25 @@ fun bindingWorkGroupAuditActor(textView: TextView, auditLogEntryUser: AuditLogEn
     textView.text = textView.context.getString(R.string.audit_log_actor, auditLogEntryUser.actor.name)
 }
 
-@BindingAdapter("workGroupActivitiesActionTitle")
-fun bindingWorkGroupAuditActionTitle(textView: TextView, auditLogEntryUser: AuditLogEntryUser) {
-    val clientLogAction = auditLogEntryUser.type.generateClientLogAction(auditLogEntryUser)
-    textView.text = textView.context.getString(auditLogEntryUser.getActionTitleResourceId(clientLogAction))
+@BindingAdapter("workGroupActivitiesActionDetails")
+fun bindingWorkGroupAuditActionDetails(textView: TextView, auditLogEntryUser: AuditLogEntryUser) {
+    runCatching {
+        with(auditLogEntryUser) {
+            val clientLogAction = type.generateClientLogAction(auditLogEntryUser)
+
+            val actionTitle = textView.context.getString(auditLogEntryUser.getActionTitleResourceId(clientLogAction))
+
+            val spanAction = SpannableStringBuilder(actionTitle)
+
+            val messageComponents = getActionMessageComponents()
+            val actionDetails = auditLogEntryUser.getActionDetailsResourceId(clientLogAction)
+                .takeIf { it != NO_RESOURCE }
+                ?.let { textView.context.getString(it, messageComponents.first, messageComponents.second, messageComponents.third) }
+
+            actionDetails?.let { spanAction.append(" ").append(it) }
+
+            spanAction.setSpan(StyleSpan(BOLD), 0, actionTitle.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            textView.text = spanAction
+        }
+    }
 }

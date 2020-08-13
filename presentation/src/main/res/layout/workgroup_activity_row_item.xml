@@ -76,32 +76,18 @@
             />
 
         <TextView
-            android:id="@+id/action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textStyle="bold"
-            android:textColor="@color/file_name_color"
-            android:textSize="@dimen/my_space_item_secondary_text_size"
-            android:layout_marginTop="@dimen/my_space_item_line_spacing"
-            android:layout_marginStart="@dimen/item_upload_container_margin_side"
-            app:layout_constraintTop_toBottomOf="@id/resourceName"
-            app:layout_constraintStart_toEndOf="@id/logIcon"
-            app:workGroupActivitiesActionTitle="@{activityLog}"
-            />
-
-        <TextView
             android:id="@+id/actionDetails"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/file_size_color"
+            android:textColor="@color/text_primary_color"
             android:layout_marginTop="@dimen/my_space_item_line_spacing"
             android:textSize="@dimen/my_space_item_secondary_text_size"
-            android:layout_marginStart="@dimen/secondary_text_spacing"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             app:layout_constraintTop_toBottomOf="@id/resourceName"
-            app:layout_constraintStart_toEndOf="@id/action"
+            app:layout_constraintStart_toEndOf="@id/logIcon"
             app:layout_constraintEnd_toEndOf="parent"
+            app:workGroupActivitiesActionDetails="@{activityLog}"
             />
 
         <TextView
