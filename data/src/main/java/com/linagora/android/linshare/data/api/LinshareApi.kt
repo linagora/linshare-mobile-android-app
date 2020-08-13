@@ -60,6 +60,7 @@ import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -212,4 +213,12 @@ interface LinshareApi {
     suspend fun findAllWorkGroupActivities(
         @Path("workGroupId") workGroupId: String
     ): List<AuditLogEntryUser>
+
+    @PUT("/shared_spaces/{sharedSpaceId}/members/{memberUuid}")
+    @Headers("Accept: application/json")
+    suspend fun editRoleMember(
+        @Path("sharedSpaceId") sharedSpaceId: String,
+        @Path("memberUuid") memberUuid: String,
+        @Body editMemberRequest: AddMemberRequest
+    ): SharedSpaceMember
 }

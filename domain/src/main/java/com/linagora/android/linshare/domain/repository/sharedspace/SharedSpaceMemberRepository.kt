@@ -42,4 +42,6 @@ interface SharedSpaceMemberRepository {
     suspend fun getAllMembers(sharedSpaceId: SharedSpaceId): List<SharedSpaceMember>
 
     suspend fun addMember(addMemberRequest: AddMemberRequest): SharedSpaceMember
+
+    suspend fun editMember(editMemberRequest: AddMemberRequest): SharedSpaceMember
 }

@@ -101,4 +101,25 @@ class SharedSpaceMemberRepositoryImpTest {
 
         assertThat(addedMember).isEqualTo(BAR_FOO_MEMBER)
     }
+
+    @Test
+    fun editMemberShouldEditMemberInSharedSpaceWhenEditMemberRequestValid() = runBlockingTest {
+        `when`(linSharedSpaceMemberDataSource.editMember(ADD_BAR_FOO_MEMBER_REQUEST))
+            .thenAnswer { BAR_FOO_MEMBER }
+
+        val editedMember = sharedSpaceMemberRepositoryImp
+            .editMember(ADD_BAR_FOO_MEMBER_REQUEST)
+
+        assertThat(editedMember).isEqualTo(BAR_FOO_MEMBER)
+    }
+
+    @Test
+    fun editMemberInSharedSpaceShouldThrowWhenEditMemberFailed() = runBlockingTest {
+        val exception = RuntimeException("edit member failed")
+        `when`(linSharedSpaceMemberDataSource.editMember(ADD_BAR_FOO_MEMBER_REQUEST))
+            .thenThrow(exception)
+
+        assertThrows<RuntimeException> { runBlockingTest {
+            sharedSpaceMemberRepositoryImp.editMember(ADD_BAR_FOO_MEMBER_REQUEST) } }
+    }
 }

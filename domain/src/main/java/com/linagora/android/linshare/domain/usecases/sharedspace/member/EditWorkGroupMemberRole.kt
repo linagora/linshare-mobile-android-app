@@ -33,15 +33,30 @@
 
 package com.linagora.android.linshare.domain.usecases.sharedspace.member
 
-import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
+import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceMemberRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class GetMembersFailed(val throwable: Throwable) : Failure.FeatureFailure()
-object GetMembersNoResult : Failure.FeatureFailure()
-data class GetMembersSuccess(val members: List<SharedSpaceMember>) : Success.ViewState()
-data class AddMemberSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class AddMemberFailed(val throwable: Throwable) : Failure.FeatureFailure()
-object AddExistingMemberState : Failure.FeatureFailure()
-data class EditWorkGroupMemberRoleSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class EditWorkGroupMemberRoleFailed(val throwable: Throwable) : Failure.FeatureFailure()
+@Singleton
+class EditWorkGroupMemberRole @Inject constructor(
+    private val sharedSpaceMemberRepository: SharedSpaceMemberRepository
+) {
+    operator fun invoke(editMemberRequest: AddMemberRequest): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Success.Loading) }
+
+            val editMemberState = Either.catch { sharedSpaceMemberRepository.editMember(editMemberRequest) }
+                .bimap(::EditWorkGroupMemberRoleFailed, ::EditWorkGroupMemberRoleSuccess)
+
+            emitState { editMemberState }
+        }
+    }
+}

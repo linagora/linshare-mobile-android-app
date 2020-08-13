@@ -53,4 +53,8 @@ class SharedSpaceMemberRepositoryImp @Inject constructor(
     ): SharedSpaceMember {
         return linShareSharedSpaceMemberDataSource.addMember(addMemberRequest)
     }
+
+    override suspend fun editMember(editMemberRequest: AddMemberRequest): SharedSpaceMember {
+        return linShareSharedSpaceMemberDataSource.editMember(editMemberRequest)
+    }
 }

@@ -60,4 +60,12 @@ class LinShareSharedSpaceMemberDataSource @Inject constructor(
             onFailure = { addMemberNetworkRequestHandler(it) }
         )
     }
+
+    override suspend fun editMember(editMemberRequest: AddMemberRequest): SharedSpaceMember {
+        return linShareApi.editRoleMember(
+            editMemberRequest.sharedSpaceId.uuid.toString(),
+            editMemberRequest.sharedSpaceAccountId.uuid.toString(),
+            editMemberRequest
+        )
+    }
 }
