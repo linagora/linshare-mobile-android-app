@@ -33,10 +33,106 @@
 
 package com.linagora.android.linshare.domain.model.audit
 
+import com.linagora.android.linshare.domain.model.audit.AuditLogEntryTypeObject.LOGGER
+import com.linagora.android.linshare.domain.model.audit.workgroup.WorkGroupDocumentAuditLogEntry
+import com.linagora.android.linshare.domain.model.audit.workgroup.WorkGroupDocumentRevisionAuditLogEntry
+import com.linagora.android.linshare.domain.model.copy.SpaceType
+import org.slf4j.LoggerFactory
+
 enum class AuditLogEntryType {
-    WORKGROUP,
-    WORKGROUP_MEMBER,
-    WORKGROUP_FOLDER,
-    WORKGROUP_DOCUMENT,
-    WORKGROUP_DOCUMENT_REVISION,
+    WORKGROUP {
+        override fun generateClientLogAction(auditLogEntry: AuditLogEntry): ClientLogAction {
+            return when (auditLogEntry.action) {
+                LogAction.CREATE -> ClientLogAction.CREATE
+                LogAction.DELETE -> ClientLogAction.DELETE
+                else -> ClientLogAction.UPDATE
+            }
+        }
+    },
+    WORKGROUP_MEMBER {
+        override fun generateClientLogAction(auditLogEntry: AuditLogEntry): ClientLogAction {
+            return when (auditLogEntry.action) {
+                LogAction.CREATE -> ClientLogAction.ADDITION
+                LogAction.DELETE -> ClientLogAction.DELETE
+                else -> ClientLogAction.UPDATE
+            }
+        }
+    },
+    WORKGROUP_FOLDER {
+        override fun generateClientLogAction(auditLogEntry: AuditLogEntry): ClientLogAction {
+            return when (auditLogEntry.action) {
+                LogAction.CREATE -> ClientLogAction.CREATE
+                LogAction.DELETE -> ClientLogAction.DELETE
+                LogAction.DOWNLOAD -> ClientLogAction.DOWNLOAD
+                else -> ClientLogAction.UPDATE
+            }
+        }
+    },
+    WORKGROUP_DOCUMENT {
+        override fun generateClientLogAction(auditLogEntry: AuditLogEntry): ClientLogAction {
+            return auditLogEntry.cause?.takeIf { it == LogActionCause.COPY }
+                ?.let { getClientLogActionForCopyDocumentAction(auditLogEntry) }
+                ?: mappingClientLogAction(auditLogEntry.action)
+        }
+
+        private fun mappingClientLogAction(logAction: LogAction): ClientLogAction {
+            return when (logAction) {
+                LogAction.CREATE -> ClientLogAction.UPLOAD
+                LogAction.DELETE -> ClientLogAction.DELETE
+                LogAction.DOWNLOAD -> ClientLogAction.DOWNLOAD
+                else -> ClientLogAction.UPDATE
+            }
+        }
+
+        private fun getClientLogActionForCopyDocumentAction(auditLogEntry: AuditLogEntry): ClientLogAction {
+            return runCatching {
+                require(auditLogEntry is WorkGroupDocumentAuditLogEntry) { "invalid log entry" }
+                require(auditLogEntry.copiedFrom != null || auditLogEntry.copiedTo != null) { "log entry is not a copy action" }
+                if (auditLogEntry.copiedFrom != null) {
+                    return when (auditLogEntry.copiedFrom.kind) {
+                        SpaceType.PERSONAL_SPACE -> ClientLogAction.COPY_FROM_PERSONAL_SPACE
+                        SpaceType.RECEIVED_SHARE -> ClientLogAction.COPY_FROM_RECEIVED_SHARE
+                        SpaceType.SHARED_SPACE -> ClientLogAction.COPY_FROM_SHARED_SPACE
+                    }
+                }
+                return auditLogEntry.copiedTo!!.let {
+                    when (it.kind) {
+                        SpaceType.SHARED_SPACE -> ClientLogAction.COPY_TO_SHARED_SPACE
+                        else -> ClientLogAction.COPY_TO_PERSONAL_SPACE
+                    }
+                }
+            }.onFailure {
+                it.printStackTrace()
+                LOGGER.error("getClientLogActionForDocumentUpdateAction(): ${it.message}")
+            }.getOrDefault(mappingClientLogAction(auditLogEntry.action))
+        }
+    },
+    WORKGROUP_DOCUMENT_REVISION {
+        override fun generateClientLogAction(auditLogEntry: AuditLogEntry): ClientLogAction {
+            return runCatching {
+                require(auditLogEntry is WorkGroupDocumentRevisionAuditLogEntry) { "invalid log entry" }
+                require(auditLogEntry.copiedFrom != null) { "invalid copy action" }
+                require(auditLogEntry.copiedFrom.kind == SpaceType.SHARED_SPACE) { "copy revision action should from SHARED_SPACE" }
+                return ClientLogAction.RESTORE_REVISION
+            }.onFailure {
+                it.printStackTrace()
+                LOGGER.error("generateClientLogAction(): ${it.message}")
+            }.getOrDefault(mappingClientLogAction(auditLogEntry.action))
+        }
+
+        private fun mappingClientLogAction(logAction: LogAction): ClientLogAction {
+            return when (logAction) {
+                LogAction.CREATE -> ClientLogAction.UPLOAD_REVISION
+                LogAction.DELETE -> ClientLogAction.DELETE_REVISION
+                LogAction.DOWNLOAD -> ClientLogAction.DOWNLOAD_REVISION
+                else -> ClientLogAction.UPDATE
+            }
+        }
+    };
+
+    abstract fun generateClientLogAction(auditLogEntry: AuditLogEntry): ClientLogAction
+}
+
+internal object AuditLogEntryTypeObject {
+    internal val LOGGER = LoggerFactory.getLogger(AuditLogEntryType::class.java)
 }

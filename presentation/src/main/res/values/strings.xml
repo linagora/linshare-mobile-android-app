@@ -209,4 +209,19 @@
     <string name="not_access_folder_while_offline" translatable="false">Cannot access folder while offline</string>
     <string name="can_not_delete_file_while_offline" translatable="false">Cannot delete file while offline</string>
     <string name="not_view_workgroup_details_while_offline" translatable="false">Cannot view workgroup details while offline</string>
+
+    <string name="activities" translatable="false">Activities</string>
+    <string name="audit_log_actor" translatable="false">by %s</string>
+
+    <string name="audit_action_title_addition" translatable="false">Addition:</string>
+    <string name="audit_action_title_delete" translatable="false">Delete:</string>
+    <string name="audit_action_title_update" translatable="false">Update:</string>
+    <string name="audit_action_title_create" translatable="false">Creation:</string>
+    <string name="audit_action_title_upload" translatable="false">Upload file:</string>
+    <string name="audit_action_title_copy" translatable="false">Copy:</string>
+    <string name="audit_action_title_download" translatable="false">Download:</string>
+    <string name="audit_action_title_upload_revision" translatable="false">Version uploaded:</string>
+    <string name="audit_action_title_delete_revision" translatable="false">Version deleted:</string>
+    <string name="audit_action_title_restore_revision" translatable="false">Restore version:</string>
+    <string name="audit_action_title_download_revision" translatable="false">Version downloaded:</string>
 </resources>
