@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ LinShare is an open source filesharing software, part of the LinPKI software
+  ~ suite, developed by Linagora.
+  ~
+  ~ Copyright (C) 2020 LINAGORA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the
+  ~ terms of the GNU Affero General Public License as published by the Free Software
+  ~ Foundation, either version 3 of the License, or (at your option) any later version,
+  ~ provided you comply with the Additional Terms applicable for LinShare software by
+  ~ Linagora pursuant to Section 7 of the GNU Affero General Public License,
+  ~ subsections (b), (c), and (e), pursuant to which you must notably (i) retain the
+  ~ display in the interface of the “LinShare™” trademark/logo, the "Libre & Free" mention,
+  ~ the words “You are using the Free and Open Source version of LinShare™, powered by
+  ~ Linagora © 2009–2020. Contribute to Linshare R&D by subscribing to an Enterprise
+  ~ offer!”. You must also retain the latter notice in all asynchronous messages such as
+  ~ e-mails sent with the Program, (ii) retain all hypertext links between LinShare and
+  ~ http://www.linshare.org, between linagora.com and Linagora, and (iii) refrain from
+  ~ infringing Linagora intellectual property rights over its trademarks and commercial
+  ~ brands. Other Additional Terms apply, see
+  ~ <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf>
+  ~ for more details.
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY
+  ~ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+  ~ more details.
+  ~ You should have received a copy of the GNU Affero General Public License and its
+  ~ applicable Additional Terms for LinShare along with this program. If not, see
+  ~ <http://www.gnu.org/licenses/> for the GNU Affero General Public License version
+  ~  3 and <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf> for
+  ~  the Additional Terms applicable to LinShare software.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.audit.AuditLogEntryUser"/>
+        <variable
+            name="activityLog"
+            type="AuditLogEntryUser" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/my_space_item_padding"
+        android:paddingBottom="@dimen/my_space_item_padding"
+        android:paddingStart="@dimen/my_space_item_padding_start">
+
+        <ImageView
+            android:id="@+id/logIcon"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/my_space_item_icon_size"
+            android:layout_height="@dimen/my_space_item_icon_size"
+            app:layout_constraintTop_toTopOf="@id/resourceName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/resourceName"
+            app:workGroupAuditIcon="@{activityLog}"
+            />
+
+        <TextView
+            android:id="@+id/resourceName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            android:singleLine="true"
+            android:textSize="@dimen/my_space_item_primary_text_size"
+            android:textColor="@color/file_name_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/logIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:workGroupAuditResourceName="@{activityLog}"
+            />
+
+        <TextView
+            android:id="@+id/action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textStyle="bold"
+            android:textColor="@color/file_name_color"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            app:layout_constraintTop_toBottomOf="@id/resourceName"
+            app:layout_constraintStart_toEndOf="@id/logIcon"
+            app:workGroupActivitiesActionTitle="@{activityLog}"
+            />
+
+        <TextView
+            android:id="@+id/actionDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/file_size_color"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
+            android:layout_marginStart="@dimen/secondary_text_spacing"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            app:layout_constraintTop_toBottomOf="@id/resourceName"
+            app:layout_constraintStart_toEndOf="@id/action"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/logTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:textStyle="italic"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
+            android:textColor="@color/file_size_color"
+            android:layout_marginStart="@dimen/item_upload_container_margin_side"
+            app:layout_constraintTop_toBottomOf="@id/actionDetails"
+            app:layout_constraintStart_toEndOf="@id/logIcon"
+            app:workGroupAuditCreationDate="@{activityLog}"
+            />
+
+        <TextView
+            android:id="@+id/logActorSeparate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="|"
+            android:textStyle="italic"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
+            android:textColor="@color/file_size_color"
+            android:layout_marginStart="@dimen/secondary_text_spacing"
+            app:layout_constraintTop_toBottomOf="@id/actionDetails"
+            app:layout_constraintStart_toEndOf="@id/logTime"
+            />
+
+        <TextView
+            android:id="@+id/logActor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:textStyle="italic"
+            android:layout_marginTop="@dimen/my_space_item_line_spacing"
+            android:textSize="@dimen/my_space_item_secondary_text_size"
+            android:textColor="@color/file_size_color"
+            android:layout_marginStart="@dimen/secondary_text_spacing"
+            android:layout_marginEnd="@dimen/item_upload_container_margin_side"
+            app:layout_constraintTop_toBottomOf="@id/actionDetails"
+            app:layout_constraintStart_toEndOf="@id/logActorSeparate"
+            app:workGroupAuditActor="@{activityLog}"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
