@@ -224,4 +224,32 @@
     <string name="audit_action_title_delete_revision" translatable="false">Version deleted:</string>
     <string name="audit_action_title_restore_revision" translatable="false">Restore version:</string>
     <string name="audit_action_title_download_revision" translatable="false">Version downloaded:</string>
+
+    <string name="audit_action_message_create_workgroup" translatable="false">%1$s has created a new Workgroup : %2$s.</string>
+    <string name="audit_action_message_delete_workgroup" translatable="false">%1$s has deleted the Workgroup : %2$s.</string>
+    <string name="audit_action_message_update_workgroup" translatable="false">%1$s has edited the Workgroup : %2$s.</string>
+
+    <string name="audit_action_message_upload_workgroup_document" translatable="false">%1$s has upload a new file : %2$s into the Workgroup : %3$s</string>
+    <string name="audit_action_message_copy_document_from_personal_space" translatable="false">%1$s has created the document : %2$s into %3$s, from his Personal Space.</string>
+    <string name="audit_action_message_copy_document_from_received_share" translatable="false">%1$s has created the document : %2$s into %3$s, from his received share.</string>
+    <string name="audit_action_message_copy_document_from_shared_space" translatable="false">%1$s has created this file by copying : %2$s from another Workgroup.</string>
+    <string name="audit_action_message_copy_document_to_personal_space" translatable="false">%1$s has copied the document : %2$s into his Personal Space.</string>
+    <string name="audit_action_message_copy_document_to_shared_space" translatable="false">%1$s has created a duplicated of this file into %3$s.</string>
+    <string name="audit_action_message_delete_workgroup_document" translatable="false">%1$s has deleted the file : %2$s from the Workgroup %3$s.</string>
+    <string name="audit_action_message_update_workgroup_document" translatable="false">%1$s has edited the file : %2$s from the Workgroup %3$s.</string>
+    <string name="audit_action_message_download_workgroup_document" translatable="false">%1$s has downloaded the file : %2$s from the Workgroup %3$s.</string>
+
+    <string name="audit_action_message_upload_revision" translatable="false">A version of the file %2$s has been added in the workgroup %3$s.</string>
+    <string name="audit_action_message_delete_revision" translatable="false">The version of the file %2$s had been removed from the workgroup %3$s.</string>
+    <string name="audit_action_message_copy_revision_from_shared_space" translatable="false">The document was restore with the version %2$s.</string>
+    <string name="audit_action_message_download_revision" translatable="false">%1$s has downloaded the version : %2$s from the workgroup %3$s.</string>
+
+    <string name="audit_action_message_create_folder" translatable="false">%1$s has created a new folder : %2$s into the Workgroup %3$s.</string>
+    <string name="audit_action_message_delete_folder" translatable="false">%1$s has deleted the folder : %2$s from the Workgroup : %3$s.</string>
+    <string name="audit_action_message_update_folder" translatable="false">%1$s has edited the folder : %2$s from the Workgroup : %3$s.</string>
+    <string name="audit_action_message_download_folder" translatable="false">%1$s has downloaded the folder : %2$s from the Workgroup : %3$s.</string>
+
+    <string name="audit_action_message_add_member" translatable="false">%1$s has added a new member : %2$s to the Workgroup : %3$s.</string>
+    <string name="audit_action_message_delete_member" translatable="false">%1$s has removed the member : %2$s from the Workgroup : %3$s.</string>
+    <string name="audit_action_message_update_member" translatable="false">%1$s has edited the member : %2$s from the Workgroup : %3$s.</string>
 </resources>

@@ -45,6 +45,7 @@ import com.linagora.android.linshare.domain.model.audit.workgroup.WorkGroupFolde
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.util.AuditLogEntryExtensions.AUDIT_LOG_MAPPING
+import com.linagora.android.linshare.util.Constant.NO_RESOURCE
 
 fun AuditLogEntryUser.getAuditLogIconResourceId(): Int {
     return when (type) {
@@ -84,95 +85,126 @@ fun AuditLogEntryUser.getResourceName(): String {
 
 enum class AuditLogActionMessage {
     TITLE,
+    DETAILS
 }
 
 object AuditLogEntryExtensions {
     val AUDIT_LOG_MAPPING = mapOf(
         AuditLogEntryType.WORKGROUP to mapOf(
             ClientLogAction.CREATE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_create
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_create,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_create_workgroup
             ),
             ClientLogAction.DELETE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_delete_workgroup
             ),
             ClientLogAction.UPDATE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_update
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_update,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_update_workgroup
             )
         ),
         AuditLogEntryType.WORKGROUP_DOCUMENT to mapOf(
             ClientLogAction.UPLOAD to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_upload
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_upload,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_upload_workgroup_document
             ),
             ClientLogAction.COPY_FROM_PERSONAL_SPACE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_copy_document_from_personal_space
             ),
             ClientLogAction.COPY_FROM_SHARED_SPACE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_copy_document_from_shared_space
             ),
             ClientLogAction.COPY_FROM_RECEIVED_SHARE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_copy_document_from_received_share
             ),
             ClientLogAction.COPY_TO_PERSONAL_SPACE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_copy_document_to_personal_space
             ),
             ClientLogAction.COPY_TO_SHARED_SPACE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_copy,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_copy_document_to_shared_space
             ),
             ClientLogAction.DELETE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_delete_workgroup_document
             ),
             ClientLogAction.UPDATE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_update
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_update,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_update_workgroup_document
             ),
             ClientLogAction.DOWNLOAD to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_download
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_download,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_download_workgroup_document
             )
         ),
         AuditLogEntryType.WORKGROUP_DOCUMENT_REVISION to mapOf(
             ClientLogAction.UPLOAD_REVISION to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_upload_revision
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_upload_revision,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_upload_revision
             ),
             ClientLogAction.DELETE_REVISION to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete_revision
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete_revision,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_delete_revision
             ),
             ClientLogAction.DOWNLOAD_REVISION to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_download_revision
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_download_revision,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_download_revision
             ),
             ClientLogAction.RESTORE_REVISION to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_restore_revision
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_restore_revision,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_copy_revision_from_shared_space
             )
         ),
         AuditLogEntryType.WORKGROUP_FOLDER to mapOf(
             ClientLogAction.CREATE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_create
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_create,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_create_folder
             ),
             ClientLogAction.DELETE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_delete_folder
             ),
             ClientLogAction.UPDATE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_update
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_update,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_update_folder
             ),
             ClientLogAction.DOWNLOAD to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_download
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_download,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_download_folder
             )
         ),
         AuditLogEntryType.WORKGROUP_MEMBER to mapOf(
             ClientLogAction.ADDITION to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_addition
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_addition,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_add_member
             ),
             ClientLogAction.DELETE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_delete,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_delete_member
             ),
             ClientLogAction.UPDATE to mapOf(
-                AuditLogActionMessage.TITLE to R.string.audit_action_title_update
+                AuditLogActionMessage.TITLE to R.string.audit_action_title_update,
+                AuditLogActionMessage.DETAILS to R.string.audit_action_message_update_member
             )
         )
     )
 }
 
 fun AuditLogEntryUser.getActionTitleResourceId(clientLogAction: ClientLogAction): Int {
-    return AUDIT_LOG_MAPPING[this.type]
+    return AUDIT_LOG_MAPPING[type]
         ?.get(clientLogAction)
         ?.get(AuditLogActionMessage.TITLE)
         ?: R.string.audit_action_title_update
+}
+
+fun AuditLogEntryUser.getActionDetailsResourceId(clientLogAction: ClientLogAction): Int {
+    return AUDIT_LOG_MAPPING[type]
+        ?.get(clientLogAction)
+        ?.get(AuditLogActionMessage.DETAILS)
+        ?: NO_RESOURCE
 }

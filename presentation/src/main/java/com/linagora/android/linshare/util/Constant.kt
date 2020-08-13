@@ -67,6 +67,8 @@ object Constant {
 
     const val UP_TO_NEXT_INDEX = 1
 
+    const val NO_RESOURCE = -1
+
     object Session {
         val NO_SESSION_ID = null
         const val J_SESSION_ID = "JSESSIONID"
