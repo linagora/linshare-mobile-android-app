@@ -31,40 +31,26 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspace.details
+package com.linagora.android.linshare.view.sharedspace.details.activity
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.ChildFragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import com.linagora.android.linshare.view.sharedspace.details.activity.SharedSpaceActivitiesFragment
-import com.linagora.android.linshare.view.sharedspace.details.activity.SharedSpaceActivitiesViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import androidx.lifecycle.viewModelScope
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.usecases.sharedspace.activity.GetWorkGroupActivities
+import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.base.BaseViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-@Module
-internal abstract class SharedSpaceDetailsFragmentModule {
+class SharedSpaceActivitiesViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
+    private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider,
+    private val getWorkGroupActivities: GetWorkGroupActivities
+) : BaseViewModel(internetAvailable, coroutinesDispatcherProvider) {
 
-    @ChildFragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeMemberFragment(): SharedSpaceMembersFragment
-
-    @ChildFragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeActivitiesFragment(): SharedSpaceActivitiesFragment
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceMemberViewModel::class)
-    internal abstract fun bindMemberFragmentViewModel(
-        sharedSpaceMemberViewModel: SharedSpaceMemberViewModel
-    ): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceActivitiesViewModel::class)
-    internal abstract fun bindActivitiesFragmentViewModel(
-        sharedSpaceActivitiesViewModel: SharedSpaceActivitiesViewModel
-    ): ViewModel
+    fun getAllActivities(sharedSpaceId: SharedSpaceId) {
+        viewModelScope.launch(coroutinesDispatcherProvider.io) {
+            consumeStates(getWorkGroupActivities(sharedSpaceId))
+        }
+    }
 }

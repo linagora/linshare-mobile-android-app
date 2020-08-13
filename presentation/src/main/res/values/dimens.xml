@@ -220,4 +220,6 @@
     <dimen name="select_button_margin_end">28dp</dimen>
     <dimen name="error_workgroup_name_blank">11sp</dimen>
 
+    <dimen name="secondary_text_spacing">4dp</dimen>
+
 </resources>
