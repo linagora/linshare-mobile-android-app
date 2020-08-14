@@ -43,6 +43,7 @@
         <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
+        <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentCopyToContextMenu"/>
 
         <variable
             name="downloadContextMenu"
@@ -55,6 +56,10 @@
         <variable
             name="workGroupNode"
             type="WorkGroupNode" />
+
+        <variable
+            name="copyToContextMenu"
+            type="SharedSpaceDocumentCopyToContextMenu" />
 
         <variable
             name="itemContextMenu"
@@ -91,6 +96,43 @@
                 android:text="@string/download_to_device" />
 
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> copyToContextMenu.copyTo(workGroupNode)}"
+            app:contextActionVisible="@{sharedSpace.role}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.copyRole}">
+
+            <ImageView
+                android:id="@+id/copyIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_copy" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/copyToAction"
+                app:layout_constraintStart_toEndOf="@id/copyIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/copyToIcon"
+                android:layout_marginStart="@dimen/bottom_sheet_item_margin_side"
+                android:layout_marginEnd="@dimen/bottom_sheet_item_margin_side"
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:drawableEnd="@drawable/ic_arrow_right"
+                android:text="@string/copy_to" />
+
+            <TextView
+                android:id="@+id/copyToIcon"
+                style="@style/TextInRowLinerBottomSheetStyle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -34,6 +34,8 @@
 package com.linagora.android.linshare.view.base.event
 
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+
 import com.linagora.android.linshare.domain.usecases.utils.Success
 
 data class SelectedDestinationMySpace(val destinationForOperator: OperatorType) :
@@ -44,3 +46,6 @@ data class SelectedDestinationSharedSpace(val destinationForOperator: OperatorTy
 
 data class SelectedDestinationReceivedShared(val destinationForOperator: OperatorType) :
     Success.OnlineViewEvent(OperatorType.SelectDestinationType)
+
+data class WorkGroupNodeCopyToViewEvent(private val node: WorkGroupNode) :
+    Success.OnlineViewEvent(OperatorType.CopyFile)

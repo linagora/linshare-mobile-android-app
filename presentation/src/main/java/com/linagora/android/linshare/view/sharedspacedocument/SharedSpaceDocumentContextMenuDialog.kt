@@ -46,6 +46,11 @@ import javax.inject.Inject
 
 class SharedSpaceDocumentContextMenuDialog(private val workGroupDocument: WorkGroupDocument) :
     DaggerBottomSheetDialogFragment() {
+
+    companion object {
+        const val TAG = "SharedSpaceDocumentContextMenuDialog"
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -69,5 +74,6 @@ class SharedSpaceDocumentContextMenuDialog(private val workGroupDocument: WorkGr
         binding.workGroupNode = workGroupDocument
         binding.downloadContextMenu = sharedSpaceDocumentViewModel.downloadContextMenu
         binding.itemContextMenu = sharedSpaceDocumentViewModel.itemContextMenu
+        binding.copyToContextMenu = sharedSpaceDocumentViewModel.copyToContextMenu
     }
 }

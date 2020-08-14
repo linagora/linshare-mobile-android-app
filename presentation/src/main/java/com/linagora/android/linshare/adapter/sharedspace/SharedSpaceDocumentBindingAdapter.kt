@@ -36,7 +36,6 @@ package com.linagora.android.linshare.adapter.sharedspace
 import android.content.res.ColorStateList
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -183,12 +182,12 @@ fun bindingTextEmptyMessageInSharedSpaceDocument(textView: TextView, state: Eith
 
 @BindingAdapter("contextActionVisible", "operationRoles", requireAll = true)
 fun bindingContextActionWithRole(
-    linearLayout: LinearLayout,
+    view: View,
     sharedSpaceRole: SharedSpaceRole,
     operationRoles: List<SharedSpaceRoleName>
 ) {
     val visible = operationRoles.takeIf { it.isNotEmpty() && it.contains(sharedSpaceRole.name) }
         ?.let { View.VISIBLE }
         ?: View.GONE
-    linearLayout.visibility = visible
+    view.visibility = visible
 }

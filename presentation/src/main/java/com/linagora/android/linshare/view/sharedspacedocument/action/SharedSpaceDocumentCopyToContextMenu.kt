@@ -31,44 +31,18 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.view.sharedspacedocument.action
 
-import com.google.gson.annotations.SerializedName
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole.UploadRoles
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.CopyToContextMenu
+import com.linagora.android.linshare.view.base.event.WorkGroupNodeCopyToViewEvent
 
-data class SharedSpaceRole(
-    @SerializedName("uuid")
-    val sharedSpaceRoleId: SharedSpaceRoleId,
-    val name: SharedSpaceRoleName
-)
-
-object SharedSpaceOperationRole {
-    val UploadRoles = listOf(
-        SharedSpaceRoleName.CONTRIBUTOR,
-        SharedSpaceRoleName.WRITER,
-        SharedSpaceRoleName.ADMIN
-    )
-
-    val DeleteRoles = listOf(
-        SharedSpaceRoleName.WRITER,
-        SharedSpaceRoleName.ADMIN
-    )
-
-    val AddMembersRole = listOf(
-        SharedSpaceRoleName.ADMIN
-    )
-
-    val EditWorkGroupMemberRole = listOf(
-        SharedSpaceRoleName.ADMIN
-    )
-
-    val CopyRole = listOf(
-        SharedSpaceRoleName.CONTRIBUTOR,
-        SharedSpaceRoleName.WRITER,
-        SharedSpaceRoleName.ADMIN
-    )
-}
-
-fun SharedSpaceRole.canUpload(): Boolean {
-    return UploadRoles.contains(this.name)
+class SharedSpaceDocumentCopyToContextMenu(
+    private val baseViewModel: BaseViewModel
+) : CopyToContextMenu<WorkGroupNode> {
+    override fun copyTo(item: WorkGroupNode) {
+        baseViewModel.dispatchUIState(Either.right(WorkGroupNodeCopyToViewEvent(item)))
+    }
 }

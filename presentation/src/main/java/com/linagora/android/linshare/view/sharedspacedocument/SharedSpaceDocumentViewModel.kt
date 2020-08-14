@@ -68,6 +68,7 @@ import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentCopyToContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -106,6 +107,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     val navigationPathBehavior = SharedSpaceNavigationPathBehavior(this)
 
     val searchAction = SearchActionImp(this)
+
+    val copyToContextMenu = SharedSpaceDocumentCopyToContextMenu(this)
 
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 

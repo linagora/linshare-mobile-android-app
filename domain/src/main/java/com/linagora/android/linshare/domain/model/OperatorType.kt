@@ -58,4 +58,6 @@ sealed class OperatorType {
     object SelectDestinationType : OnlineOperatorType()
 
     object UploadFile : OfflineOperatorType()
+
+    object CopyFile : OnlineOperatorType()
 }

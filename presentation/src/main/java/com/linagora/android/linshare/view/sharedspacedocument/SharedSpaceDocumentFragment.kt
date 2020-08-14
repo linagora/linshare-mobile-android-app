@@ -85,6 +85,7 @@ import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.util.Constant
+import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
@@ -96,6 +97,7 @@ import com.linagora.android.linshare.view.Navigation.FileType
 import com.linagora.android.linshare.view.Navigation.UploadType
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.base.event.WorkGroupNodeCopyToViewEvent
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import com.linagora.android.linshare.view.widget.errorLayout
 import com.linagora.android.linshare.view.widget.withLinShare
@@ -111,10 +113,6 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     private val mainActivityViewModel: MainActivityViewModel
             by activityViewModels { viewModelFactory }
-
-    private lateinit var sharedSpaceDocumentContextMenuDialog: SharedSpaceDocumentContextMenuDialog
-
-    private lateinit var sharedSpaceFolderContextMenuDialog: SharedSpaceFolderContextMenuDialog
 
     private lateinit var sharedSpacesDocumentViewModel: SharedSpaceDocumentViewModel
 
@@ -196,6 +194,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is SharedSpaceFolderContextMenuClick -> showContextMenuSharedSpaceFolderNode(viewEvent.workGroupFolder)
             is DownloadSharedSpaceNodeClick -> handleDownloadSharedSpaceNode(viewEvent.workGroupNode)
             is RemoveSharedSpaceNodeClick -> confirmRemoveSharedSpaceNode(viewEvent.workGroupNode)
+            is WorkGroupNodeCopyToViewEvent -> selectDestination()
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
             OpenSearchView -> handleOpenSearch()
@@ -217,8 +216,15 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     private fun dismissContextMenuDialog(workGroupNode: WorkGroupNode) {
         workGroupNode.takeIf { it is WorkGroupDocument }
-            ?.let { sharedSpaceDocumentContextMenuDialog.dismiss() }
-            ?: sharedSpaceFolderContextMenuDialog.dismiss()
+            ?.let { childFragmentManager.dismissDialogFragmentByTag(SharedSpaceDocumentContextMenuDialog.TAG) }
+            ?: childFragmentManager.dismissDialogFragmentByTag(SharedSpaceFolderContextMenuDialog.TAG)
+    }
+
+    private fun dismissAllDialog() {
+        with(childFragmentManager) {
+            dismissDialogFragmentByTag(SharedSpaceDocumentContextMenuDialog.TAG)
+            dismissDialogFragmentByTag(SharedSpaceFolderContextMenuDialog.TAG)
+        }
     }
 
     private fun handleRemoveSharedSpaceNode(workGroupNode: WorkGroupNode) {
@@ -307,13 +313,13 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     }
 
     private fun showContextMenuSharedSpaceDocumentNode(workGroupDocument: WorkGroupDocument) {
-        sharedSpaceDocumentContextMenuDialog = SharedSpaceDocumentContextMenuDialog(workGroupDocument)
-        sharedSpaceDocumentContextMenuDialog.show(childFragmentManager, sharedSpaceDocumentContextMenuDialog.tag)
+        SharedSpaceDocumentContextMenuDialog(workGroupDocument)
+            .show(childFragmentManager, SharedSpaceDocumentContextMenuDialog.TAG)
     }
 
     private fun showContextMenuSharedSpaceFolderNode(workGroupFolder: WorkGroupFolder) {
-        sharedSpaceFolderContextMenuDialog = SharedSpaceFolderContextMenuDialog(workGroupFolder)
-        sharedSpaceFolderContextMenuDialog.show(childFragmentManager, sharedSpaceFolderContextMenuDialog.tag)
+        SharedSpaceFolderContextMenuDialog(workGroupFolder)
+            .show(childFragmentManager, SharedSpaceFolderContextMenuDialog.TAG)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -428,6 +434,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     }
 
     private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
+        dismissAllDialog()
         val messageId = when (operatorType) {
             is OperatorType.OnItemClick -> R.string.not_access_folder_while_offline
             else -> R.string.can_not_process_without_network
@@ -437,6 +444,10 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             .setAnchorView(binding.sharedSpaceDocumentAddButton)
             .show()
         sharedSpacesDocumentViewModel.dispatchResetState()
+    }
+
+    private fun selectDestination() {
+        LOGGER.info("selectDestination()")
     }
 
     private fun navigateIntoSubFolder(workGroupNode: WorkGroupNode) {

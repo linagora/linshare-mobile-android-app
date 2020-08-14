@@ -46,6 +46,11 @@ import javax.inject.Inject
 
 class SharedSpaceFolderContextMenuDialog(private val workGroupFolder: WorkGroupFolder) :
     DaggerBottomSheetDialogFragment() {
+
+    companion object {
+        const val TAG = "SharedSpaceFolderContextMenuDialog"
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
