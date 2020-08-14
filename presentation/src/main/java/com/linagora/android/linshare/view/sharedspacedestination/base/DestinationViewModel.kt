@@ -31,20 +31,31 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedestination
+package com.linagora.android.linshare.view.sharedspacedestination.base
 
+import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceInteractor
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior
-import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
-class SharedSpaceDestinationViewModel @Inject constructor(
+abstract class DestinationViewModel(
     override val internetAvailable: ConnectionLiveData,
-    getSharedSpaceInteractor: GetSharedSpaceInteractor,
-    dispatcherProvider: CoroutinesDispatcherProvider
-) : DestinationViewModel(internetAvailable, getSharedSpaceInteractor, dispatcherProvider) {
+    private val getSharedSpaceInteractor: GetSharedSpaceInteractor,
+    private val dispatcherProvider: CoroutinesDispatcherProvider
+) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
-    override val sharedSpaceItemBehavior = SharedSpaceItemBehavior(this)
+    abstract val sharedSpaceItemBehavior: SharedSpaceItemBehavior
+
+    fun onSwipeRefresh() {
+        getSharedSpace()
+    }
+
+    fun getSharedSpace() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(getSharedSpaceInteractor())
+        }
+    }
 }

@@ -37,17 +37,13 @@
 
     <data>
 
-        <import type="com.linagora.android.linshare.view.sharedspacedestination.SharedSpaceDestinationViewModel" />
+        <import type="com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel" />
         <import type="com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior" />
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
 
         <variable
             name="viewModel"
-            type="SharedSpaceDestinationViewModel" />
-
-        <variable
-            name="sharedSpaceItemBehavior"
-            type="SharedSpaceItemBehavior" />
+            type="DestinationViewModel" />
 
     </data>
 
