@@ -38,6 +38,7 @@ import com.linagora.android.linshare.data.datasource.sharedspacesdocument.Shared
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNotFoundSharedSpaceDocumentException
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeException
+import com.linagora.android.testshared.CopyFixtures
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_1
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_2
@@ -49,6 +50,7 @@ import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_DO
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_FOLDER_1
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
@@ -170,6 +172,74 @@ class SharedSpacesDocumentRepositoryImpTest {
             assertThrows<RemoveNotFoundSharedSpaceDocumentException> {
                 runBlockingTest { sharedSpacesDocumentRepositoryImp.removeSharedSpaceNode(SHARED_SPACE_ID_1, PARENT_NODE_ID_1) }
             }
+        }
+    }
+
+    @Nested
+    inner class CopyToSharedSpace {
+
+        @Mock
+        lateinit var sharedSpacesDocumentDataSource: SharedSpacesDocumentDataSource
+
+        private lateinit var sharedSpacesDocumentRepositoryImp: SharedSpacesDocumentRepositoryImp
+
+        @BeforeEach
+        fun setUp() {
+            MockitoAnnotations.initMocks(this)
+            sharedSpacesDocumentRepositoryImp =
+                SharedSpacesDocumentRepositoryImp(sharedSpacesDocumentDataSource)
+        }
+
+        @Test
+        fun copyToSharedSpaceShouldReturnSuccessCopiedDocument() = runBlockingTest {
+            `when`(sharedSpacesDocumentDataSource.copyToSharedSpace(
+                    CopyFixtures.COPY_WORKGROUP_DOCUMENT_TO_SHARED_SPACE,
+                    CopyFixtures.DESTINATION_SHARED_SPACE_ID,
+                    CopyFixtures.DESTINATION_PARENT_NODE_ID))
+                .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1) }
+
+            val copiedDocuments = sharedSpacesDocumentRepositoryImp
+                .copyToSharedSpace(
+                    CopyFixtures.COPY_WORKGROUP_DOCUMENT_TO_SHARED_SPACE,
+                    CopyFixtures.DESTINATION_SHARED_SPACE_ID,
+                    CopyFixtures.DESTINATION_PARENT_NODE_ID)
+
+            assertThat(copiedDocuments).hasSize(1)
+            assertThat(copiedDocuments[0]).isEqualTo(WORK_GROUP_DOCUMENT_1)
+        }
+
+        @Test
+        fun copyToSharedSpaceShouldReturnSuccessCopiedDocumentWithoutDestinationParentNodeId() = runBlockingTest {
+            `when`(sharedSpacesDocumentDataSource.copyToSharedSpace(
+                    CopyFixtures.COPY_WORKGROUP_DOCUMENT_TO_SHARED_SPACE,
+                    CopyFixtures.DESTINATION_SHARED_SPACE_ID))
+                .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1) }
+
+            val copiedDocuments = sharedSpacesDocumentRepositoryImp
+                .copyToSharedSpace(
+                    CopyFixtures.COPY_WORKGROUP_DOCUMENT_TO_SHARED_SPACE,
+                    CopyFixtures.DESTINATION_SHARED_SPACE_ID)
+
+            assertThat(copiedDocuments).hasSize(1)
+            assertThat(copiedDocuments[0]).isEqualTo(WORK_GROUP_DOCUMENT_1)
+        }
+
+        @Test
+        fun copyToSharedSpaceShouldThrowExceptionWhenCopyFailed() = runBlockingTest {
+            val exception = RuntimeException("copy failed")
+            `when`(sharedSpacesDocumentDataSource.copyToSharedSpace(
+                    CopyFixtures.COPY_WORKGROUP_DOCUMENT_TO_SHARED_SPACE,
+                    CopyFixtures.DESTINATION_SHARED_SPACE_ID,
+                    CopyFixtures.DESTINATION_PARENT_NODE_ID))
+                .thenThrow(exception)
+
+            assertThrows<RuntimeException> { runBlockingTest {
+                sharedSpacesDocumentRepositoryImp.copyToSharedSpace(
+                    CopyFixtures.COPY_WORKGROUP_DOCUMENT_TO_SHARED_SPACE,
+                    CopyFixtures.DESTINATION_SHARED_SPACE_ID,
+                    CopyFixtures.DESTINATION_PARENT_NODE_ID
+                )
+            } }
         }
     }
 }

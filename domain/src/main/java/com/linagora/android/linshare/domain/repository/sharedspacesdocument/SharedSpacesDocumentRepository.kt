@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.domain.repository.sharedspacesdocument
 
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
@@ -69,4 +70,10 @@ interface SharedSpacesDocumentRepository {
         sharedSpaceId: SharedSpaceId,
         sharedSpaceNodeId: WorkGroupNodeId
     ): WorkGroupNode
+
+    suspend fun copyToSharedSpace(
+        copyRequest: CopyRequest,
+        destinationSharedSpaceId: SharedSpaceId,
+        destinationParentNodeId: WorkGroupNodeId? = null
+    ): List<WorkGroupNode>
 }

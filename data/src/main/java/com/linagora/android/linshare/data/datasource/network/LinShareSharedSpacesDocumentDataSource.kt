@@ -38,6 +38,7 @@ import com.linagora.android.linshare.data.datasource.sharedspacesdocument.Shared
 import com.linagora.android.linshare.data.network.NetworkExecutor
 import com.linagora.android.linshare.data.network.handler.RemoveSharedSpaceDocumentNetworkRequestHandler
 import com.linagora.android.linshare.data.network.handler.UploadNetworkRequestHandler
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.PartParameter.FILE_PARAMETER_FIELD
@@ -137,6 +138,18 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
                 )
             },
             onFailure = { removeSharedSpaceDocumentNetworkRequestHandler(it) }
+        )
+    }
+
+    override suspend fun copyToSharedSpace(
+        copyRequest: CopyRequest,
+        destinationSharedSpaceId: SharedSpaceId,
+        destinationParentNodeId: WorkGroupNodeId?
+    ): List<WorkGroupNode> {
+        return linShareApi.copyWorkGroupNodeToSharedSpaceDestination(
+            destinationSharedSpaceId.uuid.toString(),
+            destinationParentNodeId?.uuid.toString(),
+            copyRequest
         )
     }
 }

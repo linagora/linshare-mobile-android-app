@@ -36,7 +36,10 @@ package com.linagora.android.testshared
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.copy.SpaceType
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_DOCUMENT_1
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import java.util.UUID
 
@@ -44,4 +47,16 @@ object CopyFixtures {
     val COPY_REQUEST_1 = CopyRequest(UUID.fromString("77d10c28-583c-45a8-b747-d8a028f980bb"), SpaceType.RECEIVED_SHARE)
 
     val COPY_SUCCESS_STATE_1 = Either.Right(CopyInMySpaceSuccess(listOf(DOCUMENT)))
+
+    val COPY_WORKGROUP_DOCUMENT_TO_SHARED_SPACE = CopyRequest(
+        WORK_GROUP_DOCUMENT_1.workGroupNodeId.uuid, SpaceType.SHARED_SPACE
+    )
+
+    val DESTINATION_SHARED_SPACE_ID = SharedSpaceId(
+        UUID.fromString("77d10c28-583c-485c-b747-a028f980bbd8")
+    )
+
+    val DESTINATION_PARENT_NODE_ID = WorkGroupNodeId(
+        UUID.fromString("66d10c28-583c-485c-b747-a028f980bbd8")
+    )
 }

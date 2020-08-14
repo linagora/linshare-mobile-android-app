@@ -34,9 +34,11 @@
 package com.linagora.android.linshare.domain.usecases.sharedspace
 
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 
@@ -57,3 +59,9 @@ data class RemoveSharedSpaceNodeFailure(val throwable: Throwable) : Failure.Feat
 data class RemoveSharedSpaceNodeClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
 object RemoveNodeNotFoundSharedSpaceState : Failure.FeatureFailure()
 data class SharedSpaceFolderContextMenuClick(val workGroupFolder: WorkGroupFolder) : Success.ViewEvent()
+
+data class CopyToSharedSpaceSuccess(
+    val destinationSharedSpaceId: SharedSpaceId,
+    val destinationParentNodeId: WorkGroupNodeId? = null
+) : Success.ViewState()
+data class CopyToSharedSpaceFailure(val throwable: Throwable) : Failure.FeatureFailure()

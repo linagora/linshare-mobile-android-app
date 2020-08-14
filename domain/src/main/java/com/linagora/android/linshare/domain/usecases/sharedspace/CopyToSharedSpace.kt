@@ -31,73 +31,45 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.data.repository.sharedspace
+package com.linagora.android.linshare.domain.usecases.sharedspace
 
-import com.linagora.android.linshare.data.datasource.sharedspacesdocument.SharedSpacesDocumentDataSource
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
-import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
-import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SharedSpacesDocumentRepositoryImp @Inject constructor(
-    private val sharedSpacesDocumentDataSource: SharedSpacesDocumentDataSource
-) : SharedSpacesDocumentRepository {
-
-    override suspend fun getAllChildNodes(
-        sharedSpaceId: SharedSpaceId,
-        parentNodeId: WorkGroupNodeId?
-    ): List<WorkGroupNode> {
-        return sharedSpacesDocumentDataSource.getAllChildNodes(sharedSpaceId, parentNodeId)
+class CopyToSharedSpace @Inject constructor(
+    private val sharedSpacesDocumentRepository: SharedSpacesDocumentRepository
+) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(CopyToSharedSpace::class.java)
     }
 
-    override suspend fun getSharedSpaceNode(
-        sharedSpaceId: SharedSpaceId,
-        nodeId: WorkGroupNodeId
-    ): WorkGroupNode {
-        return sharedSpacesDocumentDataSource.getSharedSpaceNode(sharedSpaceId, nodeId)
-    }
-
-    override suspend fun uploadSharedSpaceDocument(
-        documentRequest: DocumentRequest,
-        sharedSpaceId: SharedSpaceId,
-        parentNodeId: WorkGroupNodeId?,
-        onTransfer: OnTransfer
-    ): WorkGroupNode {
-        return sharedSpacesDocumentDataSource
-            .uploadSharedSpaceDocument(documentRequest, sharedSpaceId, parentNodeId, onTransfer)
-    }
-
-    override suspend fun searchSharedSpaceDocuments(
-        sharedSpaceId: SharedSpaceId,
-        parentNodeId: WorkGroupNodeId?,
-        query: QueryString
-    ): List<WorkGroupNode> {
-        return sharedSpacesDocumentDataSource.searchSharedSpaceDocument(sharedSpaceId, parentNodeId, query)
-    }
-
-    override suspend fun removeSharedSpaceNode(
-        sharedSpaceId: SharedSpaceId,
-        sharedSpaceNodeUuid: WorkGroupNodeId
-    ): WorkGroupNode {
-        return sharedSpacesDocumentDataSource.removeSharedSpaceNode(sharedSpaceId, sharedSpaceNodeUuid)
-    }
-
-    override suspend fun copyToSharedSpace(
+    operator fun invoke(
         copyRequest: CopyRequest,
         destinationSharedSpaceId: SharedSpaceId,
-        destinationParentNodeId: WorkGroupNodeId?
-    ): List<WorkGroupNode> {
-        return sharedSpacesDocumentDataSource.copyToSharedSpace(
-            copyRequest,
-            destinationSharedSpaceId,
-            destinationParentNodeId
-        )
+        destinationParentNodeId: WorkGroupNodeId? = null
+    ): Flow<State<Either<Failure, Success>>> = flow<State<Either<Failure, Success>>> {
+        LOGGER.info("invoke(): $copyRequest to $destinationParentNodeId in $destinationSharedSpaceId")
+        emitState { Either.right(Success.Loading) }
+
+        val copyResultsState = Either.catch { sharedSpacesDocumentRepository
+                .copyToSharedSpace(copyRequest, destinationSharedSpaceId, destinationParentNodeId) }
+            .bimap(
+                leftOperation = ::CopyToSharedSpaceFailure,
+                rightOperation = { CopyToSharedSpaceSuccess(destinationSharedSpaceId, destinationParentNodeId) })
+
+        emitState { copyResultsState }
     }
 }

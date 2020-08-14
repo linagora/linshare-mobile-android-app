@@ -133,6 +133,15 @@ interface LinshareApi {
     @Headers("Accept: application/json")
     suspend fun copyInMySpace(@Body copyRequest: CopyRequest): List<Document>
 
+    @POST("/shared_spaces/{destinationSharedSpaceId}/nodes/{destinationParentNodeId}/copy")
+    @Headers("Accept: application/json")
+    suspend fun copyWorkGroupNodeToSharedSpaceDestination(
+        @Path("destinationSharedSpaceId") destinationSharedSpaceId: String,
+        @Path("destinationParentNodeId") destinationParentNodeId: String? = null,
+        @Query("deleteShare")
+        @Body copyRequest: CopyRequest
+    ): List<WorkGroupNode>
+
     @GET("/shared_spaces?withRole=true")
     @Headers("Accept: application/json")
     suspend fun getSharedSpaces(): List<SharedSpaceNodeNested>
