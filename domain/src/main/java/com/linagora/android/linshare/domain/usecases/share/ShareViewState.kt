@@ -44,6 +44,4 @@ data class ShareFailureState(val throwable: Throwable) : Failure.FeatureFailure(
 data class AddRecipient(val user: GenericUser) : Success.ViewEvent()
 data class AddMailingList(val mailingList: MailingList) : Success.ViewEvent()
 object ShareButtonClick : Success.ViewEvent()
-object SelectDesinationClick : Success.ViewEvent()
-object SelectUploadOutsideToMySpace : Success.ViewEvent()
-object SelectUploadOutsideToSharedSpace : Success.ViewEvent()
+object SelectDestinationClick : Success.ViewEvent()

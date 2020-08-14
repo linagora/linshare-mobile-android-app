@@ -40,14 +40,13 @@ import com.linagora.android.linshare.domain.model.autocomplete.MailingList
 import com.linagora.android.linshare.domain.usecases.quota.EnoughAccountQuotaInteractor
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
-import com.linagora.android.linshare.domain.usecases.share.SelectDesinationClick
-import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToMySpace
-import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToSharedSpace
+import com.linagora.android.linshare.domain.usecases.share.SelectDestinationClick
 import com.linagora.android.linshare.model.upload.UploadDocumentRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.DeviceStorageStats
 import com.linagora.android.linshare.util.DeviceStorageStats.Companion.INTERNAL_ROOT
+import com.linagora.android.linshare.view.action.SelectDestinationSpaceTypeActionImpl
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.widget.ShareRecipientsManager
 import kotlinx.coroutines.launch
@@ -65,6 +64,8 @@ class UploadFragmentViewModel @Inject constructor(
     companion object {
         private val LOGGER = LoggerFactory.getLogger(UploadFragmentViewModel::class.java)
     }
+
+    val selectDestinationSpaceTypeAction = SelectDestinationSpaceTypeActionImpl(this)
 
     fun checkAccountQuota(documentRequest: UploadDocumentRequest) {
         viewModelScope.launch(dispatcherProvider.io) {
@@ -110,15 +111,7 @@ class UploadFragmentViewModel @Inject constructor(
     }
 
     fun navigateDestination() {
-        dispatchState(Either.right(SelectDesinationClick))
-    }
-
-    fun selectUploadOutsideToMySpace() {
-        dispatchState(Either.right(SelectUploadOutsideToMySpace))
-    }
-
-    fun selectUploadOutsideToSharedSpace() {
-        dispatchState(Either.right(SelectUploadOutsideToSharedSpace))
+        dispatchState(Either.right(SelectDestinationClick))
     }
 
     fun resetRecipientManager() = shareRecipientsManager.resetShareRecipientManager()

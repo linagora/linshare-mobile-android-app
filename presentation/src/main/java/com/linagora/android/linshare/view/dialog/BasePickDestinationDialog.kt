@@ -31,31 +31,42 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model
+package com.linagora.android.linshare.view.dialog
 
-sealed class OperatorType {
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.linagora.android.linshare.databinding.DialogPickDestinationBinding
+import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.copy.SpaceType
+import com.linagora.android.linshare.view.base.SelectDestinationSpaceTypeAction
 
-    abstract class OfflineOperatorType : OperatorType()
+open class BasePickDestinationDialog<T>(
+    private val data: T,
+    private val operatorType: OperatorType,
+    private val selectedDestinationSpaceTypeAction: SelectDestinationSpaceTypeAction<T>
+) : DaggerBottomSheetDialogFragment() {
 
-    abstract class OnlineOperatorType : OperatorType()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding = DialogPickDestinationBinding.inflate(inflater, container, false)
+        initView(binding)
+        return binding.root
+    }
 
-    object SwiftRefresh : OnlineOperatorType()
+    private fun initView(binding: DialogPickDestinationBinding) {
+        binding.pickMySpace.setOnClickListener {
+            selectedDestinationSpaceTypeAction
+                .onSelectedDestinationSpaceType(data, operatorType, SpaceType.PERSONAL_SPACE)
+        }
 
-    object CreateWorkGroup : OnlineOperatorType()
-
-    object OpenContextMenu : OfflineOperatorType()
-
-    object OnItemClick : OnlineOperatorType()
-
-    object DeleteDocument : OnlineOperatorType()
-
-    object ViewDetails : OnlineOperatorType()
-
-    object OnSelectRoleClick : OfflineOperatorType()
-
-    object OnSelectedRoleForUpdate : OnlineOperatorType()
-
-    object SelectDestinationType : OnlineOperatorType()
-
-    object UploadFile : OfflineOperatorType()
+        binding.pickSharedSpace.setOnClickListener {
+            selectedDestinationSpaceTypeAction
+                .onSelectedDestinationSpaceType(data, operatorType, SpaceType.SHARED_SPACE)
+        }
+    }
 }

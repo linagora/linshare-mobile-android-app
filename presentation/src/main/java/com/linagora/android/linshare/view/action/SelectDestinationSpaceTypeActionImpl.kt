@@ -31,31 +31,29 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model
+package com.linagora.android.linshare.view.action
 
-sealed class OperatorType {
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.copy.SpaceType
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.SelectDestinationSpaceTypeAction
+import com.linagora.android.linshare.view.base.event.SelectedDestinationMySpace
+import com.linagora.android.linshare.view.base.event.SelectedDestinationSharedSpace
 
-    abstract class OfflineOperatorType : OperatorType()
+class SelectDestinationSpaceTypeActionImpl(
+    private val baseViewModel: BaseViewModel
+) : SelectDestinationSpaceTypeAction<Unit> {
 
-    abstract class OnlineOperatorType : OperatorType()
-
-    object SwiftRefresh : OnlineOperatorType()
-
-    object CreateWorkGroup : OnlineOperatorType()
-
-    object OpenContextMenu : OfflineOperatorType()
-
-    object OnItemClick : OnlineOperatorType()
-
-    object DeleteDocument : OnlineOperatorType()
-
-    object ViewDetails : OnlineOperatorType()
-
-    object OnSelectRoleClick : OfflineOperatorType()
-
-    object OnSelectedRoleForUpdate : OnlineOperatorType()
-
-    object SelectDestinationType : OnlineOperatorType()
-
-    object UploadFile : OfflineOperatorType()
+    override fun onSelectedDestinationSpaceType(
+        data: Unit,
+        forOperatorType: OperatorType,
+        spaceType: SpaceType
+    ) {
+        val viewEvent = when (spaceType) {
+            SpaceType.SHARED_SPACE -> SelectedDestinationSharedSpace(forOperatorType)
+            else -> SelectedDestinationMySpace(forOperatorType)
+        }
+        baseViewModel.dispatchUIState(Either.right(viewEvent))
+    }
 }

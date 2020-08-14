@@ -36,16 +36,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <import type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel"/>
-
-        <variable
-            name="viewModel"
-            type="UploadFragmentViewModel" />
-
-    </data>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,7 +58,7 @@
             style="@style/DivideView"/>
 
         <LinearLayout
-            android:onClick="@{() -> viewModel.selectUploadOutsideToMySpace()}"
+            android:id="@+id/pickMySpace"
             style="@style/RowLinerBottomSheetStyle">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
@@ -81,7 +71,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:onClick="@{() -> viewModel.selectUploadOutsideToSharedSpace()}"
+            android:id="@+id/pickSharedSpace"
             style="@style/RowLinerBottomSheetStyle">
 
             <ImageView

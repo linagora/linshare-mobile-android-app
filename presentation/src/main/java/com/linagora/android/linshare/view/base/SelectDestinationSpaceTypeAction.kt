@@ -31,31 +31,12 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model
+package com.linagora.android.linshare.view.base
 
-sealed class OperatorType {
+import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.copy.SpaceType
 
-    abstract class OfflineOperatorType : OperatorType()
+interface SelectDestinationSpaceTypeAction<T> {
 
-    abstract class OnlineOperatorType : OperatorType()
-
-    object SwiftRefresh : OnlineOperatorType()
-
-    object CreateWorkGroup : OnlineOperatorType()
-
-    object OpenContextMenu : OfflineOperatorType()
-
-    object OnItemClick : OnlineOperatorType()
-
-    object DeleteDocument : OnlineOperatorType()
-
-    object ViewDetails : OnlineOperatorType()
-
-    object OnSelectRoleClick : OfflineOperatorType()
-
-    object OnSelectedRoleForUpdate : OnlineOperatorType()
-
-    object SelectDestinationType : OnlineOperatorType()
-
-    object UploadFile : OfflineOperatorType()
+    fun onSelectedDestinationSpaceType(data: T, forOperatorType: OperatorType, spaceType: SpaceType)
 }

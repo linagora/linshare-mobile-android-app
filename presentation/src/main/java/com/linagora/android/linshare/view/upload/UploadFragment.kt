@@ -57,6 +57,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentUploadBinding
 import com.linagora.android.linshare.domain.model.GenericUser
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.MailingList
@@ -71,16 +72,13 @@ import com.linagora.android.linshare.domain.usecases.quota.ExtractInfoFailed
 import com.linagora.android.linshare.domain.usecases.quota.PreUploadExecuting
 import com.linagora.android.linshare.domain.usecases.share.AddMailingList
 import com.linagora.android.linshare.domain.usecases.share.AddRecipient
-import com.linagora.android.linshare.domain.usecases.share.SelectDesinationClick
-import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToMySpace
-import com.linagora.android.linshare.domain.usecases.share.SelectUploadOutsideToSharedSpace
+import com.linagora.android.linshare.domain.usecases.share.SelectDestinationClick
 import com.linagora.android.linshare.domain.usecases.upload.EmptyDocumentException
 import com.linagora.android.linshare.domain.usecases.upload.NotEnoughDeviceStorageException
 import com.linagora.android.linshare.domain.usecases.upload.PreUploadError
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.NoOp
-import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.model.parcelable.toQuotaId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
@@ -99,12 +97,15 @@ import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getUploadDocumentRequest
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.AUTHENTICATED
 import com.linagora.android.linshare.view.MainActivityViewModel.AuthenticationState.INVALID_AUTHENTICATION
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.ReadContactPermissionRequestCode
+import com.linagora.android.linshare.view.base.event.SelectedDestinationMySpace
+import com.linagora.android.linshare.view.base.event.SelectedDestinationSharedSpace
 import com.linagora.android.linshare.view.dialog.UploadProgressDialog
 import com.linagora.android.linshare.view.upload.request.UploadAndShareRequest
 import com.linagora.android.linshare.view.upload.request.UploadToMySpaceRequest
@@ -343,9 +344,9 @@ class UploadFragment : MainNavigationFragment() {
             is AddRecipient -> addRecipientView(viewEvent.user)
             is AddMailingList -> addMailingListView(viewEvent.mailingList)
             is OnUploadButtonClick -> preUpload(viewEvent.uploadDocumentRequest)
-            is SelectDesinationClick -> selectDestination()
-            is SelectUploadOutsideToMySpace -> updateOutsideToMySpaceDestination()
-            is SelectUploadOutsideToSharedSpace -> navigateToDestinationPicker()
+            is SelectDestinationClick -> selectDestination()
+            is SelectedDestinationMySpace -> updateOutsideToMySpaceDestination()
+            is SelectedDestinationSharedSpace -> navigateToDestinationPicker()
         }
         uploadFragmentViewModel.dispatchState(Either.right(Success.Idle))
     }
@@ -376,7 +377,8 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun showPickDestinationDialog() {
-        PickDestinationDialog().show(childFragmentManager, PickDestinationDialog.TAG)
+        PickDestinationDialog(OperatorType.UploadFile, uploadFragmentViewModel.selectDestinationSpaceTypeAction)
+            .show(childFragmentManager, PickDestinationDialog.TAG)
     }
 
     private fun addRecipientView(user: GenericUser) {
