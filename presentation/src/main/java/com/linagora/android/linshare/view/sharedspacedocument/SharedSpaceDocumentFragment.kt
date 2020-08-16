@@ -78,7 +78,7 @@ import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
-import com.linagora.android.linshare.model.parcelable.getParentNodeId
+import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
@@ -363,7 +363,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun sendQueryString(query: QueryString) {
         sharedSpacesDocumentViewModel.searchDocument(
             sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
-            parentNodeId = arguments.navigationInfo.getParentNodeId(),
+            parentNodeId = arguments.navigationInfo.getCurrentNodeId(),
             query = query
         )
     }
@@ -375,7 +375,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun getAllNodes() {
         sharedSpacesDocumentViewModel.getAllChildNodes(
             arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
-            arguments.navigationInfo.getParentNodeId()
+            arguments.navigationInfo.getCurrentNodeId()
         )
     }
 

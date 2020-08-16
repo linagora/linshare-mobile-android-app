@@ -45,7 +45,7 @@ class SharedSpaceNavigationInfo(
     val nodeIdParcelable: WorkGroupNodeIdParcelable
 ) : Parcelable
 
-fun SharedSpaceNavigationInfo.getParentNodeId(): WorkGroupNodeId? {
+fun SharedSpaceNavigationInfo.getCurrentNodeId(): WorkGroupNodeId? {
     return fileType.takeIf { it == Navigation.FileType.NORMAL }
         ?.let { nodeIdParcelable.toWorkGroupNodeId() }
 }

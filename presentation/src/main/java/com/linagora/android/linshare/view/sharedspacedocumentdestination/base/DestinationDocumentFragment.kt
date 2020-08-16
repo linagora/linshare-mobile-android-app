@@ -31,7 +31,7 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedestination.base
+package com.linagora.android.linshare.view.sharedspacedocumentdestination.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,27 +43,35 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.databinding.FragmentSharedSpaceDestinationBinding
+import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentDestinationBinding
 import com.linagora.android.linshare.domain.model.OperatorType
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.sharedspacedocumentdestination.CancelPickDestinationViewState
+import com.linagora.android.linshare.view.sharedspacedocumentdestination.ChoosePickDestinationViewState
 import com.linagora.android.linshare.view.widget.errorLayout
 
-abstract class DestinationFragment : MainNavigationFragment() {
-    abstract val destinationViewModel: DestinationViewModel
+abstract class DestinationDocumentFragment : MainNavigationFragment() {
 
-    private lateinit var binding: FragmentSharedSpaceDestinationBinding
+    abstract val destinationDocumentViewModel: DestinationDocumentViewModel
+
+    private lateinit var binding: FragmentSharedSpaceDocumentDestinationBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSharedSpaceDestinationBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding = FragmentSharedSpaceDocumentDestinationBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.navigationInfo = bindingNavigationInfo()
         observeViewState(binding)
         return binding.root
     }
@@ -71,13 +79,13 @@ abstract class DestinationFragment : MainNavigationFragment() {
     override fun configureToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_navigation_back)
         toolbar.navigationIcon?.setTint(ContextCompat.getColor(toolbar.context, R.color.toolbar_primary_color))
-        toolbar.setNavigationOnClickListener { toolbarNavigationListener() }
+        toolbar.setNavigationOnClickListener { navigateBack() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
-        getSharedSpace()
+        initData()
         setUpOnBackPressed()
     }
 
@@ -85,33 +93,66 @@ abstract class DestinationFragment : MainNavigationFragment() {
         binding.swipeLayoutSharedSpace.setColorSchemeResources(R.color.colorPrimary)
     }
 
-    abstract fun toolbarNavigationListener()
-
-    private fun getSharedSpace() {
-        destinationViewModel.getSharedSpace()
-    }
-
     private fun setUpOnBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { onDestinationBackPressed() }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { navigateBack() }
     }
 
-    abstract fun onDestinationBackPressed()
+    private fun initData() {
+        val currentSharedSpaceId = extractSharedSpaceId()
+        val currentNodeId = extractCurrentNodeId()
+        currentSharedSpaceId?.let { sharedSpaceId ->
+            getAllNodes(sharedSpaceId)
+            getCurrentSharedSpace(sharedSpaceId)
+            currentNodeId?.let { workGroupNodeId -> getCurrentNode(sharedSpaceId, workGroupNodeId) }
+        }
+    }
 
-    private fun observeViewState(binding: FragmentSharedSpaceDestinationBinding) {
-        binding.viewModel = destinationViewModel
-        destinationViewModel.viewState.observe(viewLifecycleOwner, Observer {
+    abstract fun bindingNavigationInfo(): SharedSpaceNavigationInfo?
+
+    abstract fun extractSharedSpaceId(): SharedSpaceId?
+
+    abstract fun extractCurrentNodeId(): WorkGroupNodeId?
+
+    abstract fun getRealCurrentNodeId(): WorkGroupNodeId?
+
+    private fun getAllNodes(sharedSpaceId: SharedSpaceId) {
+        destinationDocumentViewModel.getAllChildNodes(sharedSpaceId, getRealCurrentNodeId())
+    }
+
+    private fun getCurrentNode(sharedSpaceId: SharedSpaceId, currentNodeId: WorkGroupNodeId) {
+        destinationDocumentViewModel.getCurrentNode(sharedSpaceId, currentNodeId)
+    }
+
+    private fun getCurrentSharedSpace(sharedSpaceId: SharedSpaceId) {
+        destinationDocumentViewModel.getCurrentSharedSpace(sharedSpaceId)
+    }
+
+    private fun observeViewState(binding: FragmentSharedSpaceDocumentDestinationBinding) {
+        binding.viewModel = destinationDocumentViewModel
+        destinationDocumentViewModel.viewState.observe(viewLifecycleOwner, Observer {
             it.map { success ->
                 when (success) {
                     is Success.ViewEvent -> reactToViewEvent(success)
+                    is Success.ViewState -> reactToViewState(success)
                 }
             }
         })
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
-        when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(destinationViewModel.internetAvailable.value)) {
+        when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(destinationDocumentViewModel.internetAvailable.value)) {
             is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
             else -> handleViewEvent(filteredViewEvent)
+        }
+    }
+
+    open fun reactToViewState(viewState: Success.ViewState) {
+        bindingFolderName(viewState)
+    }
+
+    private fun bindingFolderName(viewState: Success.ViewState) {
+        if (viewState is GetSharedSpaceNodeSuccess) {
+            binding.navigationCurrentFolder.text = viewState.node.name
         }
     }
 
@@ -123,15 +164,30 @@ abstract class DestinationFragment : MainNavigationFragment() {
         Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
             .errorLayout(requireContext())
             .show()
-        destinationViewModel.dispatchResetState()
+        destinationDocumentViewModel.dispatchResetState()
     }
 
     protected fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
-            is SharedSpaceItemClick -> navigateIntoDocumentDestination(viewEvent.sharedSpaceNodeNested)
+            is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
+            is CancelPickDestinationViewState -> navigateInCancelDestination()
+            is ChoosePickDestinationViewState -> navigateInChooseDestination()
         }
-        destinationViewModel.dispatchResetState()
+        destinationDocumentViewModel.dispatchResetState()
     }
 
-    abstract fun navigateIntoDocumentDestination(sharedSpaceNodeNested: SharedSpaceNodeNested)
+    abstract fun navigateIntoSubFolder(subFolder: WorkGroupNode)
+    abstract fun navigateInCancelDestination()
+    abstract fun navigateInChooseDestination()
+
+    protected fun navigateBack() {
+        destinationDocumentViewModel.currentNode.value?.let { node ->
+            node.treePath.takeIf { it.isNullOrEmpty() }
+                ?.let { navigateBackToSharedSpaceDestination() }
+                ?: navigateBackToPreviousFolder(node)
+        }
+    }
+
+    abstract fun navigateBackToSharedSpaceDestination()
+    abstract fun navigateBackToPreviousFolder(workGroupNode: WorkGroupNode)
 }
