@@ -38,6 +38,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRole
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetAllMembersInSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRoles
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllSharedSpaceRolesSuccess
@@ -55,6 +58,7 @@ class SharedSpaceMemberViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val getAllRoles: GetAllRoles,
+    private val editMember: EditWorkGroupMemberRole,
     private val getAllMembersInSharedSpaceInteractor: GetAllMembersInSharedSpaceInteractor
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
@@ -76,6 +80,23 @@ class SharedSpaceMemberViewModel @Inject constructor(
     override fun onSuccessDispatched(success: Success) {
         when (success) {
             is GetAllSharedSpaceRolesSuccess -> mutableListSharedSpaceRoles.value = success.roles
+        }
+    }
+
+    fun getAllMembers(sharedSpaceId: SharedSpaceId) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(getAllMembersInSharedSpaceInteractor(sharedSpaceId))
+        }
+    }
+
+    fun editMemberInSharedSpace(selectedRole: SharedSpaceRole, sharedSpaceMember: SharedSpaceMember) {
+        val editMemberRequest = AddMemberRequest(
+            sharedSpaceMember.sharedSpaceAccount.sharedSpaceAccountId,
+            sharedSpaceMember.sharedSpaceNode.sharedSpaceId,
+            selectedRole.sharedSpaceRoleId
+        )
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(editMember(editMemberRequest))
         }
     }
 }

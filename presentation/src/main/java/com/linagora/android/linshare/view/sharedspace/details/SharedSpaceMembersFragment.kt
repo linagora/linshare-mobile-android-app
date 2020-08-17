@@ -47,7 +47,9 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenAddMembers
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRoleSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRoleForUpdate
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
@@ -104,8 +106,15 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
         sharedSpaceMemberViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
             state.map { success -> when (success) {
                 is Success.ViewEvent -> reactToViewEventMemberFragment(success)
+                is Success.ViewState -> reactToViewStateMemberFragment(success)
             } }
         })
+    }
+
+    private fun reactToViewStateMemberFragment(viewState: Success.ViewState) {
+        when (viewState) {
+            is EditWorkGroupMemberRoleSuccess -> sharedSpaceMemberViewModel.getAllMembers(sharedSpace.sharedSpaceId)
+        }
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
@@ -118,6 +127,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
     private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is OnSelectRoleClickForUpdate -> showSelectRoleForUpdateDialog(viewEvent.lastSelectedRole, viewEvent.sharedSpaceMember)
+            is OnSelectedRoleForUpdate -> onSelectedRoleForUpdate(viewEvent.selectedRole, viewEvent.sharedSpaceMember)
         }
         sharedSpaceMemberViewModel.dispatchResetState()
     }
@@ -127,6 +137,11 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
             is Success.CancelViewEvent -> {}
             else -> handleViewEvent(filteredViewEvent)
         }
+    }
+
+    private fun onSelectedRoleForUpdate(selectedRole: SharedSpaceRole, sharedSpaceMember: SharedSpaceMember) {
+        dismissSelectRoleForUpdateDialog()
+        sharedSpaceMemberViewModel.editMemberInSharedSpace(selectedRole, sharedSpaceMember)
     }
 
     private fun dismissSelectRoleForUpdateDialog() {
