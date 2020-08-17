@@ -35,8 +35,11 @@ package com.linagora.android.linshare.view.sharedspace.details
 
 import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMember
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRole
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetAllMembersInSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRoles
 import com.linagora.android.linshare.util.ConnectionLiveData
@@ -56,6 +59,7 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val getAllRoles: GetAllRoles,
     private val addMember: AddMember,
+    private val editMember: EditWorkGroupMemberRole,
     private val getAllMembersInSharedSpace: GetAllMembersInSharedSpaceInteractor,
     val addMemberSuggestionManager: AddMemberSuggestionManager
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
@@ -64,9 +68,9 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
         private val LOGGER = LoggerFactory.getLogger(SharedSpaceAddMemberViewModel::class.java)
     }
 
-    val onSelectRoleForUpdateBehavior = OnSelectRolesForUpdateBehavior(this)
-
     val onSelectRoleBehavior = OnSelectRolesBehavior(this)
+
+    val onSelectRoleForUpdateBehavior = OnSelectRolesForUpdateBehavior(this)
 
     fun initData(sharedSpaceId: SharedSpaceId) {
         LOGGER.info("initData(): $sharedSpaceId")
@@ -89,6 +93,17 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
     fun getAllMembers(sharedSpaceId: SharedSpaceId) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getAllMembersInSharedSpace(sharedSpaceId))
+        }
+    }
+
+    fun editMemberInSharedSpace(selectedRole: SharedSpaceRole, sharedSpaceMember: SharedSpaceMember) {
+        val editMemberRequest = AddMemberRequest(
+            sharedSpaceMember.sharedSpaceAccount.sharedSpaceAccountId,
+            sharedSpaceMember.sharedSpaceNode.sharedSpaceId,
+            selectedRole.sharedSpaceRoleId
+        )
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(editMember(editMemberRequest))
         }
     }
 }

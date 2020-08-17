@@ -55,9 +55,11 @@ import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRoleSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRole
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRoleForUpdate
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
@@ -144,7 +146,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
             bindingDefaultSelectedRole(viewState)
         }
         when (viewState) {
-            is AddMemberSuccess -> getAllMembers()
+            is AddMemberSuccess, is EditWorkGroupMemberRoleSuccess -> getAllMembers()
         }
     }
 
@@ -173,6 +175,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
             is OnSelectRoleClick -> selectRoles(viewEvent.lastSelectedRole)
             is OnSelectRoleClickForUpdate -> showSelectRoleForUpdateDialog(viewEvent.lastSelectedRole, viewEvent.sharedSpaceMember)
             is OnSelectedRole -> onSelectedRole(viewEvent.selectedRole)
+            is OnSelectedRoleForUpdate -> onSelectedRoleForUpdate(viewEvent.selectedRole, viewEvent.sharedSpaceMember)
         }
         viewModel.dispatchResetState()
     }
@@ -187,6 +190,11 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     private fun dismissSelectRoleForUpdateDialog() {
         childFragmentManager.dismissDialogFragmentByTag(SelectRoleForUpdateDialog.TAG)
+    }
+
+    private fun onSelectedRoleForUpdate(selectedRole: SharedSpaceRole, sharedSpaceMember: SharedSpaceMember) {
+        dismissSelectRoleForUpdateDialog()
+        viewModel.editMemberInSharedSpace(selectedRole, sharedSpaceMember)
     }
 
     private fun initData(sharedSpaceId: SharedSpaceId) {
