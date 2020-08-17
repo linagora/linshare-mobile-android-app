@@ -97,6 +97,7 @@ import com.linagora.android.linshare.view.Navigation.FileType
 import com.linagora.android.linshare.view.Navigation.UploadType
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.base.event.SelectedDestinationSharedSpace
 import com.linagora.android.linshare.view.base.event.WorkGroupNodeCopyToViewEvent
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import com.linagora.android.linshare.view.widget.errorLayout
@@ -194,7 +195,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is SharedSpaceFolderContextMenuClick -> showContextMenuSharedSpaceFolderNode(viewEvent.workGroupFolder)
             is DownloadSharedSpaceNodeClick -> handleDownloadSharedSpaceNode(viewEvent.workGroupNode)
             is RemoveSharedSpaceNodeClick -> confirmRemoveSharedSpaceNode(viewEvent.workGroupNode)
-            is WorkGroupNodeCopyToViewEvent -> selectDestination()
+            is WorkGroupNodeCopyToViewEvent -> selectDestinationSpaceType(viewEvent.operatorType, viewEvent.node)
+            is SelectedDestinationSharedSpace -> handleSelectedDestinationToSharedSpace(viewEvent.destinationForOperator)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
             OpenSearchView -> handleOpenSearch()
@@ -446,8 +448,16 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         sharedSpacesDocumentViewModel.dispatchResetState()
     }
 
-    private fun selectDestination() {
-        LOGGER.info("selectDestination()")
+    private fun selectDestinationSpaceType(operatorType: OperatorType, workGroupNode: WorkGroupNode) {
+        dismissAllDialog()
+        SharedSpacePickDestinationDialog(workGroupNode, operatorType, sharedSpacesDocumentViewModel.selectDestinationSpaceTypeAction)
+            .show(childFragmentManager, SharedSpacePickDestinationDialog.TAG)
+    }
+
+    private fun handleSelectedDestinationToSharedSpace(operatorType: OperatorType) {
+        when (operatorType) {
+            OperatorType.CopyFile -> LOGGER.info("handleSelectedDestinationToSharedSpace(): ")
+        }
     }
 
     private fun navigateIntoSubFolder(workGroupNode: WorkGroupNode) {

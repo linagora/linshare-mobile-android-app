@@ -31,31 +31,20 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.base.event
+package com.linagora.android.linshare.view.sharedspacedocument
 
 import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
-import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.view.base.SelectDestinationSpaceTypeAction
+import com.linagora.android.linshare.view.dialog.BasePickDestinationDialog
 
-data class SelectedDestinationMySpace(val destinationForOperator: OperatorType) :
-    Success.OfflineViewEvent(OperatorType.SelectDestinationType)
+class SharedSpacePickDestinationDialog(
+    private val data: WorkGroupNode,
+    private val operatorType: OperatorType,
+    private val selectedDestinationSpaceTypeAction: SelectDestinationSpaceTypeAction<WorkGroupNode>
+) : BasePickDestinationDialog<WorkGroupNode>(data, operatorType, selectedDestinationSpaceTypeAction) {
 
-data class SelectedDestinationSharedSpace(val destinationForOperator: OperatorType) :
-    Success.OnlineViewEvent(OperatorType.SelectDestinationType)
-
-data class SelectedDestinationReceivedShared(val destinationForOperator: OperatorType) :
-    Success.OnlineViewEvent(OperatorType.SelectDestinationType)
-
-data class WorkGroupNodeCopyToViewEvent(
-    val node: WorkGroupNode
-) : Success.OnlineViewEvent(OperatorType.CopyFile)
-
-data class SharedSpaceSelectedDestinationSharedSpace(
-    val workGroupNode: WorkGroupNode,
-    val destinationForOperator: OperatorType
-) : Success.OnlineViewEvent(OperatorType.SelectDestinationType)
-
-data class SharedSpaceSelectedDestinationMySpace(
-    val workGroupNode: WorkGroupNode,
-    val destinationForOperator: OperatorType
-) : Success.OnlineViewEvent(OperatorType.SelectDestinationType)
+    companion object {
+        const val TAG = "SharedSpacePickDestinationDialog"
+    }
+}

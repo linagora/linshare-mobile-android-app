@@ -31,31 +31,29 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.base.event
+package com.linagora.android.linshare.view.sharedspacedocument.action
 
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.copy.SpaceType
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
-import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.SelectDestinationSpaceTypeAction
+import com.linagora.android.linshare.view.base.event.SharedSpaceSelectedDestinationMySpace
+import com.linagora.android.linshare.view.base.event.SharedSpaceSelectedDestinationSharedSpace
 
-data class SelectedDestinationMySpace(val destinationForOperator: OperatorType) :
-    Success.OfflineViewEvent(OperatorType.SelectDestinationType)
-
-data class SelectedDestinationSharedSpace(val destinationForOperator: OperatorType) :
-    Success.OnlineViewEvent(OperatorType.SelectDestinationType)
-
-data class SelectedDestinationReceivedShared(val destinationForOperator: OperatorType) :
-    Success.OnlineViewEvent(OperatorType.SelectDestinationType)
-
-data class WorkGroupNodeCopyToViewEvent(
-    val node: WorkGroupNode
-) : Success.OnlineViewEvent(OperatorType.CopyFile)
-
-data class SharedSpaceSelectedDestinationSharedSpace(
-    val workGroupNode: WorkGroupNode,
-    val destinationForOperator: OperatorType
-) : Success.OnlineViewEvent(OperatorType.SelectDestinationType)
-
-data class SharedSpaceSelectedDestinationMySpace(
-    val workGroupNode: WorkGroupNode,
-    val destinationForOperator: OperatorType
-) : Success.OnlineViewEvent(OperatorType.SelectDestinationType)
+class SharedSpaceSelectDestinationSpaceTypeAction(
+    private val baseViewModel: BaseViewModel
+) : SelectDestinationSpaceTypeAction<WorkGroupNode> {
+    override fun onSelectedDestinationSpaceType(
+        data: WorkGroupNode,
+        forOperatorType: OperatorType,
+        spaceType: SpaceType
+    ) {
+        val viewEvent = when (spaceType) {
+            SpaceType.SHARED_SPACE -> SharedSpaceSelectedDestinationSharedSpace(data, forOperatorType)
+            else -> SharedSpaceSelectedDestinationMySpace(data, forOperatorType)
+        }
+        baseViewModel.dispatchUIState(Either.right(viewEvent))
+    }
+}
