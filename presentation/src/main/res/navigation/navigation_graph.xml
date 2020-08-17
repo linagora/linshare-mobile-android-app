@@ -157,6 +157,9 @@
         <argument
             android:name="navigationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <action
+            android:id="@+id/action_navigation_shared_spaced_document_to_navigationCopySharedSpaceDestinationFragment"
+            app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceDetails"
@@ -237,5 +240,30 @@
             android:id="@+id/action_navigation_pick_destination_to_navigation_destination"
             app:destination="@id/navigationSharedSpaceDestination"
             app:popUpTo="@+id/navigationSharedSpaceDestination" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationCopySharedSpaceDestinationFragment"
+        android:name="com.linagora.android.linshare.view.sharedspacedestination.copy.sharedspace.CopySharedSpaceDestinationFragment"
+        tools:layout="@layout/fragment_shared_space_destination" >
+        <argument
+            android:name="copyFromSharedSpaceId"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable" />
+        <argument
+            android:name="copiedFromNodeId"
+            app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationCopySharedSpaceDestinationDocumentFragment"
+        android:name="com.linagora.android.linshare.view.sharedspacedocumentdestination.copy.sharedspace.CopySharedSpaceDestinationDocumentFragment"
+        tools:layout="@layout/fragment_shared_space_document_destination" >
+        <argument
+            android:name="copiedFromSharedSpaceId"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable" />
+        <argument
+            android:name="copiedFromNodeId"
+            app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable" />
+        <argument
+            android:name="navigationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
     </fragment>
 </navigation>

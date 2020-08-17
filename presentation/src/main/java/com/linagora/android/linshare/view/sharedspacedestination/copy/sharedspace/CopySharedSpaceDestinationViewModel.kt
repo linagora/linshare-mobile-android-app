@@ -31,40 +31,22 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedocument
+package com.linagora.android.linshare.view.sharedspacedestination.copy.sharedspace
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceInteractor
+import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior
+import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module
-internal abstract class SharedSpaceDocumentPresentationModule {
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentFragment(): SharedSpaceDocumentFragment
+@Singleton
+class CopySharedSpaceDestinationViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
+    getSharedSpaceInteractor: GetSharedSpaceInteractor,
+    dispatcherProvider: CoroutinesDispatcherProvider
+) : DestinationViewModel(internetAvailable, getSharedSpaceInteractor, dispatcherProvider) {
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentViewModel::class)
-    abstract fun bindSharedSpaceDocumentViewModel(sharedSpaceDocumentViewModel: SharedSpaceDocumentViewModel): ViewModel
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentContextMenuDialog(): SharedSpaceDocumentContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmRemoveSharedSpaceNodeDialog(): ConfirmRemoveSharedSpaceNodeDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceFolderContextMenuDialog(): SharedSpaceFolderContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpacePickDestinationDialog(): SharedSpacePickDestinationDialog
+    override val sharedSpaceItemBehavior = SharedSpaceItemBehavior(this)
 }

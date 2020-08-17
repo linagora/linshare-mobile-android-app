@@ -97,7 +97,7 @@ import com.linagora.android.linshare.view.Navigation.FileType
 import com.linagora.android.linshare.view.Navigation.UploadType
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
-import com.linagora.android.linshare.view.base.event.SelectedDestinationSharedSpace
+import com.linagora.android.linshare.view.base.event.SharedSpaceSelectedDestinationSharedSpace
 import com.linagora.android.linshare.view.base.event.WorkGroupNodeCopyToViewEvent
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import com.linagora.android.linshare.view.widget.errorLayout
@@ -196,7 +196,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is DownloadSharedSpaceNodeClick -> handleDownloadSharedSpaceNode(viewEvent.workGroupNode)
             is RemoveSharedSpaceNodeClick -> confirmRemoveSharedSpaceNode(viewEvent.workGroupNode)
             is WorkGroupNodeCopyToViewEvent -> selectDestinationSpaceType(viewEvent.operatorType, viewEvent.node)
-            is SelectedDestinationSharedSpace -> handleSelectedDestinationToSharedSpace(viewEvent.destinationForOperator)
+            is SharedSpaceSelectedDestinationSharedSpace -> handleSelectedDestinationToSharedSpace(viewEvent.workGroupNode, viewEvent.destinationForOperator)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
             OpenSearchView -> handleOpenSearch()
@@ -454,10 +454,18 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             .show(childFragmentManager, SharedSpacePickDestinationDialog.TAG)
     }
 
-    private fun handleSelectedDestinationToSharedSpace(operatorType: OperatorType) {
+    private fun handleSelectedDestinationToSharedSpace(workGroupNode: WorkGroupNode, operatorType: OperatorType) {
         when (operatorType) {
-            OperatorType.CopyFile -> LOGGER.info("handleSelectedDestinationToSharedSpace(): ")
+            OperatorType.CopyFile -> navigateToSelectDestination(workGroupNode)
         }
+    }
+
+    private fun navigateToSelectDestination(workGroupNode: WorkGroupNode) {
+        val action = SharedSpaceDocumentFragmentDirections
+            .actionNavigationSharedSpacedDocumentToNavigationCopySharedSpaceDestinationFragment(
+                workGroupNode.sharedSpaceId.toParcelable(),
+                workGroupNode.workGroupNodeId.toParcelable())
+        findNavController().navigate(action)
     }
 
     private fun navigateIntoSubFolder(workGroupNode: WorkGroupNode) {

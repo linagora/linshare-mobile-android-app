@@ -31,7 +31,7 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedocument
+package com.linagora.android.linshare.view.sharedspacedestination.copy.sharedspace
 
 import androidx.lifecycle.ViewModel
 import com.linagora.android.linshare.inject.annotation.FragmentScoped
@@ -42,29 +42,15 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 @Module
-internal abstract class SharedSpaceDocumentPresentationModule {
+internal abstract class CopySharedSpaceDestinationModule {
     @FragmentScoped
     @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentFragment(): SharedSpaceDocumentFragment
+    internal abstract fun contributeCopySharedSpaceDestinationFragment(): CopySharedSpaceDestinationFragment
 
     @Binds
     @IntoMap
-    @ViewModelKey(SharedSpaceDocumentViewModel::class)
-    abstract fun bindSharedSpaceDocumentViewModel(sharedSpaceDocumentViewModel: SharedSpaceDocumentViewModel): ViewModel
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentContextMenuDialog(): SharedSpaceDocumentContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmRemoveSharedSpaceNodeDialog(): ConfirmRemoveSharedSpaceNodeDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceFolderContextMenuDialog(): SharedSpaceFolderContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpacePickDestinationDialog(): SharedSpacePickDestinationDialog
+    @ViewModelKey(CopySharedSpaceDestinationViewModel::class)
+    abstract fun bindCopySharedSpaceDestinationViewModel(
+        copySharedSpaceDestinationViewModel: CopySharedSpaceDestinationViewModel
+    ): ViewModel
 }

@@ -31,40 +31,28 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedocument
+package com.linagora.android.linshare.view.sharedspacedestination.copy.sharedspace
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import androidx.navigation.fragment.findNavController
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationFragment
+import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel
 
-@Module
-internal abstract class SharedSpaceDocumentPresentationModule {
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentFragment(): SharedSpaceDocumentFragment
+class CopySharedSpaceDestinationFragment : DestinationFragment() {
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentViewModel::class)
-    abstract fun bindSharedSpaceDocumentViewModel(sharedSpaceDocumentViewModel: SharedSpaceDocumentViewModel): ViewModel
+    override val destinationViewModel: DestinationViewModel by lazy {
+        getViewModel<CopySharedSpaceDestinationViewModel>(viewModelFactory) }
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentContextMenuDialog(): SharedSpaceDocumentContextMenuDialog
+    override fun toolbarNavigationListener() {
+        findNavController().popBackStack()
+    }
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmRemoveSharedSpaceNodeDialog(): ConfirmRemoveSharedSpaceNodeDialog
+    override fun onDestinationBackPressed() {
+        findNavController().popBackStack()
+    }
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceFolderContextMenuDialog(): SharedSpaceFolderContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpacePickDestinationDialog(): SharedSpacePickDestinationDialog
+    override fun navigateIntoDocumentDestination(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        TODO("Not yet implemented")
+    }
 }
