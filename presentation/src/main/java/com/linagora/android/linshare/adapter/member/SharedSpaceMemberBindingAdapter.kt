@@ -38,22 +38,29 @@ import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import arrow.core.Either
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersNoResult
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.util.Constant.EMPTY_BOTTOM_DRAWABLE_RESOURCE
+import com.linagora.android.linshare.util.Constant.EMPTY_LEFT_DRAWABLE_RESOURCE
+import com.linagora.android.linshare.util.Constant.EMPTY_RIGHT_DRAWABLE_RESOURCE
+import com.linagora.android.linshare.util.Constant.EMPTY_TOP_DRAWABLE_RESOURCE
 import com.linagora.android.linshare.util.getAvatarCharacter
 import com.linagora.android.linshare.util.toDisplayRoleNameId
 
-@BindingAdapter("sharedSpaceMemberState")
+@BindingAdapter("sharedSpaceMemberState", "ownRoleName")
 fun bindingSharedSpaceMember(
     recyclerView: RecyclerView,
-    sharedSpaceMemberState: Either<Failure, Success>
+    sharedSpaceMemberState: Either<Failure, Success>,
+    ownRoleName: SharedSpaceRoleName
 ) {
     if (recyclerView.adapter == null) {
-        recyclerView.adapter = SharedSpaceMemberAdapter()
+        recyclerView.adapter = SharedSpaceMemberAdapter(ownRoleName)
     }
 
     sharedSpaceMemberState.fold(
@@ -77,6 +84,20 @@ fun bindingSharedSpaceMember(
 fun bindingMemberRole(textView: TextView, sharedSpaceMember: SharedSpaceMember) {
     val stringId = sharedSpaceMember.role.name.toDisplayRoleNameId()
     textView.text = textView.context.getString(stringId.value)
+}
+
+@BindingAdapter("ownRoleName", "operationRoles")
+fun bindingClickableForEditRole(textView: TextView, ownRoleName: SharedSpaceRoleName, operationRoles: List<SharedSpaceRoleName>) {
+    val clickable = operationRoles.takeIf { it.isNotEmpty() && it.contains(ownRoleName) }
+        ?.let { true }
+        ?: false
+    textView.isEnabled = clickable
+
+    val rightDrawableResource = clickable.takeIf { it }
+        ?.let { R.drawable.ic_drop_down }
+        ?: EMPTY_RIGHT_DRAWABLE_RESOURCE
+
+    textView.setCompoundDrawablesWithIntrinsicBounds(EMPTY_LEFT_DRAWABLE_RESOURCE, EMPTY_TOP_DRAWABLE_RESOURCE, rightDrawableResource, EMPTY_BOTTOM_DRAWABLE_RESOURCE)
 }
 
 @BindingAdapter("memberAvatar")

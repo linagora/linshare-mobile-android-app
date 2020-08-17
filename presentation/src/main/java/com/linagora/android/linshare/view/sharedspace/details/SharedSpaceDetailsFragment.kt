@@ -39,11 +39,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDetailsBinding
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.util.getViewModel
@@ -80,16 +84,11 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
         viewModel = getViewModel(viewModelFactory)
         binding.viewModel = viewModel
         binding.sharedSpaceId = sharedSpaceDetailsArgs.sharedSpaceId.toSharedSpaceId()
+        observeViewState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.run {
-            viewpager.adapter = DetailsPageAdapter()
-            TabLayoutMediator(tabsDetails, viewpager) { tab, position ->
-                tab.text = getString(DETAILS_TITLES[position])
-            }.attach()
-        }
         getCurrentSharedSpace(sharedSpaceDetailsArgs.sharedSpaceId)
     }
 
@@ -97,18 +96,41 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
     }
 
+    private fun observeViewState() {
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
+            state.map { success -> when (success) {
+                is Success.ViewState -> reactToViewState(success)
+            } }
+        })
+    }
+
+    private fun reactToViewState(viewState: Success.ViewState) {
+        when (viewState) {
+            is GetSharedSpaceSuccess -> bindingDetailsPageAdapter(viewState.sharedSpace)
+        }
+    }
+
+    private fun bindingDetailsPageAdapter(sharedSpace: SharedSpace) {
+        binding.run {
+            viewpager.adapter = DetailsPageAdapter(sharedSpace)
+            TabLayoutMediator(tabsDetails, viewpager) { tab, position ->
+                tab.text = getString(DETAILS_TITLES[position])
+            }.attach()
+        }
+    }
+
     private fun getCurrentSharedSpace(sharedSpaceIdParcelable: SharedSpaceIdParcelable) {
         viewModel.getCurrentSharedSpace(sharedSpaceIdParcelable.toSharedSpaceId())
     }
 
-    inner class DetailsPageAdapter() : FragmentStateAdapter(this) {
+    inner class DetailsPageAdapter(private val sharedSpace: SharedSpace) : FragmentStateAdapter(this) {
 
         override fun getItemCount() = DETAILS_TITLES.size
 
         override fun createFragment(position: Int): Fragment {
             require(position < itemCount) { "page number is not supported" }
             return when (position) {
-                0 -> SharedSpaceMembersFragment(sharedSpaceDetailsArgs.sharedSpaceId.toSharedSpaceId())
+                0 -> SharedSpaceMembersFragment(sharedSpace)
                 else -> SharedSpaceActivitiesFragment(sharedSpaceDetailsArgs.sharedSpaceId.toSharedSpaceId())
             }
         }

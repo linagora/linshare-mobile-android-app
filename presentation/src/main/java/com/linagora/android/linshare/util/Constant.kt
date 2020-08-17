@@ -69,6 +69,11 @@ object Constant {
 
     const val NO_RESOURCE = -1
 
+    const val EMPTY_TOP_DRAWABLE_RESOURCE = 0
+    const val EMPTY_BOTTOM_DRAWABLE_RESOURCE = 0
+    const val EMPTY_LEFT_DRAWABLE_RESOURCE = 0
+    const val EMPTY_RIGHT_DRAWABLE_RESOURCE = 0
+
     object Session {
         val NO_SESSION_ID = null
         const val J_SESSION_ID = "JSESSIONID"

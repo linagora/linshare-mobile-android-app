@@ -37,9 +37,16 @@
 
     <data>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole" />
+
         <variable
             name="member"
             type="SharedSpaceMember" />
+
+        <variable
+            name="ownRoleName"
+            type="SharedSpaceRoleName" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,8 +109,9 @@
 
         <TextView
             android:id="@+id/memberRole"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/select_role_padding_vertical"
             android:singleLine="true"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/my_space_item_secondary_text_size"
@@ -112,7 +120,8 @@
             android:layout_marginStart="@dimen/item_upload_container_margin_side"
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             app:layout_constraintStart_toEndOf="@id/memberAvatar"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:ownRoleName="@{ownRoleName}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.editWorkGroupMemberRole}"
             app:memberRole="@{member}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

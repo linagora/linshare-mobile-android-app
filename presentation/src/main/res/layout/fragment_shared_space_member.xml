@@ -37,10 +37,15 @@
 
     <data>
         <import type="com.linagora.android.linshare.view.sharedspace.details.SharedSpaceMemberViewModel"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
 
         <variable
             name="viewModel"
             type="SharedSpaceMemberViewModel" />
+
+        <variable
+            name="ownRoleName"
+            type="SharedSpaceRoleName" />
 
     </data>
 
@@ -68,6 +73,7 @@
                     android:background="@color/white"
                     app:layoutManager="LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:ownRoleName="@{ownRoleName}"
                     app:sharedSpaceMemberState="@{viewModel.viewState}"/>
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
