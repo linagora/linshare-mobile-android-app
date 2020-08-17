@@ -44,13 +44,17 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceMemberBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenAddMembers
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.toParcelable
+import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getParentViewModel
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.dialog.SelectRoleForUpdateDialog
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -79,7 +83,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
-        sharedSpaceMemberViewModel.getAllMembers(sharedSpace.sharedSpaceId)
+        sharedSpaceMemberViewModel.initData(sharedSpace.sharedSpaceId)
     }
 
     private fun initViewModel(binding: FragmentSharedSpaceMemberBinding) {
@@ -113,7 +117,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
 
     private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
-            is OnSelectRoleClickForUpdate -> selectRolesForUpdate()
+            is OnSelectRoleClickForUpdate -> showSelectRoleForUpdateDialog(viewEvent.lastSelectedRole, viewEvent.sharedSpaceMember)
         }
         sharedSpaceMemberViewModel.dispatchResetState()
     }
@@ -125,7 +129,24 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
         }
     }
 
-    private fun selectRolesForUpdate() {}
+    private fun dismissSelectRoleForUpdateDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(SelectRoleForUpdateDialog.TAG)
+    }
+
+    private fun showSelectRoleForUpdateDialog(
+        lastSelectedRole: SharedSpaceRole,
+        sharedSpaceMember: SharedSpaceMember
+    ) {
+        dismissSelectRoleForUpdateDialog()
+        sharedSpaceMemberViewModel.listSharedSpaceRoles.value?.let {
+            SelectRoleForUpdateDialog(
+                it,
+                lastSelectedRole,
+                sharedSpaceMember,
+                sharedSpaceMemberViewModel.onSelectRoleForUpdateBehavior
+            ).show(childFragmentManager, SelectRoleForUpdateDialog.TAG)
+        }
+    }
 
     private fun setUpSwipeRefreshLayout() {
         binding.swipeLayoutMember.setColorSchemeResources(R.color.colorPrimary)

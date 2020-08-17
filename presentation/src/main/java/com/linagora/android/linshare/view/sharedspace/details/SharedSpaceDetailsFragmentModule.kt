@@ -36,6 +36,7 @@ package com.linagora.android.linshare.view.sharedspace.details
 import androidx.lifecycle.ViewModel
 import com.linagora.android.linshare.inject.annotation.ChildFragmentScoped
 import com.linagora.android.linshare.inject.annotation.ViewModelKey
+import com.linagora.android.linshare.view.dialog.SelectRoleForUpdateDialog
 import com.linagora.android.linshare.view.sharedspace.details.activity.SharedSpaceActivitiesFragment
 import com.linagora.android.linshare.view.sharedspace.details.activity.SharedSpaceActivitiesViewModel
 import dagger.Binds
@@ -67,4 +68,7 @@ internal abstract class SharedSpaceDetailsFragmentModule {
     internal abstract fun bindActivitiesFragmentViewModel(
         sharedSpaceActivitiesViewModel: SharedSpaceActivitiesViewModel
     ): ViewModel
+    @ChildFragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeSelectRoleForUpdateDialog(): SelectRoleForUpdateDialog
 }

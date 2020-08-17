@@ -33,27 +33,49 @@
 
 package com.linagora.android.linshare.view.sharedspace.details
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetAllMembersInSharedSpaceInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRoles
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllSharedSpaceRolesSuccess
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.OnSelectRolesForUpdateBehavior
 import com.linagora.android.linshare.view.base.BaseViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SharedSpaceMemberViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
+    private val getAllRoles: GetAllRoles,
     private val getAllMembersInSharedSpaceInteractor: GetAllMembersInSharedSpaceInteractor
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     val onSelectRoleForUpdateBehavior = OnSelectRolesForUpdateBehavior(this)
 
-    fun getAllMembers(sharedSpaceId: SharedSpaceId) {
+    private val mutableListSharedSpaceRoles = MutableLiveData<List<SharedSpaceRole>>(emptyList())
+    val listSharedSpaceRoles: LiveData<List<SharedSpaceRole>> = mutableListSharedSpaceRoles
+
+    fun initData(sharedSpaceId: SharedSpaceId) {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(getAllMembersInSharedSpaceInteractor(sharedSpaceId))
+            consumeStates(
+                getAllRoles().onCompletion {
+                    getAllMembersInSharedSpaceInteractor(sharedSpaceId)
+                        .collect { emit(it) }
+                })
+        }
+    }
+
+    override fun onSuccessDispatched(success: Success) {
+        when (success) {
+            is GetAllSharedSpaceRolesSuccess -> mutableListSharedSpaceRoles.value = success.roles
         }
     }
 }
