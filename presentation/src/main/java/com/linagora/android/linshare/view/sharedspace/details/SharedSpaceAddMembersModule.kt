@@ -37,6 +37,7 @@ import androidx.lifecycle.ViewModel
 import com.linagora.android.linshare.inject.annotation.FragmentScoped
 import com.linagora.android.linshare.inject.annotation.ViewModelKey
 import com.linagora.android.linshare.view.dialog.SelectRoleDialog
+import com.linagora.android.linshare.view.dialog.SelectRoleForUpdateDialog
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -58,4 +59,8 @@ internal abstract class SharedSpaceAddMembersModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeSelectRoleDialog(): SelectRoleDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeSelectRoleForUpdateDialog(): SelectRoleForUpdateDialog
 }

@@ -41,7 +41,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentAddMemberBinding
@@ -53,9 +52,11 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceAccountId
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRole
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -68,9 +69,11 @@ import com.linagora.android.linshare.util.binding.onSelectedMember
 import com.linagora.android.linshare.util.binding.queryAfterTextChange
 import com.linagora.android.linshare.util.binding.showKeyBoard
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
+import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.dialog.SelectRoleDialog
+import com.linagora.android.linshare.view.dialog.SelectRoleForUpdateDialog
 import com.linagora.android.linshare.view.widget.errorLayout
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
@@ -159,11 +162,31 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(viewModel.internetAvailable.value)) {
+            is Success.CancelViewEvent -> {}
+            else -> handleViewEvent(filteredViewEvent)
+        }
+    }
+
+    private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is OnSelectRoleClick -> selectRoles(viewEvent.lastSelectedRole)
+            is OnSelectRoleClickForUpdate -> showSelectRoleForUpdateDialog(viewEvent.lastSelectedRole, viewEvent.sharedSpaceMember)
             is OnSelectedRole -> onSelectedRole(viewEvent.selectedRole)
         }
-        viewModel.dispatchState(Either.right(Success.Idle))
+        viewModel.dispatchResetState()
+    }
+
+    private fun showSelectRoleForUpdateDialog(lastSelectedRole: SharedSpaceRole, sharedSpaceMember: SharedSpaceMember) {
+        binding.addMembersContainer.sharedSpaceRoles?.let {
+            dismissSelectRoleForUpdateDialog()
+            SelectRoleForUpdateDialog(it.toList(), lastSelectedRole, sharedSpaceMember, viewModel.onSelectRoleForUpdateBehavior)
+                .show(childFragmentManager, SelectRoleForUpdateDialog.TAG)
+        }
+    }
+
+    private fun dismissSelectRoleForUpdateDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(SelectRoleForUpdateDialog.TAG)
     }
 
     private fun initData(sharedSpaceId: SharedSpaceId) {
