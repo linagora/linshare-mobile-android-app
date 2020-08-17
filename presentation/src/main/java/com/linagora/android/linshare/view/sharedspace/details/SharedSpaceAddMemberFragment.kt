@@ -175,10 +175,9 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
     }
 
     private fun selectRoles(lastSelectedRole: SharedSpaceRole) {
-        if (binding.addMembersContainer.sharedSpaceRoles != null) {
+        binding.addMembersContainer.sharedSpaceRoles?.let {
             dismissSelectRoleDialog()
-            val roles = binding.addMembersContainer.sharedSpaceRoles!!
-            SelectRoleDialog(roles.toList(), lastSelectedRole)
+            SelectRoleDialog(it.toList(), lastSelectedRole, viewModel.onSelectRoleBehavior)
                 .show(childFragmentManager, SelectRoleDialog.TAG)
         }
     }
