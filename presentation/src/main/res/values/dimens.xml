@@ -221,5 +221,6 @@
     <dimen name="error_workgroup_name_blank">11sp</dimen>
 
     <dimen name="secondary_text_spacing">4dp</dimen>
+    <dimen name="snackbar_margin_bottom_large">96dp</dimen>
 
 </resources>

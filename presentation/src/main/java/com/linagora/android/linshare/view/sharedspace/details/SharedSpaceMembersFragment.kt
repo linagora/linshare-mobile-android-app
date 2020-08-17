@@ -40,14 +40,15 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceMemberBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenAddMembers
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.toParcelable
+import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getParentViewModel
 import com.linagora.android.linshare.util.getViewModel
 import dagger.android.support.DaggerFragment
@@ -75,6 +76,12 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpSwipeRefreshLayout()
+        sharedSpaceMemberViewModel.getAllMembers(sharedSpace.sharedSpaceId)
+    }
+
     private fun initViewModel(binding: FragmentSharedSpaceMemberBinding) {
         sharedSpaceDetailsViewModel = getParentViewModel(viewModelFactory)
         sharedSpaceMemberViewModel = getViewModel(viewModelFactory)
@@ -89,20 +96,36 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
                 is Success.ViewEvent -> reactToViewEvent(success)
             } }
         })
+
+        sharedSpaceMemberViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
+            state.map { success -> when (success) {
+                is Success.ViewEvent -> reactToViewEventMemberFragment(success)
+            } }
+        })
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is OpenAddMembers -> navigateToAddMembersFragment(viewEvent.sharedSpaceId)
         }
-        sharedSpaceDetailsViewModel.dispatchState(Either.right(Success.Idle))
+        sharedSpaceDetailsViewModel.dispatchResetState()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setUpSwipeRefreshLayout()
-        sharedSpaceMemberViewModel.getAllMembers(sharedSpace.sharedSpaceId)
+    private fun handleViewEvent(viewEvent: Success.ViewEvent) {
+        when (viewEvent) {
+            is OnSelectRoleClickForUpdate -> selectRolesForUpdate()
+        }
+        sharedSpaceMemberViewModel.dispatchResetState()
     }
+
+    private fun reactToViewEventMemberFragment(viewEvent: Success.ViewEvent) {
+        when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(sharedSpaceMemberViewModel.internetAvailable.value)) {
+            is Success.CancelViewEvent -> {}
+            else -> handleViewEvent(filteredViewEvent)
+        }
+    }
+
+    private fun selectRolesForUpdate() {}
 
     private fun setUpSwipeRefreshLayout() {
         binding.swipeLayoutMember.setColorSchemeResources(R.color.colorPrimary)

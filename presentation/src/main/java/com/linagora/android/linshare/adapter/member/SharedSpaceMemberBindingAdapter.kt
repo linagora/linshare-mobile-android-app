@@ -52,15 +52,17 @@ import com.linagora.android.linshare.util.Constant.EMPTY_RIGHT_DRAWABLE_RESOURCE
 import com.linagora.android.linshare.util.Constant.EMPTY_TOP_DRAWABLE_RESOURCE
 import com.linagora.android.linshare.util.getAvatarCharacter
 import com.linagora.android.linshare.util.toDisplayRoleNameId
+import com.linagora.android.linshare.view.base.OnSelectRolesForUpdate
 
-@BindingAdapter("sharedSpaceMemberState", "ownRoleName")
+@BindingAdapter("sharedSpaceMemberState", "ownRoleName", "selectRoleForUpdateBehavior")
 fun bindingSharedSpaceMember(
     recyclerView: RecyclerView,
     sharedSpaceMemberState: Either<Failure, Success>,
-    ownRoleName: SharedSpaceRoleName
+    ownRoleName: SharedSpaceRoleName,
+    selectRoleForUpdateBehavior: OnSelectRolesForUpdate
 ) {
     if (recyclerView.adapter == null) {
-        recyclerView.adapter = SharedSpaceMemberAdapter(ownRoleName)
+        recyclerView.adapter = SharedSpaceMemberAdapter(ownRoleName, selectRoleForUpdateBehavior)
     }
 
     sharedSpaceMemberState.fold(

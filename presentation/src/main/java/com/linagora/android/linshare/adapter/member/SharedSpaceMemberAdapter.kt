@@ -41,8 +41,9 @@ import com.linagora.android.linshare.adapter.diff.SharedSpaceMemberDiffCallback
 import com.linagora.android.linshare.databinding.MemberRowItemBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.view.base.OnSelectRolesForUpdate
 
-class SharedSpaceMemberAdapter(private val ownRoleName: SharedSpaceRoleName) :
+class SharedSpaceMemberAdapter(private val ownRoleName: SharedSpaceRoleName, private val selectRoleForUpdateBehavior: OnSelectRolesForUpdate) :
     ListAdapter<SharedSpaceMember, SharedSpaceMemberViewHolder>(SharedSpaceMemberDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SharedSpaceMemberViewHolder {
@@ -52,8 +53,8 @@ class SharedSpaceMemberAdapter(private val ownRoleName: SharedSpaceRoleName) :
                 parent,
                 false
             ),
-            ownRoleName
-        )
+            ownRoleName,
+            selectRoleForUpdateBehavior)
     }
 
     override fun onBindViewHolder(holder: SharedSpaceMemberViewHolder, position: Int) {
@@ -63,11 +64,13 @@ class SharedSpaceMemberAdapter(private val ownRoleName: SharedSpaceRoleName) :
 
 class SharedSpaceMemberViewHolder(
     private val binding: MemberRowItemBinding,
-    private val ownRoleName: SharedSpaceRoleName
+    private val ownRoleName: SharedSpaceRoleName,
+    private val selectRoleForUpdateBehavior: OnSelectRolesForUpdate
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(sharedSpaceMember: SharedSpaceMember) {
         binding.member = sharedSpaceMember
         binding.ownRoleName = ownRoleName
+        binding.onSelectRolesForUpdate = selectRoleForUpdateBehavior
         binding.executePendingBindings()
     }
 }

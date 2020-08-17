@@ -73,6 +73,7 @@
                     android:background="@color/white"
                     app:layoutManager="LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:selectRoleForUpdateBehavior="@{viewModel.onSelectRoleForUpdateBehavior}"
                     app:ownRoleName="@{ownRoleName}"
                     app:sharedSpaceMemberState="@{viewModel.viewState}"/>
 

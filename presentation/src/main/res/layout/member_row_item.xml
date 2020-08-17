@@ -39,6 +39,7 @@
         <import type="com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole" />
+        <import type="com.linagora.android.linshare.view.base.OnSelectRolesForUpdate" />
 
         <variable
             name="member"
@@ -47,6 +48,10 @@
         <variable
             name="ownRoleName"
             type="SharedSpaceRoleName" />
+
+        <variable
+            name="onSelectRolesForUpdate"
+            type="OnSelectRolesForUpdate" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,6 +116,7 @@
             android:id="@+id/memberRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_drop_down"
             android:drawablePadding="@dimen/select_role_padding_vertical"
             android:singleLine="true"
             android:textColor="@color/colorPrimary"
@@ -120,6 +126,7 @@
             android:layout_marginStart="@dimen/item_upload_container_margin_side"
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             app:layout_constraintStart_toEndOf="@id/memberAvatar"
+            android:onClick="@{() -> onSelectRolesForUpdate.onSelectRoles(member.role, member)}"
             app:ownRoleName="@{ownRoleName}"
             app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.editWorkGroupMemberRole}"
             app:memberRole="@{member}"/>
