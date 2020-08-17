@@ -31,27 +31,22 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model
+package com.linagora.android.linshare.view.action
 
-sealed class OperatorType {
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
+import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRoleForUpdate
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.OnSelectRolesForUpdate
 
-    abstract class OfflineOperatorType : OperatorType()
+class OnSelectRolesForUpdateBehavior(val viewModel: BaseViewModel) : OnSelectRolesForUpdate {
+    override fun onSelectRoles(lastSelectedRole: SharedSpaceRole, sharedSpaceMember: SharedSpaceMember) {
+        viewModel.dispatchUIState(Either.right(OnSelectRoleClickForUpdate(lastSelectedRole, sharedSpaceMember)))
+    }
 
-    abstract class OnlineOperatorType : OperatorType()
-
-    object SwiftRefresh : OnlineOperatorType()
-
-    object CreateWorkGroup : OnlineOperatorType()
-
-    object OpenContextMenu : OfflineOperatorType()
-
-    object OnItemClick : OnlineOperatorType()
-
-    object DeleteDocument : OnlineOperatorType()
-
-    object ViewDetails : OnlineOperatorType()
-
-    object OnSelectRoleClick : OfflineOperatorType()
-
-    object OnSelectedRoleForUpdate : OnlineOperatorType()
+    override fun onSelectedRoles(selectedRole: SharedSpaceRole, sharedSpaceMember: SharedSpaceMember) {
+        viewModel.dispatchUIState(Either.right(OnSelectedRoleForUpdate(selectedRole, sharedSpaceMember)))
+    }
 }

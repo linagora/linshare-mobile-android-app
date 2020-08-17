@@ -33,11 +33,15 @@
 
 package com.linagora.android.linshare.domain.usecases.sharedspace.role
 
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 
 data class GetAllSharedSpaceRolesSuccess(val roles: List<SharedSpaceRole>) : Success.ViewState()
 data class GetAllSharedSpaceRolesFailed(val throwable: Throwable) : Failure.FeatureFailure()
 data class OnSelectRoleClick(val lastSelectedRole: SharedSpaceRole) : Success.ViewEvent()
+data class OnSelectRoleClickForUpdate(val lastSelectedRole: SharedSpaceRole, val sharedSpaceMember: SharedSpaceMember) : Success.OfflineViewEvent(OperatorType.OnSelectRoleClick)
 data class OnSelectedRole(val selectedRole: SharedSpaceRole) : Success.ViewEvent()
+data class OnSelectedRoleForUpdate(val selectedRole: SharedSpaceRole, val sharedSpaceMember: SharedSpaceMember) : Success.OnlineViewEvent(OperatorType.OnSelectedRoleForUpdate)
