@@ -39,6 +39,11 @@
         <import type="com.linagora.android.linshare.view.sharedspace.details.SharedSpaceAddMemberViewModel"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+
+        <variable
+            name="internetAvailable"
+            type="ConnectionLiveData" />
 
         <variable
             name="ownRoleName"
@@ -80,6 +85,16 @@
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <include
+            android:id="@+id/networkBannerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/network_banner_layout"
+            app:connectionState="@{internetAvailable}"
+            app:layout_constraintTop_toBottomOf="@id/appBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <include
             android:id="@+id/addMembersContainer"
@@ -134,5 +149,11 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        <View
+            android:id="@+id/anchorSnackbar"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/snackbar_margin_bottom"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

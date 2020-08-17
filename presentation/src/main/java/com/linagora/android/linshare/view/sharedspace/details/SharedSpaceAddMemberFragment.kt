@@ -44,6 +44,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentAddMemberBinding
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompletePattern
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteType
@@ -110,6 +111,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
         binding.sharedSpaceId = arguments.sharedSpaceId.toSharedSpaceId()
         binding.viewModel = viewModel
         binding.ownRoleName = arguments.ownRoleName
+        binding.internetAvailable = viewModel.internetAvailable
         observeViewState()
     }
 
@@ -158,14 +160,14 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     private fun alertAddMemberFailed() {
         Snackbar.make(binding.root, requireContext().resources.getString(R.string.add_member_failed), Snackbar.LENGTH_SHORT)
-            .setAnchorView(binding.swipeLayoutMember)
+            .setAnchorView(binding.anchorSnackbar)
             .errorLayout(requireContext())
             .show()
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(viewModel.internetAvailable.value)) {
-            is Success.CancelViewEvent -> {}
+            is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
             else -> handleViewEvent(filteredViewEvent)
         }
     }
@@ -186,6 +188,19 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
             SelectRoleForUpdateDialog(it.toList(), lastSelectedRole, sharedSpaceMember, viewModel.onSelectRoleForUpdateBehavior)
                 .show(childFragmentManager, SelectRoleForUpdateDialog.TAG)
         }
+    }
+
+    private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
+        val messageId = when (operatorType) {
+            is OperatorType.OnSelectedRoleForUpdate -> R.string.can_not_change_member_role_without_network
+            else -> R.string.can_not_process_without_network
+        }
+        dismissSelectRoleForUpdateDialog()
+        Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.anchorSnackbar)
+            .show()
+        viewModel.dispatchResetState()
     }
 
     private fun dismissSelectRoleForUpdateDialog() {

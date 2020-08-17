@@ -222,5 +222,6 @@
 
     <dimen name="secondary_text_spacing">4dp</dimen>
     <dimen name="snackbar_margin_bottom_large">96dp</dimen>
+    <dimen name="snackbar_margin_bottom">48dp</dimen>
 
 </resources>
