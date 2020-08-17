@@ -252,4 +252,5 @@
     <string name="audit_action_message_add_member" translatable="false">%1$s has added a new member : %2$s to the Workgroup : %3$s.</string>
     <string name="audit_action_message_delete_member" translatable="false">%1$s has removed the member : %2$s from the Workgroup : %3$s.</string>
     <string name="audit_action_message_update_member" translatable="false">%1$s has edited the member : %2$s from the Workgroup : %3$s.</string>
+    <string name="can_not_change_member_role_without_network" translatable="false">Can not change member role while offline</string>
 </resources>

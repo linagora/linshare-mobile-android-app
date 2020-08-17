@@ -41,6 +41,11 @@
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+
+        <variable
+            name="internetAvailable"
+            type="ConnectionLiveData" />
 
         <variable
             name="sharedSpaceId"
@@ -78,6 +83,16 @@
                         app:sharedSpaceDetailsTitle="@{viewModel.viewState}"/>
 
                 </androidx.appcompat.widget.Toolbar>
+
+                <include
+                    android:id="@+id/networkBannerContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/network_banner_layout"
+                    app:connectionState="@{internetAvailable}"
+                    app:layout_constraintTop_toBottomOf="@id/app_bar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabsDetails"

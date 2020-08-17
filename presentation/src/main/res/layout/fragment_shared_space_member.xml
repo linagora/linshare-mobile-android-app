@@ -38,6 +38,11 @@
     <data>
         <import type="com.linagora.android.linshare.view.sharedspace.details.SharedSpaceMemberViewModel"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+
+        <variable
+            name="internetAvailable"
+            type="ConnectionLiveData" />
 
         <variable
             name="viewModel"
@@ -78,6 +83,14 @@
                     app:sharedSpaceMemberState="@{viewModel.viewState}"/>
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <View
+                android:id="@+id/anchorSnackbar"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/snackbar_margin_bottom_large"
+                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

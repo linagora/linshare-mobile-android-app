@@ -84,6 +84,7 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
         viewModel = getViewModel(viewModelFactory)
         binding.viewModel = viewModel
         binding.sharedSpaceId = sharedSpaceDetailsArgs.sharedSpaceId.toSharedSpaceId()
+        binding.internetAvailable = viewModel.internetAvailable
         observeViewState()
     }
 

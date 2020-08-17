@@ -40,8 +40,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceMemberBinding
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
@@ -57,6 +59,7 @@ import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getParentViewModel
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.dialog.SelectRoleForUpdateDialog
+import com.linagora.android.linshare.view.widget.errorLayout
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -93,6 +96,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
         sharedSpaceMemberViewModel = getViewModel(viewModelFactory)
         binding.viewModel = sharedSpaceMemberViewModel
         binding.ownRoleName = sharedSpace.role.name
+        binding.internetAvailable = sharedSpaceMemberViewModel.internetAvailable
         observeViewState()
     }
 
@@ -124,6 +128,19 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
         sharedSpaceDetailsViewModel.dispatchResetState()
     }
 
+    private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
+        val messageId = when (operatorType) {
+            is OperatorType.OnSelectedRoleForUpdate -> R.string.can_not_change_member_role_without_network
+            else -> R.string.can_not_process_without_network
+        }
+        dismissSelectRoleForUpdateDialog()
+        Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.anchorSnackbar)
+            .show()
+        sharedSpaceMemberViewModel.dispatchResetState()
+    }
+
     private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is OnSelectRoleClickForUpdate -> showSelectRoleForUpdateDialog(viewEvent.lastSelectedRole, viewEvent.sharedSpaceMember)
@@ -134,7 +151,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
 
     private fun reactToViewEventMemberFragment(viewEvent: Success.ViewEvent) {
         when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(sharedSpaceMemberViewModel.internetAvailable.value)) {
-            is Success.CancelViewEvent -> {}
+            is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
             else -> handleViewEvent(filteredViewEvent)
         }
     }
