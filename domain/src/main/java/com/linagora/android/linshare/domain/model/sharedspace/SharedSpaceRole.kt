@@ -57,6 +57,10 @@ object SharedSpaceOperationRole {
     val AddMembersRole = listOf(
         SharedSpaceRoleName.ADMIN
     )
+
+    val EditWorkGroupMemberRole = listOf(
+        SharedSpaceRoleName.ADMIN
+    )
 }
 
 fun SharedSpaceRole.canUpload(): Boolean {

@@ -20,6 +20,8 @@ class SharedSpaceListExtensionsTest {
         private val LIST_SHARED_SPACE_DELETE_ROLE = listOf(SHARED_SPACE_1, SHARED_SPACE_4)
 
         private val LIST_SHARED_SPACE_ADD_MEMBER_ROLE = listOf(SHARED_SPACE_1)
+
+        private val LIST_SHARED_SPACE_EDIT_MEMBER_ROLE = listOf(SHARED_SPACE_1)
     }
 
     @Test
@@ -44,5 +46,11 @@ class SharedSpaceListExtensionsTest {
     fun filterSharedSpaceListByAddMemberRoleShouldReturnSharedSpdaceListWithAddMemberRole() {
         assertThat(SHARED_SPACE_LIST.filterSharedSpaceDestinationByRole(emptyList()))
             .isEqualTo(SHARED_SPACE_LIST)
+    }
+
+    @Test
+    fun filterSharedSpaceListByEditMemberRoleShouldReturnSharedSpaceListWithEditMemberRole() {
+        assertThat(SHARED_SPACE_LIST.filterSharedSpaceDestinationByRole(SharedSpaceOperationRole.EditWorkGroupMemberRole))
+            .isEqualTo(LIST_SHARED_SPACE_EDIT_MEMBER_ROLE)
     }
 }
