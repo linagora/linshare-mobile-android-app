@@ -104,6 +104,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
         binding.lifecycleOwner = this
         binding.sharedSpaceId = arguments.sharedSpaceId.toSharedSpaceId()
         binding.viewModel = viewModel
+        binding.ownRoleName = arguments.ownRoleName
         observeViewState()
     }
 
