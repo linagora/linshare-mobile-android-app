@@ -176,6 +176,9 @@
         <argument
             android:name="sharedSpaceId"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable" />
+        <argument
+            android:name="ownRoleName"
+            app:argType="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceDestination"

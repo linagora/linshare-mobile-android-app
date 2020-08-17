@@ -186,7 +186,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
 
     private fun navigateToAddMembersFragment(sharedSpaceId: SharedSpaceId) {
         val action = SharedSpaceDetailsFragmentDirections
-            .actionNavigationSharedSpaceToSharedSpaceAddMemberFragment(sharedSpaceId.toParcelable())
+            .actionNavigationSharedSpaceToSharedSpaceAddMemberFragment(sharedSpaceId.toParcelable(), sharedSpace.role.name)
         findNavController().navigate(action)
     }
 }
