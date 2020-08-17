@@ -37,12 +37,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.linagora.android.linshare.adapter.diff.SharedSpaceDiffCallback
+import com.linagora.android.linshare.adapter.diff.SharedSpaceMemberDiffCallback
 import com.linagora.android.linshare.databinding.MemberRowItemBinding
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 
 class SharedSpaceMemberAdapter() :
-    ListAdapter<SharedSpaceMember, SharedSpaceMemberViewHolder>(SharedSpaceDiffCallback) {
+    ListAdapter<SharedSpaceMember, SharedSpaceMemberViewHolder>(SharedSpaceMemberDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SharedSpaceMemberViewHolder {
         return SharedSpaceMemberViewHolder(
