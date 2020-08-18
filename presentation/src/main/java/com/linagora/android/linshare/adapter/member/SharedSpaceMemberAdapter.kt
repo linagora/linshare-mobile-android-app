@@ -42,8 +42,13 @@ import com.linagora.android.linshare.databinding.MemberRowItemBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.view.base.OnSelectRolesForUpdate
+import com.linagora.android.linshare.view.base.WorkGroupMemberBehavior
 
-class SharedSpaceMemberAdapter(private val ownRoleName: SharedSpaceRoleName, private val selectRoleForUpdateBehavior: OnSelectRolesForUpdate) :
+class SharedSpaceMemberAdapter(
+    private val ownRoleName: SharedSpaceRoleName,
+    private val selectRoleForUpdateBehavior: OnSelectRolesForUpdate,
+    private val workGroupMemberBehavior: WorkGroupMemberBehavior
+) :
     ListAdapter<SharedSpaceMember, SharedSpaceMemberViewHolder>(SharedSpaceMemberDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SharedSpaceMemberViewHolder {
@@ -54,7 +59,8 @@ class SharedSpaceMemberAdapter(private val ownRoleName: SharedSpaceRoleName, pri
                 false
             ),
             ownRoleName,
-            selectRoleForUpdateBehavior)
+            selectRoleForUpdateBehavior,
+            workGroupMemberBehavior)
     }
 
     override fun onBindViewHolder(holder: SharedSpaceMemberViewHolder, position: Int) {
@@ -65,12 +71,14 @@ class SharedSpaceMemberAdapter(private val ownRoleName: SharedSpaceRoleName, pri
 class SharedSpaceMemberViewHolder(
     private val binding: MemberRowItemBinding,
     private val ownRoleName: SharedSpaceRoleName,
-    private val selectRoleForUpdateBehavior: OnSelectRolesForUpdate
+    private val selectRoleForUpdateBehavior: OnSelectRolesForUpdate,
+    private val workGroupMemberBehavior: WorkGroupMemberBehavior
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(sharedSpaceMember: SharedSpaceMember) {
         binding.member = sharedSpaceMember
         binding.ownRoleName = ownRoleName
         binding.onSelectRolesForUpdate = selectRoleForUpdateBehavior
+        binding.workGroupMemberBehavior = workGroupMemberBehavior
         binding.executePendingBindings()
     }
 }

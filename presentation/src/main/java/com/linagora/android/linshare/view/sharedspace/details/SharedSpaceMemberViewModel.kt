@@ -48,6 +48,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.OnSelectRolesForUpdateBehavior
+import com.linagora.android.linshare.view.action.WorkGroupMemberItemBehavior
 import com.linagora.android.linshare.view.base.BaseViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
@@ -63,6 +64,8 @@ class SharedSpaceMemberViewModel @Inject constructor(
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     val onSelectRoleForUpdateBehavior = OnSelectRolesForUpdateBehavior(this)
+
+    val workGroupMemberBehavior = WorkGroupMemberItemBehavior(this)
 
     private val mutableListSharedSpaceRoles = MutableLiveData<List<SharedSpaceRole>>(emptyList())
     val listSharedSpaceRoles: LiveData<List<SharedSpaceRole>> = mutableListSharedSpaceRoles

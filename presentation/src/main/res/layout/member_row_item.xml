@@ -40,6 +40,7 @@
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole" />
         <import type="com.linagora.android.linshare.view.base.OnSelectRolesForUpdate" />
+        <import type="com.linagora.android.linshare.view.base.WorkGroupMemberBehavior" />
 
         <variable
             name="member"
@@ -52,6 +53,10 @@
         <variable
             name="onSelectRolesForUpdate"
             type="OnSelectRolesForUpdate" />
+
+        <variable
+            name="workGroupMemberBehavior"
+            type="WorkGroupMemberBehavior" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -120,6 +125,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/memberName"
             android:visibility="invisible"
+            android:onClick="@{() -> workGroupMemberBehavior.onDeleteWorkGroupMember(member)}"
             app:ownRoleName="@{ownRoleName}"
             app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteWorkGroupMemberRole}"
             app:layout_constraintBottom_toBottomOf="@+id/memberMail" />
