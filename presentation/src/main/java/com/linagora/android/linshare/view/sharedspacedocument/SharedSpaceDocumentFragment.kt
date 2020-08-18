@@ -462,8 +462,9 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     private fun navigateToSelectDestination(workGroupNode: WorkGroupNode) {
         val action = SharedSpaceDocumentFragmentDirections
-            .actionNavigationSharedSpacedDocumentToNavigationCopySharedSpaceDestinationFragment(
+            .navigateToCopySharedSpaceDestinationFragment(
                 workGroupNode.sharedSpaceId.toParcelable(),
+                arguments.navigationInfo.nodeIdParcelable,
                 workGroupNode.workGroupNodeId.toParcelable())
         findNavController().navigate(action)
     }

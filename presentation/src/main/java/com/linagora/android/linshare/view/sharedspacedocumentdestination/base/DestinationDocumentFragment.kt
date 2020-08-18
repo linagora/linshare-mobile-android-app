@@ -137,6 +137,7 @@ abstract class DestinationDocumentFragment : MainNavigationFragment() {
                 }
             }
         })
+        binding.executePendingBindings()
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
@@ -180,7 +181,7 @@ abstract class DestinationDocumentFragment : MainNavigationFragment() {
     abstract fun navigateInCancelDestination()
     abstract fun navigateInChooseDestination()
 
-    protected fun navigateBack() {
+    protected open fun navigateBack() {
         destinationDocumentViewModel.currentNode.value?.let { node ->
             node.treePath.takeIf { it.isNullOrEmpty() }
                 ?.let { navigateBackToSharedSpaceDestination() }

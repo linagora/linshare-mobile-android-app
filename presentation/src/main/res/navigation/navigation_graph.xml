@@ -158,7 +158,7 @@
             android:name="navigationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
         <action
-            android:id="@+id/action_navigation_shared_spaced_document_to_navigationCopySharedSpaceDestinationFragment"
+            android:id="@+id/navigateToCopySharedSpaceDestinationFragment"
             app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
     </fragment>
     <fragment
@@ -249,21 +249,44 @@
             android:name="copyFromSharedSpaceId"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable" />
         <argument
-            android:name="copiedFromNodeId"
+            android:name="copyFromParentNodeId"
+            app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable"/>
+        <argument
+            android:name="copyFromNodeId"
             app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable" />
+        <action
+            android:id="@+id/navigateToCopySharedSpaceDestinationDocumentFragment"
+            app:destination="@id/navigationCopySharedSpaceDestinationDocumentFragment" />
+        <action
+            android:id="@+id/action_navigationCopySharedSpaceDestinationFragment_to_navigation_shared_spaced_document"
+            app:destination="@id/navigation_shared_spaced_document" />
     </fragment>
     <fragment
         android:id="@+id/navigationCopySharedSpaceDestinationDocumentFragment"
         android:name="com.linagora.android.linshare.view.sharedspacedocumentdestination.copy.sharedspace.CopySharedSpaceDestinationDocumentFragment"
         tools:layout="@layout/fragment_shared_space_document_destination" >
         <argument
-            android:name="copiedFromSharedSpaceId"
+            android:name="copyFromSharedSpaceId"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable" />
         <argument
-            android:name="copiedFromNodeId"
+            android:name="copyFromParentNodeId"
+            app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable" />
+        <argument
+            android:name="copyFromNodeId"
             app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable" />
         <argument
             android:name="navigationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <action
+            android:id="@+id/navigateToFolder"
+            app:destination="@id/navigationCopySharedSpaceDestinationDocumentFragment" />
+        <action
+            android:id="@+id/navigateToSharedSpacedDocument"
+            app:destination="@id/navigation_shared_spaced_document"
+            app:popUpTo="@+id/navigation_shared_spaced_document"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/navigateToCopySharedSpaceDestinationFragment"
+            app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
     </fragment>
 </navigation>
