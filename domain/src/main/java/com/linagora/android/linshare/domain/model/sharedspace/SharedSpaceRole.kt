@@ -67,6 +67,10 @@ object SharedSpaceOperationRole {
         SharedSpaceRoleName.WRITER,
         SharedSpaceRoleName.ADMIN
     )
+
+    val DeleteWorkGroupMemberRole = listOf(
+        SharedSpaceRoleName.ADMIN
+    )
 }
 
 fun SharedSpaceRole.canUpload(): Boolean {

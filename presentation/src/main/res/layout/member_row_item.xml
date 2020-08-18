@@ -80,7 +80,7 @@
             android:singleLine="true"
             android:textSize="@dimen/my_space_item_primary_text_size"
             android:textColor="@color/file_name_color"
-            app:layout_constraintEnd_toStartOf="@id/memberTag"
+            app:layout_constraintEnd_toStartOf="@id/remove"
             app:layout_constraintStart_toEndOf="@id/memberAvatar"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@{member.sharedSpaceAccount.name}"/>
@@ -109,8 +109,20 @@
             android:layout_marginEnd="@dimen/item_upload_container_margin_side"
             app:layout_constraintTop_toBottomOf="@id/memberName"
             app:layout_constraintStart_toEndOf="@id/memberAvatar"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/remove"
             android:text="@{member.sharedSpaceAccount.mail}"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/remove"
+            android:layout_width="@dimen/remove_member_icon_size"
+            android:layout_height="@dimen/remove_member_icon_size"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/memberName"
+            android:visibility="invisible"
+            app:ownRoleName="@{ownRoleName}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.deleteWorkGroupMemberRole}"
+            app:layout_constraintBottom_toBottomOf="@+id/memberMail" />
 
         <TextView
             android:id="@+id/memberRole"

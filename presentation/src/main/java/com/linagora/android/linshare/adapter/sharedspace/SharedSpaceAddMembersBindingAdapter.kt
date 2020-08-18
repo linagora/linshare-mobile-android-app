@@ -36,6 +36,7 @@ package com.linagora.android.linshare.adapter.sharedspace
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
@@ -44,6 +45,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter
 import com.linagora.android.linshare.adapter.autocomplete.UserAutoCompleteAdapter.StateSuggestionUser
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetMembersSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllSharedSpaceRolesFailed
@@ -120,4 +122,11 @@ fun bindingMemberCount(textView: TextView, sharedSpaceMemberState: Either<Failur
             }
         }
     )
+}
+
+@BindingAdapter("ownRoleName", "operationRoles")
+fun bindingVisibilityRemoveButton(imageView: AppCompatImageView, ownRoleName: SharedSpaceRoleName, operationRoles: List<SharedSpaceRoleName>) {
+    imageView.visibility = operationRoles.takeIf { it.isNotEmpty() && it.contains(ownRoleName) }
+        ?.let { View.VISIBLE }
+        ?: View.GONE
 }
