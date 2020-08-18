@@ -31,22 +31,11 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.usecases.sharedspace.member
+package com.linagora.android.linshare.view.base
 
-import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
-import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Success
 
-data class GetMembersFailed(val throwable: Throwable) : Failure.FeatureFailure()
-object GetMembersNoResult : Failure.FeatureFailure()
-data class GetMembersSuccess(val members: List<SharedSpaceMember>) : Success.ViewState()
-data class AddMemberSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class AddMemberFailed(val throwable: Throwable) : Failure.FeatureFailure()
-object AddExistingMemberState : Failure.FeatureFailure()
-data class EditWorkGroupMemberRoleSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class EditWorkGroupMemberRoleFailed(val throwable: Throwable) : Failure.FeatureFailure()
-data class DeleteMemberSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class DeleteMemberFailed(val throwable: Throwable) : Failure.FeatureFailure()
-data class OnDeleteWorkGroupMemberClick(val member: SharedSpaceMember) : Success.OnlineViewEvent(OperatorType.DeleteWorkGroupMember)
-data class OnShowConfirmDeleteMemberClick(val member: SharedSpaceMember) : Success.OfflineViewEvent(OperatorType.ShowConfirmDialogClick)
+interface WorkGroupMemberBehavior {
+
+    fun onDeleteWorkGroupMember(sharedSpaceMember: SharedSpaceMember)
+}

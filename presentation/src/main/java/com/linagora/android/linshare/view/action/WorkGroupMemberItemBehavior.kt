@@ -31,22 +31,16 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.usecases.sharedspace.member
+package com.linagora.android.linshare.view.action
 
-import com.linagora.android.linshare.domain.model.OperatorType
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
-import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.OnShowConfirmDeleteMemberClick
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.WorkGroupMemberBehavior
 
-data class GetMembersFailed(val throwable: Throwable) : Failure.FeatureFailure()
-object GetMembersNoResult : Failure.FeatureFailure()
-data class GetMembersSuccess(val members: List<SharedSpaceMember>) : Success.ViewState()
-data class AddMemberSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class AddMemberFailed(val throwable: Throwable) : Failure.FeatureFailure()
-object AddExistingMemberState : Failure.FeatureFailure()
-data class EditWorkGroupMemberRoleSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class EditWorkGroupMemberRoleFailed(val throwable: Throwable) : Failure.FeatureFailure()
-data class DeleteMemberSuccess(val member: SharedSpaceMember) : Success.ViewState()
-data class DeleteMemberFailed(val throwable: Throwable) : Failure.FeatureFailure()
-data class OnDeleteWorkGroupMemberClick(val member: SharedSpaceMember) : Success.OnlineViewEvent(OperatorType.DeleteWorkGroupMember)
-data class OnShowConfirmDeleteMemberClick(val member: SharedSpaceMember) : Success.OfflineViewEvent(OperatorType.ShowConfirmDialogClick)
+class WorkGroupMemberItemBehavior(val viewModel: BaseViewModel) : WorkGroupMemberBehavior {
+    override fun onDeleteWorkGroupMember(sharedSpaceMember: SharedSpaceMember) {
+        viewModel.dispatchUIState(Either.right(OnShowConfirmDeleteMemberClick(sharedSpaceMember)))
+    }
+}

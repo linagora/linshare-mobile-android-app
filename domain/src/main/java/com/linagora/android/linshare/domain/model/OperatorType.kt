@@ -62,4 +62,6 @@ sealed class OperatorType {
     object CopyFile : OnlineOperatorType()
 
     object DeleteWorkGroupMember : OnlineOperatorType()
+
+    object ShowConfirmDialogClick : OfflineOperatorType()
 }
