@@ -187,6 +187,9 @@
         <argument
             android:name="ownRoleName"
             app:argType="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
+        <argument
+            android:name="sharedSpaceName"
+            app:argType="string"/>
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceDestination"
