@@ -31,37 +31,31 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view
+package com.linagora.android.linshare.view.dialog
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import com.linagora.android.linshare.view.dialog.ConfirmDeleteWorkGroupMemberDialog
-import com.linagora.android.linshare.view.dialog.ReadStorageExplanationPermissionDialog
-import com.linagora.android.linshare.view.dialog.WriteStorageExplanationPermissionDialog
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.view.View
+import android.widget.TextView
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.model.resources.LayoutId
 
-@Module
-@Suppress("UNUSED")
-abstract class MainActivityModule {
+class ConfirmDeleteWorkGroupMemberDialog(
+    private val title: String,
+    negativeText: String,
+    positiveText: String,
+    onNegativeCallback: OnNegativeCallback = NoOpCallback,
+    onPositiveCallback: OnPositiveCallback = NoOpCallback
+) : BaseConfirmDialogFragment(
+    LayoutId(R.layout.dialog_confirm_layout),
+    negativeText,
+    positiveText,
+    onNegativeCallback,
+    onPositiveCallback
+) {
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(MainActivityViewModel::class)
-    abstract fun bindViewModel(viewModel: MainActivityViewModel): ViewModel
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    abstract fun contributeReadStorageExplanationDialog(): ReadStorageExplanationPermissionDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    abstract fun contributeWriteStorageExplanationDialog(): WriteStorageExplanationPermissionDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmDeleteWorkGroupMemberDialog(): ConfirmDeleteWorkGroupMemberDialog
+    override fun setUpContent(contentView: View) {
+        with(contentView) {
+            val titleDialog = findViewById<TextView>(R.id.titleDialog)
+            titleDialog.text = title
+        }
+    }
 }
