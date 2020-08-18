@@ -33,22 +33,31 @@
 
 package com.linagora.android.linshare.view.sharedspacedocumentdestination.copy.sharedspace
 
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.sharedspacedestination.copy.sharedspace.CopySharedSpaceDestinationFragment.CopySharedSpaceDestination.generateFileTypeToBackToCopyFromDestination
 import com.linagora.android.linshare.view.sharedspacedocumentdestination.base.DestinationDocumentFragment
 import com.linagora.android.linshare.view.sharedspacedocumentdestination.base.DestinationDocumentViewModel
+import org.slf4j.LoggerFactory
 
 class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment() {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(CopySharedSpaceDestinationDocumentFragment::class.java)
+    }
 
     private val args: CopySharedSpaceDestinationDocumentFragmentArgs by navArgs()
 
@@ -71,6 +80,11 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
         return args.navigationInfo.getCurrentNodeId()
     }
 
+    override fun generateSelectNodeId(currentNode: WorkGroupNode): WorkGroupNodeId {
+        return args.navigationInfo.getCurrentNodeId()
+            ?: currentNode.parentWorkGroupNodeId
+    }
+
     override fun navigateIntoSubFolder(subFolder: WorkGroupNode) {
         val actionIntoSubfolder = CopySharedSpaceDestinationDocumentFragmentDirections
             .navigateToFolder(
@@ -90,7 +104,9 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
             .navigateToSharedSpacedDocument(
                 SharedSpaceNavigationInfo(
                     args.copyFromSharedSpaceId,
-                    generateFileTypeToBackToSharedSpaceDocument(),
+                    generateFileTypeToBackToCopyFromDestination(
+                        args.copyFromSharedSpaceId.toSharedSpaceId(),
+                        args.copyFromParentNodeId.toWorkGroupNodeId()),
                     args.copyFromParentNodeId
                 )
             )
@@ -98,15 +114,29 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
         findNavController().navigate(actionCancelCopy)
     }
 
-    private fun generateFileTypeToBackToSharedSpaceDocument(): Navigation.FileType {
-        if (args.copyFromParentNodeId.uuid == args.copyFromSharedSpaceId.uuid) {
-            return Navigation.FileType.ROOT
-        }
-        return Navigation.FileType.NORMAL
+    override fun navigateInChooseDestination() {
+        runCatching { selectCurrentDestination() }
+            .onFailure {
+                it.printStackTrace()
+                LOGGER.info("navigateInChooseDestination(): ${it.message}") }
+            .map { selectedNavigation -> SelectedDestinationInfoForOperate(
+                Event.OperatorPickDestination.COPY,
+                args.copyFromNodeId,
+                selectedNavigation) }
+            .map(this@CopySharedSpaceDestinationDocumentFragment::createChooseAction)
+            .map { findNavController().navigate(it) }
     }
 
-    override fun navigateInChooseDestination() {
-        TODO("Not yet implemented")
+    private fun createChooseAction(selectedDestinationInfoForOperate: SelectedDestinationInfoForOperate): NavDirections {
+        return CopySharedSpaceDestinationDocumentFragmentDirections.navigateToSharedSpacedDocument(
+            navigationInfo = SharedSpaceNavigationInfo(
+                args.copyFromSharedSpaceId,
+                generateFileTypeToBackToCopyFromDestination(
+                    args.copyFromSharedSpaceId.toSharedSpaceId(),
+                    args.copyFromParentNodeId.toWorkGroupNodeId()),
+                args.copyFromParentNodeId
+            ),
+            selectedDestinationInfoFor = selectedDestinationInfoForOperate)
     }
 
     override fun navigateBackToSharedSpaceDestination() {

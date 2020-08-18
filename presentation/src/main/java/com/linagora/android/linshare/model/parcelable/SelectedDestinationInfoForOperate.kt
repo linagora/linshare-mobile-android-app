@@ -31,15 +31,15 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view
+package com.linagora.android.linshare.model.parcelable
 
-class Event {
+import android.os.Parcelable
+import com.linagora.android.linshare.view.Event
+import kotlinx.android.parcel.Parcelize
 
-    enum class DestinationPickerEvent {
-        NONE, CANCEL, CHOOSE, BACK
-    }
-
-    enum class OperatorPickDestination {
-        COPY,
-    }
-}
+@Parcelize
+class SelectedDestinationInfoForOperate(
+    val operatorPickDestination: Event.OperatorPickDestination,
+    val operateWorkGroupNode: WorkGroupNodeIdParcelable,
+    val selectedDestinationInfo: SelectedDestinationInfo
+) : Parcelable

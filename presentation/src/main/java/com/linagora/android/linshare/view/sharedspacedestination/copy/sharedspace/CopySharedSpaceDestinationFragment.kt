@@ -35,10 +35,14 @@ package com.linagora.android.linshare.view.sharedspacedestination.copy.sharedspa
 
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.toParcelable
+import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
+import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationFragment
@@ -46,17 +50,42 @@ import com.linagora.android.linshare.view.sharedspacedestination.base.Destinatio
 
 class CopySharedSpaceDestinationFragment : DestinationFragment() {
 
+    object CopySharedSpaceDestination {
+
+        fun generateFileTypeToBackToCopyFromDestination(
+            copyFromSharedSpaceId: SharedSpaceId,
+            copyFromParentNodeId: WorkGroupNodeId
+        ): Navigation.FileType {
+            if (copyFromParentNodeId.uuid == copyFromSharedSpaceId.uuid) {
+                return Navigation.FileType.ROOT
+            }
+            return Navigation.FileType.NORMAL
+        }
+    }
+
     private val args: CopySharedSpaceDestinationFragmentArgs by navArgs()
 
     override val destinationViewModel: DestinationViewModel by lazy {
         getViewModel<CopySharedSpaceDestinationViewModel>(viewModelFactory) }
 
-    override fun toolbarNavigationListener() {
-        findNavController().popBackStack()
-    }
+    override fun toolbarNavigationListener() = navigateToCopyFrom()
 
-    override fun onDestinationBackPressed() {
-        findNavController().popBackStack()
+    override fun onDestinationBackPressed() = navigateToCopyFrom()
+
+    private fun navigateToCopyFrom() {
+        val actionToBack = CopySharedSpaceDestinationFragmentDirections
+            .actionNavigateToSharedSpacedDocument(
+                SharedSpaceNavigationInfo(
+                    args.copyFromSharedSpaceId,
+                    CopySharedSpaceDestination.generateFileTypeToBackToCopyFromDestination(
+                        args.copyFromSharedSpaceId.toSharedSpaceId(),
+                        args.copyFromParentNodeId.toWorkGroupNodeId()
+                    ),
+                    args.copyFromParentNodeId
+                )
+            )
+
+        findNavController().navigate(actionToBack)
     }
 
     override fun navigateIntoDocumentDestination(sharedSpaceNodeNested: SharedSpaceNodeNested) {

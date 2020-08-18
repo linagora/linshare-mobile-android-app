@@ -63,7 +63,7 @@ abstract class DestinationFragment : MainNavigationFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSharedSpaceDestinationBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         observeViewState(binding)
         return binding.root
     }

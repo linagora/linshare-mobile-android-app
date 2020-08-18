@@ -51,7 +51,11 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
+import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.sharedspacedocumentdestination.CancelPickDestinationViewState
@@ -176,6 +180,28 @@ abstract class DestinationDocumentFragment : MainNavigationFragment() {
         }
         destinationDocumentViewModel.dispatchResetState()
     }
+
+    protected fun selectCurrentDestination(): SelectedDestinationInfo {
+        val currentSharedSpace = destinationDocumentViewModel.currentSharedSpace.value
+        val currentNode = destinationDocumentViewModel.currentNode.value
+
+        require(currentSharedSpace != null) { "sharedSpace is not available" }
+        require(currentNode != null) { "workgroup node is not available" }
+
+        return SelectedDestinationInfo(
+            sharedSpaceDestinationInfo = SharedSpaceDestinationInfo(
+                currentSharedSpace.sharedSpaceId.toParcelable(),
+                currentSharedSpace.name,
+                currentSharedSpace.quotaId.toParcelable()
+            ),
+            parentDestinationInfo = ParentDestinationInfo(
+                generateSelectNodeId(currentNode).toParcelable(),
+                currentNode.name
+            )
+        )
+    }
+
+    abstract fun generateSelectNodeId(currentNode: WorkGroupNode): WorkGroupNodeId
 
     abstract fun navigateIntoSubFolder(subFolder: WorkGroupNode)
     abstract fun navigateInCancelDestination()

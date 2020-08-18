@@ -39,9 +39,7 @@ import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior
 import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CopySharedSpaceDestinationViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     getSharedSpaceInteractor: GetSharedSpaceInteractor,

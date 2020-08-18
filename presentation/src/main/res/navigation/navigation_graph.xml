@@ -160,6 +160,11 @@
         <action
             android:id="@+id/navigateToCopySharedSpaceDestinationFragment"
             app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
+        <argument
+            android:name="selectedDestinationInfoFor"
+            app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceDetails"
@@ -258,8 +263,10 @@
             android:id="@+id/navigateToCopySharedSpaceDestinationDocumentFragment"
             app:destination="@id/navigationCopySharedSpaceDestinationDocumentFragment" />
         <action
-            android:id="@+id/action_navigationCopySharedSpaceDestinationFragment_to_navigation_shared_spaced_document"
-            app:destination="@id/navigation_shared_spaced_document" />
+            android:id="@+id/actionNavigateToSharedSpacedDocument"
+            app:destination="@id/navigation_shared_spaced_document"
+            app:popUpTo="@+id/navigation_shared_spaced_document"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/navigationCopySharedSpaceDestinationDocumentFragment"

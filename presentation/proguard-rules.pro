@@ -24,6 +24,7 @@
 -keep enum com.linagora.android.linshare.view.Navigation$FolderType
 -keep enum com.linagora.android.linshare.view.Navigation$MainNavigationType
 -keep enum com.linagora.android.linshare.view.Event$DestinationPickerEvent
+-keep enum com.linagora.android.linshare.view.Event$OperatorPickDestination
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.

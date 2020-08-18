@@ -40,9 +40,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
-import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
-import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
@@ -110,24 +108,8 @@ class SharedSpaceDocumentDestinationFragment : DestinationDocumentFragment() {
             ?: WorkGroupNodeIdParcelable(selectedDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.uuid)
     }
 
-    private fun selectDestination(): SelectedDestinationInfo {
-        val currentSharedSpace = destinationDocumentViewModel.currentSharedSpace.value
-        val currentNode = destinationDocumentViewModel.currentNode.value
-
-        require(currentSharedSpace != null) { "sharedSpace is not available" }
-        require(currentNode != null) { "workgroup node is not available" }
-
-        return SelectedDestinationInfo(
-            sharedSpaceDestinationInfo = SharedSpaceDestinationInfo(
-                currentSharedSpace.sharedSpaceId.toParcelable(),
-                currentSharedSpace.name,
-                currentSharedSpace.quotaId.toParcelable()
-            ),
-            parentDestinationInfo = ParentDestinationInfo(
-                generateSelectedNodeIdByFileType(currentNode).toParcelable(),
-                currentNode.name
-            )
-        )
+    override fun generateSelectNodeId(currentNode: WorkGroupNode): WorkGroupNodeId {
+        return generateSelectedNodeIdByFileType(currentNode)
     }
 
     private fun generateSelectedNodeIdByFileType(currentNode: WorkGroupNode): WorkGroupNodeId {
@@ -178,7 +160,7 @@ class SharedSpaceDocumentDestinationFragment : DestinationDocumentFragment() {
     }
 
     override fun navigateInChooseDestination() {
-        runCatching { selectDestination() }
+        runCatching { selectCurrentDestination() }
             .onFailure { LOGGER.error("handleChooseDestination(): ${it.printStackTrace()} - ${it.message}") }
             .map { navigateToUpload(Navigation.UploadType.OUTSIDE_APP_TO_WORKGROUP, arguments.uri, it, Event.DestinationPickerEvent.CHOOSE) }
     }
