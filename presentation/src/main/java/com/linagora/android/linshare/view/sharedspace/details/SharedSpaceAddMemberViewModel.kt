@@ -46,6 +46,7 @@ import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.OnSelectRolesBehavior
 import com.linagora.android.linshare.view.action.OnSelectRolesForUpdateBehavior
+import com.linagora.android.linshare.view.action.WorkGroupMemberItemBehavior
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.widget.AddMemberSuggestionManager
 import kotlinx.coroutines.flow.collect
@@ -71,6 +72,8 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
     val onSelectRoleBehavior = OnSelectRolesBehavior(this)
 
     val onSelectRoleForUpdateBehavior = OnSelectRolesForUpdateBehavior(this)
+
+    val workGroupMemberBehavior = WorkGroupMemberItemBehavior(this)
 
     fun initData(sharedSpaceId: SharedSpaceId) {
         LOGGER.info("initData(): $sharedSpaceId")
