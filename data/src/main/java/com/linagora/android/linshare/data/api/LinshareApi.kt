@@ -138,7 +138,6 @@ interface LinshareApi {
     suspend fun copyWorkGroupNodeToSharedSpaceDestination(
         @Path("destinationSharedSpaceId") destinationSharedSpaceId: String,
         @Path("destinationParentNodeId") destinationParentNodeId: String? = null,
-        @Query("deleteShare")
         @Body copyRequest: CopyRequest
     ): List<WorkGroupNode>
 

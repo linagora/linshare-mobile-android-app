@@ -46,6 +46,8 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.createCopyRequest
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
@@ -90,7 +92,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val getSingleSharedSpaceInteractor: GetSingleSharedSpaceInteractor,
     private val searchSharedSpaceDocumentInteractor: SearchSharedSpaceDocumentInteractor,
     private val removeSharedSpaceNodeInteractor: RemoveSharedSpaceNodeInteractor,
-    private val downloadOperator: DownloadOperator
+    private val downloadOperator: DownloadOperator,
+    private val copyToSharedSpace: CopyToSharedSpace
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
@@ -191,6 +194,21 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     fun removeSharedSpaceNode(sharedSpaceId: SharedSpaceId, workGroupNode: WorkGroupNode) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(removeSharedSpaceNodeInteractor(sharedSpaceId, workGroupNode.workGroupNodeId))
+        }
+    }
+
+    fun copyNodeToSharedSpace(
+        copyFromNodeId: WorkGroupNodeId,
+        copyToSharedSpaceId: SharedSpaceId,
+        copyToParentNodeId: WorkGroupNodeId
+    ) {
+        LOGGER.info("copyNodeToSharedSpace(): copy $copyFromNodeId to $copyToParentNodeId in $copyToSharedSpaceId")
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(copyToSharedSpace(
+                copyFromNodeId.createCopyRequest(),
+                copyToSharedSpaceId,
+                copyToParentNodeId
+            ))
         }
     }
 }

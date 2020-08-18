@@ -60,6 +60,8 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
@@ -75,6 +77,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
@@ -91,6 +94,7 @@ import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
 import com.linagora.android.linshare.util.showKeyboard
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.FileType
@@ -157,6 +161,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         when (failure) {
             is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
             is RemoveNodeNotFoundSharedSpaceState -> getAllNodes()
+            is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_another_shared_space_fail))
+                .show()
         }
     }
 
@@ -166,6 +172,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
                 alertRemoveSuccess(viewState.workGroupNode)
                 getAllNodes()
             }
+            is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_another_shared_space_success))
+                .show()
         }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
@@ -179,6 +187,18 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             .withLinShare(requireContext())
             .setAnchorView(binding.sharedSpaceDocumentAddButton)
             .show()
+    }
+
+    private fun errorSnackBar(message: String): Snackbar {
+        return Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.sharedSpaceDocumentAddButton)
+    }
+
+    private fun successSnackBar(message: String): Snackbar {
+        return Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+            .withLinShare(requireContext())
+            .setAnchorView(binding.sharedSpaceDocumentAddButton)
     }
 
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
@@ -336,6 +356,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
         sharedSpacesDocumentViewModel.getCurrentSharedSpace(
             sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId())
+
+        handleNewArguments()
     }
 
     private fun setUpSearchView() {
@@ -404,6 +426,28 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         requestCode.takeIf { it == OpenFilePickerRequestCode.code }
             ?.let { data?.data }
             ?.let(this@SharedSpaceDocumentFragment::navigateToUpload)
+    }
+
+    private fun handleNewArguments() {
+        arguments.selectedDestinationInfoFor
+            ?.let(this@SharedSpaceDocumentFragment::operateSelectedDestinationInfo)
+    }
+
+    private fun operateSelectedDestinationInfo(selectedDestinationInfo: SelectedDestinationInfoForOperate) {
+        LOGGER.info("operateSelectedDestinationInfo(): $selectedDestinationInfo")
+        when (selectedDestinationInfo.operatorPickDestination) {
+            Event.OperatorPickDestination.COPY -> copyToSharedSpace(selectedDestinationInfo)
+        }
+    }
+
+    private fun copyToSharedSpace(selectedDestinationInfo: SelectedDestinationInfoForOperate) {
+        sharedSpacesDocumentViewModel.copyNodeToSharedSpace(
+            copyFromNodeId = selectedDestinationInfo.operateWorkGroupNode.toWorkGroupNodeId(),
+            copyToSharedSpaceId = selectedDestinationInfo.selectedDestinationInfo
+                .sharedSpaceDestinationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
+            copyToParentNodeId = selectedDestinationInfo.selectedDestinationInfo
+                .parentDestinationInfo.parentNodeId.toWorkGroupNodeId()
+        )
     }
 
     private fun navigateToUpload(uri: Uri) {

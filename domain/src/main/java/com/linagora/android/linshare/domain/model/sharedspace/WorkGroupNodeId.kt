@@ -33,6 +33,10 @@
 
 package com.linagora.android.linshare.domain.model.sharedspace
 
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
+import com.linagora.android.linshare.domain.model.copy.SpaceType
 import java.util.UUID
 
 data class WorkGroupNodeId(val uuid: UUID)
+
+fun WorkGroupNodeId.createCopyRequest() = CopyRequest(uuid, SpaceType.SHARED_SPACE)
