@@ -38,7 +38,9 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMember
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.DeleteWorkGroupMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRole
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetAllMembersInSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRoles
@@ -62,7 +64,8 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
     private val addMember: AddMember,
     private val editMember: EditWorkGroupMemberRole,
     private val getAllMembersInSharedSpace: GetAllMembersInSharedSpaceInteractor,
-    val addMemberSuggestionManager: AddMemberSuggestionManager
+    val addMemberSuggestionManager: AddMemberSuggestionManager,
+    private val deleteWorkGroupMember: DeleteWorkGroupMember
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
@@ -107,6 +110,12 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
         )
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(editMember(editMemberRequest))
+        }
+    }
+
+    fun deleteMember(sharedSpaceId: SharedSpaceId, sharedSpaceMemberId: SharedSpaceMemberId) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(deleteWorkGroupMember(sharedSpaceId, sharedSpaceMemberId))
         }
     }
 }

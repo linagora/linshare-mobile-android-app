@@ -41,6 +41,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentAddMemberBinding
@@ -56,7 +57,9 @@ import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberFailed
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.AddMemberSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.DeleteMemberSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRoleSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.OnDeleteWorkGroupMemberClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.OnShowConfirmDeleteMemberClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
@@ -150,7 +153,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
             bindingDefaultSelectedRole(viewState)
         }
         when (viewState) {
-            is AddMemberSuccess, is EditWorkGroupMemberRoleSuccess -> getAllMembers()
+            is AddMemberSuccess, is EditWorkGroupMemberRoleSuccess, is DeleteMemberSuccess -> getAllMembers()
         }
     }
 
@@ -181,8 +184,13 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
             is OnSelectedRole -> onSelectedRole(viewEvent.selectedRole)
             is OnSelectedRoleForUpdate -> onSelectedRoleForUpdate(viewEvent.selectedRole, viewEvent.sharedSpaceMember)
             is OnShowConfirmDeleteMemberClick -> showConfirmDeleteMemberDialog(viewEvent.member, arguments.sharedSpaceName)
+            is OnDeleteWorkGroupMemberClick -> deleteMember(arguments.sharedSpaceId.toSharedSpaceId(), viewEvent.member)
         }
         viewModel.dispatchResetState()
+    }
+
+    private fun deleteMember(sharedSpaceId: SharedSpaceId, sharedSpaceMember: SharedSpaceMember) {
+        viewModel.deleteMember(sharedSpaceId, sharedSpaceMember.sharedSpaceMemberId)
     }
 
     private fun showConfirmDeleteMemberDialog(sharedSpaceMember: SharedSpaceMember, sharedSpaceName: String) {
@@ -193,7 +201,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
                 sharedSpaceName),
             negativeText = getString(R.string.cancel),
             positiveText = getString(R.string.delete),
-            onPositiveCallback = {}
+            onPositiveCallback = { viewModel.dispatchState(Either.right(OnDeleteWorkGroupMemberClick(sharedSpaceMember))) }
         ).show(childFragmentManager, "confirm_delete_member_dialog")
     }
 
