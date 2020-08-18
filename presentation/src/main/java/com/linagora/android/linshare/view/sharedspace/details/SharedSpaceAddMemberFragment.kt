@@ -216,6 +216,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
     private fun handleCannotExecuteViewEvent(operatorType: OperatorType) {
         val messageId = when (operatorType) {
             is OperatorType.OnSelectedRoleForUpdate -> R.string.can_not_change_member_role_without_network
+            is OperatorType.DeleteWorkGroupMember -> R.string.can_not_delete_member_in_workgroup_without_network
             else -> R.string.can_not_process_without_network
         }
         dismissSelectRoleForUpdateDialog()
