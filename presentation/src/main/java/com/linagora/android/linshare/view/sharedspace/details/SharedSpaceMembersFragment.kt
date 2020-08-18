@@ -50,6 +50,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenAddMembers
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRoleSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.OnShowConfirmDeleteMemberClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRoleForUpdate
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -58,6 +59,7 @@ import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getParentViewModel
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.dialog.ConfirmDeleteWorkGroupMemberDialog
 import com.linagora.android.linshare.view.dialog.SelectRoleForUpdateDialog
 import com.linagora.android.linshare.view.widget.errorLayout
 import dagger.android.support.DaggerFragment
@@ -145,8 +147,21 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
         when (viewEvent) {
             is OnSelectRoleClickForUpdate -> showSelectRoleForUpdateDialog(viewEvent.lastSelectedRole, viewEvent.sharedSpaceMember)
             is OnSelectedRoleForUpdate -> onSelectedRoleForUpdate(viewEvent.selectedRole, viewEvent.sharedSpaceMember)
+            is OnShowConfirmDeleteMemberClick -> showConfirmDeleteMemberDialog(viewEvent.member, sharedSpace)
         }
         sharedSpaceMemberViewModel.dispatchResetState()
+    }
+
+    private fun showConfirmDeleteMemberDialog(sharedSpaceMember: SharedSpaceMember, sharedSpace: SharedSpace) {
+        ConfirmDeleteWorkGroupMemberDialog(
+            title = String.format(
+                getString(R.string.confirm_remove_member_from_work_group),
+                sharedSpaceMember.sharedSpaceAccount.name,
+                sharedSpace.name),
+            negativeText = getString(R.string.cancel),
+            positiveText = getString(R.string.delete),
+            onPositiveCallback = {}
+        ).show(childFragmentManager, "confirm_delete_member_dialog")
     }
 
     private fun reactToViewEventMemberFragment(viewEvent: Success.ViewEvent) {
