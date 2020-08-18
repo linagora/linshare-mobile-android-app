@@ -60,4 +60,6 @@ sealed class OperatorType {
     object UploadFile : OfflineOperatorType()
 
     object CopyFile : OnlineOperatorType()
+
+    object DeleteWorkGroupMember : OnlineOperatorType()
 }

@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.domain.usecases.sharedspace.member
 
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -47,3 +48,4 @@ data class EditWorkGroupMemberRoleSuccess(val member: SharedSpaceMember) : Succe
 data class EditWorkGroupMemberRoleFailed(val throwable: Throwable) : Failure.FeatureFailure()
 data class DeleteMemberSuccess(val member: SharedSpaceMember) : Success.ViewState()
 data class DeleteMemberFailed(val throwable: Throwable) : Failure.FeatureFailure()
+data class OnDeleteWorkGroupMemberClick(val member: SharedSpaceMember) : Success.OnlineViewEvent(OperatorType.DeleteWorkGroupMember)
