@@ -40,6 +40,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceMemberBinding
@@ -49,7 +50,9 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenAddMembers
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.DeleteMemberSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRoleSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.member.OnDeleteWorkGroupMemberClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.OnShowConfirmDeleteMemberClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectRoleClickForUpdate
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.OnSelectedRoleForUpdate
@@ -119,7 +122,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
 
     private fun reactToViewStateMemberFragment(viewState: Success.ViewState) {
         when (viewState) {
-            is EditWorkGroupMemberRoleSuccess -> sharedSpaceMemberViewModel.getAllMembers(sharedSpace.sharedSpaceId)
+            is EditWorkGroupMemberRoleSuccess, is DeleteMemberSuccess -> sharedSpaceMemberViewModel.getAllMembers(sharedSpace.sharedSpaceId)
         }
     }
 
@@ -148,8 +151,13 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
             is OnSelectRoleClickForUpdate -> showSelectRoleForUpdateDialog(viewEvent.lastSelectedRole, viewEvent.sharedSpaceMember)
             is OnSelectedRoleForUpdate -> onSelectedRoleForUpdate(viewEvent.selectedRole, viewEvent.sharedSpaceMember)
             is OnShowConfirmDeleteMemberClick -> showConfirmDeleteMemberDialog(viewEvent.member, sharedSpace)
+            is OnDeleteWorkGroupMemberClick -> deleteMember(sharedSpace, viewEvent.member)
         }
         sharedSpaceMemberViewModel.dispatchResetState()
+    }
+
+    private fun deleteMember(sharedSpace: SharedSpace, sharedSpaceMember: SharedSpaceMember) {
+        sharedSpaceMemberViewModel.deleteMember(sharedSpace.sharedSpaceId, sharedSpaceMember.sharedSpaceMemberId)
     }
 
     private fun showConfirmDeleteMemberDialog(sharedSpaceMember: SharedSpaceMember, sharedSpace: SharedSpace) {
@@ -160,7 +168,7 @@ class SharedSpaceMembersFragment(private val sharedSpace: SharedSpace) : DaggerF
                 sharedSpace.name),
             negativeText = getString(R.string.cancel),
             positiveText = getString(R.string.delete),
-            onPositiveCallback = {}
+            onPositiveCallback = { sharedSpaceMemberViewModel.dispatchState(Either.right(OnDeleteWorkGroupMemberClick(sharedSpaceMember))) }
         ).show(childFragmentManager, "confirm_delete_member_dialog")
     }
 
