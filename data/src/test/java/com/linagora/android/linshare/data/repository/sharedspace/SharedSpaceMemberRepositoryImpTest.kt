@@ -39,6 +39,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpace
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.ADD_BAR_FOO_MEMBER_REQUEST
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.BAR_FOO_MEMBER
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.JOHN_DOE_MEMBER
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.SHARED_SPACE_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_ID_1
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
@@ -121,5 +122,26 @@ class SharedSpaceMemberRepositoryImpTest {
 
         assertThrows<RuntimeException> { runBlockingTest {
             sharedSpaceMemberRepositoryImp.editMember(ADD_BAR_FOO_MEMBER_REQUEST) } }
+    }
+
+    @Test
+    fun deleteMemberShouldDeleteMemberInSharedSpaceWhenDeleteMemberRequestValid() = runBlockingTest {
+        `when`(linSharedSpaceMemberDataSource.deleteMember(SHARED_SPACE_1.sharedSpaceId, BAR_FOO_MEMBER.sharedSpaceMemberId))
+            .thenAnswer { BAR_FOO_MEMBER }
+
+        val deletedMember = sharedSpaceMemberRepositoryImp
+            .deleteMember(SHARED_SPACE_1.sharedSpaceId, BAR_FOO_MEMBER.sharedSpaceMemberId)
+
+        assertThat(deletedMember).isEqualTo(BAR_FOO_MEMBER)
+    }
+
+    @Test
+    fun deleteMemberInSharedSpaceShouldThrowWhenDeleteMemberFailed() = runBlockingTest {
+        val exception = RuntimeException("delete member failed")
+        `when`(linSharedSpaceMemberDataSource.deleteMember(SHARED_SPACE_1.sharedSpaceId, BAR_FOO_MEMBER.sharedSpaceMemberId))
+            .thenThrow(exception)
+
+        assertThrows<RuntimeException> { runBlockingTest {
+            sharedSpaceMemberRepositoryImp.deleteMember(SHARED_SPACE_1.sharedSpaceId, BAR_FOO_MEMBER.sharedSpaceMemberId) } }
     }
 }

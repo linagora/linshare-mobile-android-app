@@ -229,4 +229,13 @@ interface LinshareApi {
         @Path("memberUuid") memberUuid: String,
         @Body editMemberRequest: AddMemberRequest
     ): SharedSpaceMember
+
+    @DELETE("/shared_spaces/{sharedSpaceId}/members/{memberUuid}")
+    @Headers(
+        "Accept: application/json",
+        "Content-Type: application/json")
+    suspend fun deleteMember(
+        @Path("sharedSpaceId") sharedSpaceId: String,
+        @Path("memberUuid") memberUuid: String
+    ): SharedSpaceMember
 }

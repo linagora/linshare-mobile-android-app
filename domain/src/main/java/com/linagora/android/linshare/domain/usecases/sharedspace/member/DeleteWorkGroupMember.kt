@@ -31,20 +31,33 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.repository.sharedspace
+package com.linagora.android.linshare.domain.usecases.sharedspace.member
 
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
-import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
-import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
+import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceMemberRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface SharedSpaceMemberRepository {
+@Singleton
+class DeleteWorkGroupMember @Inject constructor(
+    private val sharedSpaceMemberRepository: SharedSpaceMemberRepository
+) {
+    operator fun invoke(sharedSpaceId: SharedSpaceId, sharedSpaceMemberId: SharedSpaceMemberId): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Success.Loading) }
 
-    suspend fun getAllMembers(sharedSpaceId: SharedSpaceId): List<SharedSpaceMember>
+            val deleteMemberState = Either.catch { sharedSpaceMemberRepository.deleteMember(sharedSpaceId, sharedSpaceMemberId) }
+                .bimap(::DeleteMemberFailed, ::DeleteMemberSuccess)
 
-    suspend fun addMember(addMemberRequest: AddMemberRequest): SharedSpaceMember
-
-    suspend fun editMember(editMemberRequest: AddMemberRequest): SharedSpaceMember
-
-    suspend fun deleteMember(sharedSpaceId: SharedSpaceId, sharedSpaceMemberId: SharedSpaceMemberId): SharedSpaceMember
+            emitState { deleteMemberState }
+        }
+    }
 }

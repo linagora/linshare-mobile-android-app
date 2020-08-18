@@ -37,6 +37,7 @@ import com.linagora.android.linshare.data.datasource.sharedspace.member.SharedSp
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
 import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceMemberRepository
 import javax.inject.Inject
 
@@ -56,5 +57,9 @@ class SharedSpaceMemberRepositoryImp @Inject constructor(
 
     override suspend fun editMember(editMemberRequest: AddMemberRequest): SharedSpaceMember {
         return linShareSharedSpaceMemberDataSource.editMember(editMemberRequest)
+    }
+
+    override suspend fun deleteMember(sharedSpaceId: SharedSpaceId, sharedSpaceMemberId: SharedSpaceMemberId): SharedSpaceMember {
+        return linShareSharedSpaceMemberDataSource.deleteMember(sharedSpaceId, sharedSpaceMemberId)
     }
 }

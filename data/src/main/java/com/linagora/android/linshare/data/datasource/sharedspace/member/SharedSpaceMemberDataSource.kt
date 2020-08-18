@@ -36,6 +36,7 @@ package com.linagora.android.linshare.data.datasource.sharedspace.member
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
+import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMemberId
 
 interface SharedSpaceMemberDataSource {
 
@@ -44,4 +45,6 @@ interface SharedSpaceMemberDataSource {
     suspend fun addMember(addMemberRequest: AddMemberRequest): SharedSpaceMember
 
     suspend fun editMember(editMemberRequest: AddMemberRequest): SharedSpaceMember
+
+    suspend fun deleteMember(sharedSpaceId: SharedSpaceId, sharedSpaceMemberId: SharedSpaceMemberId): SharedSpaceMember
 }
