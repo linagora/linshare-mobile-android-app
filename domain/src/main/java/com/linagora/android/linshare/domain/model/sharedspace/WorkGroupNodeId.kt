@@ -39,4 +39,4 @@ import java.util.UUID
 
 data class WorkGroupNodeId(val uuid: UUID)
 
-fun WorkGroupNodeId.createCopyRequest() = CopyRequest(uuid, SpaceType.SHARED_SPACE)
+fun WorkGroupNodeId.createCopyRequest() = CopyRequest(uuid = uuid, kind = SpaceType.SHARED_SPACE)

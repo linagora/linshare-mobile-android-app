@@ -47,6 +47,8 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.model.sharedspace.createCopyRequest
+import com.linagora.android.linshare.domain.model.sharedspace.toCopyToMySpaceRequest
+import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
@@ -93,7 +95,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val searchSharedSpaceDocumentInteractor: SearchSharedSpaceDocumentInteractor,
     private val removeSharedSpaceNodeInteractor: RemoveSharedSpaceNodeInteractor,
     private val downloadOperator: DownloadOperator,
-    private val copyToSharedSpace: CopyToSharedSpace
+    private val copyToSharedSpace: CopyToSharedSpace,
+    private val copyToMySpace: CopyInMySpaceInteractor
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
@@ -209,6 +212,13 @@ class SharedSpaceDocumentViewModel @Inject constructor(
                 copyToSharedSpaceId,
                 copyToParentNodeId
             ))
+        }
+    }
+
+    fun copyNodeToMySpace(copyFromNode: WorkGroupNode) {
+        LOGGER.info("copyNodeToMySpace(): $copyFromNode")
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(copyToMySpace(copyFromNode.toCopyToMySpaceRequest()))
         }
     }
 }

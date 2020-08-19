@@ -37,6 +37,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithFileSizeExceed
 import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithQuotaReach
+import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceFailure
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -56,20 +57,21 @@ class CopyErrorHandler(
     }
 
     override fun invoke(throwable: Throwable) {
-        LOGGER.error("invoke(): ${throwable.message} - ${throwable.printStackTrace()}")
+        throwable.printStackTrace()
+        LOGGER.error("invoke(): ${throwable.message}")
         if (throwable is CopyException) {
             when (val copyErrorCode = throwable.errorResponse.errCode) {
-                is LinShareErrorCode -> handleLinShareErrorCode(copyErrorCode)
-                else -> producerScope.sendState { Either.left(Failure.Error) }
+                is LinShareErrorCode -> handleLinShareErrorCode(throwable, copyErrorCode)
+                else -> producerScope.sendState { Either.left(CopyInMySpaceFailure(throwable)) }
             }
         }
     }
 
-    private fun handleLinShareErrorCode(errorCode: LinShareErrorCode) {
+    private fun handleLinShareErrorCode(throwable: Throwable, errorCode: LinShareErrorCode) {
         val state = when (errorCode) {
             QuotaAccountNoMoreSpaceErrorCode -> Either.left(CopyFailedWithQuotaReach)
             FileSizeIsGreaterThanMaxFileSize -> Either.left(CopyFailedWithFileSizeExceed)
-            else -> Either.left(Failure.Error)
+            else -> Either.left(CopyInMySpaceFailure(throwable))
         }
         producerScope.sendState { state }
     }

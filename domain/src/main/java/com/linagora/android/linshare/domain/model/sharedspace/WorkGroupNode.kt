@@ -33,6 +33,8 @@
 
 package com.linagora.android.linshare.domain.model.sharedspace
 
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
+import com.linagora.android.linshare.domain.model.copy.SpaceType
 import java.util.Date
 
 interface WorkGroupNode {
@@ -49,4 +51,8 @@ interface WorkGroupNode {
 
 fun WorkGroupNode.nameContains(query: String): Boolean {
     return name.toLowerCase().contains(query.toLowerCase())
+}
+
+fun WorkGroupNode.toCopyToMySpaceRequest(): CopyRequest {
+    return CopyRequest(sharedSpaceId.uuid, workGroupNodeId.uuid, SpaceType.SHARED_SPACE)
 }

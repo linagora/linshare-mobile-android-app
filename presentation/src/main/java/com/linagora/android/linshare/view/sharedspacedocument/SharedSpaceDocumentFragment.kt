@@ -52,12 +52,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentBinding
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
+import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithFileSizeExceed
+import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithQuotaReach
+import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceFailure
+import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
@@ -101,6 +106,7 @@ import com.linagora.android.linshare.view.Navigation.FileType
 import com.linagora.android.linshare.view.Navigation.UploadType
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.base.event.SharedSpaceSelectedDestinationMySpace
 import com.linagora.android.linshare.view.base.event.SharedSpaceSelectedDestinationSharedSpace
 import com.linagora.android.linshare.view.base.event.WorkGroupNodeCopyToViewEvent
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
@@ -161,8 +167,10 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         when (failure) {
             is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
             is RemoveNodeNotFoundSharedSpaceState -> getAllNodes()
-            is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_another_shared_space_fail))
-                .show()
+            is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_another_shared_space_fail)).show()
+            is CopyFailedWithFileSizeExceed -> errorSnackBar(getString(R.string.copy_to_my_space_error_file_size_exceed)).show()
+            is CopyFailedWithQuotaReach -> errorSnackBar(getString(R.string.copy_to_my_space_error_quota_reach)).show()
+            is CopyInMySpaceFailure -> errorSnackBar(getString(R.string.copy_to_my_space_error)).show()
         }
     }
 
@@ -172,8 +180,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
                 alertRemoveSuccess(viewState.workGroupNode)
                 getAllNodes()
             }
-            is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_another_shared_space_success))
-                .show()
+            is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_another_shared_space_success)).show()
+            is CopyInMySpaceSuccess -> alertCopyToMySpaceSuccess(viewState.documents)
         }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
@@ -201,6 +209,13 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             .setAnchorView(binding.sharedSpaceDocumentAddButton)
     }
 
+    private fun alertCopyToMySpaceSuccess(documents: List<Document>) {
+        successSnackBar(getString(R.string.copied_in_my_space, documents[0].name))
+            .setAction(R.string.view) { navigateToMySpace() }
+            .show()
+        sharedSpacesDocumentViewModel.dispatchResetState()
+    }
+
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(sharedSpacesDocumentViewModel.internetAvailable.value)) {
             is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
@@ -217,6 +232,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is RemoveSharedSpaceNodeClick -> confirmRemoveSharedSpaceNode(viewEvent.workGroupNode)
             is WorkGroupNodeCopyToViewEvent -> selectDestinationSpaceType(viewEvent.operatorType, viewEvent.node)
             is SharedSpaceSelectedDestinationSharedSpace -> handleSelectedDestinationToSharedSpace(viewEvent.workGroupNode, viewEvent.destinationForOperator)
+            is SharedSpaceSelectedDestinationMySpace -> handleSelectedDestinationToMySpace(viewEvent.workGroupNode, viewEvent.destinationForOperator)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
             OpenSearchView -> handleOpenSearch()
@@ -246,6 +262,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         with(childFragmentManager) {
             dismissDialogFragmentByTag(SharedSpaceDocumentContextMenuDialog.TAG)
             dismissDialogFragmentByTag(SharedSpaceFolderContextMenuDialog.TAG)
+            dismissDialogFragmentByTag(SharedSpacePickDestinationDialog.TAG)
         }
     }
 
@@ -504,7 +521,24 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         }
     }
 
+    private fun handleSelectedDestinationToMySpace(workGroupNode: WorkGroupNode, operatorType: OperatorType) {
+        when (operatorType) {
+            OperatorType.CopyFile -> copyToMySpace(workGroupNode)
+        }
+    }
+
+    private fun copyToMySpace(workGroupNode: WorkGroupNode) {
+        dismissAllDialog()
+        if (workGroupNode !is WorkGroupDocument) {
+            return
+        }
+        sharedSpacesDocumentViewModel.copyNodeToMySpace(workGroupNode)
+    }
+
     private fun navigateToSelectDestination(workGroupNode: WorkGroupNode) {
+        if (workGroupNode !is WorkGroupDocument) {
+            return
+        }
         val action = SharedSpaceDocumentFragmentDirections
             .navigateToCopySharedSpaceDestinationFragment(
                 workGroupNode.sharedSpaceId.toParcelable(),
@@ -535,4 +569,6 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun navigateBack() {
         findNavController().popBackStack()
     }
+
+    private fun navigateToMySpace() = findNavController().navigate(R.id.navigation_my_space)
 }
