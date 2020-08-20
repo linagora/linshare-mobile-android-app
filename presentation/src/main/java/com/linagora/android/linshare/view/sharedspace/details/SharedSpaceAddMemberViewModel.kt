@@ -44,6 +44,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.member.DeleteWo
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.EditWorkGroupMemberRole
 import com.linagora.android.linshare.domain.usecases.sharedspace.member.GetAllMembersInSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.role.GetAllRoles
+import com.linagora.android.linshare.model.State.Companion.LOADING_STATE
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.action.OnSelectRolesBehavior
@@ -52,6 +53,7 @@ import com.linagora.android.linshare.view.action.WorkGroupMemberItemBehavior
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.widget.AddMemberSuggestionManager
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
@@ -85,6 +87,7 @@ class SharedSpaceAddMemberViewModel @Inject constructor(
                 getAllRoles().onCompletion {
                     LOGGER.info("initData(): onCompletion $sharedSpaceId")
                     getAllMembersInSharedSpace(sharedSpaceId)
+                        .dropWhile { state -> state(INITIAL_STATE) == LOADING_STATE }
                         .collect { emit(it) }
                 })
         }
