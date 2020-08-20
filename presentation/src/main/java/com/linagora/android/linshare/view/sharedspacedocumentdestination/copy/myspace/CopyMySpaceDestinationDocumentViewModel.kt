@@ -31,45 +31,32 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedestination.copy.myspace
+package com.linagora.android.linshare.view.sharedspacedocumentdestination.copy.myspace
 
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
-import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
-import com.linagora.android.linshare.model.parcelable.toParcelable
-import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.view.Navigation
-import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationFragment
-import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSingleSharedSpaceInteractor
+import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
+import com.linagora.android.linshare.view.sharedspacedocumentdestination.SelectDestinationBehavior
+import com.linagora.android.linshare.view.sharedspacedocumentdestination.base.DestinationDocumentViewModel
+import javax.inject.Inject
 
-class CopyMySpaceDestinationFragment : DestinationFragment() {
+class CopyMySpaceDestinationDocumentViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
+    dispatcherProvider: CoroutinesDispatcherProvider,
+    getSharedSpaceChildDocumentsInteractor: GetSharedSpaceChildDocumentsInteractor,
+    getSharedSpaceNodeInteractor: GetSharedSpaceNodeInteractor,
+    getSingleSharedSpaceInteractor: GetSingleSharedSpaceInteractor
+) : DestinationDocumentViewModel(
+    internetAvailable,
+    dispatcherProvider,
+    getSharedSpaceChildDocumentsInteractor,
+    getSharedSpaceNodeInteractor,
+    getSingleSharedSpaceInteractor
+) {
+    override val listItemBehavior = SharedSpaceDocumentItemBehavior(this)
 
-    private val args: CopyMySpaceDestinationFragmentArgs by navArgs()
-
-    override val destinationViewModel: DestinationViewModel by lazy {
-        getViewModel<CopyMySpaceDestinationViewModel>(viewModelFactory) }
-
-    override fun toolbarNavigationListener() {
-        findNavController().popBackStack()
-    }
-
-    override fun onDestinationBackPressed() {
-        findNavController().popBackStack()
-    }
-
-    override fun navigateIntoDocumentDestination(sharedSpaceNodeNested: SharedSpaceNodeNested) {
-        val actionToDocument = CopyMySpaceDestinationFragmentDirections
-            .navigateToCopyMySpaceDestinationDocumentFragment(
-                copyDocument = args.copyDocument,
-                navigationInfo = SharedSpaceNavigationInfo(
-                    sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
-                    Navigation.FileType.ROOT,
-                    WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)
-                )
-            )
-
-        findNavController().navigate(actionToDocument)
-    }
+    override val pickDestinationBehavior = SelectDestinationBehavior(this)
 }

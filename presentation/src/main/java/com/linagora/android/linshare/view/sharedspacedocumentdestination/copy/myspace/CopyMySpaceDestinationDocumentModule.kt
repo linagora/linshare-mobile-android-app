@@ -31,45 +31,26 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedestination.copy.myspace
+package com.linagora.android.linshare.view.sharedspacedocumentdestination.copy.myspace
 
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
-import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
-import com.linagora.android.linshare.model.parcelable.toParcelable
-import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.view.Navigation
-import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationFragment
-import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel
+import androidx.lifecycle.ViewModel
+import com.linagora.android.linshare.inject.annotation.FragmentScoped
+import com.linagora.android.linshare.inject.annotation.ViewModelKey
+import dagger.Binds
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
 
-class CopyMySpaceDestinationFragment : DestinationFragment() {
+@Module
+internal abstract class CopyMySpaceDestinationDocumentModule {
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeCopyMySpaceDestinationDocumentFragment(): CopyMySpaceDestinationDocumentFragment
 
-    private val args: CopyMySpaceDestinationFragmentArgs by navArgs()
-
-    override val destinationViewModel: DestinationViewModel by lazy {
-        getViewModel<CopyMySpaceDestinationViewModel>(viewModelFactory) }
-
-    override fun toolbarNavigationListener() {
-        findNavController().popBackStack()
-    }
-
-    override fun onDestinationBackPressed() {
-        findNavController().popBackStack()
-    }
-
-    override fun navigateIntoDocumentDestination(sharedSpaceNodeNested: SharedSpaceNodeNested) {
-        val actionToDocument = CopyMySpaceDestinationFragmentDirections
-            .navigateToCopyMySpaceDestinationDocumentFragment(
-                copyDocument = args.copyDocument,
-                navigationInfo = SharedSpaceNavigationInfo(
-                    sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
-                    Navigation.FileType.ROOT,
-                    WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)
-                )
-            )
-
-        findNavController().navigate(actionToDocument)
-    }
+    @Binds
+    @IntoMap
+    @ViewModelKey(CopyMySpaceDestinationDocumentViewModel::class)
+    internal abstract fun bindCopyMySpaceDestinationDocumentViewModel(
+        copyMySpaceDestinationDocumentViewModel: CopyMySpaceDestinationDocumentViewModel
+    ): ViewModel
 }
