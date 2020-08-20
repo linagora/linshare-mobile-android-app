@@ -157,6 +157,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/navigateToAddMembersFragment"
+            app:destination="@id/navigationAddMembersFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_shared_spaced_document"

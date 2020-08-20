@@ -73,5 +73,6 @@ class SharedSpaceContextMenuDialog(
         sharedSpaceViewModel = getParentViewModel(viewModelFactory)
         binding.sharedSpaceNodeNested = sharedSpaceNodeNested
         binding.itemContextMenu = sharedSpaceViewModel.sharedSpaceItemContextMenu
+        binding.addMemberContextMenu = sharedSpaceViewModel.onAddMemberContextMenu
     }
 }

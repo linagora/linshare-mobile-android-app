@@ -64,6 +64,7 @@ import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspace.action.CreateWorkGroupBehavior
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemContextMenu
+import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceOnAddMemberContextMenu
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -95,6 +96,8 @@ class SharedSpaceViewModel @Inject constructor(
     val listSharedSpaceNodeNested: LiveData<List<SharedSpaceNodeNested>> = mutableListSharedSpaceNodeNested
 
     val createWorkGroupBehavior = CreateWorkGroupBehavior(this)
+
+    val onAddMemberContextMenu = SharedSpaceOnAddMemberContextMenu(this)
 
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 

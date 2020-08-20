@@ -31,41 +31,10 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model
+package com.linagora.android.linshare.view.base
 
-sealed class OperatorType {
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 
-    abstract class OfflineOperatorType : OperatorType()
-
-    abstract class OnlineOperatorType : OperatorType()
-
-    object SwiftRefresh : OnlineOperatorType()
-
-    object CreateWorkGroup : OnlineOperatorType()
-
-    object OpenContextMenu : OfflineOperatorType()
-
-    object OnItemClick : OnlineOperatorType()
-
-    object DeleteDocument : OnlineOperatorType()
-
-    object ViewDetails : OnlineOperatorType()
-
-    object OnSelectRoleClick : OfflineOperatorType()
-
-    object OnSelectedRoleForUpdate : OnlineOperatorType()
-
-    object SelectDestinationType : OnlineOperatorType()
-
-    object UploadFile : OfflineOperatorType()
-
-    object CopyFile : OnlineOperatorType()
-
-    object DeleteWorkGroupMember : OnlineOperatorType()
-
-    object ShowConfirmDialogClick : OfflineOperatorType()
-
-    object DeleteSharedSpace : OnlineOperatorType()
-
-    object AddMember : OnlineOperatorType()
+interface OnAddMemberContextMenu {
+    fun onAddMemberClick(sharedSpaceNodeNested: SharedSpaceNodeNested)
 }

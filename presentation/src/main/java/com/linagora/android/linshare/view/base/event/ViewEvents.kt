@@ -35,6 +35,7 @@ package com.linagora.android.linshare.view.base.event
 
 import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.utils.Success
 
@@ -64,3 +65,7 @@ data class SharedSpaceSelectedDestinationMySpace(
 data class CopyDocumentToSharedSpaceClick(
     val document: Document
 ) : Success.OnlineViewEvent(OperatorType.CopyFile)
+
+data class OnAddMemberContextMenuClick(
+    val sharedSpaceNodeNested: SharedSpaceNodeNested
+) : Success.OnlineViewEvent(OperatorType.AddMember)

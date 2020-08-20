@@ -40,6 +40,7 @@
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested"/>
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
+        <import type="com.linagora.android.linshare.view.base.OnAddMemberContextMenu"/>
 
         <variable
             name="sharedSpaceNodeNested"
@@ -48,6 +49,10 @@
         <variable
             name="itemContextMenu"
             type="ItemContextMenu&lt;SharedSpaceNodeNested&gt;" />
+
+        <variable
+            name="addMemberContextMenu"
+            type="OnAddMemberContextMenu" />
     </data>
 
     <LinearLayout
@@ -66,6 +71,21 @@
             android:layout_marginTop="@dimen/padding_top_bottom_sheet"
             style="@style/DivideView"
             app:layout_constraintTop_toBottomOf="@id/sharedSpaceHeaderContainer" />
+
+        <LinearLayout style="@style/RowLinerBottomSheetStyle"
+            app:contextActionVisible="@{sharedSpaceNodeNested.role}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.addMembersRole}"
+            android:onClick="@{() -> addMemberContextMenu.onAddMemberClick(sharedSpaceNodeNested)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_add_person" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/add_members" />
+
+        </LinearLayout>
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"

@@ -31,41 +31,16 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model
+package com.linagora.android.linshare.view.sharedspace.action
 
-sealed class OperatorType {
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.OnAddMemberContextMenu
+import com.linagora.android.linshare.view.base.event.OnAddMemberContextMenuClick
 
-    abstract class OfflineOperatorType : OperatorType()
-
-    abstract class OnlineOperatorType : OperatorType()
-
-    object SwiftRefresh : OnlineOperatorType()
-
-    object CreateWorkGroup : OnlineOperatorType()
-
-    object OpenContextMenu : OfflineOperatorType()
-
-    object OnItemClick : OnlineOperatorType()
-
-    object DeleteDocument : OnlineOperatorType()
-
-    object ViewDetails : OnlineOperatorType()
-
-    object OnSelectRoleClick : OfflineOperatorType()
-
-    object OnSelectedRoleForUpdate : OnlineOperatorType()
-
-    object SelectDestinationType : OnlineOperatorType()
-
-    object UploadFile : OfflineOperatorType()
-
-    object CopyFile : OnlineOperatorType()
-
-    object DeleteWorkGroupMember : OnlineOperatorType()
-
-    object ShowConfirmDialogClick : OfflineOperatorType()
-
-    object DeleteSharedSpace : OnlineOperatorType()
-
-    object AddMember : OnlineOperatorType()
+class SharedSpaceOnAddMemberContextMenu(val viewModel: BaseViewModel) : OnAddMemberContextMenu {
+    override fun onAddMemberClick(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        viewModel.dispatchUIState(Either.right(OnAddMemberContextMenuClick(sharedSpaceNodeNested)))
+    }
 }

@@ -74,6 +74,7 @@ import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation
+import com.linagora.android.linshare.view.base.event.OnAddMemberContextMenuClick
 import com.linagora.android.linshare.view.dialog.ConfirmDeleteSharedSpaceDialog
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentFragment.Companion.NAVIGATION_INFO_KEY
 import com.linagora.android.linshare.view.widget.errorLayout
@@ -156,6 +157,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is CreateWorkGroupViewState -> handleCreateWorkGroup(viewEvent.nameWorkGroup)
             is OnShowConfirmDeleteSharedSpaceClick -> showConfirmDeleteSharedSpaceDialog(viewEvent.sharedSpaceNodeNested)
             is DeleteSharedSpaceClick -> deleteSharedSpace(viewEvent.sharedSpaceNodeNested)
+            is OnAddMemberContextMenuClick -> navigateIntoAddMemberFragment(viewEvent.sharedSpaceNodeNested)
         }
         sharedSpaceViewModel.dispatchResetState()
     }
@@ -302,5 +304,16 @@ class SharedSpaceFragment : MainNavigationFragment() {
             fileType = Navigation.FileType.ROOT,
             nodeIdParcelable = WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)
         )
+    }
+
+    private fun navigateIntoAddMemberFragment(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        dismissContextMenu()
+        val actionToAddMember = SharedSpaceFragmentDirections
+            .navigateToAddMembersFragment(
+                sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
+                sharedSpaceNodeNested.role.name,
+                sharedSpaceNodeNested.name
+            )
+        findNavController().navigate(actionToAddMember)
     }
 }
