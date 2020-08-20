@@ -246,6 +246,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     private fun selectRoles(lastSelectedRole: SharedSpaceRole) {
         binding.addMembersContainer.sharedSpaceRoles?.let {
+            dismissKeyBoard()
             dismissSelectRoleDialog()
             SelectRoleDialog(it.toList(), lastSelectedRole, viewModel.onSelectRoleBehavior)
                 .show(childFragmentManager, SelectRoleDialog.TAG)
@@ -280,6 +281,10 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     override fun configureToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
+    }
+
+    private fun dismissKeyBoard() {
+        binding.addMembersContainer.clearFocus()
     }
 
     override fun onPause() {
