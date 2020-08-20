@@ -74,6 +74,7 @@ import com.linagora.android.linshare.view.Navigation.MainNavigationType
 import com.linagora.android.linshare.view.Navigation.UploadType.INSIDE_APP
 import com.linagora.android.linshare.view.OpenFilePickerRequestCode
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
+import com.linagora.android.linshare.view.base.event.CopyDocumentToSharedSpaceClick
 import com.linagora.android.linshare.view.share.ShareFragment.Companion.SHARE_DOCUMENT_BUNDLE_KEY
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import com.linagora.android.linshare.view.widget.errorLayout
@@ -149,6 +150,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is RemoveClick -> confirmRemoveDocument(viewEvent.document)
             is SearchButtonClick -> openSearch()
             is ShareItemClick -> navigateToShare(viewEvent.document)
+            is CopyDocumentToSharedSpaceClick -> selectCopyDestination(viewEvent.document)
         }
         mySpaceViewModel.dispatchResetState()
     }
@@ -283,6 +285,13 @@ class MySpaceFragment : MainNavigationFragment() {
     override fun onInvalidAuthentication() {
         LOGGER.info("onInvalidAuthentication()")
         navigateToReload()
+    }
+
+    private fun selectCopyDestination(document: Document) {
+        val actionToSelectDestination = MySpaceFragmentDirections
+            .navigateToCopyMySpaceDestinationFragment(document.toParcelable())
+
+        findNavController().navigate(actionToSelectDestination)
     }
 
     private fun navigateToReload() {

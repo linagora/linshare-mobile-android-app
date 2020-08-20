@@ -124,6 +124,9 @@
         <action
             android:id="@+id/action_navigation_my_space_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/navigateToCopyMySpaceDestinationFragment"
+            app:destination="@id/navigationCopyMySpaceDestinationFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigationSearch"
@@ -298,5 +301,13 @@
         <action
             android:id="@+id/navigateToCopySharedSpaceDestinationFragment"
             app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationCopyMySpaceDestinationFragment"
+        android:name="com.linagora.android.linshare.view.sharedspacedestination.copy.myspace.CopyMySpaceDestinationFragment"
+        tools:layout="@layout/fragment_shared_space_destination" >
+        <argument
+            android:name="copyDocument"
+            app:argType="com.linagora.android.linshare.model.parcelable.DocumentParcelable" />
     </fragment>
 </navigation>

@@ -52,6 +52,7 @@ import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
+import com.linagora.android.linshare.view.myspace.action.MySpaceCopyToContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemContextMenu
 import kotlinx.coroutines.launch
@@ -79,6 +80,8 @@ class MySpaceViewModel @Inject constructor(
     val itemContextMenu = MySpaceItemContextMenu(this)
 
     val downloadContextMenu = MySpaceDownloadContextMenu(this)
+
+    val copyToSharedSpaceContextMenu = MySpaceCopyToContextMenu(this)
 
     fun getAllDocuments() {
         viewModelScope.launch(dispatcherProvider.io) {

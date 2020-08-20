@@ -255,6 +255,7 @@
     <string name="can_not_change_member_role_without_network" translatable="false">Can not change member role while offline</string>
 
     <string name="copy_to" translatable="false">Copy to</string>
+    <string name="copy_to_a_workgroup" translatable="false">Copy to a workgroup</string>
     <string name="copy_to_another_shared_space_success" translatable="false">The file is copied to another Shared space.</string>
     <string name="copy_to_another_shared_space_fail" translatable="false">Can not copy file to another Shared space.</string>
     <string name="confirm_remove_member_from_work_group" translatable="false">Are you sure to remove %1$s from %2$s?</string>

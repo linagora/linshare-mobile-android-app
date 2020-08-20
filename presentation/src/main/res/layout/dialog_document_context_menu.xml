@@ -42,6 +42,7 @@
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.document.Document"/>
+        <import type="com.linagora.android.linshare.view.myspace.action.MySpaceCopyToContextMenu"/>
 
         <variable
             name="mySpaceItemAction"
@@ -54,6 +55,10 @@
         <variable
             name="downloadContextMenu"
             type="DownloadItemContextMenu&lt;Document&gt;" />
+
+        <variable
+            name="copyToContextMenu"
+            type="MySpaceCopyToContextMenu" />
 
         <variable
             name="document"
@@ -100,6 +105,19 @@
             <TextView
                 style="@style/TextInRowLinerBottomSheetStyle"
                 android:text="@string/download_to_device" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> copyToContextMenu.copyTo(document)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_copy" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/copy_to_a_workgroup" />
 
         </LinearLayout>
 

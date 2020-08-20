@@ -31,48 +31,28 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.myspace
+package com.linagora.android.linshare.view.sharedspacedestination.copy.myspace
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import com.linagora.android.linshare.databinding.DialogDocumentContextMenuBinding
-import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.util.getParentViewModel
-import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
-import javax.inject.Inject
+import androidx.navigation.fragment.findNavController
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
+import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationFragment
+import com.linagora.android.linshare.view.sharedspacedestination.base.DestinationViewModel
 
-class MySpaceContextMenuDialog(private val document: Document) : DaggerBottomSheetDialogFragment() {
+class CopyMySpaceDestinationFragment : DestinationFragment() {
 
-    companion object {
-        const val TAG = "mySpaceContextMenu"
+    override val destinationViewModel: DestinationViewModel by lazy {
+        getViewModel<CopyMySpaceDestinationViewModel>(viewModelFactory) }
+
+    override fun toolbarNavigationListener() {
+        findNavController().popBackStack()
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var mySpaceViewModel: MySpaceViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = DialogDocumentContextMenuBinding.inflate(inflater, container, false)
-        initViewModel(binding)
-        return binding.root
+    override fun onDestinationBackPressed() {
+        findNavController().popBackStack()
     }
 
-    private fun initViewModel(binding: DialogDocumentContextMenuBinding) {
-        mySpaceViewModel = getParentViewModel(viewModelFactory)
-
-        binding.document = document
-        binding.mySpaceItemAction = mySpaceViewModel.mySpaceItemAction
-        binding.contextMenu = mySpaceViewModel.itemContextMenu
-        binding.downloadContextMenu = mySpaceViewModel.downloadContextMenu
-        binding.copyToContextMenu = mySpaceViewModel.copyToSharedSpaceContextMenu
+    override fun navigateIntoDocumentDestination(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        TODO("Not yet implemented")
     }
 }
