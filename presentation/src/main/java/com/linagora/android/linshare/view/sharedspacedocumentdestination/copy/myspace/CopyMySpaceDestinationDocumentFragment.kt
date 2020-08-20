@@ -38,17 +38,24 @@ import androidx.navigation.fragment.navArgs
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperateDocument
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
 import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.Navigation
 import com.linagora.android.linshare.view.sharedspacedocumentdestination.base.DestinationDocumentFragment
 import com.linagora.android.linshare.view.sharedspacedocumentdestination.base.DestinationDocumentViewModel
+import org.slf4j.LoggerFactory
 
 class CopyMySpaceDestinationDocumentFragment : DestinationDocumentFragment() {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(CopyMySpaceDestinationDocumentFragment::class.java)
+    }
 
     private val args: CopyMySpaceDestinationDocumentFragmentArgs by navArgs()
 
@@ -91,11 +98,22 @@ class CopyMySpaceDestinationDocumentFragment : DestinationDocumentFragment() {
     }
 
     override fun navigateInCancelDestination() {
-        TODO("Not yet implemented")
+        val cancelAction = CopyMySpaceDestinationDocumentFragmentDirections
+            .navigateToMySpace()
+        findNavController().navigate(cancelAction)
     }
 
     override fun navigateInChooseDestination() {
-        TODO("Not yet implemented")
+        runCatching { selectCurrentDestination() }
+            .onFailure {
+                it.printStackTrace()
+                LOGGER.info("navigateInChooseDestination(): ${it.message}") }
+            .map { selectedDestination -> SelectedDestinationInfoForOperateDocument(
+                Event.OperatorPickDestination.COPY,
+                args.copyDocument,
+                selectedDestination) }
+            .map(CopyMySpaceDestinationDocumentFragmentDirections.Companion::navigateToMySpace)
+            .map(findNavController()::navigate)
     }
 
     override fun navigateBackToSharedSpaceDestination() {

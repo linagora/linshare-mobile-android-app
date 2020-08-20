@@ -31,42 +31,15 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.document
+package com.linagora.android.linshare.model.parcelable
 
-import com.google.gson.annotations.SerializedName
-import com.linagora.android.linshare.domain.model.copy.CopyRequest
-import com.linagora.android.linshare.domain.model.copy.SpaceType
-import com.linagora.android.linshare.domain.model.share.Share
-import okhttp3.MediaType
-import java.util.Date
+import android.os.Parcelable
+import com.linagora.android.linshare.view.Event
+import kotlinx.android.parcel.Parcelize
 
-data class Document(
-    @SerializedName("uuid")
-    val documentId: DocumentId,
-    val description: String? = null,
-    val creationDate: Date,
-    val modificationDate: Date,
-    val expirationDate: Date? = null,
-    val ciphered: Boolean,
-    val name: String,
-    val size: Long,
-    val type: MediaType,
-    val metaData: String? = null,
-    val sha256sum: String,
-    val hasThumbnail: Boolean,
-    val shared: Int = 0,
-    val shares: List<Share>? = emptyList()
-) {
-    init {
-        require(size >= 0) { "size must not be negative" }
-        require(shared >= 0) { "shared must not be negative" }
-    }
-}
-
-fun Document.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
-
-fun Document.toCopyRequest(): CopyRequest {
-    return CopyRequest(uuid = documentId.uuid, kind = SpaceType.PERSONAL_SPACE)
-}
+@Parcelize
+class SelectedDestinationInfoForOperateDocument(
+    val operatorPickDestination: Event.OperatorPickDestination,
+    val documentParcelable: DocumentParcelable,
+    val selectedDestinationInfo: SelectedDestinationInfo
+) : Parcelable

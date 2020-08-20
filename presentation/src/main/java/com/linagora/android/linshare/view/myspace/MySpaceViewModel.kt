@@ -39,11 +39,15 @@ import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.toCopyRequest
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
@@ -65,7 +69,8 @@ class MySpaceViewModel @Inject constructor(
     private val getAllDocumentsInteractor: GetAllDocumentsInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator,
-    private val removeDocumentInteractor: RemoveDocumentInteractor
+    private val removeDocumentInteractor: RemoveDocumentInteractor,
+    private val copyToSharedSpace: CopyToSharedSpace
 ) : LinShareViewModel(internetAvailable, application, dispatcherProvider),
     ListItemBehavior<Document> {
 
@@ -124,6 +129,21 @@ class MySpaceViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.io) {
             downloadContextMenu.setDownloading(NO_DOWNLOADING_DOCUMENT)
             downloadOperator.download(credential, token, document.toDownloadRequest())
+        }
+    }
+
+    fun copyDocumentToSharedSpace(
+        document: Document,
+        copyToSharedSpaceId: SharedSpaceId,
+        copyToParentNodeId: WorkGroupNodeId
+    ) {
+        LOGGER.info("copyDocumentToSharedSpace(): copy $document to $copyToParentNodeId in $copyToSharedSpaceId")
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(copyToSharedSpace(
+                document.toCopyRequest(),
+                copyToSharedSpaceId,
+                copyToParentNodeId
+            ))
         }
     }
 }

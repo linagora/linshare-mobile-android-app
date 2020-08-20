@@ -44,6 +44,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
@@ -58,16 +59,23 @@ import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSucce
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.ShareItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Failure.CannotExecuteWithoutNetwork
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperateDocument
+import com.linagora.android.linshare.model.parcelable.toDocument
 import com.linagora.android.linshare.model.parcelable.toParcelable
+import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
+import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.Navigation.MainNavigationType
@@ -78,6 +86,7 @@ import com.linagora.android.linshare.view.base.event.CopyDocumentToSharedSpaceCl
 import com.linagora.android.linshare.view.share.ShareFragment.Companion.SHARE_DOCUMENT_BUNDLE_KEY
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import com.linagora.android.linshare.view.widget.errorLayout
+import com.linagora.android.linshare.view.widget.withLinShare
 import kotlinx.android.synthetic.main.fragment_my_space.swipeLayoutMySpace
 import org.slf4j.LoggerFactory
 
@@ -89,6 +98,8 @@ class MySpaceFragment : MainNavigationFragment() {
     private lateinit var mySpaceViewModel: MySpaceViewModel
 
     private lateinit var binding: FragmentMySpaceBinding
+
+    private val args: MySpaceFragmentArgs by navArgs()
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceFragment::class.java)
@@ -125,6 +136,7 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun reactToFailure(failure: Failure) {
         when (failure) {
             is CannotExecuteWithoutNetwork -> handleCannotExecuteWithoutNetwork(failure.operatorType)
+            is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_shared_space_fail_message)).show()
         }
     }
 
@@ -132,6 +144,7 @@ class MySpaceFragment : MainNavigationFragment() {
         when (success) {
             is Success.ViewEvent -> reactToViewEvent(success)
             is RemoveDocumentSuccessViewState -> getAllDocuments()
+            is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_shared_space_message)).show()
         }
     }
 
@@ -192,6 +205,7 @@ class MySpaceFragment : MainNavigationFragment() {
         LOGGER.info("onViewCreated")
         setUpSwipeRefreshLayout()
         getAllDocuments()
+        handleArguments()
     }
 
     private fun setUpSwipeRefreshLayout() {
@@ -201,6 +215,18 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun getAllDocuments() {
         LOGGER.info("getAllDocuments")
         mySpaceViewModel.getAllDocuments()
+    }
+
+    private fun handleArguments() {
+        args.selectedDestinationInfoForOperate
+            ?.let(this@MySpaceFragment::operateSelectedDestinationInfo)
+    }
+
+    private fun operateSelectedDestinationInfo(selectedDestinationInfo: SelectedDestinationInfoForOperateDocument) {
+        LOGGER.info("operateSelectedDestinationInfo(): $selectedDestinationInfo")
+        when (selectedDestinationInfo.operatorPickDestination) {
+            Event.OperatorPickDestination.COPY -> copyToSharedSpace(selectedDestinationInfo)
+        }
     }
 
     private fun handleDownloadDocument(document: Document) {
@@ -292,6 +318,26 @@ class MySpaceFragment : MainNavigationFragment() {
             .navigateToCopyMySpaceDestinationFragment(document.toParcelable())
 
         findNavController().navigate(actionToSelectDestination)
+    }
+
+    private fun errorSnackBar(message: String): Snackbar {
+        return Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.mySpaceUploadButton)
+    }
+
+    private fun successSnackBar(message: String): Snackbar {
+        return Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+            .withLinShare(requireContext())
+            .setAnchorView(binding.mySpaceUploadButton)
+    }
+
+    private fun copyToSharedSpace(selectedDestinationInfo: SelectedDestinationInfoForOperateDocument) {
+        mySpaceViewModel.copyDocumentToSharedSpace(
+            selectedDestinationInfo.documentParcelable.toDocument(),
+            selectedDestinationInfo.selectedDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
+            selectedDestinationInfo.selectedDestinationInfo.parentDestinationInfo.parentNodeId.toWorkGroupNodeId()
+        )
     }
 
     private fun navigateToReload() {

@@ -121,6 +121,11 @@
         android:id="@id/navigation_my_space"
         android:name="com.linagora.android.linshare.view.myspace.MySpaceFragment"
         tools:layout="@layout/fragment_my_space" >
+        <argument
+            android:name="selectedDestinationInfoForOperate"
+            app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperateDocument"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_navigation_my_space_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -326,5 +331,10 @@
         <action
             android:id="@+id/navigateToFolder"
             app:destination="@id/navigationCopyMySpaceDestinationDocumentFragment" />
+        <action
+            android:id="@+id/navigateToMySpace"
+            app:destination="@id/navigation_my_space"
+            app:popUpTo="@id/navigation_my_space"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
