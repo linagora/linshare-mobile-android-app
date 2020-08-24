@@ -96,6 +96,17 @@ object SharedSpaceFixtures {
         nodeType = LinShareNodeType.WORK_GROUP
     )
 
+    private val SHARED_SPACE_ID_5 = SharedSpaceId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa"))
+
+    val SHARED_SPACE_5 = SharedSpaceNodeNested(
+        sharedSpaceId = SHARED_SPACE_ID_5,
+        role = SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("6c0e1f35-89e5-432e-a8d4-17c8d2c3b5fa")), SharedSpaceRoleName.WRITER),
+        name = "workgroup 5",
+        creationDate = Date(1574837876965),
+        modificationDate = Date(1574837876965),
+        nodeType = LinShareNodeType.WORK_GROUP
+    )
+
     private val ALL_SHARED_SPACE = SharedSpaceViewState(listOf(SHARED_SPACE_1, SHARED_SPACE_2))
 
     private val SEARCH_SHARED_SPACE = SearchSharedSpaceViewState(listOf(SHARED_SPACE_1, SHARED_SPACE_2))
