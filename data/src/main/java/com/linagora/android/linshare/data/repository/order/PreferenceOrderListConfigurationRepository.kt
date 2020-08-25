@@ -31,19 +31,46 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.repository
+package com.linagora.android.linshare.data.repository.order
 
+import android.content.SharedPreferences
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.order.OrderListType
+import com.linagora.android.linshare.domain.repository.OrderListConfigurationRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface OrderListConfigurationRepository {
+@Singleton
+class PreferenceOrderListConfigurationRepository @Inject constructor(
+    private val sharedPreferences: SharedPreferences
+) : OrderListConfigurationRepository {
 
-    suspend fun persistOrderListConfiguration(
+    override suspend fun persistOrderListConfiguration(
         orderListType: OrderListType,
         orderListConfigurationType: OrderListConfigurationType
-    )
+    ) {
+        with(sharedPreferences.edit()) {
+            putString(orderListType.toString(), orderListConfigurationType.toString())
+            commit()
+        }
+    }
 
-    suspend fun getOrderConfiguration(orderListType: OrderListType): OrderListConfigurationType
+    override suspend fun getOrderConfiguration(orderListType: OrderListType): OrderListConfigurationType {
+        with(sharedPreferences) {
+            val orderListConfigurationTypeString = getString(
+                orderListType.toString(),
+                OrderListConfigurationType.AscendingModificationDate.toString())
 
-    suspend fun removeOrderConfiguration(orderListType: OrderListType)
+            return OrderListConfigurationType.values()
+                .firstOrNull { it.name == orderListConfigurationTypeString }
+                ?: OrderListConfigurationType.AscendingModificationDate
+        }
+    }
+
+    override suspend fun removeOrderConfiguration(orderListType: OrderListType) {
+        with(sharedPreferences.edit()) {
+            remove(orderListType.toString())
+            commit()
+        }
+    }
 }
