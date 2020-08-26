@@ -59,6 +59,7 @@ import com.linagora.android.linshare.util.Constant.MIN_LENGTH_CHARACTERS_TO_SEAR
 import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NameValidator
+import com.linagora.android.linshare.view.action.OrderByActionImp
 import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspace.action.CreateWorkGroupBehavior
@@ -89,6 +90,8 @@ class SharedSpaceViewModel @Inject constructor(
     val sharedSpaceItemBehavior = SharedSpaceItemBehavior(this)
 
     val searchAction = SearchActionImp(this)
+
+    val orderByAction = OrderByActionImp(this)
 
     val sharedSpaceItemContextMenu = SharedSpaceItemContextMenu(this)
 

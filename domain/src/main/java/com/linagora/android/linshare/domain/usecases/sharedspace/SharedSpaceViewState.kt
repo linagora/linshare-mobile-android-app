@@ -67,3 +67,4 @@ data class DeletedSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.Vie
 data class DeleteSharedSpaceFailure(val throwable: Throwable) : FeatureFailure()
 data class DeleteSharedSpaceClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OnlineViewEvent(OperatorType.DeleteSharedSpace)
 data class OnShowConfirmDeleteSharedSpaceClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OfflineViewEvent(OperatorType.ShowConfirmDialogClick)
+object OpenOrderByDialog : Success.ViewEvent()
