@@ -33,46 +33,48 @@
 
 package com.linagora.android.linshare.view.sharedspacedocument
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.view.View
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.databinding.BindingAdapter
+import arrow.core.Either
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.usecases.sharedspace.BlankNameError
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicatedNameError
+import com.linagora.android.linshare.domain.usecases.sharedspace.NameContainSpecialCharacter
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.util.SuggestNewNameUtils
+import com.linagora.android.linshare.util.SuggestNewNameUtils.SuggestNameType
 
-@Module
-internal abstract class SharedSpaceDocumentPresentationModule {
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentFragment(): SharedSpaceDocumentFragment
+@BindingAdapter("suggestNameFolder")
+fun bindingSuggestNameFolder(
+    editText: AppCompatEditText,
+    listFolder: List<WorkGroupNode>
+) {
+    val suggestName = SuggestNewNameUtils(editText.context)
+        .suggestNewName(
+            listFolder.filterIsInstance<WorkGroupFolder>().map { it.name },
+            SuggestNameType.FOLDER)
+    editText.setText(suggestName)
+    editText.setSelection(suggestName.length)
+}
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentViewModel::class)
-    abstract fun bindSharedSpaceDocumentViewModel(sharedSpaceDocumentViewModel: SharedSpaceDocumentViewModel): ViewModel
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentContextMenuDialog(): SharedSpaceDocumentContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmRemoveSharedSpaceNodeDialog(): ConfirmRemoveSharedSpaceNodeDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceFolderContextMenuDialog(): SharedSpaceFolderContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpacePickDestinationDialog(): SharedSpacePickDestinationDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeUploadOrCreateFolderDialog(): AddToSharedSpaceDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeCreateFolderDialog(): CreateFolderDialog
+@BindingAdapter("errorMessageEnterNameFolder")
+fun bindingErrorMessageEnterNameFolder(
+    textView: AppCompatTextView,
+    state: Either<Failure, Success>
+) {
+    state.fold(
+        ifLeft = { failure ->
+            textView.visibility = View.VISIBLE
+            when (failure) {
+                is BlankNameError -> textView.text = textView.context.getString(R.string.folder_name_can_not_be_blank)
+                is NameContainSpecialCharacter -> textView.text = textView.context.getString(R.string.workgroup_name_not_contain_special_char)
+                is DuplicatedNameError -> textView.text = textView.context.getString(R.string.folder_name_already_exists)
+            }
+        },
+        ifRight = { textView.visibility = View.GONE })
 }

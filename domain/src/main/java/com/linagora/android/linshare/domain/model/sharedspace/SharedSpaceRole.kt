@@ -75,6 +75,12 @@ object SharedSpaceOperationRole {
     val DeleteSharedSpaceRole = listOf(
         SharedSpaceRoleName.ADMIN
     )
+
+    val CreateFolderRole = listOf(
+        SharedSpaceRoleName.CONTRIBUTOR,
+        SharedSpaceRoleName.WRITER,
+        SharedSpaceRoleName.ADMIN
+    )
 }
 
 fun SharedSpaceRole.canUpload(): Boolean {

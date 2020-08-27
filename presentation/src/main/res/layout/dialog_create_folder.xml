@@ -37,22 +37,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId"/>
-        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
-        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName"/>
-        <import type="com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentViewModel"/>
+        <import type="java.util.List"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode"/>
+        <import type="arrow.core.Either"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
+        <import type="androidx.lifecycle.LiveData"/>
 
         <variable
-            name="viewModel"
-            type="SharedSpaceDocumentViewModel" />
+            name="listWorkGroupNode"
+            type="LiveData&lt;List&lt;WorkGroupNode&gt;&gt;" />
 
         <variable
-            name="sharedSpaceId"
-            type="SharedSpaceId" />
-
-        <variable
-            name="sharedSpaceRoleName"
-            type="SharedSpaceRoleName" />
+            name="state"
+            type="LiveData&lt;Either&lt;Failure, Success&gt;&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,50 +59,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="@dimen/padding_top_bottom_sheet"
-        android:paddingBottom="@dimen/padding_vertical_common">
+        android:paddingTop="@dimen/padding_top_bottom_sheet">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/titleDialog"
+            android:id="@+id/titleCreateFolder"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:textSize="@dimen/title_dialog_text_size"
             android:textColor="@color/file_name_color"
-            android:text="@string/add_new_file_or_folder"
+            android:text="@string/create_new_folder"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <TextView
-            android:id="@+id/uploadFile"
-            android:onClick="@{() -> viewModel.selectedBehavior.onUploadFileClick()}"
-            app:contextActionForEnableClick="@{sharedSpaceRoleName}"
-            app:listRoles="@{SharedSpaceOperationRole.INSTANCE.uploadRoles}"
-            android:padding="@dimen/padding_vertical_common"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleDialog"
-            android:textSize="@dimen/select_button_text_size"
-            android:drawableTop="@drawable/ic_upload_file"
-            android:drawableTint="@color/colorPrimary"
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/nameFolder"
+            style="@style/TextInRowLinerBottomSheetStyle"
+            android:hint="@string/new_folder"
+            android:textStyle="italic"
+            app:suggestNameFolder="@{listWorkGroupNode}"
+            android:backgroundTint="@color/file_name_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/titleCreateFolder"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/errorMessage"
+            android:textSize="@dimen/error_workgroup_name_blank"
+            android:textColor="@color/error_border_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorPrimary"
-            android:text="@string/upload_file"/>
+            app:errorMessageEnterNameFolder="@{state}"
+            app:layout_constraintTop_toBottomOf="@+id/nameFolder"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
-            android:id="@+id/createFolder"
-            android:onClick="@{() -> viewModel.selectedBehavior.onCreateFolderClick()}"
-            app:contextActionForEnableClick="@{sharedSpaceRoleName}"
-            app:listRoles="@{SharedSpaceOperationRole.INSTANCE.createFolderRole}"
-            android:padding="@dimen/padding_vertical_common"
-            app:layout_constraintStart_toEndOf="@+id/uploadFile"
-            app:layout_constraintTop_toBottomOf="@+id/titleDialog"
-            android:textSize="@dimen/select_button_text_size"
-            android:drawableTop="@drawable/ic_create_folder"
-            android:drawableTint="@color/colorPrimary"
+            android:id="@+id/createButton"
+            style="@style/SelectButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorPrimary"
-            android:text="@string/create_folder"/>
+            android:text="@string/create"
+            android:layout_marginTop="@dimen/upload_button_margin_top"
+            android:layout_marginBottom="@dimen/upload_button_margin_top"
+            app:enableCreateWorkGroupAndFolderButton="@{state}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameFolder" />
+
+        <TextView
+            android:id="@+id/cancelButton"
+            style="@style/SelectButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:layout_marginEnd="@dimen/select_button_margin_end"
+            app:layout_constraintEnd_toStartOf="@+id/createButton"
+            app:layout_constraintTop_toTopOf="@+id/createButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
