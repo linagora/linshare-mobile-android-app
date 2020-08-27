@@ -78,8 +78,8 @@ fun bindingErrorMessageEnterNameWorkGroup(
         ifRight = { textView.visibility = View.GONE })
 }
 
-@BindingAdapter("enableCreateWorkGroupButton")
-fun bindingEnableCreateWorkGroupButton(
+@BindingAdapter("positiveButtonWithSuggestName")
+fun bindingPositiveButtonWithSuggestName(
     textView: TextView,
     state: Either<Failure, Success>
 ) {

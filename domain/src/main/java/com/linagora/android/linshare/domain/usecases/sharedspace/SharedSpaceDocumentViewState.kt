@@ -39,6 +39,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 
@@ -63,6 +64,7 @@ data class CreateSharedSpaceFolderSuccessViewState(val workGroupFolder: WorkGrou
 data class CreateSharedSpaceFolderFailure(val throwable: Throwable) : Failure.FeatureFailure()
 object SharedSpaceDocumentOnUploadFileClick : Success.OfflineViewEvent(OperatorType.UploadFile)
 object SharedSpaceDocumentOnCreateFolderClick : Success.OfflineViewEvent(OperatorType.CreateFolder)
+data class CreateFolderViewEvent(val nameFolder: NewNameRequest) : Success.OnlineViewEvent(OperatorType.CreateFolder)
 
 data class CopyToSharedSpaceSuccess(
     val destinationSharedSpaceId: SharedSpaceId,

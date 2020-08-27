@@ -58,6 +58,7 @@ import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithFileSizeExceed
 import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithQuotaReach
@@ -67,6 +68,8 @@ import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateFolderViewEvent
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceFolderSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
@@ -77,6 +80,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocu
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnBackClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnCreateFolderClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnUploadFileClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderContextMenuClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -183,6 +187,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             }
             is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_another_shared_space_success)).show()
             is CopyInMySpaceSuccess -> alertCopyToMySpaceSuccess(viewState.documents)
+            is CreateSharedSpaceFolderSuccessViewState -> getAllNodes()
         }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
@@ -235,6 +240,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is SharedSpaceSelectedDestinationSharedSpace -> handleSelectedDestinationToSharedSpace(viewEvent.workGroupNode, viewEvent.destinationForOperator)
             is SharedSpaceSelectedDestinationMySpace -> handleSelectedDestinationToMySpace(viewEvent.workGroupNode, viewEvent.destinationForOperator)
             is SharedSpaceDocumentOnUploadFileClick -> handleUploadFile()
+            is SharedSpaceDocumentOnCreateFolderClick -> showCreateFolderDialog()
+            is CreateFolderViewEvent -> handleCreateFolder(viewEvent.nameFolder)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> showUploadFileOrCreateFolderDialog()
             OpenSearchView -> handleOpenSearch()
@@ -243,12 +250,31 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         sharedSpacesDocumentViewModel.dispatchResetState()
     }
 
+    private fun handleCreateFolder(nameWorkGroup: NewNameRequest) {
+        dismissCreateFolderDialog()
+        sharedSpacesDocumentViewModel.createFolder(nameWorkGroup)
+    }
+
+    private fun dismissCreateFolderDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(CreateFolderDialog.TAG)
+    }
+
+    private fun showCreateFolderDialog() {
+        dismissAddToSharedSpaceDialog()
+        CreateFolderDialog(
+                listWorkGroupNodes = sharedSpacesDocumentViewModel.listWorkGroupNode,
+                onCreateSharedSpaceNode = { text -> sharedSpacesDocumentViewModel.createFolderBehavior.onCreate(NewNameRequest(text)) },
+                onNewNameRequestChange = { name -> sharedSpacesDocumentViewModel.verifyNewName(name) },
+                viewState = sharedSpacesDocumentViewModel.viewState)
+            .show(childFragmentManager, CreateFolderDialog.TAG)
+    }
+
     private fun handleUploadFile() {
-        dismissUploadOrCreateFolderDialog()
+        dismissAddToSharedSpaceDialog()
         openFilePicker()
     }
 
-    private fun dismissUploadOrCreateFolderDialog() {
+    private fun dismissAddToSharedSpaceDialog() {
         childFragmentManager.dismissDialogFragmentByTag(AddToSharedSpaceDialog.TAG)
     }
 
@@ -517,6 +543,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         dismissAllDialog()
         val messageId = when (operatorType) {
             is OperatorType.OnItemClick -> R.string.not_access_folder_while_offline
+            is OperatorType.CreateFolder -> R.string.not_create_folder_while_offline
             else -> R.string.can_not_process_without_network
         }
         Snackbar.make(binding.root, getString(messageId), Snackbar.LENGTH_SHORT)

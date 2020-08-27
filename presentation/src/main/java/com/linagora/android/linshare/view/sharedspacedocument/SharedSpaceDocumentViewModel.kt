@@ -37,30 +37,40 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
+import arrow.core.flatMap
 import com.linagora.android.linshare.adapter.sharedspace.action.SharedSpaceNodeDownloadContextMenu
 import com.linagora.android.linshare.domain.model.Credential
+import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.createCopyRequest
 import com.linagora.android.linshare.domain.model.sharedspace.toCopyToMySpaceRequest
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
+import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceNodeInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicatedNameError
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSingleSharedSpaceInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.NotDuplicatedName
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
@@ -70,8 +80,10 @@ import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.NameValidator
 import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.sharedspacedocument.action.CreateFolderBehavior
 import com.linagora.android.linshare.view.sharedspacedocument.action.OnSelectedSharedSpaceDocumentAddBehaviorImpl
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentCopyToContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
@@ -83,6 +95,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -97,7 +111,9 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val removeSharedSpaceNodeInteractor: RemoveSharedSpaceNodeInteractor,
     private val downloadOperator: DownloadOperator,
     private val copyToSharedSpace: CopyToSharedSpace,
-    private val copyToMySpace: CopyInMySpaceInteractor
+    private val copyToMySpace: CopyInMySpaceInteractor,
+    private val nameValidator: NameValidator,
+    private val createSharedSpaceNodeInteractor: CreateSharedSpaceNodeInteractor
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
@@ -122,6 +138,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
 
     val selectedBehavior = OnSelectedSharedSpaceDocumentAddBehaviorImpl(this)
 
+    val createFolderBehavior = CreateFolderBehavior(this)
+
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 
     private val mutableCurrentSharedSpace = MutableLiveData<SharedSpace?>()
@@ -130,11 +148,48 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val mutableCurrentNode = MutableLiveData<WorkGroupNode?>()
     val currentNode: LiveData<WorkGroupNode?> = mutableCurrentNode
 
+    private val mutableListWorkGroupNode = MutableLiveData<List<WorkGroupNode>>(emptyList())
+    val listWorkGroupNode: LiveData<List<WorkGroupNode>> = mutableListWorkGroupNode
+
+    private val enteringName = BroadcastChannel<NewNameRequest>(Channel.CONFLATED)
+
+    private val newNameStates = enteringName.asFlow()
+        .debounce(QUERY_INTERVAL_MS)
+        .mapLatest { queryString -> checkDuplicateName(queryString) }
+        .mapLatest { duplicatedState -> validateName(duplicatedState) }
+
     fun onSwipeRefresh(sharedSpaceNavigationInfo: SharedSpaceNavigationInfo) {
         getAllChildNodes(
             sharedSpaceId = sharedSpaceNavigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
             parentNodeId = sharedSpaceNavigationInfo.getCurrentNodeId()
         )
+    }
+
+    private fun checkDuplicateName(queryString: NewNameRequest): Either<Failure, Success> {
+        return Either.cond(
+            test = listWorkGroupNode.value?.map { it.name }?.contains(queryString.value) == false,
+            ifTrue = { NotDuplicatedName(queryString) },
+            ifFalse = { DuplicatedNameError }
+        )
+    }
+
+    private fun validateName(duplicatedState: Either<Failure, Success>): Either<Failure, Success> {
+        return duplicatedState.flatMap { state ->
+            if (state is NotDuplicatedName) {
+                return@flatMap nameValidator.validateName(state.verifiedName.value)
+            }
+            return@flatMap Either.right(state)
+        }
+    }
+
+    fun verifyNewName(nameString: NewNameRequest) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            enteringName.send(nameString)
+            consumeStates(
+                newNameStates.flatMapLatest { state ->
+                    flow<State<Either<Failure, Success>>> { emitState { state } } }
+            )
+        }
     }
 
     fun getAllChildNodes(sharedSpaceId: SharedSpaceId, parentNodeId: WorkGroupNodeId?) {
@@ -189,6 +244,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         when (success) {
             is GetSharedSpaceSuccess -> mutableCurrentSharedSpace.value = success.sharedSpace
             is GetSharedSpaceNodeSuccess -> mutableCurrentNode.value = success.node
+            is SharedSpaceDocumentViewState -> mutableListWorkGroupNode.value = success.documents
         }
     }
 
@@ -222,6 +278,22 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         LOGGER.info("copyNodeToMySpace(): $copyFromNode")
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(copyToMySpace(copyFromNode.toCopyToMySpaceRequest()))
+        }
+    }
+
+    fun createFolder(nameFolder: NewNameRequest) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(OperatorType.CreateFolder) {
+                currentNode.value?.let {
+                    createSharedSpaceNodeInteractor(
+                        it.sharedSpaceId,
+                        CreateSharedSpaceNodeRequest(
+                            nameFolder.value,
+                            it.workGroupNodeId,
+                            WorkGroupNodeType.FOLDER)
+                    )
+                }!!
+            }
         }
     }
 }
