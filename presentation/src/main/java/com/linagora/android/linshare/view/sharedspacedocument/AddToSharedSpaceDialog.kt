@@ -33,42 +33,45 @@
 
 package com.linagora.android.linshare.view.sharedspacedocument
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import com.linagora.android.linshare.databinding.DialogAddToSharedSpaceBinding
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import com.linagora.android.linshare.util.getParentViewModel
+import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
+import javax.inject.Inject
 
-@Module
-internal abstract class SharedSpaceDocumentPresentationModule {
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentFragment(): SharedSpaceDocumentFragment
+class AddToSharedSpaceDialog(
+    private val sharedSpace: SharedSpace
+) : DaggerBottomSheetDialogFragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentViewModel::class)
-    abstract fun bindSharedSpaceDocumentViewModel(sharedSpaceDocumentViewModel: SharedSpaceDocumentViewModel): ViewModel
+    @Inject
+    lateinit var sharedSpaceDocumentViewModel: SharedSpaceDocumentViewModel
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceDocumentContextMenuDialog(): SharedSpaceDocumentContextMenuDialog
+    companion object {
+        const val TAG = "UploadOrCreateFolderDialog"
+    }
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmRemoveSharedSpaceNodeDialog(): ConfirmRemoveSharedSpaceNodeDialog
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding = DialogAddToSharedSpaceBinding
+            .inflate(inflater, container, false)
+        initViewModel(binding)
+        return binding.root
+    }
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceFolderContextMenuDialog(): SharedSpaceFolderContextMenuDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpacePickDestinationDialog(): SharedSpacePickDestinationDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeUploadOrCreateFolderDialog(): AddToSharedSpaceDialog
+    private fun initViewModel(binding: DialogAddToSharedSpaceBinding) {
+        sharedSpaceDocumentViewModel = getParentViewModel(viewModelFactory)
+        binding.viewModel = sharedSpaceDocumentViewModel
+        binding.sharedSpaceId = sharedSpace.sharedSpaceId
+        binding.sharedSpaceRoleName = sharedSpace.role.name
+    }
 }

@@ -191,3 +191,15 @@ fun bindingContextActionWithRole(
         ?: View.GONE
     view.visibility = visible
 }
+
+@BindingAdapter("contextActionForEnableClick", "listRoles", requireAll = true)
+fun bindingContextActionWithRoleForTextView(
+    textView: TextView,
+    ownRoleName: SharedSpaceRoleName,
+    operationRoles: List<SharedSpaceRoleName>
+) {
+    val enableClick = operationRoles.takeIf { it.isNotEmpty() && it.contains(ownRoleName) }
+        ?.let { true }
+        ?: false
+    textView.isEnabled = enableClick
+}

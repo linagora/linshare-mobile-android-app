@@ -77,6 +77,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocu
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnBackClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnUploadFileClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderContextMenuClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -233,12 +234,28 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is WorkGroupNodeCopyToViewEvent -> selectDestinationSpaceType(viewEvent.operatorType, viewEvent.node)
             is SharedSpaceSelectedDestinationSharedSpace -> handleSelectedDestinationToSharedSpace(viewEvent.workGroupNode, viewEvent.destinationForOperator)
             is SharedSpaceSelectedDestinationMySpace -> handleSelectedDestinationToMySpace(viewEvent.workGroupNode, viewEvent.destinationForOperator)
+            is SharedSpaceDocumentOnUploadFileClick -> handleUploadFile()
             SharedSpaceDocumentOnBackClick -> navigateBack()
-            SharedSpaceDocumentOnAddButtonClick -> openFilePicker()
+            SharedSpaceDocumentOnAddButtonClick -> showUploadFileOrCreateFolderDialog()
             OpenSearchView -> handleOpenSearch()
             CloseSearchView -> handleCloseSearch()
         }
         sharedSpacesDocumentViewModel.dispatchResetState()
+    }
+
+    private fun handleUploadFile() {
+        dismissUploadOrCreateFolderDialog()
+        openFilePicker()
+    }
+
+    private fun dismissUploadOrCreateFolderDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(AddToSharedSpaceDialog.TAG)
+    }
+
+    private fun showUploadFileOrCreateFolderDialog() {
+        sharedSpacesDocumentViewModel.currentSharedSpace.value
+            ?.let { AddToSharedSpaceDialog(it)
+                .show(childFragmentManager, AddToSharedSpaceDialog.TAG) }
     }
 
     private fun confirmRemoveSharedSpaceNode(workGroupNode: WorkGroupNode) {

@@ -68,4 +68,8 @@ sealed class OperatorType {
     object DeleteSharedSpace : OnlineOperatorType()
 
     object AddMember : OnlineOperatorType()
+
+    object OnFabButtonClick : OfflineOperatorType()
+
+    object CreateFolder : OnlineOperatorType()
 }

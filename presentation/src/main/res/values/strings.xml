@@ -265,4 +265,6 @@
     <string name="confirm_delete_shared_space" translatable="false">Are you sure to delete \"%s\"</string>
 
     <string name="can_not_delete_shared_space_without_network" translatable="false">Can not delete shared space while offline</string>
+    <string name="add_new_file_or_folder" translatable="false">Add new file or folder</string>
+    <string name="create_folder" translatable="false">Create Folder</string>
 </resources>

@@ -51,7 +51,7 @@ data class SharedSpaceDocumentItemClick(val workGroupNode: WorkGroupNode) : Succ
 data class SharedSpaceDocumentContextMenuClick(val workGroupDocument: WorkGroupDocument) : Success.ViewEvent()
 object SharedSpaceDocumentOnBackClick : Success.ViewEvent()
 data class DownloadSharedSpaceNodeClick(val workGroupNode: WorkGroupNode) : Success.ViewEvent()
-object SharedSpaceDocumentOnAddButtonClick : Success.ViewEvent()
+object SharedSpaceDocumentOnAddButtonClick : Success.OfflineViewEvent(OperatorType.OnFabButtonClick)
 object SearchSharedSpaceDocumentNoResult : Failure.FeatureFailure()
 data class SearchSharedSpaceDocumentViewState(val documents: List<WorkGroupNode>) : Success.ViewState()
 data class RemoveSharedSpaceNodeSuccessViewState(val workGroupNode: WorkGroupNode) : Success.ViewState()
