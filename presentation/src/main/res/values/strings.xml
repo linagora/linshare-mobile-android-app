@@ -272,4 +272,6 @@
     <string name="folder_name_already_exists" translatable="false">Folder name already exists</string>
     <string name="not_create_folder_while_offline" translatable="false">Cannot create folder while offline</string>
     <string name="folder_name_can_not_be_blank" translatable="false">"Folder name can not be blank"</string>
+
+    <string name="order_by_name" translatable="false">Name</string>
 </resources>

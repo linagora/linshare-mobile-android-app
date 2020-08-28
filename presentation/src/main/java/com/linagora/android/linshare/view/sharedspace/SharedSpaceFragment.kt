@@ -110,7 +110,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
-        getSharedSpace()
+        getOrderListConfiguration()
         setUpSearchView()
     }
 
@@ -261,6 +261,10 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun dismissContextMenu() {
         childFragmentManager.dismissDialogFragmentByTag(SharedSpaceContextMenuDialog.TAG)
+    }
+
+    private fun getOrderListConfiguration() {
+        sharedSpaceViewModel.getOrderListConfiguration()
     }
 
     private fun getSharedSpace() {

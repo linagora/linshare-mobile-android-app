@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ LinShare is an open source filesharing software, part of the LinPKI software
   ~ suite, developed by Linagora.
   ~
@@ -32,51 +31,48 @@
   ~  the Additional Terms applicable to LinShare software.
   -->
 
-<resources>
-    <color name="colorPrimary">#4AC6FF</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#1B7EC7</color>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <color name="greyPrimary">#7B7B7B</color>
+    <data>
 
-    <color name="grey_20">#cccccc</color>
-    <color name="grey_80">#37474F</color>
-    <color name="grey_60">#6D747A</color>
-    <color name="grey_40">#C0C0C0</color>
+        <import type="com.linagora.android.linshare.domain.model.order.OrderListConfigurationType" />
 
-    <color name="divide_view">#D3D3D3</color>
+        <variable
+            name="orderListConfiguration"
+            type="OrderListConfigurationType" />
+    </data>
 
-    <color name="text_with_logo_color">#FFF</color>
-    <color name="error_border_color">#FF5858</color>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/order_by_status_background_color"
+        android:paddingTop="@dimen/padding_vertical_common"
+        android:paddingBottom="@dimen/padding_vertical_common">
 
-    <color name="white">#FFFFFFFF</color>
+        <ImageView
+            android:id="@+id/current_order_configuration_type"
+            android:layout_width="@dimen/order_by_list_icon_size"
+            android:layout_height="@dimen/order_by_list_icon_size"
+            android:layout_marginStart="@dimen/margin_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:orderByListTypeImage="@{orderListConfiguration}" />
 
-    <color name="disable_state_color">#D3D3D3</color>
+        <TextView
+            android:id="@+id/current_order_configuration_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_order_by_list_name"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:textColor="@color/greyPrimary"
+            android:textSize="@dimen/order_by_list_label_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/current_order_configuration_type"
+            app:layout_constraintTop_toTopOf="parent"
+            app:orderByListConfigurationName="@{orderListConfiguration}" />
 
-    <color name="file_name_color">#7B7B7B</color>
-    <color name="file_size_color">#ACACAC</color>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <color name="bottom_app_bar_background">#F2F2F2</color>
-
-    <color name="request_permission_popup_image_background_color">#919799</color>
-
-    <color name="transparent">#0fff</color>
-    <color name="search_result_total_text_color">#ACACAC</color>
-    <color name="search_result_container_background_color">#F7F7F7</color>
-
-    <color name="cancel_color_text">#7B7B7B</color>
-    <color name="cancel_color_border">#D3D3D3</color>
-
-    <color name="available_offline_tag_background">#1B7EC7</color>
-    <color name="add_recipient_gray">#D3D3D3</color>
-    <color name="add_recipient_text">#7B7B7B</color>
-    <color name="recipient_background_color">#F7F7F7</color>
-
-    <color name="text_primary_color">#7B7B7B</color>
-
-    <color name="tag_background_color">#66C190</color>
-    <color name="toolbar_primary_color">#7B7B7B</color>
-
-    <color name="select_role_background_color">#F2F2F2</color>
-    <color name="order_by_status_background_color">#F7F7F7</color>
-</resources>
+</layout>

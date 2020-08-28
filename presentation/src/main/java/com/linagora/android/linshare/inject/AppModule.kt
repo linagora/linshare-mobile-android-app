@@ -44,6 +44,7 @@ import com.linagora.android.linshare.data.repository.credential.PreferenceCreden
 import com.linagora.android.linshare.data.repository.credential.PreferenceTokenRepository
 import com.linagora.android.linshare.data.repository.document.DocumentRepositoryImp
 import com.linagora.android.linshare.data.repository.download.RoomDownloadingRepository
+import com.linagora.android.linshare.data.repository.order.PreferenceOrderListConfigurationRepository
 import com.linagora.android.linshare.data.repository.properties.PreferencePropertiesRepository
 import com.linagora.android.linshare.data.repository.share.ReceivedSharesRepositoryImp
 import com.linagora.android.linshare.data.repository.user.LinshareAuditUserRepository
@@ -51,6 +52,7 @@ import com.linagora.android.linshare.data.repository.user.LinshareQuotaRepositor
 import com.linagora.android.linshare.data.repository.user.LinshareUserRepository
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
 import com.linagora.android.linshare.domain.repository.CredentialRepository
+import com.linagora.android.linshare.domain.repository.OrderListConfigurationRepository
 import com.linagora.android.linshare.domain.repository.PropertiesRepository
 import com.linagora.android.linshare.domain.repository.TokenRepository
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
@@ -173,6 +175,12 @@ open class AppModule {
     @Singleton
     fun provideAutoCompleteRepository(autoCompleteRepository: LinshareAutoCompleteRepository): AutoCompleteRepository {
         return autoCompleteRepository
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderListConfigurationRepository(orderListConfigurationRepository: PreferenceOrderListConfigurationRepository): OrderListConfigurationRepository {
+        return orderListConfigurationRepository
     }
 
     @Provides

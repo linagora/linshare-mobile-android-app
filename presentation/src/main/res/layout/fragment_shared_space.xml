@@ -105,9 +105,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <include
+                android:id="@+id/currentOrderListConfigurationStatus"
+                layout="@layout/current_order_by_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/networkBannerContainer"
+                app:orderListConfiguration="@{viewModel.orderListConfigurationType}" />
+
             <LinearLayout
                 android:id="@+id/resultsCountContainer"
-                app:layout_constraintTop_toBottomOf="@+id/networkBannerContainer"
+                app:layout_constraintTop_toBottomOf="@+id/currentOrderListConfigurationStatus"
                 app:layout_constraintStart_toStartOf="parent"
                 android:visibility="gone"
                 style="@style/ResultsCountContainerStyle"

@@ -38,16 +38,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceInteractor
-import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceOrderedInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -80,9 +84,10 @@ import javax.inject.Inject
 class SharedSpaceViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     private val searchSharedSpaceInteractor: SearchSharedSpaceInteractor,
-    private val getSharedSpaceInteractor: GetSharedSpaceInteractor,
+    private val getSharedSpaceOrderInteractor: GetSharedSpaceOrderedInteractor,
     private val createWorkGroupInteractor: CreateWorkGroupInteractor,
     private val deleteSharedSpaceInteractor: DeleteSharedSpaceInteractor,
+    private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val nameValidator: NameValidator
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
@@ -97,6 +102,10 @@ class SharedSpaceViewModel @Inject constructor(
 
     private val mutableListSharedSpaceNodeNested = MutableLiveData<List<SharedSpaceNodeNested>>(emptyList())
     val listSharedSpaceNodeNested: LiveData<List<SharedSpaceNodeNested>> = mutableListSharedSpaceNodeNested
+
+    private val mutableOrderListConfigurationType =
+        MutableLiveData<OrderListConfigurationType>(OrderListConfigurationType.AscendingName)
+    val orderListConfigurationType: MutableLiveData<OrderListConfigurationType> = mutableOrderListConfigurationType
 
     val createWorkGroupBehavior = CreateWorkGroupBehavior(this)
 
@@ -134,12 +143,20 @@ class SharedSpaceViewModel @Inject constructor(
     private fun getSearchResult(query: QueryString): Flow<State<Either<Failure, Success>>> {
         return query.takeIf { it.getLength() >= MIN_LENGTH_CHARACTERS_TO_SEARCH }
             ?.let { searchSharedSpaceInteractor(it) }
-            ?: getSharedSpaceInteractor()
+            ?: getSharedSpaceOrderInteractor(mutableOrderListConfigurationType.value ?: OrderListConfigurationType.AscendingName)
+    }
+
+    fun getOrderListConfiguration() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(getOrderListConfigurationInteractor(OrderListType.SharedSpace))
+        }
     }
 
     fun getSharedSpace() {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(getSharedSpaceInteractor())
+            mutableOrderListConfigurationType.value?.let {
+                consumeStates(getSharedSpaceOrderInteractor(it))
+            }
         }
     }
 
@@ -166,6 +183,10 @@ class SharedSpaceViewModel @Inject constructor(
     override fun onSuccessDispatched(success: Success) {
         when (success) {
             is SharedSpaceViewState -> mutableListSharedSpaceNodeNested.value = success.sharedSpace
+            is GetOrderListConfigurationSuccess -> {
+                mutableOrderListConfigurationType.value = success.orderListConfigurationType
+                getSharedSpace()
+            }
         }
     }
 }

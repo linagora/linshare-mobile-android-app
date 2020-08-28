@@ -31,17 +31,34 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.order
+package com.linagora.android.linshare.view.order
 
-enum class OrderListConfigurationType {
-    AscendingModificationDate,
-    DescendingModificationDate,
-    AscendingCreationDate,
-    DescendingCreationDate,
-    AscendingName,
-    DescendingName;
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 
-    fun isAscending(): Boolean {
-        return this.toString().startsWith("Ascending")
+@BindingAdapter("orderByListConfigurationName")
+fun bindingOrderByListConfigurationName(
+    textView: TextView,
+    orderListConfigurationType: OrderListConfigurationType
+) {
+    when (orderListConfigurationType) {
+        OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> {
+            textView.text = textView.context.getString(R.string.order_by_name)
+        }
+    }
+}
+
+@BindingAdapter("orderByListTypeImage")
+fun bindingOrderByListType(
+    imageView: ImageView,
+    orderListConfigurationType: OrderListConfigurationType
+) {
+    if (orderListConfigurationType.isAscending()) {
+        imageView.setImageResource(R.drawable.ic_arrow_up_with_line)
+    } else {
+        imageView.setImageResource(R.drawable.ic_arrow_down_with_line)
     }
 }
