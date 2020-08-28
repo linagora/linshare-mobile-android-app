@@ -54,6 +54,7 @@ import com.linagora.android.testshared.ShareFixtures.SHARE_CREATION_1
 import com.linagora.android.testshared.ShareFixtures.SHARE_CREATION_2
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_ID
 import com.linagora.android.testshared.TestFixtures.Searchs.QUERY_STRING
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -236,6 +237,25 @@ class DocumentsRepositoryImpTest {
 
         assertThrows<CopyException> {
             runBlockingTest { documentRepositoryImp.copy(COPY_REQUEST_1) }
+        }
+    }
+
+    @Test
+    fun getDocumentShouldSuccessWithValidDocumentId() = runBlockingTest {
+        `when`(documentDataSource.get(DOCUMENT_ID))
+            .thenAnswer { DOCUMENT }
+
+        assertThat(documentRepositoryImp.get(DOCUMENT_ID)).isEqualTo(DOCUMENT)
+    }
+
+    @Test
+    fun getDocumentShouldSuccessWhenGetDocumentHaveAFailure() = runBlockingTest {
+        val exception = RuntimeException("can not get document")
+        `when`(documentDataSource.get(DOCUMENT_ID))
+            .thenThrow(exception)
+
+        assertThrows<RuntimeException> {
+            runBlockingTest { documentRepositoryImp.get(DOCUMENT_ID) }
         }
     }
 }

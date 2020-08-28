@@ -113,6 +113,13 @@ interface LinshareApi {
     @Headers("Accept: application/json")
     suspend fun getAll(): List<Document>
 
+    @GET("/documents/{documentId}")
+    @Headers("Accept: application/json")
+    suspend fun getDocument(
+        @Path("documentId") documentUuid: String,
+        @Query("withShares") withShares: Boolean = true
+    ): Document
+
     @DELETE("/documents/{uuid}")
     @Headers("Accept: application/json")
     suspend fun removeDocument(@Path("uuid") uuid: String): Document

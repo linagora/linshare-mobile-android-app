@@ -60,6 +60,10 @@ class DocumentRepositoryImp @Inject constructor(
         return linShareDocumentDataSource.getAll()
     }
 
+    override suspend fun get(documentId: DocumentId): Document {
+        return linShareDocumentDataSource.get(documentId)
+    }
+
     override suspend fun remove(documentId: DocumentId): Document {
         return linShareDocumentDataSource.remove(documentId)
     }

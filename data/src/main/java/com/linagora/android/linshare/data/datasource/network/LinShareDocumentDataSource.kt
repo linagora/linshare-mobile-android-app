@@ -101,6 +101,10 @@ class LinShareDocumentDataSource @Inject constructor(
         return linshareApi.getAll().sortedByDescending { it.modificationDate }
     }
 
+    override suspend fun get(documentId: DocumentId): Document {
+        return linshareApi.getDocument(documentId.uuid.toString())
+    }
+
     override suspend fun search(query: QueryString): List<Document> {
         return getAll()
             .filter { document -> document.nameContains(query.value) }

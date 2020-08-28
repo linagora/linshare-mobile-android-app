@@ -53,6 +53,8 @@ interface DocumentDataSource {
 
     suspend fun getAll(): List<Document>
 
+    suspend fun get(documentId: DocumentId): Document
+
     suspend fun remove(documentId: DocumentId): Document
 
     suspend fun search(query: QueryString): List<Document>

@@ -31,33 +31,61 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.repository.document
+package com.linagora.android.linshare.domain.usecases.myspace
 
-import com.linagora.android.linshare.domain.model.copy.CopyRequest
-import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.document.DocumentId
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
-import com.linagora.android.linshare.domain.model.search.QueryString
-import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.domain.model.share.ShareRequest
-import com.linagora.android.linshare.domain.model.upload.OnTransfer
+import arrow.core.Either
+import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.repository.document.DocumentRepository
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_ID
+import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
+import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 
-interface DocumentRepository {
+class GetDocumentTest {
 
-    suspend fun upload(
-        documentRequest: DocumentRequest,
-        onTransfer: OnTransfer
-    ): Document
+    @Mock
+    private lateinit var documentRepository: DocumentRepository
 
-    suspend fun getAll(): List<Document>
+    private lateinit var getDocument: GetDocument
 
-    suspend fun get(documentId: DocumentId): Document
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.initMocks(this)
+        getDocument = GetDocument(documentRepository)
+    }
 
-    suspend fun remove(documentId: DocumentId): Document
+    @Test
+    fun getDocumentShouldSuccessWithValidDocumentId() = runBlockingTest {
+        `when`(documentRepository.get(DOCUMENT_ID))
+            .thenAnswer { DOCUMENT }
 
-    suspend fun search(query: QueryString): List<Document>
+        val documentState = getDocument(DOCUMENT_ID)
+            .map { it(INIT_STATE) }
+            .toList(ArrayList())
 
-    suspend fun share(shareRequest: ShareRequest): List<Share>
+        assertThat(documentState)
+            .containsExactly(LOADING_STATE, Either.right(GetDocumentSuccess(DOCUMENT)))
+    }
 
-    suspend fun copy(copyRequest: CopyRequest): List<Document>
+    @Test
+    fun getDocumentShouldSuccessWhenGetDocumentHaveAFailure() = runBlockingTest {
+        val exception = RuntimeException("can not get document")
+        `when`(documentRepository.get(DOCUMENT_ID))
+            .thenThrow(exception)
+
+        val documentState = getDocument(DOCUMENT_ID)
+            .map { it(INIT_STATE) }
+            .toList(ArrayList())
+
+        assertThat(documentState)
+            .containsExactly(LOADING_STATE, Either.Left(GetDocumentFailure(exception)))
+    }
 }
