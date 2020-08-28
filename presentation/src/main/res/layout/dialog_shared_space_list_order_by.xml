@@ -34,50 +34,57 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <import type="com.linagora.android.linshare.domain.model.order.OrderListConfigurationType" />
-
-        <variable
-            name="orderListConfiguration"
-            type="OrderListConfigurationType" />
-
-        <variable
-            name="orderByAction"
-            type="com.linagora.android.linshare.view.action.OrderByAction" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/order_by_status_background_color"
-        android:onClick="@{() -> orderByAction.openOrderByDialog()}"
-        android:paddingTop="@dimen/padding_vertical_common"
-        android:paddingBottom="@dimen/padding_vertical_common">
-
-        <ImageView
-            android:id="@+id/current_order_configuration_type"
-            android:layout_width="@dimen/order_by_list_icon_size"
-            android:layout_height="@dimen/order_by_list_icon_size"
-            android:layout_marginStart="@dimen/margin_normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:orderByListTypeImage="@{orderListConfiguration}" />
+        android:orientation="vertical"
+        android:paddingTop="@dimen/padding_top_bottom_sheet"
+        android:paddingBottom="@dimen/padding_top_bottom_sheet">
 
         <TextView
-            android:id="@+id/current_order_configuration_name"
+            style="@style/TitleOrderByStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_order_by_list_name"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:textColor="@color/greyPrimary"
-            android:textSize="@dimen/order_by_list_label_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/current_order_configuration_type"
-            app:layout_constraintTop_toTopOf="parent"
-            app:orderByListConfigurationName="@{orderListConfiguration}" />
+            android:text="@string/order_by_dialog_title" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            style="@style/DivideView"
+            android:layout_marginTop="@dimen/padding_top_bottom_sheet"
+            app:layout_constraintTop_toBottomOf="@id/sharedSpaceHeaderContainer" />
+
+        <LinearLayout style="@style/RowLinerBottomSheetStyle">
+
+            <ImageView
+                style="@style/ImageInRowOrderBy" />
+
+            <TextView
+                style="@style/TextInRowOrderBy"
+                android:text="@string/order_by_modification_date" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/RowLinerBottomSheetStyle">
+
+            <ImageView
+                style="@style/ImageInRowOrderBy" />
+
+            <TextView
+                style="@style/TextInRowOrderBy"
+                android:text="@string/order_by_creation_date" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/RowLinerBottomSheetStyle">
+
+            <ImageView
+                style="@style/ImageInRowOrderBy" />
+
+            <TextView
+                style="@style/TextInRowOrderBy"
+                android:text="@string/order_by_name" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </layout>

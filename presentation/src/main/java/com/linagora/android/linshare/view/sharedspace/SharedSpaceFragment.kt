@@ -58,6 +58,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpa
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeletedSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnShowConfirmDeleteSharedSpaceClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderBy
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -158,6 +159,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is OnShowConfirmDeleteSharedSpaceClick -> showConfirmDeleteSharedSpaceDialog(viewEvent.sharedSpaceNodeNested)
             is DeleteSharedSpaceClick -> deleteSharedSpace(viewEvent.sharedSpaceNodeNested)
             is OnAddMemberContextMenuClick -> navigateIntoAddMemberFragment(viewEvent.sharedSpaceNodeNested)
+            is OpenOrderBy -> showOrderByDialog()
         }
         sharedSpaceViewModel.dispatchResetState()
     }
@@ -193,6 +195,15 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun dismissCreateWorkGroupDialog() {
         childFragmentManager.dismissDialogFragmentByTag(CreateWorkGroupDialog.TAG)
+    }
+
+    private fun showOrderByDialog() {
+        dismissListOrderByDialog()
+        SharedSpaceListOrderByDialog().show(childFragmentManager, SharedSpaceListOrderByDialog.TAG)
+    }
+
+    private fun dismissListOrderByDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(SharedSpaceListOrderByDialog.TAG)
     }
 
     private fun handleOpenSearch() {

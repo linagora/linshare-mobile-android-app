@@ -274,4 +274,7 @@
     <string name="folder_name_can_not_be_blank" translatable="false">"Folder name can not be blank"</string>
 
     <string name="order_by_name" translatable="false">Name</string>
+    <string name="order_by_modification_date" translatable="false">Modification date</string>
+    <string name="order_by_creation_date" translatable="false">Creation date</string>
+    <string name="order_by_dialog_title" translatable="false">Order by</string>
 </resources>

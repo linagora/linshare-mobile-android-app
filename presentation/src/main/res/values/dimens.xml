@@ -230,4 +230,6 @@
     <dimen name="order_by_list_icon_size">16dp</dimen>
     <dimen name="margin_order_by_list_name">8dp</dimen>
     <dimen name="order_by_list_label_text_size">12sp</dimen>
+    <dimen name="title_dialog_order_by_margin_start">32dp</dimen>
+    <dimen name="dialog_order_by_margin_side">10dp</dimen>
 </resources>

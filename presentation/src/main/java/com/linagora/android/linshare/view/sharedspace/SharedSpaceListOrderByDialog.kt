@@ -33,40 +33,38 @@
 
 package com.linagora.android.linshare.view.sharedspace
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import com.linagora.android.linshare.view.dialog.ConfirmDeleteSharedSpaceDialog
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import com.linagora.android.linshare.databinding.DialogSharedSpaceListOrderByBinding
+import com.linagora.android.linshare.util.getParentViewModel
+import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
+import javax.inject.Inject
 
-@Module
-internal abstract class SharedSpacePresentationModule {
+class SharedSpaceListOrderByDialog : DaggerBottomSheetDialogFragment() {
+    companion object {
+        const val TAG = "listOrderByDialog"
+    }
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceFragment(): SharedSpaceFragment
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceViewModel::class)
-    abstract fun bindSharedSpaceViewModel(receivedSharesViewModel: SharedSpaceViewModel): ViewModel
+    @Inject
+    lateinit var sharedSpaceViewModel: SharedSpaceViewModel
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceContextMenuDialog(): SharedSpaceContextMenuDialog
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding = DialogSharedSpaceListOrderByBinding.inflate(inflater, container, false)
+        initViewModel(binding)
+        return binding.root
+    }
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeCreateWorkGroupDialog(): CreateWorkGroupDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeConfirmDeleteSharedSpaceDialog(): ConfirmDeleteSharedSpaceDialog
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSharedSpaceListOrderByDialog(): SharedSpaceListOrderByDialog
+    private fun initViewModel(binding: DialogSharedSpaceListOrderByBinding) {
+        sharedSpaceViewModel = getParentViewModel(viewModelFactory)
+    }
 }

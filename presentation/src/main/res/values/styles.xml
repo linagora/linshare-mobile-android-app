@@ -331,4 +331,19 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">@dimen/select_button_text_size</item>
     </style>
+
+    <style name="TitleOrderByStyle">
+        <item name="android:textColor">@color/greyPrimary</item>
+        <item name="android:textSize">@dimen/title_dialog_text_size</item>
+        <item name="android:layout_marginStart">@dimen/title_dialog_order_by_margin_start</item>
+    </style>
+
+    <style name="ImageInRowOrderBy" parent="ImageInRowBottomSheet">
+        <item name="android:layout_width">@dimen/order_by_list_icon_size</item>
+        <item name="android:layout_height">@dimen/order_by_list_icon_size</item>
+    </style>
+
+    <style name="TextInRowOrderBy" parent="TextInRowLinerBottomSheetStyle">
+        <item name="android:layout_marginStart">@dimen/title_dialog_order_by_margin_start</item>
+    </style>
 </resources>
