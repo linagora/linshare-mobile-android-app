@@ -33,7 +33,15 @@
 
 package com.linagora.android.linshare.view.action
 
+import androidx.lifecycle.LiveData
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.model.order.OrderTypeName
+
 interface OrderByAction {
+    val selectedOrderType: LiveData<OrderTypeName>
+    val currentOrderListConfigurationType: LiveData<OrderListConfigurationType>
 
     fun openOrderByDialog()
+
+    fun setSelectedOrderType(orderListConfigurationType: OrderListConfigurationType)
 }

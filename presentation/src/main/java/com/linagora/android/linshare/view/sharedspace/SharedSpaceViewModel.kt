@@ -96,8 +96,6 @@ class SharedSpaceViewModel @Inject constructor(
 
     val searchAction = SearchActionImp(this)
 
-    val orderByAction = OrderByActionImp(this)
-
     val sharedSpaceItemContextMenu = SharedSpaceItemContextMenu(this)
 
     private val mutableListSharedSpaceNodeNested = MutableLiveData<List<SharedSpaceNodeNested>>(emptyList())
@@ -106,6 +104,8 @@ class SharedSpaceViewModel @Inject constructor(
     private val mutableOrderListConfigurationType =
         MutableLiveData<OrderListConfigurationType>(OrderListConfigurationType.AscendingName)
     val orderListConfigurationType: MutableLiveData<OrderListConfigurationType> = mutableOrderListConfigurationType
+
+    val orderByAction = OrderByActionImp(this, mutableOrderListConfigurationType)
 
     val createWorkGroupBehavior = CreateWorkGroupBehavior(this)
 
@@ -185,6 +185,7 @@ class SharedSpaceViewModel @Inject constructor(
             is SharedSpaceViewState -> mutableListSharedSpaceNodeNested.value = success.sharedSpace
             is GetOrderListConfigurationSuccess -> {
                 mutableOrderListConfigurationType.value = success.orderListConfigurationType
+                orderByAction.setSelectedOrderType(success.orderListConfigurationType)
                 getSharedSpace()
             }
         }

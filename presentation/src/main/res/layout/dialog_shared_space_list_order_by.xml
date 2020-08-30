@@ -34,6 +34,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="com.linagora.android.linshare.model.order.OrderTypeName" />
+        <import type="android.view.View" />
+
+        <variable
+            name="orderByAction"
+            type="com.linagora.android.linshare.view.action.OrderByAction" />
+
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,33 +66,45 @@
         <LinearLayout style="@style/RowLinerBottomSheetStyle">
 
             <ImageView
-                style="@style/ImageInRowOrderBy" />
+                style="@style/ImageInRowOrderBy"
+                android:visibility="@{orderByAction.selectedOrderType == OrderTypeName.ModificationDate ? View.VISIBLE : View.INVISIBLE}"
+                app:orderByListTypeImage="@{orderByAction.currentOrderListConfigurationType}" />
 
             <TextView
                 style="@style/TextInRowOrderBy"
-                android:text="@string/order_by_modification_date" />
+                android:text="@string/order_by_modification_date"
+                app:currentOrderTypeNameTextColor="@{OrderTypeName.ModificationDate}"
+                app:selectedOrderTypeNameTextColor="@{orderByAction.selectedOrderType}" />
 
         </LinearLayout>
 
         <LinearLayout style="@style/RowLinerBottomSheetStyle">
 
             <ImageView
-                style="@style/ImageInRowOrderBy" />
+                style="@style/ImageInRowOrderBy"
+                android:visibility="@{orderByAction.selectedOrderType == OrderTypeName.CreationDate ? View.VISIBLE : View.INVISIBLE}"
+                app:orderByListTypeImage="@{orderByAction.currentOrderListConfigurationType}" />
 
             <TextView
                 style="@style/TextInRowOrderBy"
-                android:text="@string/order_by_creation_date" />
+                android:text="@string/order_by_creation_date"
+                app:currentOrderTypeNameTextColor="@{OrderTypeName.CreationDate}"
+                app:selectedOrderTypeNameTextColor="@{orderByAction.selectedOrderType}" />
 
         </LinearLayout>
 
         <LinearLayout style="@style/RowLinerBottomSheetStyle">
 
             <ImageView
-                style="@style/ImageInRowOrderBy" />
+                style="@style/ImageInRowOrderBy"
+                android:visibility="@{orderByAction.selectedOrderType == OrderTypeName.Name ? View.VISIBLE : View.INVISIBLE}"
+                app:orderByListTypeImage="@{orderByAction.currentOrderListConfigurationType}" />
 
             <TextView
                 style="@style/TextInRowOrderBy"
-                android:text="@string/order_by_name" />
+                android:text="@string/order_by_name"
+                app:currentOrderTypeNameTextColor="@{OrderTypeName.Name}"
+                app:selectedOrderTypeNameTextColor="@{orderByAction.selectedOrderType}" />
 
         </LinearLayout>
 

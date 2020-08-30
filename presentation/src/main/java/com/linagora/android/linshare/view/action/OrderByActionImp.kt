@@ -33,13 +33,33 @@
 
 package com.linagora.android.linshare.view.action
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import arrow.core.Either
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderBy
+import com.linagora.android.linshare.model.order.OrderTypeName
 import com.linagora.android.linshare.view.base.BaseViewModel
 
-class OrderByActionImp constructor(val viewModel: BaseViewModel) : OrderByAction {
+class OrderByActionImp constructor(
+    val viewModel: BaseViewModel,
+    orderListConfigurationType: LiveData<OrderListConfigurationType>
+) : OrderByAction {
+
+    private var mutableSelectedOrderType = MutableLiveData<OrderTypeName>(OrderTypeName.Name)
+    override val selectedOrderType: LiveData<OrderTypeName> = mutableSelectedOrderType
+    override val currentOrderListConfigurationType = orderListConfigurationType
 
     override fun openOrderByDialog() {
         viewModel.dispatchState(Either.right(OpenOrderByDialog))
+    }
+
+    override fun setSelectedOrderType(orderListConfigurationType: OrderListConfigurationType) {
+        when (orderListConfigurationType) {
+            OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> {
+                mutableSelectedOrderType.value = OrderTypeName.Name
+            }
+        }
     }
 }

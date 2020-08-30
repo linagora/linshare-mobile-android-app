@@ -31,41 +31,10 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspace
+package com.linagora.android.linshare.model.order
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import com.linagora.android.linshare.databinding.DialogSharedSpaceListOrderByBinding
-import com.linagora.android.linshare.util.getParentViewModel
-import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
-import javax.inject.Inject
-
-class SharedSpaceListOrderByDialog : DaggerBottomSheetDialogFragment() {
-    companion object {
-        const val TAG = "listOrderByDialog"
-    }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var sharedSpaceViewModel: SharedSpaceViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = DialogSharedSpaceListOrderByBinding.inflate(inflater, container, false)
-        initViewModel(binding)
-        return binding.root
-    }
-
-    private fun initViewModel(binding: DialogSharedSpaceListOrderByBinding) {
-        sharedSpaceViewModel = getParentViewModel(viewModelFactory)
-        binding.orderByAction = sharedSpaceViewModel.orderByAction
-    }
+enum class OrderTypeName {
+    Name,
+    ModificationDate,
+    CreationDate
 }

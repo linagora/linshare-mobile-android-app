@@ -35,20 +35,29 @@ package com.linagora.android.linshare.view.order
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.model.order.OrderTypeName
 
 @BindingAdapter("orderByListConfigurationName")
 fun bindingOrderByListConfigurationName(
     textView: TextView,
     orderListConfigurationType: OrderListConfigurationType
 ) {
-    when (orderListConfigurationType) {
+    val configurationNameId = when (orderListConfigurationType) {
+        OrderListConfigurationType.AscendingModificationDate, OrderListConfigurationType.DescendingModificationDate -> {
+            R.string.order_by_modification_date
+        }
+        OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate -> {
+            R.string.order_by_creation_date
+        }
         OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> {
-            textView.text = textView.context.getString(R.string.order_by_name)
+            R.string.order_by_name
         }
     }
+    textView.text = textView.context.getString(configurationNameId)
 }
 
 @BindingAdapter("orderByListTypeImage")
@@ -56,9 +65,20 @@ fun bindingOrderByListType(
     imageView: ImageView,
     orderListConfigurationType: OrderListConfigurationType
 ) {
-    if (orderListConfigurationType.isAscending()) {
-        imageView.setImageResource(R.drawable.ic_arrow_up_with_line)
-    } else {
-        imageView.setImageResource(R.drawable.ic_arrow_down_with_line)
-    }
+    val imageResource = orderListConfigurationType.takeIf { it.isAscending() }
+        ?.let { R.drawable.ic_arrow_up_with_line }
+        ?: R.drawable.ic_arrow_down_with_line
+    imageView.setImageResource(imageResource)
+}
+
+@BindingAdapter("selectedOrderTypeNameTextColor", "currentOrderTypeNameTextColor", requireAll = true)
+fun bindingOrderTypeNameTextColor(
+    textView: TextView,
+    selectedOrderTypeNameTextColor: OrderTypeName,
+    currentOrderTypeNameTextColor: OrderTypeName
+) {
+    val textColorId = selectedOrderTypeNameTextColor.takeIf { it == currentOrderTypeNameTextColor }
+        ?.let { R.color.colorPrimary }
+        ?: R.color.greyPrimary
+    textView.setTextColor(ContextCompat.getColor(textView.context, textColorId))
 }
