@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ LinShare is an open source filesharing software, part of the LinPKI software
+  ~ suite, developed by Linagora.
+  ~
+  ~ Copyright (C) 2020 LINAGORA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the
+  ~ terms of the GNU Affero General Public License as published by the Free Software
+  ~ Foundation, either version 3 of the License, or (at your option) any later version,
+  ~ provided you comply with the Additional Terms applicable for LinShare software by
+  ~ Linagora pursuant to Section 7 of the GNU Affero General Public License,
+  ~ subsections (b), (c), and (e), pursuant to which you must notably (i) retain the
+  ~ display in the interface of the “LinShare™” trademark/logo, the "Libre & Free" mention,
+  ~ the words “You are using the Free and Open Source version of LinShare™, powered by
+  ~ Linagora © 2009–2020. Contribute to Linshare R&D by subscribing to an Enterprise
+  ~ offer!”. You must also retain the latter notice in all asynchronous messages such as
+  ~ e-mails sent with the Program, (ii) retain all hypertext links between LinShare and
+  ~ http://www.linshare.org, between linagora.com and Linagora, and (iii) refrain from
+  ~ infringing Linagora intellectual property rights over its trademarks and commercial
+  ~ brands. Other Additional Terms apply, see
+  ~ <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf>
+  ~ for more details.
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY
+  ~ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+  ~ more details.
+  ~ You should have received a copy of the GNU Affero General Public License and its
+  ~ applicable Additional Terms for LinShare along with this program. If not, see
+  ~ <http://www.gnu.org/licenses/> for the GNU Affero General Public License version
+  ~  3 and <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf> for
+  ~  the Additional Terms applicable to LinShare software.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+        <import type="com.linagora.android.linshare.domain.model.document.Document"/>
+
+        <variable
+            name="document"
+            type="Document" />
+
+        <variable
+            name="internetAvailable"
+            type="ConnectionLiveData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:navigationIcon="@drawable/ic_linshare_menu">
+
+                <TextView
+                    android:id="@+id/txtAccountTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/details"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_with_logo_color"
+                    android:textSize="@dimen/url_name_text_size" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <include
+            android:id="@+id/networkBannerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/network_banner_layout"
+            app:connectionState="@{internetAvailable}"
+            app:layout_constraintTop_toBottomOf="@id/app_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/fileInfoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/upload_container_padding_top"
+            android:paddingBottom="@dimen/upload_container_padding_top"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="@dimen/info_elevation"
+            app:layout_constraintTop_toBottomOf="@id/networkBannerContainer">
+
+            <include
+                android:id="@+id/documentInfoContainer"
+                layout="@layout/header_file_info_container"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/share_info_container_height"
+                bind:document="@{document}" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/txtTitleModified"
+            style="@style/DetailsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/info_line_margin"
+            android:layout_marginStart="@dimen/container_padding_right"
+            android:text="@string/modified"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer" />
+
+        <TextView
+            android:id="@+id/txtValueModified"
+            style="@style/DetailsValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/info_line_margin"
+            android:layout_marginEnd="@dimen/container_padding_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer" />
+
+        <TextView
+            android:id="@+id/txtTitleCreated"
+            style="@style/DetailsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/info_line_margin"
+            android:layout_marginStart="@dimen/container_padding_right"
+            android:text="@string/created_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitleModified" />
+
+        <TextView
+            android:id="@+id/txtValueCreated"
+            style="@style/DetailsValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/info_line_margin"
+            android:layout_marginEnd="@dimen/container_padding_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitleModified" />
+
+        <TextView
+            android:id="@+id/txtTitleExpired"
+            style="@style/DetailsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/info_line_margin"
+            android:layout_marginStart="@dimen/container_padding_right"
+            android:text="@string/expiration"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitleCreated" />
+
+        <TextView
+            android:id="@+id/txtValueExpired"
+            style="@style/DetailsValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/info_line_margin"
+            android:layout_marginEnd="@dimen/container_padding_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitleCreated" />
+
+        <View
+            android:id="@+id/divideViewBasicInfoContainer"
+            style="@style/DivideView"
+            android:layout_marginTop="@dimen/info_line_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtTitleExpired" />
+
+        <TextView
+            android:id="@+id/descriptionLabel"
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/container_padding_right"
+            android:layout_marginTop="@dimen/container_padding_right"
+            android:text="@string/description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divideViewBasicInfoContainer" />
+
+        <TextView
+            android:id="@+id/description"
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/container_padding_right"
+            android:layout_marginStart="@dimen/container_padding_right"
+            android:layout_marginEnd="@dimen/container_padding_right"
+            android:singleLine="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
+
+        <LinearLayout
+            android:id="@+id/sharedCountContainer"
+            app:layout_constraintTop_toBottomOf="@+id/description"
+            android:layout_marginTop="@dimen/container_padding_right"
+            android:background="@color/search_result_container_background_color"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_counter_container_height">
+
+            <TextView
+                android:id="@+id/sharedCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:singleLine="true"
+                android:textColor="@color/search_result_total_text_color"
+                android:textSize="@dimen/common_primary_text_size"
+                android:background="@color/search_result_container_background_color"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listMembers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@id/sharedCountContainer" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

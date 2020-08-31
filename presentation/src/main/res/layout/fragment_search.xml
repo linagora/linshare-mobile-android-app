@@ -81,7 +81,7 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <LinearLayout
-                android:id="@+id/resultsCountContainer"
+                android:id="@+id/sharedCountContainer"
                 app:layout_constraintTop_toBottomOf="@+id/app_bar"
                 android:background="@color/search_result_container_background_color"
                 android:orientation="vertical"
@@ -91,7 +91,7 @@
                 app:resultsCountContainer="@{searchViewModel.searchResult}">
 
                 <TextView
-                    android:id="@+id/resultsCount"
+                    android:id="@+id/sharedCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -113,7 +113,7 @@
                 android:background="@color/white"
                 app:layoutManager="LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:layout_constraintTop_toBottomOf="@+id/resultsCountContainer"
+                app:layout_constraintTop_toBottomOf="@+id/sharedCountContainer"
                 app:searchState="@{searchViewModel.searchResult}"
                 app:itemBehavior="@{searchViewModel}" />
 

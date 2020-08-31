@@ -269,6 +269,20 @@
         <item name="android:ellipsize">middle</item>
     </style>
 
+    <style name="DetailsTitle">
+        <item name="android:textColor">@color/grey_80</item>
+        <item name="singleLineTitle">true</item>
+        <item name="android:textSize">@dimen/guide_text_size</item>
+    </style>
+
+    <style name="DetailsValue">
+        <item name="android:textSize">@dimen/guide_text_size</item>
+        <item name="singleLine">true</item>
+        <item name="android:textColor">@color/file_size_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="ResultsCountContainerStyle">
         <item name="android:background">@color/search_result_container_background_color</item>
         <item name="android:orientation">vertical</item>
