@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.domain.usecases.sharedspace
 
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
@@ -68,3 +69,4 @@ data class DeleteSharedSpaceFailure(val throwable: Throwable) : FeatureFailure()
 data class DeleteSharedSpaceClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OnlineViewEvent(OperatorType.DeleteSharedSpace)
 data class OnShowConfirmDeleteSharedSpaceClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OfflineViewEvent(OperatorType.ShowConfirmDialogClick)
 object OpenOrderByDialog : Success.ViewEvent()
+data class OnOrderByRowItemClick(val orderListConfigurationType: OrderListConfigurationType) : Success.OfflineViewEvent(OperatorType.OnOrderByItemRowClick)

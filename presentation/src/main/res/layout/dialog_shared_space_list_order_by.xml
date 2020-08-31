@@ -63,7 +63,9 @@
             android:layout_marginTop="@dimen/padding_top_bottom_sheet"
             app:layout_constraintTop_toBottomOf="@id/sharedSpaceHeaderContainer" />
 
-        <LinearLayout style="@style/RowLinerBottomSheetStyle">
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> orderByAction.tapOrderByRowItem(OrderTypeName.ModificationDate)}">
 
             <ImageView
                 style="@style/ImageInRowOrderBy"
@@ -78,7 +80,9 @@
 
         </LinearLayout>
 
-        <LinearLayout style="@style/RowLinerBottomSheetStyle">
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> orderByAction.tapOrderByRowItem(OrderTypeName.CreationDate)}">
 
             <ImageView
                 style="@style/ImageInRowOrderBy"
@@ -93,7 +97,9 @@
 
         </LinearLayout>
 
-        <LinearLayout style="@style/RowLinerBottomSheetStyle">
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> orderByAction.tapOrderByRowItem(OrderTypeName.Name)}">
 
             <ImageView
                 style="@style/ImageInRowOrderBy"

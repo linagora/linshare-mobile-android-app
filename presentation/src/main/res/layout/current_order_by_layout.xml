@@ -63,7 +63,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:orderByListTypeImage="@{orderListConfiguration}" />
+            app:orderByListTypeImage="@{orderByAction.currentOrderListConfigurationType}" />
 
         <TextView
             android:id="@+id/current_order_configuration_name"
@@ -76,7 +76,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/current_order_configuration_type"
             app:layout_constraintTop_toTopOf="parent"
-            app:orderByListConfigurationName="@{orderListConfiguration}" />
+            app:orderByListConfigurationName="@{orderByAction.currentOrderListConfigurationType}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -38,28 +38,61 @@ import androidx.lifecycle.MutableLiveData
 import arrow.core.Either
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
-import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderBy
+import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
 import com.linagora.android.linshare.model.order.OrderTypeName
 import com.linagora.android.linshare.view.base.BaseViewModel
 
 class OrderByActionImp constructor(
-    val viewModel: BaseViewModel,
-    orderListConfigurationType: LiveData<OrderListConfigurationType>
+    val viewModel: BaseViewModel
 ) : OrderByAction {
 
     private var mutableSelectedOrderType = MutableLiveData<OrderTypeName>(OrderTypeName.Name)
     override val selectedOrderType: LiveData<OrderTypeName> = mutableSelectedOrderType
-    override val currentOrderListConfigurationType = orderListConfigurationType
+
+    private var mutableCurrentOrderListConfigurationType = MutableLiveData<OrderListConfigurationType>(OrderListConfigurationType.AscendingModificationDate)
+    override val currentOrderListConfigurationType = mutableCurrentOrderListConfigurationType
 
     override fun openOrderByDialog() {
         viewModel.dispatchState(Either.right(OpenOrderByDialog))
     }
 
-    override fun setSelectedOrderType(orderListConfigurationType: OrderListConfigurationType) {
+    override fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
+        mutableCurrentOrderListConfigurationType.value = orderListConfigurationType
         when (orderListConfigurationType) {
             OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> {
                 mutableSelectedOrderType.value = OrderTypeName.Name
             }
         }
     }
+
+    override fun getCurrentOrderListConfigurationType(): OrderListConfigurationType {
+        return mutableCurrentOrderListConfigurationType.value ?: OrderListConfigurationType.AscendingModificationDate
+    }
+
+    override fun tapOrderByRowItem(orderTypeName: OrderTypeName) {
+        currentOrderListConfigurationType.value?.let {
+            when (orderTypeName) {
+                OrderTypeName.ModificationDate -> {
+                    // TODO later
+                }
+                OrderTypeName.CreationDate -> {
+                    // TODO later
+                }
+                OrderTypeName.Name -> {
+                    val newOrderListConfigurationType: OrderListConfigurationType =
+                        if (isNewOrderHasSameType(orderTypeName, it)) {
+                        if (it.isAscending()) OrderListConfigurationType.DescendingName else OrderListConfigurationType.AscendingName
+                    } else {
+                        OrderListConfigurationType.AscendingName
+                    }
+                    viewModel.dispatchUIState(Either.right(OnOrderByRowItemClick(newOrderListConfigurationType)))
+                }
+            }
+        }
+    }
+
+    private fun isNewOrderHasSameType(
+        orderTypeName: OrderTypeName,
+        orderListConfigurationType: OrderListConfigurationType
+    ) = orderListConfigurationType.toString().contains(orderTypeName.toString(), ignoreCase = true)
 }

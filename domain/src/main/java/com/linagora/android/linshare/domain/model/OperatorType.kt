@@ -72,4 +72,6 @@ sealed class OperatorType {
     object OnFabButtonClick : OfflineOperatorType()
 
     object CreateFolder : OnlineOperatorType()
+
+    object OnOrderByItemRowClick : OfflineOperatorType()
 }

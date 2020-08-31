@@ -46,9 +46,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceBinding
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationFailed
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
@@ -57,8 +60,9 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroup
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeletedSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
+import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnShowConfirmDeleteSharedSpaceClick
-import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderBy
+import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -124,6 +128,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
     private fun reactToFailure(failure: Failure) {
         when (failure) {
             is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
+            is GetOrderListConfigurationFailed -> getSharedSpace()
         }
     }
 
@@ -136,7 +141,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun reactToViewState(viewState: Success.ViewState) {
         when (viewState) {
-            is CreateWorkGroupSuccess, is DeletedSharedSpaceSuccess -> getSharedSpace()
+            is CreateWorkGroupSuccess, is DeletedSharedSpaceSuccess, is GetOrderListConfigurationSuccess -> getSharedSpace()
         }
     }
 
@@ -159,7 +164,8 @@ class SharedSpaceFragment : MainNavigationFragment() {
             is OnShowConfirmDeleteSharedSpaceClick -> showConfirmDeleteSharedSpaceDialog(viewEvent.sharedSpaceNodeNested)
             is DeleteSharedSpaceClick -> deleteSharedSpace(viewEvent.sharedSpaceNodeNested)
             is OnAddMemberContextMenuClick -> navigateIntoAddMemberFragment(viewEvent.sharedSpaceNodeNested)
-            is OpenOrderBy -> showOrderByDialog()
+            is OpenOrderByDialog -> showOrderByDialog()
+            is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
         }
         sharedSpaceViewModel.dispatchResetState()
     }
@@ -224,6 +230,11 @@ class SharedSpaceFragment : MainNavigationFragment() {
             }
         }
         getSharedSpace()
+    }
+
+    private fun handleOrderRowItemClick(orderListConfigurationType: OrderListConfigurationType) {
+        dismissListOrderByDialog()
+        sharedSpaceViewModel.persistOrderListConfiguration(orderListConfigurationType)
     }
 
     private fun setUpSearchView() {

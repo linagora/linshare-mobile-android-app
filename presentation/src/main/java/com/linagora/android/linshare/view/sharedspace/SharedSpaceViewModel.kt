@@ -48,6 +48,8 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNes
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceInteractor
@@ -88,6 +90,7 @@ class SharedSpaceViewModel @Inject constructor(
     private val createWorkGroupInteractor: CreateWorkGroupInteractor,
     private val deleteSharedSpaceInteractor: DeleteSharedSpaceInteractor,
     private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
+    private val persistOrderListConfigurationInteractor: PersistOrderListConfigurationInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val nameValidator: NameValidator
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
@@ -101,11 +104,7 @@ class SharedSpaceViewModel @Inject constructor(
     private val mutableListSharedSpaceNodeNested = MutableLiveData<List<SharedSpaceNodeNested>>(emptyList())
     val listSharedSpaceNodeNested: LiveData<List<SharedSpaceNodeNested>> = mutableListSharedSpaceNodeNested
 
-    private val mutableOrderListConfigurationType =
-        MutableLiveData<OrderListConfigurationType>(OrderListConfigurationType.AscendingName)
-    val orderListConfigurationType: MutableLiveData<OrderListConfigurationType> = mutableOrderListConfigurationType
-
-    val orderByAction = OrderByActionImp(this, mutableOrderListConfigurationType)
+    val orderByAction = OrderByActionImp(this)
 
     val createWorkGroupBehavior = CreateWorkGroupBehavior(this)
 
@@ -143,7 +142,7 @@ class SharedSpaceViewModel @Inject constructor(
     private fun getSearchResult(query: QueryString): Flow<State<Either<Failure, Success>>> {
         return query.takeIf { it.getLength() >= MIN_LENGTH_CHARACTERS_TO_SEARCH }
             ?.let { searchSharedSpaceInteractor(it) }
-            ?: getSharedSpaceOrderInteractor(mutableOrderListConfigurationType.value ?: OrderListConfigurationType.AscendingName)
+            ?: getSharedSpaceOrderInteractor(orderByAction.getCurrentOrderListConfigurationType())
     }
 
     fun getOrderListConfiguration() {
@@ -152,11 +151,15 @@ class SharedSpaceViewModel @Inject constructor(
         }
     }
 
+    fun persistOrderListConfiguration(orderListConfigurationType: OrderListConfigurationType) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(persistOrderListConfigurationInteractor(OrderListType.SharedSpace, orderListConfigurationType))
+        }
+    }
+
     fun getSharedSpace() {
         viewModelScope.launch(dispatcherProvider.io) {
-            mutableOrderListConfigurationType.value?.let {
-                consumeStates(getSharedSpaceOrderInteractor(it))
-            }
+            consumeStates(getSharedSpaceOrderInteractor(orderByAction.getCurrentOrderListConfigurationType()))
         }
     }
 
@@ -183,11 +186,8 @@ class SharedSpaceViewModel @Inject constructor(
     override fun onSuccessDispatched(success: Success) {
         when (success) {
             is SharedSpaceViewState -> mutableListSharedSpaceNodeNested.value = success.sharedSpace
-            is GetOrderListConfigurationSuccess -> {
-                mutableOrderListConfigurationType.value = success.orderListConfigurationType
-                orderByAction.setSelectedOrderType(success.orderListConfigurationType)
-                getSharedSpace()
-            }
+            is GetOrderListConfigurationSuccess -> orderByAction.setCurrentOrderListConfigurationType(success.orderListConfigurationType)
+            is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
         }
     }
 }

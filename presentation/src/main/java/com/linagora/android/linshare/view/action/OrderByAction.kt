@@ -43,5 +43,9 @@ interface OrderByAction {
 
     fun openOrderByDialog()
 
-    fun setSelectedOrderType(orderListConfigurationType: OrderListConfigurationType)
+    fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType)
+
+    fun getCurrentOrderListConfigurationType(): OrderListConfigurationType
+
+    fun tapOrderByRowItem(orderTypeName: OrderTypeName)
 }
