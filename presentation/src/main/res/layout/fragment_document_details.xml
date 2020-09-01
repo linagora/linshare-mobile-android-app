@@ -33,16 +33,16 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="androidx.lifecycle.LiveData"/>
         <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
         <import type="com.linagora.android.linshare.domain.model.document.Document"/>
 
         <variable
             name="document"
-            type="Document" />
+            type="LiveData&lt;Document&gt;" />
 
         <variable
             name="internetAvailable"
@@ -105,7 +105,7 @@
                 layout="@layout/header_file_info_container"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/share_info_container_height"
-                bind:document="@{document}" />
+                app:document="@{document}" />
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -127,7 +127,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer" />
+            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer"
+            app:documentModified="@{document}"/>
 
         <TextView
             android:id="@+id/txtTitleCreated"
@@ -148,7 +149,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitleModified" />
+            app:layout_constraintTop_toBottomOf="@id/txtTitleModified"
+            app:documentCreation="@{document}"/>
 
         <TextView
             android:id="@+id/txtTitleExpired"
@@ -169,7 +171,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitleCreated" />
+            app:layout_constraintTop_toBottomOf="@id/txtTitleCreated"
+            app:documentExpiration="@{document}"/>
 
         <View
             android:id="@+id/divideViewBasicInfoContainer"
@@ -200,7 +203,8 @@
             android:layout_marginEnd="@dimen/container_padding_right"
             android:singleLine="false"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/descriptionLabel"
+            app:documentDescription="@{document}"/>
 
         <LinearLayout
             android:id="@+id/sharedCountContainer"

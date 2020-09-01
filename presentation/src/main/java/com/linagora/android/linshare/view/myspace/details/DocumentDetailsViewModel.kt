@@ -33,10 +33,19 @@
 
 package com.linagora.android.linshare.view.myspace.details
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.usecases.myspace.GetDocument
+import com.linagora.android.linshare.domain.usecases.myspace.GetDocumentSuccess
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.base.BaseViewModel
+import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class DocumentDetailsViewModel @Inject constructor(
@@ -45,4 +54,23 @@ class DocumentDetailsViewModel @Inject constructor(
     private val getDocument: GetDocument
 ) : BaseViewModel(internetAvailable, coroutinesDispatcherProvider) {
 
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(DocumentDetailsViewModel::class.java)
+    }
+
+    private val mutableDocument = MutableLiveData<Document>()
+    val document: LiveData<Document> = mutableDocument
+
+    fun retrieveDocument(documentId: DocumentId) {
+        viewModelScope.launch(coroutinesDispatcherProvider.io) {
+            consumeStates(getDocument(documentId))
+        }
+    }
+
+    override fun onSuccessDispatched(success: Success) {
+        LOGGER.info("onSuccessDispatched(): $success")
+        when (success) {
+            is GetDocumentSuccess -> mutableDocument.value = success.document
+        }
+    }
 }

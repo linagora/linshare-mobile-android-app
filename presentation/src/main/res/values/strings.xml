@@ -281,5 +281,6 @@
     <string name="created_title" translatable="false">Created</string>
     <string name="expiration" translatable="false">Expiration</string>
     <string name="description" translatable="false">Description</string>
+    <string name="undefined" translatable="false">Undefined</string>
     
 </resources>

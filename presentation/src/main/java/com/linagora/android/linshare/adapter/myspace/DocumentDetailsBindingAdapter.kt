@@ -31,51 +31,37 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.myspace.details
+package com.linagora.android.linshare.adapter.myspace
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
-import androidx.navigation.fragment.navArgs
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.databinding.FragmentDocumentDetailsBinding
-import com.linagora.android.linshare.model.parcelable.toDocumentId
-import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.util.TimeUtils
+import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
 
-class DocumentDetailsFragment : MainNavigationFragment() {
-
-    private lateinit var viewModel: DocumentDetailsViewModel
-
-    private lateinit var binding: FragmentDocumentDetailsBinding
-
-    private val args: DocumentDetailsFragmentArgs by navArgs()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentDocumentDetailsBinding.inflate(inflater, container, false)
-            .apply { lifecycleOwner = viewLifecycleOwner }
-        initViewModel()
-        return binding.root
+@BindingAdapter("documentModified")
+fun bindingModifiedDate(textView: TextView, document: Document?) {
+    textView.text = document?.let {
+        TimeUtils(textView.context).convertToLocalTime(it.modificationDate, LastModifiedFormat)
     }
+}
 
-    private fun initViewModel() {
-        viewModel = getViewModel(viewModelFactory)
-        binding.internetAvailable = viewModel.internetAvailable
-        binding.document = viewModel.document
+@BindingAdapter("documentCreation")
+fun bindingCreationDate(textView: TextView, document: Document?) {
+    textView.text = document?.let {
+        TimeUtils(textView.context).convertToLocalTime(it.creationDate, LastModifiedFormat)
     }
+}
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.retrieveDocument(args.documentId.toDocumentId())
-    }
+@BindingAdapter("documentExpiration")
+fun bindingExpirationDate(textView: TextView, document: Document?) {
+    textView.text = runCatching { document?.let {
+            TimeUtils(textView.context).convertToLocalTime(it.expirationDate!!, LastModifiedFormat) } }
+        .getOrElse { textView.context.getString(R.string.undefined) }
+}
 
-    override fun configureToolbar(toolbar: Toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
-    }
+@BindingAdapter("documentDescription")
+fun bindingDocumentDescription(textView: TextView, document: Document?) {
+    textView.text = document?.let { it.description }
 }
