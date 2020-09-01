@@ -73,5 +73,5 @@ sealed class OperatorType {
 
     object CreateFolder : OnlineOperatorType()
 
-    object OnOrderByItemRowClick : OfflineOperatorType()
+    object OrderBy : OfflineOperatorType()
 }

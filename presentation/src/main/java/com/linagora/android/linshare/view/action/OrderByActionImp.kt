@@ -58,9 +58,15 @@ class OrderByActionImp constructor(
 
     override fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
         mutableCurrentOrderListConfigurationType.value = orderListConfigurationType
-        when (orderListConfigurationType) {
+        mutableSelectedOrderType.value = when (orderListConfigurationType) {
             OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> {
-                mutableSelectedOrderType.value = OrderTypeName.Name
+                OrderTypeName.Name
+            }
+            OrderListConfigurationType.AscendingModificationDate, OrderListConfigurationType.DescendingModificationDate -> {
+                OrderTypeName.ModificationDate
+            }
+            OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate -> {
+                OrderTypeName.CreationDate
             }
         }
     }
@@ -69,30 +75,10 @@ class OrderByActionImp constructor(
         return mutableCurrentOrderListConfigurationType.value ?: OrderListConfigurationType.AscendingModificationDate
     }
 
-    override fun tapOrderByRowItem(orderTypeName: OrderTypeName) {
+    override fun selectOrderByRowItem(orderTypeName: OrderTypeName) {
         currentOrderListConfigurationType.value?.let {
-            when (orderTypeName) {
-                OrderTypeName.ModificationDate -> {
-                    // TODO later
-                }
-                OrderTypeName.CreationDate -> {
-                    // TODO later
-                }
-                OrderTypeName.Name -> {
-                    val newOrderListConfigurationType: OrderListConfigurationType =
-                        if (isNewOrderHasSameType(orderTypeName, it)) {
-                        if (it.isAscending()) OrderListConfigurationType.DescendingName else OrderListConfigurationType.AscendingName
-                    } else {
-                        OrderListConfigurationType.AscendingName
-                    }
-                    viewModel.dispatchUIState(Either.right(OnOrderByRowItemClick(newOrderListConfigurationType)))
-                }
-            }
+            val newOrderListConfigurationType = orderTypeName.generateNewConfigurationType(it)
+            viewModel.dispatchUIState(Either.right(OnOrderByRowItemClick(newOrderListConfigurationType)))
         }
     }
-
-    private fun isNewOrderHasSameType(
-        orderTypeName: OrderTypeName,
-        orderListConfigurationType: OrderListConfigurationType
-    ) = orderListConfigurationType.toString().contains(orderTypeName.toString(), ignoreCase = true)
 }

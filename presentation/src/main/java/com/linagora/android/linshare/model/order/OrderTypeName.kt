@@ -33,8 +33,34 @@
 
 package com.linagora.android.linshare.model.order
 
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+
 enum class OrderTypeName {
-    Name,
-    ModificationDate,
-    CreationDate
+    Name {
+        override fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType {
+            return currentOrderConfigurationType.takeIf { it.isCurrentOrderHasSameType(this) }
+                ?.let { if (it.isAscending()) OrderListConfigurationType.DescendingName else OrderListConfigurationType.AscendingName }
+                ?: OrderListConfigurationType.AscendingName
+        }
+    },
+    ModificationDate {
+        override fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType {
+            return currentOrderConfigurationType.takeIf { it.isCurrentOrderHasSameType(this) }
+                ?.let { if (it.isAscending()) OrderListConfigurationType.DescendingModificationDate else OrderListConfigurationType.AscendingModificationDate }
+                ?: OrderListConfigurationType.AscendingModificationDate
+        }
+    },
+    CreationDate {
+        override fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType {
+            return currentOrderConfigurationType.takeIf { it.isCurrentOrderHasSameType(this) }
+                ?.let { if (it.isAscending()) OrderListConfigurationType.DescendingCreationDate else OrderListConfigurationType.AscendingCreationDate }
+                ?: OrderListConfigurationType.AscendingCreationDate
+        }
+    };
+
+    abstract fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType
 }
+
+fun OrderListConfigurationType.isCurrentOrderHasSameType(
+    orderTypeName: OrderTypeName
+) = this.toString().contains(orderTypeName.toString(), ignoreCase = true)

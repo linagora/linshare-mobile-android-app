@@ -47,5 +47,5 @@ interface OrderByAction {
 
     fun getCurrentOrderListConfigurationType(): OrderListConfigurationType
 
-    fun tapOrderByRowItem(orderTypeName: OrderTypeName)
+    fun selectOrderByRowItem(orderTypeName: OrderTypeName)
 }

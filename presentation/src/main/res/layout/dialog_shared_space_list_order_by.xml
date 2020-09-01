@@ -65,7 +65,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> orderByAction.tapOrderByRowItem(OrderTypeName.ModificationDate)}">
+            android:onClick="@{() -> orderByAction.selectOrderByRowItem(OrderTypeName.ModificationDate)}">
 
             <ImageView
                 style="@style/ImageInRowOrderBy"
@@ -82,7 +82,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> orderByAction.tapOrderByRowItem(OrderTypeName.CreationDate)}">
+            android:onClick="@{() -> orderByAction.selectOrderByRowItem(OrderTypeName.CreationDate)}">
 
             <ImageView
                 style="@style/ImageInRowOrderBy"
@@ -99,7 +99,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> orderByAction.tapOrderByRowItem(OrderTypeName.Name)}">
+            android:onClick="@{() -> orderByAction.selectOrderByRowItem(OrderTypeName.Name)}">
 
             <ImageView
                 style="@style/ImageInRowOrderBy"
