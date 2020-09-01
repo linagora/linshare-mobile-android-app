@@ -33,33 +33,16 @@
 
 package com.linagora.android.linshare.view.myspace.details
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.linagora.android.linshare.databinding.FragmentDocumentDetailsBinding
-import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.domain.usecases.myspace.GetDocument
+import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.base.BaseViewModel
+import javax.inject.Inject
 
-class DocumentDetailsFragment : MainNavigationFragment() {
+class DocumentDetailsViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
+    private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider,
+    private val getDocument: GetDocument
+) : BaseViewModel(internetAvailable, coroutinesDispatcherProvider) {
 
-    private lateinit var viewModel: DocumentDetailsViewModel
-
-    private lateinit var binding: FragmentDocumentDetailsBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentDocumentDetailsBinding.inflate(inflater, container, false)
-            .apply { lifecycleOwner = viewLifecycleOwner }
-        initViewModel()
-        return binding.root
-    }
-
-    private fun initViewModel() {
-        viewModel = getViewModel(viewModelFactory)
-        binding.internetAvailable = viewModel.internetAvailable
-    }
 }

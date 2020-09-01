@@ -121,6 +121,19 @@
 
         </LinearLayout>
 
+        <LinearLayout style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> contextMenu.details(document)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_detail" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/details" />
+
+        </LinearLayout>
+
         <View style="@style/DivideView"/>
 
         <LinearLayout

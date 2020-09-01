@@ -31,35 +31,23 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.myspace.details
+package com.linagora.android.linshare.model.parcelable
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.linagora.android.linshare.databinding.FragmentDocumentDetailsBinding
-import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.view.MainNavigationFragment
+import android.os.Parcelable
+import com.linagora.android.linshare.domain.model.document.DocumentId
+import com.linagora.android.linshare.model.parceler.UUIDParceler
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.TypeParceler
+import java.util.UUID
 
-class DocumentDetailsFragment : MainNavigationFragment() {
+@Parcelize
+@TypeParceler<UUID, UUIDParceler>()
+class DocumentIdParcelable(val uuid: UUID) : Parcelable
 
-    private lateinit var viewModel: DocumentDetailsViewModel
+fun DocumentIdParcelable.toDocumentId(): DocumentId {
+    return DocumentId(uuid)
+}
 
-    private lateinit var binding: FragmentDocumentDetailsBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentDocumentDetailsBinding.inflate(inflater, container, false)
-            .apply { lifecycleOwner = viewLifecycleOwner }
-        initViewModel()
-        return binding.root
-    }
-
-    private fun initViewModel() {
-        viewModel = getViewModel(viewModelFactory)
-        binding.internetAvailable = viewModel.internetAvailable
-    }
+fun DocumentId.toParcelable(): DocumentIdParcelable {
+    return DocumentIdParcelable(uuid)
 }

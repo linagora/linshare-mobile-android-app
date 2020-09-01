@@ -33,33 +33,22 @@
 
 package com.linagora.android.linshare.view.myspace.details
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.linagora.android.linshare.databinding.FragmentDocumentDetailsBinding
-import com.linagora.android.linshare.util.getViewModel
-import com.linagora.android.linshare.view.MainNavigationFragment
+import androidx.lifecycle.ViewModel
+import com.linagora.android.linshare.inject.annotation.FragmentScoped
+import com.linagora.android.linshare.inject.annotation.ViewModelKey
+import dagger.Binds
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
 
-class DocumentDetailsFragment : MainNavigationFragment() {
+@Module
+internal abstract class DocumentDetailsModule {
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeDocumentDetailsFragment(): DocumentDetailsFragment
 
-    private lateinit var viewModel: DocumentDetailsViewModel
-
-    private lateinit var binding: FragmentDocumentDetailsBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentDocumentDetailsBinding.inflate(inflater, container, false)
-            .apply { lifecycleOwner = viewLifecycleOwner }
-        initViewModel()
-        return binding.root
-    }
-
-    private fun initViewModel() {
-        viewModel = getViewModel(viewModelFactory)
-        binding.internetAvailable = viewModel.internetAvailable
-    }
+    @Binds
+    @IntoMap
+    @ViewModelKey(DocumentDetailsViewModel::class)
+    internal abstract fun bindViewModel(viewModel: DocumentDetailsViewModel): ViewModel
 }

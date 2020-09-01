@@ -53,6 +53,7 @@ import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
+import com.linagora.android.linshare.domain.usecases.myspace.DocumentDetailsClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
@@ -164,6 +165,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is SearchButtonClick -> openSearch()
             is ShareItemClick -> navigateToShare(viewEvent.document)
             is CopyDocumentToSharedSpaceClick -> selectCopyDestination(viewEvent.document)
+            is DocumentDetailsClick -> navigateToDetails(viewEvent.document)
         }
         mySpaceViewModel.dispatchResetState()
     }
@@ -360,5 +362,12 @@ class MySpaceFragment : MainNavigationFragment() {
         val bundle = Bundle()
         bundle.putParcelable(SHARE_DOCUMENT_BUNDLE_KEY, document.toParcelable())
         findNavController().navigate(R.id.navigationShare, bundle)
+    }
+
+    private fun navigateToDetails(document: Document) {
+        dismissContextMenu()
+        val actionToDocumentDetails = MySpaceFragmentDirections
+            .navigateToDocumentDetails(document.documentId.toParcelable())
+        findNavController().navigate(actionToDocumentDetails)
     }
 }
