@@ -282,5 +282,10 @@
     <string name="expiration" translatable="false">Expiration</string>
     <string name="description" translatable="false">Description</string>
     <string name="undefined" translatable="false">Undefined</string>
-    
+
+    <plurals name="share_with_contacts">
+        <item quantity="one">Shared with contact</item>
+        <item quantity="other">Shared with %s contacts</item>
+    </plurals>
+
 </resources>

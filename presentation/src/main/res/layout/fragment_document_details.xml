@@ -221,23 +221,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginStart="@dimen/container_padding_right"
+                android:layout_marginEnd="@dimen/container_padding_right"
                 android:singleLine="true"
                 android:textColor="@color/search_result_total_text_color"
                 android:textSize="@dimen/common_primary_text_size"
                 android:background="@color/search_result_container_background_color"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                app:shareCount="@{document}"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listMembers"
+            android:id="@+id/listShares"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintTop_toBottomOf="@id/sharedCountContainer" />
+            app:layout_constraintTop_toBottomOf="@id/sharedCountContainer"
+            app:documentShares="@{document}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
