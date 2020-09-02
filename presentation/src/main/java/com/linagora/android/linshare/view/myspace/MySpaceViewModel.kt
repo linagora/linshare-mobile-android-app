@@ -42,7 +42,6 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.toCopyRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
-import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
@@ -55,9 +54,9 @@ import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.base.LinShareViewModel
-import com.linagora.android.linshare.view.base.ListItemBehavior
 import com.linagora.android.linshare.view.myspace.action.MySpaceCopyToContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextMenu
+import com.linagora.android.linshare.view.myspace.action.MySpaceItemBehavior
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemContextMenu
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
@@ -71,14 +70,15 @@ class MySpaceViewModel @Inject constructor(
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor,
     private val copyToSharedSpace: CopyToSharedSpace
-) : LinShareViewModel(internetAvailable, application, dispatcherProvider),
-    ListItemBehavior<Document> {
+) : LinShareViewModel(internetAvailable, application, dispatcherProvider) {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(MySpaceViewModel::class.java)
 
         val NO_DOWNLOADING_DOCUMENT = null
     }
+
+    val mySpaceItemBehavior = MySpaceItemBehavior(this)
 
     val mySpaceItemAction = MySpaceItemActionImp(this)
 
@@ -98,11 +98,6 @@ class MySpaceViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(OperatorType.SwiftRefresh) { getAllDocumentsInteractor() }
         }
-    }
-
-    override fun onContextMenuClick(document: Document) {
-        LOGGER.info("onContextMenuClick() $document")
-        dispatchState(Either.right(ContextMenuClick(document)))
     }
 
     fun onUploadBottomBarClick() {

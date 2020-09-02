@@ -54,6 +54,7 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DocumentDetailsClick
+import com.linagora.android.linshare.domain.usecases.myspace.DocumentItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
@@ -159,6 +160,7 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
             is ContextMenuClick -> showContextMenu(viewEvent.document)
+            is DocumentItemClick -> navigateToDetails(viewEvent.document)
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
             is UploadButtonBottomBarClick -> openFilePicker()
             is RemoveClick -> confirmRemoveDocument(viewEvent.document)

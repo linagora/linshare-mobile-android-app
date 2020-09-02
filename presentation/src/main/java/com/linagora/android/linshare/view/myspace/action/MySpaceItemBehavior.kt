@@ -31,28 +31,29 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.usecases.myspace
+package com.linagora.android.linshare.view.myspace.action
 
-import com.linagora.android.linshare.domain.model.OperatorType
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
-import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
+import com.linagora.android.linshare.domain.usecases.myspace.DocumentItemClick
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.ListItemBehavior
+import org.slf4j.LoggerFactory
 
-data class MySpaceViewState(val documents: List<Document>) : Success.ViewState()
-data class MySpaceFailure(val throwable: Throwable) : FeatureFailure()
-data class GetDocumentSuccess(val document: Document) : Success.ViewState()
-data class GetDocumentFailure(val throwable: Throwable) : FeatureFailure()
-data class ContextMenuClick(val document: Document) : Success.ViewEvent()
-data class DocumentItemClick(val document: Document) : Success.OnlineViewEvent(OperatorType.OnItemClick)
-data class DownloadClick(val document: Document) : Success.ViewEvent()
-object UploadButtonBottomBarClick : Success.ViewEvent()
-data class RemoveDocumentSuccessViewState(val document: Document) : Success.ViewState()
-data class RemoveDocumentFailure(val throwable: Throwable) : FeatureFailure()
-data class RemoveClick(val document: Document) : Success.OnlineViewEvent(OperatorType.DeleteDocument)
-object SearchButtonClick : Success.ViewEvent()
-data class ShareItemClick(val document: Document) : Success.ViewEvent()
-data class CopyInMySpaceFailure(val throwable: Throwable) : FeatureFailure()
-data class CopyInMySpaceSuccess(val documents: List<Document>) : Success.ViewState()
-object CopyFailedWithFileSizeExceed : FeatureFailure()
-object CopyFailedWithQuotaReach : FeatureFailure()
-data class DocumentDetailsClick(val document: Document) : Success.OnlineViewEvent(OperatorType.ViewDetails)
+class MySpaceItemBehavior(private val viewModel: BaseViewModel) : ListItemBehavior<Document> {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(MySpaceItemBehavior::class.java)
+    }
+
+    override fun onContextMenuClick(data: Document) {
+        LOGGER.info("onContextMenuClick(): $data")
+        viewModel.dispatchUIState(Either.right(ContextMenuClick(data)))
+    }
+
+    override fun onItemClick(data: Document) {
+        LOGGER.info("onItemClick(): $data")
+        viewModel.dispatchUIState(Either.right(DocumentItemClick(data)))
+    }
+}

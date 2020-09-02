@@ -112,7 +112,7 @@
                     app:layoutManager="LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:mySpaceState="@{viewModel.viewState}"
-                    app:itemBehavior="@{viewModel}" />
+                    app:itemBehavior="@{viewModel.mySpaceItemBehavior}" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
