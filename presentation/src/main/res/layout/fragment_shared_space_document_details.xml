@@ -37,7 +37,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.view.sharedspacedocument.details.SharedSpaceDocumentDetailsViewModel"/>
         <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+
+        <variable
+            name="viewModel"
+            type="SharedSpaceDocumentDetailsViewModel" />
 
         <variable
             name="internetAvailable"
@@ -68,7 +73,8 @@
 
                     <TextView
                         android:id="@+id/txtTitle"
-                        style="@style/ScreenTitle" />
+                        style="@style/ScreenTitle"
+                        app:sharedSpaceDocumentDetailsTitle="@{viewModel.viewState}"/>
 
                 </androidx.appcompat.widget.Toolbar>
 

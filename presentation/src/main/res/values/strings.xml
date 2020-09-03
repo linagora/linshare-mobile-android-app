@@ -282,6 +282,7 @@
     <string name="expiration" translatable="false">Expiration</string>
     <string name="description" translatable="false">Description</string>
     <string name="undefined" translatable="false">Undefined</string>
+    <string name="modified_by" translatable="false">Modified by</string>
 
     <plurals name="share_with_contacts">
         <item quantity="one">Shared with contact</item>

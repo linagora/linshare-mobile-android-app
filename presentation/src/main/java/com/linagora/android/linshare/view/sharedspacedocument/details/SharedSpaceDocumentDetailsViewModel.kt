@@ -33,24 +33,25 @@
 
 package com.linagora.android.linshare.view.sharedspacedocument.details
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import androidx.lifecycle.viewModelScope
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
+import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.base.BaseViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-@Module
-internal abstract class SharedSpaceDocumentDetailsModule {
-    @FragmentScoped
-    @ContributesAndroidInjector(modules = [SharedSpaceDocumentDetailsFragmentModule::class])
-    internal abstract fun contributeSharedSpaceDocumentDetailsFragment(): SharedSpaceDocumentDetailsFragment
+class SharedSpaceDocumentDetailsViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
+    private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider,
+    private val getNode: GetSharedSpaceNodeInteractor
+) : BaseViewModel(internetAvailable, coroutinesDispatcherProvider) {
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentDetailsViewModel::class)
-    internal abstract fun bindSharedSpaceDocumentDetailsViewModel(
-        sharedSpaceDocumentDetailsViewModel: SharedSpaceDocumentDetailsViewModel
-    ): ViewModel
+    fun getSharedSpaceNode(sharedSpaceId: SharedSpaceId, workGroupNodeId: WorkGroupNodeId) {
+        viewModelScope.launch(coroutinesDispatcherProvider.io) {
+            consumeStates(getNode(sharedSpaceId, workGroupNodeId))
+        }
+    }
 }

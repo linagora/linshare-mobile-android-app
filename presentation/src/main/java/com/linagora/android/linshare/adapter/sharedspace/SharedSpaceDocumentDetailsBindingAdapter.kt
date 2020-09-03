@@ -31,26 +31,20 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedocument.details
+package com.linagora.android.linshare.adapter.sharedspace
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import arrow.core.Either
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
 
-@Module
-internal abstract class SharedSpaceDocumentDetailsModule {
-    @FragmentScoped
-    @ContributesAndroidInjector(modules = [SharedSpaceDocumentDetailsFragmentModule::class])
-    internal abstract fun contributeSharedSpaceDocumentDetailsFragment(): SharedSpaceDocumentDetailsFragment
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentDetailsViewModel::class)
-    internal abstract fun bindSharedSpaceDocumentDetailsViewModel(
-        sharedSpaceDocumentDetailsViewModel: SharedSpaceDocumentDetailsViewModel
-    ): ViewModel
+@BindingAdapter("sharedSpaceDocumentDetailsTitle")
+fun bindingNodeDetailsTitle(textView: TextView, states: Either<Failure, Success>) {
+    states.map { success ->
+        if (success is GetSharedSpaceNodeSuccess) {
+            textView.text = success.node.name
+        }
+    }
 }

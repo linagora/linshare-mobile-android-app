@@ -33,24 +33,14 @@
 
 package com.linagora.android.linshare.view.sharedspacedocument.details
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
+import com.linagora.android.linshare.inject.annotation.ChildFragmentScoped
+import com.linagora.android.linshare.view.sharedspacedocument.details.info.SharedSpaceDocumentInfoFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
 
 @Module
-internal abstract class SharedSpaceDocumentDetailsModule {
-    @FragmentScoped
-    @ContributesAndroidInjector(modules = [SharedSpaceDocumentDetailsFragmentModule::class])
-    internal abstract fun contributeSharedSpaceDocumentDetailsFragment(): SharedSpaceDocumentDetailsFragment
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentDetailsViewModel::class)
-    internal abstract fun bindSharedSpaceDocumentDetailsViewModel(
-        sharedSpaceDocumentDetailsViewModel: SharedSpaceDocumentDetailsViewModel
-    ): ViewModel
+internal abstract class SharedSpaceDocumentDetailsFragmentModule {
+    @ChildFragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeSharedSpaceDocumentInfoFragment(): SharedSpaceDocumentInfoFragment
 }

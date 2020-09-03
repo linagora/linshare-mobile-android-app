@@ -38,24 +38,96 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentDestinationBinding
+import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentDetailsBinding
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
+import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
+import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
+import com.linagora.android.linshare.view.sharedspacedocument.details.info.SharedSpaceDocumentInfoFragment
 
 class SharedSpaceDocumentDetailsFragment : MainNavigationFragment() {
 
-    private lateinit var binding: FragmentSharedSpaceDocumentDestinationBinding
+    companion object {
+        private val DETAILS_TITLES = arrayOf(
+            R.string.details
+        )
+    }
+
+    private lateinit var binding: FragmentSharedSpaceDocumentDetailsBinding
+
+    private lateinit var sharedSpaceDocumentDetailsViewModel: SharedSpaceDocumentDetailsViewModel
+
+    private val args: SharedSpaceDocumentDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSharedSpaceDocumentDestinationBinding.inflate(inflater, container, false)
+        binding = FragmentSharedSpaceDocumentDetailsBinding.inflate(inflater, container, false)
+            .apply { lifecycleOwner = viewLifecycleOwner }
+        initViewModel()
         return binding.root
+    }
+
+    private fun initViewModel() {
+        sharedSpaceDocumentDetailsViewModel = getViewModel(viewModelFactory)
+        binding.internetAvailable = sharedSpaceDocumentDetailsViewModel.internetAvailable
+        binding.viewModel = sharedSpaceDocumentDetailsViewModel
+        observeViewState()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        sharedSpaceDocumentDetailsViewModel.getSharedSpaceNode(
+            args.sharedSpaceId.toSharedSpaceId(),
+            args.nodeId.toWorkGroupNodeId()
+        )
     }
 
     override fun configureToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
+    }
+
+    private fun observeViewState() {
+        sharedSpaceDocumentDetailsViewModel.viewState.observe(viewLifecycleOwner, Observer { state ->
+            state.map { success -> when (success) {
+                is Success.ViewState -> reactToViewState(success)
+            } }
+        })
+    }
+
+    private fun reactToViewState(viewState: Success.ViewState) {
+        when (viewState) {
+            is GetSharedSpaceNodeSuccess -> bindingDetailsPageAdapter(viewState.node)
+        }
+    }
+
+    private fun bindingDetailsPageAdapter(workGroupNode: WorkGroupNode) {
+        binding.run {
+            viewpager.adapter = DetailsPageAdapter(workGroupNode)
+            TabLayoutMediator(tabsDetails, viewpager) { tab, position ->
+                tab.text = getString(DETAILS_TITLES[position])
+            }.attach()
+        }
+    }
+
+    inner class DetailsPageAdapter(private val workGroupNode: WorkGroupNode) : FragmentStateAdapter(this) {
+
+        override fun getItemCount() = DETAILS_TITLES.size
+
+        override fun createFragment(position: Int): Fragment {
+            require(position < itemCount) { "page number is not supported" }
+            return SharedSpaceDocumentInfoFragment(workGroupNode)
+        }
     }
 }

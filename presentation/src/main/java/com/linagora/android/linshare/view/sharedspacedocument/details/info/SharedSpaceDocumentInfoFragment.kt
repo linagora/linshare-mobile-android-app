@@ -31,26 +31,26 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspacedocument.details
+package com.linagora.android.linshare.view.sharedspacedocument.details.info
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.linagora.android.linshare.databinding.FragmentSharedSpaceNodeInfoBinding
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import dagger.android.support.DaggerFragment
 
-@Module
-internal abstract class SharedSpaceDocumentDetailsModule {
-    @FragmentScoped
-    @ContributesAndroidInjector(modules = [SharedSpaceDocumentDetailsFragmentModule::class])
-    internal abstract fun contributeSharedSpaceDocumentDetailsFragment(): SharedSpaceDocumentDetailsFragment
+class SharedSpaceDocumentInfoFragment(private val workGroupNode: WorkGroupNode) : DaggerFragment() {
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDocumentDetailsViewModel::class)
-    internal abstract fun bindSharedSpaceDocumentDetailsViewModel(
-        sharedSpaceDocumentDetailsViewModel: SharedSpaceDocumentDetailsViewModel
-    ): ViewModel
+    private lateinit var binding: FragmentSharedSpaceNodeInfoBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSharedSpaceNodeInfoBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 }
