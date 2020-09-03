@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.domain.model.sharedspace
 
+import com.linagora.android.linshare.domain.model.account.Account
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.copy.SpaceType
 import java.util.Date
@@ -42,6 +43,7 @@ interface WorkGroupNode {
     val workGroupNodeId: WorkGroupNodeId
     val parentWorkGroupNodeId: WorkGroupNodeId
     val creationDate: Date
+    val lastAuthor: Account
     val sharedSpaceId: SharedSpaceId
     val modificationDate: Date
     val description: String?

@@ -34,6 +34,7 @@
 package com.linagora.android.testshared
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.account.Account
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.LinShareNodeType
@@ -83,6 +84,12 @@ object SharedSpaceDocumentFixtures {
         description = "test description",
         name = "FOLDER1",
         treePath = emptyList(),
+        lastAuthor = Account(
+            uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+            firstName = "John",
+            lastName = "Doe",
+            name = "John Doe",
+            mail = "user1@linshare.org"),
         type = WorkGroupNodeType.FOLDER
     )
 
@@ -94,6 +101,12 @@ object SharedSpaceDocumentFixtures {
         modificationDate = Date(1574837876965),
         description = "test description 2",
         name = "FOLDER2",
+        lastAuthor = Account(
+            uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+            firstName = "John",
+            lastName = "Doe",
+            name = "John Doe",
+            mail = "user1@linshare.org"),
         treePath = listOf(TreePath(PARENT_NODE_ID_1, "FOLDER1")),
         type = WorkGroupNodeType.FOLDER
     )
@@ -106,6 +119,12 @@ object SharedSpaceDocumentFixtures {
         description = "document 1",
         creationDate = Date(1588664701182),
         modificationDate = Date(1588664701182),
+        lastAuthor = Account(
+            uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+            firstName = "John",
+            lastName = "Doe",
+            name = "John Doe",
+            mail = "user1@linshare.org"),
         size = 78480,
         mimeType = MediaType.parse("application/vnd.oasis.opendocument.text")!!,
         hasRevision = false,
@@ -124,6 +143,12 @@ object SharedSpaceDocumentFixtures {
         description = "document 2",
         creationDate = Date(1588664701275),
         modificationDate = Date(1588664701275),
+        lastAuthor = Account(
+            uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+            firstName = "John",
+            lastName = "Doe",
+            name = "John Doe",
+            mail = "user1@linshare.org"),
         size = 78481,
         mimeType = MediaType.parse("application/vnd.oasis.opendocument.text")!!,
         hasRevision = false,

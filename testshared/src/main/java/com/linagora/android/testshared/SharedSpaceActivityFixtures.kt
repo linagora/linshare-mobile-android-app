@@ -99,6 +99,12 @@ object SharedSpaceActivityFixtures {
             parentWorkGroupNodeId = WorkGroupNodeId(UUID.fromString("e91a9480-7812-4de2-b161-77481daf5b1c")),
             creationDate = Date(1597054319799),
             modificationDate = Date(1597054319799),
+            lastAuthor = Account(
+                uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+                firstName = "John",
+                lastName = "Doe",
+                name = "John Doe",
+                mail = "user1@linshare.org"),
             name = "Abc",
             type = WorkGroupNodeType.FOLDER,
             sharedSpaceId = SharedSpaceId(UUID.fromString("85f403d4-b5f8-4759-8d8b-447a8141102f")),
@@ -203,6 +209,12 @@ object SharedSpaceActivityFixtures {
             mimeType = MediaType.parse("text/plain")!!,
             size = 192,
             sha256sum = "d6747b1e2516e8ff545a9d454aebe1e89b6f55f720cae0625a2a767259559842",
+            lastAuthor = Account(
+                uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+                firstName = "John",
+                lastName = "Doe",
+                name = "John Doe",
+                mail = "user1@linshare.org"),
             uploadDate = Date(1597042097838)
         ),
         copiedFrom = WorkGroupCopy(
@@ -246,6 +258,12 @@ object SharedSpaceActivityFixtures {
             creationDate = Date(1597036123165),
             modificationDate = Date(1597036123165),
             name = "image.png",
+            lastAuthor = Account(
+                uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+                firstName = "John",
+                lastName = "Doe",
+                name = "John Doe",
+                mail = "user1@linshare.org"),
             type = WorkGroupNodeType.DOCUMENT_REVISION,
             sharedSpaceId = SharedSpaceId(UUID.fromString("85f403d4-b5f8-4759-8d8b-447a8141102f")),
             description = null,

@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.domain.model.sharedspace
 
 import com.google.gson.annotations.SerializedName
+import com.linagora.android.linshare.domain.model.account.Account
 import okhttp3.MediaType
 import java.util.Date
 
@@ -43,6 +44,7 @@ data class WorkGroupDocument(
     @SerializedName("parent")
     override val parentWorkGroupNodeId: WorkGroupNodeId,
     override val creationDate: Date,
+    override val lastAuthor: Account,
     @SerializedName("workGroup")
     override val sharedSpaceId: SharedSpaceId,
     override val modificationDate: Date,
