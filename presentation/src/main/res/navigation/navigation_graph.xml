@@ -351,4 +351,15 @@
             android:name="documentId"
             app:argType="com.linagora.android.linshare.model.parcelable.DocumentIdParcelable" />
     </fragment>
+    <fragment
+        android:id="@+id/sharedSpaceDocumentDetailsFragment"
+        android:name="com.linagora.android.linshare.view.sharedspacedocument.details.SharedSpaceDocumentDetailsFragment"
+        tools:layout="@layout/fragment_shared_space_document_details" >
+        <argument
+            android:name="sharedSpaceId"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable" />
+        <argument
+            android:name="nodeId"
+            app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable" />
+    </fragment>
 </navigation>
