@@ -83,6 +83,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocu
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnCreateFolderClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnUploadFileClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderContextMenuClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
@@ -231,7 +232,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     private fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
-            is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
+            is SharedSpaceFolderItemClick -> navigateIntoSubFolder(viewEvent.workGroupFolder)
+            is SharedSpaceDocumentItemClick -> navigateToDetails(viewEvent.workGroupDocument)
             is SharedSpaceDocumentContextMenuClick -> showContextMenuSharedSpaceDocumentNode(viewEvent.workGroupDocument)
             is SharedSpaceFolderContextMenuClick -> showContextMenuSharedSpaceFolderNode(viewEvent.workGroupFolder)
             is DownloadSharedSpaceNodeClick -> handleDownloadSharedSpaceNode(viewEvent.workGroupNode)
@@ -600,6 +602,15 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             NAVIGATION_INFO_KEY to generateNavigationInfoForSubFolder(workGroupNode)
         )
         findNavController().navigate(R.id.navigation_shared_spaced_document, navigationBundle)
+    }
+
+    private fun navigateToDetails(workGroupNode: WorkGroupNode) {
+        LOGGER.info("navigateToDetails(): $workGroupNode")
+        val actionToNodeDetails = SharedSpaceDocumentFragmentDirections
+            .navigateToSharedSpaceDocumentDetailsFragment(
+                workGroupNode.sharedSpaceId.toParcelable(),
+                workGroupNode.workGroupNodeId.toParcelable())
+        findNavController().navigate(actionToNodeDetails)
     }
 
     private fun generateNavigationInfoForSubFolder(workGroupNode: WorkGroupNode): SharedSpaceNavigationInfo {

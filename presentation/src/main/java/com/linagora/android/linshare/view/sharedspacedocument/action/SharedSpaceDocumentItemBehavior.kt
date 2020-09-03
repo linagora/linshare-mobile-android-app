@@ -40,6 +40,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderContextMenuClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderItemClick
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
 
@@ -52,6 +53,10 @@ class SharedSpaceDocumentItemBehavior constructor(val viewModel: BaseViewModel) 
     }
 
     override fun onItemClick(data: WorkGroupNode) {
-        viewModel.dispatchUIState(Either.right(SharedSpaceDocumentItemClick(data)))
+        viewModel.dispatchUIState(
+            Either.right(data.takeIf { it is WorkGroupDocument }
+                ?.let { SharedSpaceDocumentItemClick(data as WorkGroupDocument) }
+                ?: SharedSpaceFolderItemClick(data as WorkGroupFolder))
+        )
     }
 }

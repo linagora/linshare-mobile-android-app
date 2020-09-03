@@ -49,7 +49,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
-import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
@@ -174,7 +174,7 @@ abstract class DestinationDocumentFragment : MainNavigationFragment() {
 
     protected fun handleViewEvent(viewEvent: Success.ViewEvent) {
         when (viewEvent) {
-            is SharedSpaceDocumentItemClick -> navigateIntoSubFolder(viewEvent.workGroupNode)
+            is SharedSpaceFolderItemClick -> navigateIntoSubFolder(viewEvent.workGroupFolder)
             is CancelPickDestinationViewState -> navigateInCancelDestination()
             is ChoosePickDestinationViewState -> navigateInChooseDestination()
         }
