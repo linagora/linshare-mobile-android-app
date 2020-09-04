@@ -66,6 +66,7 @@ data class CreateSharedSpaceFolderFailure(val throwable: Throwable) : Failure.Fe
 object SharedSpaceDocumentOnUploadFileClick : Success.OfflineViewEvent(OperatorType.UploadFile)
 object SharedSpaceDocumentOnCreateFolderClick : Success.OfflineViewEvent(OperatorType.CreateFolder)
 data class CreateFolderViewEvent(val nameFolder: NewNameRequest) : Success.OnlineViewEvent(OperatorType.CreateFolder)
+data class SharedSpaceDocumentDetailsClick(val node: WorkGroupNode) : Success.OnlineViewEvent(OperatorType.ViewDetails)
 
 data class CopyToSharedSpaceSuccess(
     val destinationSharedSpaceId: SharedSpaceId,

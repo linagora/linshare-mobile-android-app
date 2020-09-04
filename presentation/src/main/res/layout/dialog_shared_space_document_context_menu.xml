@@ -135,6 +135,20 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> itemContextMenu.details(workGroupNode)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_detail" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/details" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

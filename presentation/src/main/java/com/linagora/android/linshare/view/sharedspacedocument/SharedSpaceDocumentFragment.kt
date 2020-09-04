@@ -77,6 +77,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNodeNotFo
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentContextMenuClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentDetailsClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnBackClick
@@ -244,6 +245,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is SharedSpaceDocumentOnUploadFileClick -> handleUploadFile()
             is SharedSpaceDocumentOnCreateFolderClick -> showCreateFolderDialog()
             is CreateFolderViewEvent -> handleCreateFolder(viewEvent.nameFolder)
+            is SharedSpaceDocumentDetailsClick -> navigateToDetails(viewEvent.node)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> showUploadFileOrCreateFolderDialog()
             OpenSearchView -> handleOpenSearch()
