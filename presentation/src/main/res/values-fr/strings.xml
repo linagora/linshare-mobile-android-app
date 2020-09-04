@@ -133,7 +133,7 @@
     <string name="file_added_to_waiting_list">Le fichier %s est ajouté à la liste d\'attente.</string>
     <string name="confirm_delete_file">Voulez-vous vraiment supprimer \"%s\"?</string>
 
-    <string name="last_modified">Modifié %s</string>
+    <string name="last_modified">Modifié le %s</string>
 
     <string name="search_in_my_space">Rechercher dans Mon Espace</string>
     <string name="search_no_results">Aucun résultats trouvés</string>
