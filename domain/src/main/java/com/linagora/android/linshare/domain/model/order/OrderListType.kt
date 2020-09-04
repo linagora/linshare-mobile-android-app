@@ -34,5 +34,6 @@
 package com.linagora.android.linshare.domain.model.order
 
 enum class OrderListType {
-    SharedSpace
+    SharedSpace,
+    SharedSpaceDocument
 }

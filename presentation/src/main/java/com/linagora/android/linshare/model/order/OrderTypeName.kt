@@ -56,6 +56,13 @@ enum class OrderTypeName {
                 ?.let { if (it.isAscending()) OrderListConfigurationType.DescendingCreationDate else OrderListConfigurationType.AscendingCreationDate }
                 ?: OrderListConfigurationType.AscendingCreationDate
         }
+    },
+    FileSize {
+        override fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType {
+            return currentOrderConfigurationType.takeIf { it.isCurrentOrderHasSameType(this) }
+                ?.let { if (it.isAscending()) OrderListConfigurationType.DescendingFileSize else OrderListConfigurationType.AscendingFileSize }
+                ?: OrderListConfigurationType.AscendingFileSize
+        }
     };
 
     abstract fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType

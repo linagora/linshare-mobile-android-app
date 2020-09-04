@@ -47,15 +47,14 @@ fun bindingOrderByListConfigurationName(
     orderListConfigurationType: OrderListConfigurationType
 ) {
     val configurationNameId = when (orderListConfigurationType) {
-        OrderListConfigurationType.AscendingModificationDate, OrderListConfigurationType.DescendingModificationDate -> {
+        OrderListConfigurationType.AscendingModificationDate, OrderListConfigurationType.DescendingModificationDate ->
             R.string.order_by_modification_date
-        }
-        OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate -> {
+        OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate ->
             R.string.order_by_creation_date
-        }
-        OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> {
+        OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName ->
             R.string.order_by_name
-        }
+        OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize ->
+            R.string.order_by_file_size
     }
     textView.text = textView.context.getString(configurationNameId)
 }

@@ -76,6 +76,18 @@ class OrderTypeNameTest {
     }
 
     @Test
+    fun orderTypeFileSizeShouldGenerateDescendingFileSizeWithInputAscendingFileSize() {
+        Truth.assertThat(OrderTypeName.FileSize.generateNewConfigurationType(OrderListConfigurationType.AscendingFileSize))
+            .isEqualTo(OrderListConfigurationType.DescendingFileSize)
+    }
+
+    @Test
+    fun orderTypeFileSizeShouldGenerateAscendingFileSizeWithInputDescendingFileSize() {
+        Truth.assertThat(OrderTypeName.FileSize.generateNewConfigurationType(OrderListConfigurationType.DescendingFileSize))
+            .isEqualTo(OrderListConfigurationType.AscendingFileSize)
+    }
+
+    @Test
     fun orderTypeNameShouldGenerateAscendingNameWithDifferentInput() {
         Truth.assertThat(OrderTypeName.Name.generateNewConfigurationType(OrderListConfigurationType.AscendingCreationDate))
             .isEqualTo(OrderListConfigurationType.AscendingName)
@@ -91,5 +103,11 @@ class OrderTypeNameTest {
     fun orderTypeCreationDateShouldGenerateAscendingCreationDateWithDifferentInput() {
         Truth.assertThat(OrderTypeName.CreationDate.generateNewConfigurationType(OrderListConfigurationType.AscendingName))
             .isEqualTo(OrderListConfigurationType.AscendingCreationDate)
+    }
+
+    @Test
+    fun orderTypeFileSizeShouldGenerateAscendingFileSizeWithDifferentInput() {
+        Truth.assertThat(OrderTypeName.FileSize.generateNewConfigurationType(OrderListConfigurationType.AscendingName))
+            .isEqualTo(OrderListConfigurationType.AscendingFileSize)
     }
 }

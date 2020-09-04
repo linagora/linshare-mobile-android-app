@@ -38,6 +38,8 @@ enum class OrderListConfigurationType {
     DescendingModificationDate,
     AscendingCreationDate,
     DescendingCreationDate,
+    AscendingFileSize,
+    DescendingFileSize,
     AscendingName,
     DescendingName;
 

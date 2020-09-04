@@ -68,6 +68,9 @@ class OrderByActionImp constructor(
             OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate -> {
                 OrderTypeName.CreationDate
             }
+            OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize -> {
+                OrderTypeName.FileSize
+            }
         }
     }
 

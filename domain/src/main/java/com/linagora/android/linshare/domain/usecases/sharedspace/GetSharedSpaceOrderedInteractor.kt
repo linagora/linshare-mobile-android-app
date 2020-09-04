@@ -92,6 +92,7 @@ class GetSharedSpaceOrderedInteractor @Inject constructor(
             OrderListConfigurationType.DescendingName -> {
                 Either.right(SharedSpaceViewState(sharedSpace.sortedByDescending { it.name }))
             }
+            else -> Either.right(SharedSpaceViewState(sharedSpace.sortedBy { it.modificationDate }))
         }
     }
 }
