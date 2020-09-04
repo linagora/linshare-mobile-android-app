@@ -156,7 +156,7 @@ class UploadFragment : MainNavigationFragment() {
     ): View? {
         LOGGER.info("onCreateView()")
         binding = FragmentUploadBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.uploadType = args.uploadType
         binding.selectedDestinationInfo = args.selectedDestinationInfo
         initViewModel()

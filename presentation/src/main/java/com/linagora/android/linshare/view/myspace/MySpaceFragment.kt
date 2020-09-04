@@ -120,7 +120,7 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private fun initViewModel(binding: FragmentMySpaceBinding) {
         mySpaceViewModel = getViewModel(viewModelFactory)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.internetAvailable = mainActivityViewModel.internetAvailable
         binding.viewModel = mySpaceViewModel
 

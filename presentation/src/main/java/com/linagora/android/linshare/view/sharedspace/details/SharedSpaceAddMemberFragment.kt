@@ -112,7 +112,7 @@ class SharedSpaceAddMemberFragment : MainNavigationFragment() {
 
     private fun initViewModel() {
         viewModel = getViewModel(viewModelFactory)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedSpaceId = arguments.sharedSpaceId.toSharedSpaceId()
         binding.viewModel = viewModel
         binding.ownRoleName = arguments.ownRoleName

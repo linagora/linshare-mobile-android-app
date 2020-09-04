@@ -82,7 +82,7 @@ class AccountDetailsFragment : MainNavigationFragment() {
         val binding = FragmentAccountDetailBinding.inflate(inflater, container, false)
         binding.details = detailsViewState
         binding.internetAvailable = mainActivityViewModel.internetAvailable
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         initViewModel()
         return binding.root
     }

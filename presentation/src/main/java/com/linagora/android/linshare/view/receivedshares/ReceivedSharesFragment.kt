@@ -96,7 +96,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
 
     private fun initViewModel(binding: FragmentReceivedSharesBinding) {
         receivedSharesViewModel = getViewModel(viewModelFactory)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = receivedSharesViewModel
 
         observeViewState()

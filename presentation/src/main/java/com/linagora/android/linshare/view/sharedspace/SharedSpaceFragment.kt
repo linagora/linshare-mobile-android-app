@@ -107,7 +107,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun initViewModel(binding: FragmentSharedSpaceBinding) {
         sharedSpaceViewModel = getViewModel(viewModelFactory)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = sharedSpaceViewModel
         observeViewState()
     }

@@ -100,7 +100,7 @@ class SearchFragment : MainNavigationFragment() {
 
     private fun initViewModel(searchBinding: FragmentSearchBinding) {
         searchViewModel = getViewModel(viewModelFactory)
-        searchBinding.lifecycleOwner = this
+        searchBinding.lifecycleOwner = viewLifecycleOwner
         searchBinding.searchViewModel = searchViewModel
 
         observeViewState()

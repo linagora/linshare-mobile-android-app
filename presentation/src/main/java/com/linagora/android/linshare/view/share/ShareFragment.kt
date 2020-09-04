@@ -111,7 +111,7 @@ class ShareFragment : MainNavigationFragment() {
 
     private fun initViewModel() {
         shareFragmentViewModel = getViewModel(viewModelFactory)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.shareViewModel = shareFragmentViewModel
 
         observeViewState()
