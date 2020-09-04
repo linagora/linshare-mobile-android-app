@@ -69,7 +69,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    andrdoid:navigationIcon="@drawable/ic_linshare_menu">
+                    andrdoid:navigationIcon="@drawable/ic_linshare_menu"
+                    app:menu="@menu/shared_space_document_action_menu">
 
                     <TextView
                         android:id="@+id/txtTitle"

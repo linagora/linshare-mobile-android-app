@@ -91,6 +91,7 @@ import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
+import com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
@@ -410,6 +411,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpMenu()
         setUpSwipeRefreshLayout()
         setUpSearchView()
         getAllNodes()
@@ -460,6 +462,18 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             parentNodeId = arguments.navigationInfo.getCurrentNodeId(),
             query = query
         )
+    }
+
+    private fun setUpMenu() {
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.sharedSpaceDetailsMenu -> {
+                    navigateToSharedSpaceDetails(arguments.navigationInfo.sharedSpaceIdParcelable)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun setUpSwipeRefreshLayout() {
@@ -606,7 +620,15 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         findNavController().navigate(R.id.navigation_shared_spaced_document, navigationBundle)
     }
 
+    private fun navigateToSharedSpaceDetails(sharedSpaceId: SharedSpaceIdParcelable) {
+        LOGGER.info("navigateToSharedSpaceDetails(): $sharedSpaceId")
+        val actionToSharedSpaceDetails = SharedSpaceDocumentFragmentDirections
+            .navigateToSharedSpaceDetails(sharedSpaceId)
+        findNavController().navigate(actionToSharedSpaceDetails)
+    }
+
     private fun navigateToDetails(workGroupNode: WorkGroupNode) {
+        dismissAllDialog()
         LOGGER.info("navigateToDetails(): $workGroupNode")
         val actionToNodeDetails = SharedSpaceDocumentFragmentDirections
             .navigateToSharedSpaceDocumentDetailsFragment(

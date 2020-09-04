@@ -171,17 +171,20 @@
         <argument
             android:name="navigationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
-        <action
-            android:id="@+id/navigateToCopySharedSpaceDestinationFragment"
-            app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
         <argument
             android:name="selectedDestinationInfoFor"
             app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate"
             app:nullable="true"
             android:defaultValue="@null" />
         <action
+            android:id="@+id/navigateToCopySharedSpaceDestinationFragment"
+            app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
+        <action
             android:id="@+id/navigateToSharedSpaceDocumentDetailsFragment"
             app:destination="@id/sharedSpaceDocumentDetailsFragment" />
+        <action
+            android:id="@+id/navigateToSharedSpaceDetails"
+            app:destination="@id/navigationSharedSpaceDetails" />
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceDetails"
