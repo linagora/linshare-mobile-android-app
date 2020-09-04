@@ -51,6 +51,12 @@ class SharedSpaceDocumentInfoFragment(private val workGroupNode: WorkGroupNode) 
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSharedSpaceNodeInfoBinding.inflate(inflater, container, false)
+            .apply { lifecycleOwner = viewLifecycleOwner }
+        bindingData()
         return binding.root
+    }
+
+    private fun bindingData() {
+        binding.workGroupNode = workGroupNode
     }
 }

@@ -37,10 +37,15 @@
 
     <data>
         <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode"/>
 
         <variable
             name="internetAvailable"
             type="ConnectionLiveData" />
+
+        <variable
+            name="workGroupNode"
+            type="WorkGroupNode" />
 
     </data>
 
@@ -62,7 +67,8 @@
                 android:id="@+id/workGroupNodeInfoContainer"
                 layout="@layout/header_work_group_node_info_container"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/share_info_container_height" />
+                android:layout_height="@dimen/share_info_container_height"
+                app:workGroupNode="@{workGroupNode}"/>
 
         </androidx.cardview.widget.CardView>
 
@@ -85,7 +91,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer" />
+            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer"
+            app:sharedSpaceDocumentModifiedDate="@{workGroupNode}"/>
 
         <TextView
             android:id="@+id/txtTitleModifiedBy"
@@ -106,7 +113,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitleModifiedBy" />
+            app:layout_constraintTop_toBottomOf="@id/txtTitleModified"
+            app:sharedSpaceDocumentModifiedBy="@{workGroupNode}"/>
 
         <TextView
             android:id="@+id/txtTitleCreated"
@@ -127,7 +135,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitleModifiedBy" />
+            app:layout_constraintTop_toBottomOf="@id/txtTitleModifiedBy"
+            app:sharedSpaceDocumentCreationDate="@{workGroupNode}"/>
 
         <View
             android:id="@+id/divideViewBasicInfoContainer"
@@ -158,7 +167,8 @@
             android:layout_marginEnd="@dimen/container_padding_right"
             android:singleLine="false"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/descriptionLabel"
+            app:sharedSpaceDocumentDescription="@{workGroupNode}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
