@@ -42,6 +42,7 @@ import com.linagora.android.linshare.adapter.sharedspace.action.SharedSpaceNodeD
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
@@ -54,10 +55,12 @@ import com.linagora.android.linshare.domain.model.sharedspace.createCopyRequest
 import com.linagora.android.linshare.domain.model.sharedspace.toCopyToMySpaceRequest
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicatedNameError
-import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsOrderedInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
@@ -81,6 +84,7 @@ import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.Constant.QUERY_INTERVAL_MS
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.NameValidator
+import com.linagora.android.linshare.view.action.OrderByActionImp
 import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspacedocument.action.CreateFolderBehavior
@@ -104,11 +108,12 @@ import javax.inject.Inject
 class SharedSpaceDocumentViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
-    private val getSharedSpaceChildDocumentsInteractor: GetSharedSpaceChildDocumentsInteractor,
+    private val getSharedSpaceChildDocumentsOrderedInteractor: GetSharedSpaceChildDocumentsOrderedInteractor,
     private val getSharedSpaceNodeInteractor: GetSharedSpaceNodeInteractor,
     private val getSingleSharedSpaceInteractor: GetSingleSharedSpaceInteractor,
     private val searchSharedSpaceDocumentInteractor: SearchSharedSpaceDocumentInteractor,
     private val removeSharedSpaceNodeInteractor: RemoveSharedSpaceNodeInteractor,
+    private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
     private val downloadOperator: DownloadOperator,
     private val copyToSharedSpace: CopyToSharedSpace,
     private val copyToMySpace: CopyInMySpaceInteractor,
@@ -131,6 +136,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     val navigationPathBehavior = SharedSpaceNavigationPathBehavior(this)
 
     val searchAction = SearchActionImp(this)
+
+    val orderByAction = OrderByActionImp(this)
 
     val copyToContextMenu = SharedSpaceDocumentCopyToContextMenu(this)
 
@@ -194,7 +201,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
 
     fun getAllChildNodes(sharedSpaceId: SharedSpaceId, parentNodeId: WorkGroupNodeId?) {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(getSharedSpaceChildDocumentsInteractor(sharedSpaceId, parentNodeId))
+            consumeStates(getSharedSpaceChildDocumentsOrderedInteractor(sharedSpaceId, parentNodeId, orderByAction.getCurrentOrderListConfigurationType()))
         }
     }
 
@@ -237,7 +244,13 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     ): Flow<State<Either<Failure, Success>>> {
         return query.takeIf { it.getLength() >= Constant.MIN_LENGTH_CHARACTERS_TO_SEARCH }
             ?.let { searchSharedSpaceDocumentInteractor(sharedSpaceId, parentNodeId, it) }
-            ?: getSharedSpaceChildDocumentsInteractor(sharedSpaceId, parentNodeId)
+            ?: getSharedSpaceChildDocumentsOrderedInteractor(sharedSpaceId, parentNodeId, orderByAction.getCurrentOrderListConfigurationType())
+    }
+
+    fun getOrderListConfiguration() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(getOrderListConfigurationInteractor(OrderListType.SharedSpaceDocument))
+        }
     }
 
     override fun onSuccessDispatched(success: Success) {
@@ -245,6 +258,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
             is GetSharedSpaceSuccess -> mutableCurrentSharedSpace.value = success.sharedSpace
             is GetSharedSpaceNodeSuccess -> mutableCurrentNode.value = success.node
             is SharedSpaceDocumentViewState -> mutableListWorkGroupNode.value = success.documents
+            is GetOrderListConfigurationSuccess -> orderByAction.setCurrentOrderListConfigurationType(success.orderListConfigurationType)
         }
     }
 

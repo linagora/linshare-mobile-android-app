@@ -64,6 +64,8 @@ import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithFileS
 import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithQuotaReach
 import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceFailure
 import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationFailed
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
 import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
@@ -174,7 +176,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun reactToFailureState(failure: Failure) {
         when (failure) {
             is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
-            is RemoveNodeNotFoundSharedSpaceState -> getAllNodes()
+            is RemoveNodeNotFoundSharedSpaceState, is GetOrderListConfigurationFailed -> getAllNodes()
             is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_another_shared_space_fail)).show()
             is CopyFailedWithFileSizeExceed -> errorSnackBar(getString(R.string.copy_to_my_space_error_file_size_exceed)).show()
             is CopyFailedWithQuotaReach -> errorSnackBar(getString(R.string.copy_to_my_space_error_quota_reach)).show()
@@ -190,7 +192,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             }
             is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_another_shared_space_success)).show()
             is CopyInMySpaceSuccess -> alertCopyToMySpaceSuccess(viewState.documents)
-            is CreateSharedSpaceFolderSuccessViewState -> getAllNodes()
+            is CreateSharedSpaceFolderSuccessViewState, is GetOrderListConfigurationSuccess -> getAllNodes()
         }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
@@ -414,7 +416,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         setUpMenu()
         setUpSwipeRefreshLayout()
         setUpSearchView()
-        getAllNodes()
+        getOrderListConfiguration()
 
         sharedSpacesDocumentViewModel.getCurrentNode(
             sharedSpaceId = arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
@@ -485,6 +487,10 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             arguments.navigationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
             arguments.navigationInfo.getCurrentNodeId()
         )
+    }
+
+    private fun getOrderListConfiguration() {
+        sharedSpacesDocumentViewModel.getOrderListConfiguration()
     }
 
     private fun bindingTitleName(viewState: Success.ViewState) {
