@@ -53,6 +53,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDocumentBinding
 import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
@@ -75,6 +76,8 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpa
 import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNodeNotFoundSharedSpaceState
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeSuccessViewState
@@ -248,13 +251,29 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is SharedSpaceDocumentOnUploadFileClick -> handleUploadFile()
             is SharedSpaceDocumentOnCreateFolderClick -> showCreateFolderDialog()
             is CreateFolderViewEvent -> handleCreateFolder(viewEvent.nameFolder)
+            is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
             is SharedSpaceDocumentDetailsClick -> navigateToDetails(viewEvent.node)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> showUploadFileOrCreateFolderDialog()
             OpenSearchView -> handleOpenSearch()
             CloseSearchView -> handleCloseSearch()
+            OpenOrderByDialog -> showOrderByDialog()
         }
         sharedSpacesDocumentViewModel.dispatchResetState()
+    }
+
+    private fun showOrderByDialog() {
+        dismissOrderByDialog()
+        SharedSpaceDocumentOrderByDialog().show(childFragmentManager, SharedSpaceDocumentOrderByDialog.TAG)
+    }
+
+    private fun dismissOrderByDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(SharedSpaceDocumentOrderByDialog.TAG)
+    }
+
+    private fun handleOrderRowItemClick(orderListConfigurationType: OrderListConfigurationType) {
+        dismissOrderByDialog()
+        sharedSpacesDocumentViewModel.persistOrderListConfiguration(orderListConfigurationType)
     }
 
     private fun handleCreateFolder(nameWorkGroup: NewNameRequest) {

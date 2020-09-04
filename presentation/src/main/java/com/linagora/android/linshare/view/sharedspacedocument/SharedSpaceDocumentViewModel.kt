@@ -42,6 +42,7 @@ import com.linagora.android.linshare.adapter.sharedspace.action.SharedSpaceNodeD
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
@@ -57,6 +58,8 @@ import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicatedNameError
@@ -114,6 +117,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val searchSharedSpaceDocumentInteractor: SearchSharedSpaceDocumentInteractor,
     private val removeSharedSpaceNodeInteractor: RemoveSharedSpaceNodeInteractor,
     private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
+    private val persistOrderListConfigurationInteractor: PersistOrderListConfigurationInteractor,
     private val downloadOperator: DownloadOperator,
     private val copyToSharedSpace: CopyToSharedSpace,
     private val copyToMySpace: CopyInMySpaceInteractor,
@@ -253,12 +257,19 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         }
     }
 
+    fun persistOrderListConfiguration(orderListConfigurationType: OrderListConfigurationType) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(persistOrderListConfigurationInteractor(OrderListType.SharedSpaceDocument, orderListConfigurationType))
+        }
+    }
+
     override fun onSuccessDispatched(success: Success) {
         when (success) {
             is GetSharedSpaceSuccess -> mutableCurrentSharedSpace.value = success.sharedSpace
             is GetSharedSpaceNodeSuccess -> mutableCurrentNode.value = success.node
             is SharedSpaceDocumentViewState -> mutableListWorkGroupNode.value = success.documents
             is GetOrderListConfigurationSuccess -> orderByAction.setCurrentOrderListConfigurationType(success.orderListConfigurationType)
+            is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
         }
     }
 
