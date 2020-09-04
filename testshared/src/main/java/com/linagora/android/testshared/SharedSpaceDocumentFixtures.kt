@@ -159,6 +159,30 @@ object SharedSpaceDocumentFixtures {
         type = WorkGroupNodeType.DOCUMENT
     )
 
+    val WORK_GROUP_DOCUMENT_3 = WorkGroupDocument(
+        workGroupNodeId = NODE_ID_1,
+        name = "Document3.odt",
+        parentWorkGroupNodeId = WorkGroupNodeId(UUID.fromString("7371802c-f452-47a8-a65c-b5f0b36ce410")),
+        sharedSpaceId = SHARED_SPACE_ID_1,
+        description = "Document3",
+        creationDate = Date(1588664701182),
+        modificationDate = Date(1588664701187),
+        lastAuthor = Account(
+            uuid = UUID.fromString("bfe33a5-1cc3-49b8-8442-efb9dffdc989"),
+            firstName = "John",
+            lastName = "Doe",
+            name = "John Doe",
+            mail = "user1@linshare.org"),
+        size = 78480,
+        mimeType = MediaType.parse("application/vnd.oasis.opendocument.text")!!,
+        hasRevision = false,
+        sha256sum = "d6747b1e2516e8ff545a9d454aebe1e89b6f55f720cae0625a2a767259559842",
+        uploadDate = Date(1588664701182),
+        hasThumbnail = true,
+        treePath = emptyList(),
+        type = WorkGroupNodeType.DOCUMENT
+    )
+
     val STATE_SHARED_DOCUMENT_IN_SPACE_1 = Either.right(SharedSpaceDocumentViewState(
         listOf(WORK_GROUP_FOLDER_1, WORK_GROUP_FOLDER_2, WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2)
     ))
