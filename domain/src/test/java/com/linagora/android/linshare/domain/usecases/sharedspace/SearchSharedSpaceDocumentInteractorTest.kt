@@ -35,6 +35,7 @@ package com.linagora.android.linshare.domain.usecases.sharedspace
 
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.PARENT_NODE_ID_1
@@ -72,7 +73,7 @@ class SearchSharedSpaceDocumentInteractorTest {
             .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
 
         val states = searchSharedSpaceDocumentInteractor(
-                SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT)
+                SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.DescendingName)
             .toList(ArrayList())
 
         assertThat(states).hasSize(2)
@@ -89,7 +90,7 @@ class SearchSharedSpaceDocumentInteractorTest {
             .thenAnswer { emptyList<WorkGroupNode>() }
 
         val states = searchSharedSpaceDocumentInteractor(
-                SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT)
+                SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.DescendingName)
             .toList(ArrayList())
 
         assertThat(states).hasSize(2)
@@ -107,7 +108,7 @@ class SearchSharedSpaceDocumentInteractorTest {
             .thenThrow(exception)
 
         val states = searchSharedSpaceDocumentInteractor(
-                SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT)
+                SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.DescendingName)
             .toList(ArrayList())
 
         assertThat(states).hasSize(2)
@@ -115,5 +116,157 @@ class SearchSharedSpaceDocumentInteractorTest {
             .isEqualTo(LOADING_STATE)
         assertThat(states[1](LOADING_STATE))
             .isEqualTo(Either.left(SharedSpaceDocumentFailure(exception)))
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingNameMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_2, WORK_GROUP_DOCUMENT_1)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.AscendingName)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingNameMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.DescendingName)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingModificationDateMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.AscendingModificationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingModificationDateMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_2, WORK_GROUP_DOCUMENT_1)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.DescendingModificationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingCreationDateMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.AscendingCreationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingCreationDateMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_2, WORK_GROUP_DOCUMENT_1)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.DescendingCreationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingFileSizeMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.AscendingFileSize)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingFileSizeMatchedListDocument() = runBlockingTest {
+        `when`(sharedSpacesDocumentRepository.searchSharedSpaceDocuments(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT))
+            .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1, WORK_GROUP_DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchSharedSpaceDocumentViewState(listOf(WORK_GROUP_DOCUMENT_2, WORK_GROUP_DOCUMENT_1)))
+
+        val states = searchSharedSpaceDocumentInteractor(
+            SHARED_SPACE_ID_1, PARENT_NODE_ID_1, QUERY_SHARED_SPACE_DOCUMENT, OrderListConfigurationType.DescendingFileSize)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
     }
 }

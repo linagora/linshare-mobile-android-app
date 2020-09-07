@@ -31,55 +31,46 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.usecases.sharedspace
+package com.linagora.android.linshare.domain.utils
 
-import arrow.core.Either
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
-import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
-import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.State
-import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.domain.utils.emitState
-import com.linagora.android.linshare.domain.utils.sortBy
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class GetSharedSpaceChildDocumentsOrderedInteractor @Inject constructor(
-    private val sharedSpacesDocumentRepository: SharedSpacesDocumentRepository
-) {
-    operator fun invoke(
-        sharedSpaceId: SharedSpaceId,
-        parentNodeId: WorkGroupNodeId?,
-        orderListConfigurationType: OrderListConfigurationType
-    ): Flow<State<Either<Failure, Success>>> {
-        return flow<State<Either<Failure, Success>>> {
-            emitState { Either.right(Success.Loading) }
+fun List<WorkGroupNode>.sortBy(orderConfigType: OrderListConfigurationType): List<WorkGroupNode> {
+    return when (orderConfigType) {
+        OrderListConfigurationType.AscendingModificationDate ->
+            this.sortedBy { it.modificationDate }
+        OrderListConfigurationType.DescendingModificationDate ->
+            this.sortedByDescending { it.modificationDate }
+        OrderListConfigurationType.AscendingCreationDate ->
+            this.sortedBy { it.creationDate }
+        OrderListConfigurationType.DescendingCreationDate ->
+            this.sortedByDescending { it.creationDate }
+        OrderListConfigurationType.AscendingName ->
+            this.sortedBy { it.name }
+        OrderListConfigurationType.DescendingName ->
+            this.sortedByDescending { it.name }
+        OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize ->
+            this.sortByFileSize(orderConfigType)
+    }
+}
 
-            val state = Either.catch {
-                sharedSpacesDocumentRepository.getAllChildNodes(sharedSpaceId, parentNodeId)
-            }
-                .bimap(
-                    { SharedSpaceDocumentFailure(it) },
-                    { sortSharedSpaceDocumentListByOrderListType(it, orderListConfigurationType) })
-
-            emitState { state }
+private fun List<WorkGroupNode>.sortByFileSize(orderConfigType: OrderListConfigurationType): List<WorkGroupNode> {
+    val workGroupDocumentList = this.filterIsInstance<WorkGroupDocument>()
+    return this.takeIf { orderConfigType == OrderListConfigurationType.AscendingFileSize || orderConfigType == OrderListConfigurationType.DescendingFileSize }
+        ?.let {
+            this.takeIf { orderConfigType == OrderListConfigurationType.AscendingFileSize }
+                ?.let {
+                    workGroupDocumentList.sortedBy { it.size }
+                        .plus(this.filterIsInstance<WorkGroupFolder>())
+                }
+                ?: workGroupDocumentList.sortedByDescending { it.size }
+                    .let { documentList ->
+                        this.filterIsInstance<WorkGroupFolder>()
+                            .plus(documentList)
+                    }
         }
-    }
-
-    private fun sortSharedSpaceDocumentListByOrderListType(
-        sharedSpaceDocuments: List<WorkGroupNode>,
-        orderListConfigurationType: OrderListConfigurationType
-    ): Success {
-        return sharedSpaceDocuments.takeIf { it.isNotEmpty() }
-            ?.let {
-                SharedSpaceDocumentViewState(sharedSpaceDocuments.sortBy(orderListConfigurationType))
-            }
-            ?: SharedSpaceDocumentEmpty
-    }
+        ?: this
 }

@@ -247,7 +247,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         query: QueryString
     ): Flow<State<Either<Failure, Success>>> {
         return query.takeIf { it.getLength() >= Constant.MIN_LENGTH_CHARACTERS_TO_SEARCH }
-            ?.let { searchSharedSpaceDocumentInteractor(sharedSpaceId, parentNodeId, it) }
+            ?.let { searchSharedSpaceDocumentInteractor(sharedSpaceId, parentNodeId, it, orderByAction.getCurrentOrderListConfigurationType()) }
             ?: getSharedSpaceChildDocumentsOrderedInteractor(sharedSpaceId, parentNodeId, orderByAction.getCurrentOrderListConfigurationType())
     }
 

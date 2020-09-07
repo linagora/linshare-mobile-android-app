@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.domain.usecases.sharedspace
 
 import arrow.core.Either
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
@@ -43,6 +44,7 @@ import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
+import com.linagora.android.linshare.domain.utils.sortBy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -56,22 +58,32 @@ class SearchSharedSpaceDocumentInteractor @Inject constructor(
     operator fun invoke(
         sharedSpaceId: SharedSpaceId,
         parentNodeId: WorkGroupNodeId?,
-        queryString: QueryString
+        queryString: QueryString,
+        orderListConfigurationType: OrderListConfigurationType
     ): Flow<State<Either<Failure, Success>>> {
         return flow<State<Either<Failure, Success>>> {
             emitState { Either.right(Success.Loading) }
 
-            val state = Either.catch { sharedSpacesDocumentRepository
-                    .searchSharedSpaceDocuments(sharedSpaceId, parentNodeId, queryString) }
-                .fold({ Either.left(SharedSpaceDocumentFailure(it)) }, ::generateSearchState)
+            val state = Either.catch {
+                sharedSpacesDocumentRepository.searchSharedSpaceDocuments(sharedSpaceId, parentNodeId, queryString)
+            }
+                .fold(
+                    { Either.left(SharedSpaceDocumentFailure(it)) },
+                    { sortSharedSpaceDocumentListByOrderListType(it, orderListConfigurationType) }
+                )
 
             emitState { state }
         }
     }
 
-    private fun generateSearchState(sharedSpaceDocumentResults: List<WorkGroupNode>): Either<Failure, Success> {
-        return sharedSpaceDocumentResults.takeIf { it.isNotEmpty() }
-            ?.let { Either.right(SearchSharedSpaceDocumentViewState(it)) }
-            ?: let { Either.left(SearchSharedSpaceDocumentNoResult) }
+    private fun sortSharedSpaceDocumentListByOrderListType(
+        sharedSpaceDocuments: List<WorkGroupNode>,
+        orderListConfigurationType: OrderListConfigurationType
+    ): Either<Failure, Success> {
+        return sharedSpaceDocuments.takeIf { it.isNotEmpty() }
+            ?.let {
+                Either.right(SearchSharedSpaceDocumentViewState(sharedSpaceDocuments.sortBy(orderListConfigurationType)))
+            }
+            ?: Either.left(SearchSharedSpaceDocumentNoResult)
     }
 }
