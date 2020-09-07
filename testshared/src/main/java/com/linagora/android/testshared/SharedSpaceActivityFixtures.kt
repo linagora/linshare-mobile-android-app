@@ -52,6 +52,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNes
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
+import com.linagora.android.linshare.domain.model.sharedspace.VersioningParameter
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupCopy
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocumentRevision
@@ -308,7 +309,8 @@ object SharedSpaceActivityFixtures {
             role = SharedSpaceRole(
                 sharedSpaceRoleId = SharedSpaceRoleId(UUID.fromString("b206c2ba-37de-491e-8e9c-88ed3be70682")),
                 name = SharedSpaceRoleName.ADMIN
-            )
+            ),
+            versioningParameters = VersioningParameter(true)
         )
     )
 

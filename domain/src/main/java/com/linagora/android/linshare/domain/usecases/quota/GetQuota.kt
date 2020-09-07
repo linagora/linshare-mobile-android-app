@@ -33,19 +33,36 @@
 
 package com.linagora.android.linshare.domain.usecases.quota
 
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.AccountQuota
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.QuotaAccountError
-import com.linagora.android.linshare.domain.usecases.utils.Success.ViewState
-import com.linagora.android.linshare.domain.utils.BusinessErrorCode
+import com.linagora.android.linshare.domain.model.quota.QuotaId
+import com.linagora.android.linshare.domain.repository.user.QuotaRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-object ValidAccountQuota : ViewState()
-object PreUploadExecuting : ViewState()
-object CheckingQuota : ViewState()
-object ExceedMaxFileSize : FeatureFailure()
-object QuotaAccountNoMoreSpaceAvailable :
-    QuotaAccountError(BusinessErrorCode.QuotaAccountNoMoreSpaceErrorCode)
-object ExtractInfoFailed : FeatureFailure()
-data class GetQuotaSuccess(val quota: AccountQuota) : ViewState()
-data class GetQuotaFailed(val throwable: Throwable) : FeatureFailure()
-object CanNotGetQuota : FeatureFailure()
+class GetQuota @Inject constructor(private val quotaRepository: QuotaRepository) {
+
+    operator fun invoke(quotaId: QuotaId): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Success.Loading) }
+
+            val quotaState = Either.catch { quotaRepository.findQuota(quotaId) }
+                .fold(
+                    ifLeft = { Either.left(GetQuotaFailed(it)) },
+                    ifRight = { quota -> generateQuotaState(quota) }
+                )
+
+            emitState { quotaState }
+        }
+    }
+
+    private fun generateQuotaState(quota: AccountQuota?): Either<Failure, Success> {
+        return quota?.let { Either.right(GetQuotaSuccess(it)) }
+            ?: Either.left(CanNotGetQuota)
+    }
+}

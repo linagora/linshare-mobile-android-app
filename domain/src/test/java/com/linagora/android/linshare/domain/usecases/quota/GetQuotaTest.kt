@@ -33,19 +33,63 @@
 
 package com.linagora.android.linshare.domain.usecases.quota
 
-import com.linagora.android.linshare.domain.model.AccountQuota
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.QuotaAccountError
-import com.linagora.android.linshare.domain.usecases.utils.Success.ViewState
-import com.linagora.android.linshare.domain.utils.BusinessErrorCode
+import arrow.core.Either
+import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.repository.user.QuotaRepository
+import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA
+import com.linagora.android.testshared.TestFixtures.Accounts.QUOTA_UUID
+import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
+import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 
-object ValidAccountQuota : ViewState()
-object PreUploadExecuting : ViewState()
-object CheckingQuota : ViewState()
-object ExceedMaxFileSize : FeatureFailure()
-object QuotaAccountNoMoreSpaceAvailable :
-    QuotaAccountError(BusinessErrorCode.QuotaAccountNoMoreSpaceErrorCode)
-object ExtractInfoFailed : FeatureFailure()
-data class GetQuotaSuccess(val quota: AccountQuota) : ViewState()
-data class GetQuotaFailed(val throwable: Throwable) : FeatureFailure()
-object CanNotGetQuota : FeatureFailure()
+class GetQuotaTest {
+
+    @Mock
+    lateinit var quotaRepository: QuotaRepository
+
+    private lateinit var getQuota: GetQuota
+
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.initMocks(this)
+        getQuota = GetQuota(quotaRepository)
+    }
+
+    @Test
+    fun getQuotaShouldSuccessWithValidQuotaId() = runBlockingTest {
+        `when`(quotaRepository.findQuota(QUOTA_UUID))
+            .thenAnswer { QUOTA }
+
+        val quotaState = getQuota(QUOTA_UUID)
+            .map { it(INIT_STATE) }
+            .toList(ArrayList())
+
+        assertThat(quotaState).containsExactly(
+            LOADING_STATE,
+            Either.right(GetQuotaSuccess(QUOTA))
+        )
+    }
+
+    @Test
+    fun getQuotaShouldReturnFailedStateWhenHaveErrorInGettingQuota() = runBlockingTest {
+        val getQuotaError = RuntimeException()
+        `when`(quotaRepository.findQuota(QUOTA_UUID))
+            .thenThrow(getQuotaError)
+
+        val quotaState = getQuota(QUOTA_UUID)
+            .map { it(INIT_STATE) }
+            .toList(ArrayList())
+
+        assertThat(quotaState).containsExactly(
+            LOADING_STATE,
+            Either.left(GetQuotaFailed(getQuotaError))
+        )
+    }
+}

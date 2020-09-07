@@ -44,6 +44,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.TreePath
+import com.linagora.android.linshare.domain.model.sharedspace.VersioningParameter
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
@@ -196,7 +197,8 @@ object SharedSpaceDocumentFixtures {
         modificationDate = Date(1588928300716),
         nodeType = LinShareNodeType.WORK_GROUP,
         role = SharedSpaceRole(SharedSpaceRoleId(UUID.fromString("234be74d-2966-41c1-9dee-e47c8c63c14e")), SharedSpaceRoleName.ADMIN),
-        quotaId = QUOTA_UUID
+        quotaId = QUOTA_UUID,
+        versioningParameters = VersioningParameter(true)
     )
 
     val QUERY_SHARED_SPACE_DOCUMENT = QueryString("document")
