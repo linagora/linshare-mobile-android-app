@@ -290,4 +290,8 @@
         <item quantity="other">Shared with %s contacts</item>
     </plurals>
 
+    <string name="my_right" translatable="false">My rights</string>
+    <string name="max_file_size" translatable="false">Max file size</string>
+    <string name="versioning_enable" translatable="false">Versioning enable</string>
+
 </resources>

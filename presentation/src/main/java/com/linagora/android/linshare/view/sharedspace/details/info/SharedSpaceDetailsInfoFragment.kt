@@ -31,53 +31,32 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.sharedspace.details
+package com.linagora.android.linshare.view.sharedspace.details.info
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.ChildFragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import com.linagora.android.linshare.view.sharedspace.details.activity.SharedSpaceActivitiesFragment
-import com.linagora.android.linshare.view.sharedspace.details.activity.SharedSpaceActivitiesViewModel
-import com.linagora.android.linshare.view.sharedspace.details.info.SharedSpaceDetailsInfoFragment
-import com.linagora.android.linshare.view.sharedspace.details.info.SharedSpaceDetailsInfoViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import com.linagora.android.linshare.databinding.FragmentSharedSpaceDetailsInfoBinding
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-@Module
-internal abstract class SharedSpaceDetailsFragmentModule {
+class SharedSpaceDetailsInfoFragment(private val sharedSpace: SharedSpace) : DaggerFragment() {
 
-    @ChildFragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeDetailsInfoFragment(): SharedSpaceDetailsInfoFragment
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @ChildFragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeMemberFragment(): SharedSpaceMembersFragment
+    private lateinit var binding: FragmentSharedSpaceDetailsInfoBinding
 
-    @ChildFragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeActivitiesFragment(): SharedSpaceActivitiesFragment
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceDetailsInfoViewModel::class)
-    internal abstract fun bindDetailsInfoFragmentViewModel(
-        sharedSpaceDetailsInfoViewModel: SharedSpaceDetailsInfoViewModel
-    ): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceMemberViewModel::class)
-    internal abstract fun bindMemberFragmentViewModel(
-        sharedSpaceMemberViewModel: SharedSpaceMemberViewModel
-    ): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SharedSpaceActivitiesViewModel::class)
-    internal abstract fun bindActivitiesFragmentViewModel(
-        sharedSpaceActivitiesViewModel: SharedSpaceActivitiesViewModel
-    ): ViewModel
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSharedSpaceDetailsInfoBinding.inflate(inflater, container, false)
+            .apply { lifecycleOwner = viewLifecycleOwner }
+        return binding.root
+    }
 }
