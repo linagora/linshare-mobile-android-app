@@ -53,11 +53,13 @@ import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.sharedspace.details.activity.SharedSpaceActivitiesFragment
+import com.linagora.android.linshare.view.sharedspace.details.info.SharedSpaceDetailsInfoFragment
 
 class SharedSpaceDetailsFragment : MainNavigationFragment() {
 
     companion object {
         private val DETAILS_TITLES = arrayOf(
+            R.string.details,
             R.string.members,
             R.string.activities
         )
@@ -131,7 +133,8 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
         override fun createFragment(position: Int): Fragment {
             require(position < itemCount) { "page number is not supported" }
             return when (position) {
-                0 -> SharedSpaceMembersFragment(sharedSpace)
+                0 -> SharedSpaceDetailsInfoFragment(sharedSpace)
+                1 -> SharedSpaceMembersFragment(sharedSpace)
                 else -> SharedSpaceActivitiesFragment(sharedSpaceDetailsArgs.sharedSpaceId.toSharedSpaceId())
             }
         }

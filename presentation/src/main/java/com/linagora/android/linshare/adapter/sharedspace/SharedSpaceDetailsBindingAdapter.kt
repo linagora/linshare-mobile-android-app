@@ -34,14 +34,18 @@
 package com.linagora.android.linshare.adapter.sharedspace
 
 import android.view.View
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import arrow.core.Either
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
+import com.linagora.android.linshare.domain.model.sharedspace.VersioningParameter
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.util.toDisplayRoleNameId
 
 @BindingAdapter("sharedSpaceDetailsTitle")
 fun bindingDetailsTitle(textView: TextView, sharedSpaceDetailsState: Either<Failure, Success>) {
@@ -66,4 +70,15 @@ fun bindingAddMembersWithRole(
             addMembersButton.visibility = visible
         }
     }
+}
+
+@BindingAdapter("roleName")
+fun bindingRoleName(textView: TextView, sharedSpaceRole: SharedSpaceRole?) {
+    textView.text = sharedSpaceRole?.name?.toDisplayRoleNameId()
+        ?.let { textView.context.getString(it.value) }
+}
+
+@BindingAdapter("versioningEnabled")
+fun bindingDetailsVersioningEnable(checkBox: CheckBox, versioningParameter: VersioningParameter?) {
+    checkBox.isChecked = versioningParameter?.enabled ?: false
 }

@@ -33,35 +33,24 @@
 
 package com.linagora.android.linshare.view.sharedspace.details.info
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import com.linagora.android.linshare.databinding.FragmentSharedSpaceDetailsInfoBinding
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
-import dagger.android.support.DaggerFragment
+import androidx.lifecycle.viewModelScope
+import com.linagora.android.linshare.domain.model.quota.QuotaId
+import com.linagora.android.linshare.domain.usecases.quota.GetQuota
+import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.base.BaseViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SharedSpaceDetailsInfoFragment(private val sharedSpace: SharedSpace) : DaggerFragment() {
+class SharedSpaceDetailsInfoViewModel @Inject constructor(
+    override val internetAvailable: ConnectionLiveData,
+    private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider,
+    private val getQuota: GetQuota
+) : BaseViewModel(internetAvailable, coroutinesDispatcherProvider) {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private lateinit var binding: FragmentSharedSpaceDetailsInfoBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSharedSpaceDetailsInfoBinding.inflate(inflater, container, false)
-            .apply { lifecycleOwner = viewLifecycleOwner }
-        initViewModel()
-        return binding.root
-    }
-
-    private fun initViewModel() {
-        binding.sharedSpace = sharedSpace
+    fun getSharedSpaceQuota(quotaId: QuotaId) {
+        viewModelScope.launch(coroutinesDispatcherProvider.io) {
+            consumeStates(getQuota(quotaId))
+        }
     }
 }

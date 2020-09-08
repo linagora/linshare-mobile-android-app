@@ -35,6 +35,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
+        <variable
+            name="sharedSpace"
+            type="SharedSpace" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -53,7 +60,8 @@
                 android:id="@+id/workGroupNodeInfoContainer"
                 layout="@layout/header_shared_space_details"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/share_info_container_height" />
+                android:layout_height="@dimen/share_info_container_height"
+                app:sharedSpace="@{sharedSpace}"/>
 
         </androidx.cardview.widget.CardView>
 
@@ -76,7 +84,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer" />
+            app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer"
+            app:detailsDate="@{sharedSpace.modificationDate}"/>
 
         <TextView
             android:id="@+id/txtTitleCreated"
@@ -97,7 +106,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitleModified" />
+            app:layout_constraintTop_toBottomOf="@id/txtTitleModified"
+            app:detailsDate="@{sharedSpace.creationDate}"/>
 
         <TextView
             android:id="@+id/txtTitleMyRight"
@@ -118,7 +128,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitleCreated" />
+            app:layout_constraintTop_toBottomOf="@id/txtTitleCreated"
+            app:roleName="@{sharedSpace.role}"/>
 
         <TextView
             android:id="@+id/txtTitleMaxFileSize"
@@ -202,7 +213,8 @@
             android:layout_marginTop="@dimen/container_padding_right"
             app:layout_constraintBaseline_toBaselineOf="@+id/versioningEnableLabel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divideViewDescriptionContainer" />
+            app:layout_constraintTop_toBottomOf="@+id/divideViewDescriptionContainer"
+            app:versioningEnabled="@{sharedSpace.versioningParameters}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
