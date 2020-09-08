@@ -42,6 +42,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDetailsBinding
@@ -68,6 +69,8 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
     private lateinit var viewModel: SharedSpaceDetailsViewModel
 
     private lateinit var binding: FragmentSharedSpaceDetailsBinding
+
+    private val sharedSpaceDetailsPageChange = SharedSpaceDetailsPageChange()
 
     private val sharedSpaceDetailsArgs: SharedSpaceDetailsFragmentArgs by navArgs()
 
@@ -116,6 +119,7 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
     private fun bindingDetailsPageAdapter(sharedSpace: SharedSpace) {
         binding.run {
             viewpager.adapter = DetailsPageAdapter(sharedSpace)
+            viewpager.registerOnPageChangeCallback(sharedSpaceDetailsPageChange)
             TabLayoutMediator(tabsDetails, viewpager) { tab, position ->
                 tab.text = getString(DETAILS_TITLES[position])
             }.attach()
@@ -136,6 +140,15 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
                 0 -> SharedSpaceDetailsInfoFragment(sharedSpace)
                 1 -> SharedSpaceMembersFragment(sharedSpace)
                 else -> SharedSpaceActivitiesFragment(sharedSpaceDetailsArgs.sharedSpaceId.toSharedSpaceId())
+            }
+        }
+    }
+
+    private inner class SharedSpaceDetailsPageChange : OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            when (DETAILS_TITLES[position]) {
+                R.string.members -> binding.addMemberButton.show()
+                else -> binding.addMemberButton.hide()
             }
         }
     }
