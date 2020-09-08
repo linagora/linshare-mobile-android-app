@@ -92,7 +92,7 @@
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer"
-            app:sharedSpaceDocumentModifiedDate="@{workGroupNode}"/>
+            app:detailsDate="@{workGroupNode.modificationDate}"/>
 
         <TextView
             android:id="@+id/txtTitleModifiedBy"
@@ -136,7 +136,7 @@
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtTitleModifiedBy"
-            app:sharedSpaceDocumentCreationDate="@{workGroupNode}"/>
+            app:detailsDate="@{workGroupNode.creationDate}"/>
 
         <View
             android:id="@+id/divideViewBasicInfoContainer"
@@ -168,7 +168,7 @@
             android:singleLine="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionLabel"
-            app:sharedSpaceDocumentDescription="@{workGroupNode}"/>
+            app:descriptions="@{workGroupNode.description}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

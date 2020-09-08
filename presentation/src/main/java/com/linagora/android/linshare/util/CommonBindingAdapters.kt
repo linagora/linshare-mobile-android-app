@@ -31,45 +31,21 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.adapter.myspace
+package com.linagora.android.linshare.util
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.adapter.myspace.details.ShareRecipientAdapter
-import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.util.getFirstLetter
+import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
+import java.util.Date
 
-@BindingAdapter("documentShares")
-fun bindingDocumentShare(recyclerView: RecyclerView, document: Document?) {
-    document?.let {
-        if (recyclerView.adapter == null) {
-            recyclerView.adapter = ShareRecipientAdapter()
-        }
-
-        it.shares?.let { recipients ->
-            (recyclerView.adapter as ShareRecipientAdapter).submitList(recipients)
-        }
-    }
+@BindingAdapter("detailsDate")
+fun bindingModifiedDate(textView: TextView, date: Date?) {
+    textView.text = date
+        ?.let { TimeUtils(textView.context).convertToLocalTime(it, LastModifiedFormat) }
 }
 
-@BindingAdapter("shareCount")
-fun bindingDocumentShareCount(textView: TextView, document: Document?) {
-    textView.text = document?.let {
-        textView.context.resources.getQuantityString(R.plurals.share_with_contacts, it.shared, it.shared)
-    }
-}
-
-@BindingAdapter("shareRecipientIcon")
-fun bindingShareRecipientIcon(textView: TextView, share: Share?) {
-    textView.text = share?.recipient?.firstName?.getFirstLetter()
-        ?: share?.recipient?.mail?.getFirstLetter()
-}
-
-@BindingAdapter("shareRecipientFullName")
-fun bindingShareRecipientFullName(textView: TextView, share: Share?) {
-    textView.text = share?.recipient?.firstName?.let { it + " " + share.recipient.lastName }
-        ?: share?.recipient?.mail
+@BindingAdapter("descriptions")
+fun bindingDocumentDescription(textView: TextView, descriptions: String?) {
+    textView.text = descriptions ?: textView.context.getString(R.string.undefined)
 }

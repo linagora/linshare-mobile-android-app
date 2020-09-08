@@ -128,7 +128,7 @@
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fileInfoContainer"
-            app:documentModified="@{document}"/>
+            app:detailsDate="@{document.modificationDate}"/>
 
         <TextView
             android:id="@+id/txtTitleCreated"
@@ -150,7 +150,7 @@
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtTitleModified"
-            app:documentCreation="@{document}"/>
+            app:detailsDate="@{document.creationDate}"/>
 
         <TextView
             android:id="@+id/txtTitleExpired"
@@ -172,7 +172,7 @@
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtTitleCreated"
-            app:documentExpiration="@{document}"/>
+            app:detailsDate="@{document.expirationDate}"/>
 
         <View
             android:id="@+id/divideViewBasicInfoContainer"
@@ -204,7 +204,7 @@
             android:singleLine="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionLabel"
-            app:documentDescription="@{document}"/>
+            app:descriptions="@{document.description}"/>
 
         <LinearLayout
             android:id="@+id/sharedCountContainer"

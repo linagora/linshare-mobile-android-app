@@ -41,7 +41,6 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
-import com.linagora.android.linshare.util.TimeUtils
 
 @BindingAdapter("sharedSpaceDocumentDetailsTitle")
 fun bindingNodeDetailsTitle(textView: TextView, states: Either<Failure, Success>) {
@@ -52,27 +51,9 @@ fun bindingNodeDetailsTitle(textView: TextView, states: Either<Failure, Success>
     }
 }
 
-@BindingAdapter("sharedSpaceDocumentModifiedDate")
-fun bindingModifiedDate(textView: TextView, workGroupNode: WorkGroupNode?) {
-    textView.text = workGroupNode?.let {
-        TimeUtils(textView.context).convertToLocalTime(it.modificationDate,
-            TimeUtils.LinShareTimeFormat.LastModifiedFormat
-        )
-    }
-}
-
 @BindingAdapter("sharedSpaceDocumentModifiedBy")
 fun bindingModifiedBy(textView: TextView, workGroupNode: WorkGroupNode?) {
     textView.text = workGroupNode?.lastAuthor?.name
-}
-
-@BindingAdapter("sharedSpaceDocumentCreationDate")
-fun bindingCreationDate(textView: TextView, workGroupNode: WorkGroupNode?) {
-    textView.text = workGroupNode?.let {
-        TimeUtils(textView.context).convertToLocalTime(it.creationDate,
-            TimeUtils.LinShareTimeFormat.LastModifiedFormat
-        )
-    }
 }
 
 @BindingAdapter("sharedSpaceDocumentDescription")
