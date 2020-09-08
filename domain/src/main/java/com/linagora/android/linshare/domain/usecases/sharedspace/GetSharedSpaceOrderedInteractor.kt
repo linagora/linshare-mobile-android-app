@@ -42,6 +42,7 @@ import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.linshare.domain.utils.emitState
+import com.linagora.android.linshare.domain.utils.sortSharedSpaceNodeNestedBy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -69,30 +70,7 @@ class GetSharedSpaceOrderedInteractor @Inject constructor(
     private fun sortSharedSpaceListByOrderListType(
         sharedSpace: List<SharedSpaceNodeNested>,
         orderListConfigurationType: OrderListConfigurationType
-    ): Either<Failure, Success> {
-        if (sharedSpace.isEmpty()) {
-            return Either.left(EmptySharedSpaceState)
-        }
-        return when (orderListConfigurationType) {
-            OrderListConfigurationType.AscendingModificationDate -> {
-                Either.right(SharedSpaceViewState(sharedSpace.sortedBy { it.modificationDate }))
-            }
-            OrderListConfigurationType.DescendingModificationDate -> {
-                Either.right(SharedSpaceViewState(sharedSpace.sortedByDescending { it.modificationDate }))
-            }
-            OrderListConfigurationType.AscendingCreationDate -> {
-                Either.right(SharedSpaceViewState(sharedSpace.sortedBy { it.creationDate }))
-            }
-            OrderListConfigurationType.DescendingCreationDate -> {
-                Either.right(SharedSpaceViewState(sharedSpace.sortedByDescending { it.creationDate }))
-            }
-            OrderListConfigurationType.AscendingName -> {
-                Either.right(SharedSpaceViewState(sharedSpace.sortedBy { it.name }))
-            }
-            OrderListConfigurationType.DescendingName -> {
-                Either.right(SharedSpaceViewState(sharedSpace.sortedByDescending { it.name }))
-            }
-            else -> Either.right(SharedSpaceViewState(sharedSpace.sortedBy { it.modificationDate }))
-        }
-    }
+    ): Either<Failure, Success> = sharedSpace.takeIf { it.isNotEmpty() }
+        ?.let { Either.right(SharedSpaceViewState(sharedSpace.sortSharedSpaceNodeNestedBy(orderListConfigurationType))) }
+        ?: Either.left(EmptySharedSpaceState)
 }

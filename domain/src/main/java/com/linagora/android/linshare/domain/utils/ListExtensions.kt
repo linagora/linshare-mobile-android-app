@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.domain.utils
 
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
@@ -73,4 +74,16 @@ private fun List<WorkGroupNode>.sortByFileSize(orderConfigType: OrderListConfigu
                     }
         }
         ?: this
+}
+
+fun List<SharedSpaceNodeNested>.sortSharedSpaceNodeNestedBy(orderConfigType: OrderListConfigurationType): List<SharedSpaceNodeNested> {
+    return when (orderConfigType) {
+        OrderListConfigurationType.AscendingModificationDate -> this.sortedBy { it.modificationDate }
+        OrderListConfigurationType.DescendingModificationDate -> this.sortedByDescending { it.modificationDate }
+        OrderListConfigurationType.AscendingCreationDate -> this.sortedBy { it.creationDate }
+        OrderListConfigurationType.DescendingCreationDate -> this.sortedByDescending { it.creationDate }
+        OrderListConfigurationType.AscendingName -> this.sortedBy { it.name }
+        OrderListConfigurationType.DescendingName -> this.sortedByDescending { it.name }
+        else -> this.sortedBy { it.modificationDate }
+    }
 }

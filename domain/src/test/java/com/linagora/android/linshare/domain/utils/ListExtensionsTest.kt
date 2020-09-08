@@ -37,6 +37,7 @@ import com.google.common.truth.Truth
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures
+import com.linagora.android.testshared.SharedSpaceFixtures
 import org.junit.Test
 
 class ListExtensionsTest {
@@ -208,6 +209,118 @@ class ListExtensionsTest {
         val expectedList = ArrayList<WorkGroupNode>()
 
         Truth.assertThat(inputList.sortBy(OrderListConfigurationType.AscendingName))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortSharedSpaceNodeNestedShouldReturnSortedAscendingWithTypeAscendingName() {
+        val inputList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1, SharedSpaceFixtures.SHARED_SPACE_5, SharedSpaceFixtures.SHARED_SPACE_2
+        )
+
+        val expectedList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1,
+            SharedSpaceFixtures.SHARED_SPACE_2,
+            SharedSpaceFixtures.SHARED_SPACE_5
+        )
+
+        Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.AscendingName))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortSharedSpaceNodeNestedShouldReturnSortedDescendingWithTypeDescendingName() {
+        val inputList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1, SharedSpaceFixtures.SHARED_SPACE_5, SharedSpaceFixtures.SHARED_SPACE_2
+        )
+
+        val expectedList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_5,
+            SharedSpaceFixtures.SHARED_SPACE_2,
+            SharedSpaceFixtures.SHARED_SPACE_1
+        )
+
+        Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.DescendingName))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortSharedSpaceNodeNestedShouldReturnSortedAscendingWithTypeAscendingModificationDate() {
+        val inputList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1, SharedSpaceFixtures.SHARED_SPACE_5, SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        val expectedList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1,
+            SharedSpaceFixtures.SHARED_SPACE_5,
+            SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.AscendingModificationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortSharedSpaceNodeNestedShouldReturnSortedDescendingWithTypeDescendingModificationDate() {
+        val inputList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1, SharedSpaceFixtures.SHARED_SPACE_5, SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        val expectedList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_6,
+            SharedSpaceFixtures.SHARED_SPACE_1,
+            SharedSpaceFixtures.SHARED_SPACE_5
+        )
+
+        Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.DescendingModificationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortSharedSpaceNodeNestedShouldReturnSortedAscendingWithTypeAscendingCreationDate() {
+        val inputList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1, SharedSpaceFixtures.SHARED_SPACE_5, SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        val expectedList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1,
+            SharedSpaceFixtures.SHARED_SPACE_5,
+            SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.AscendingCreationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortSharedSpaceNodeNestedShouldReturnSortedAscendingWithTypeDescendingCreationDate() {
+        val inputList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1, SharedSpaceFixtures.SHARED_SPACE_5, SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        val expectedList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_6,
+            SharedSpaceFixtures.SHARED_SPACE_1,
+            SharedSpaceFixtures.SHARED_SPACE_5
+        )
+
+        Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.DescendingCreationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortSharedSpaceNodeNestedShouldReturnSortedAscendingModificationDateWithOtherType() {
+        val inputList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1, SharedSpaceFixtures.SHARED_SPACE_5, SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        val expectedList = listOf(
+            SharedSpaceFixtures.SHARED_SPACE_1,
+            SharedSpaceFixtures.SHARED_SPACE_5,
+            SharedSpaceFixtures.SHARED_SPACE_6
+        )
+
+        Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.AscendingFileSize))
             .isEqualTo(expectedList)
     }
 }
