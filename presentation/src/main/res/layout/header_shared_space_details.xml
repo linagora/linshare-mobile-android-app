@@ -36,11 +36,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="arrow.core.Either"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
 
         <variable
             name="sharedSpace"
             type="SharedSpace" />
+
+        <variable
+            name="quotaState"
+            type="Either&lt;Failure,Success&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,7 +87,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/sharedSpaceName"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:sharedSpaceUsedSpace="@{quotaState}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -42,9 +42,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.VersioningParameter
+import com.linagora.android.linshare.domain.usecases.quota.GetQuotaSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.util.FileSize
+import com.linagora.android.linshare.util.FileSize.SizeFormat
 import com.linagora.android.linshare.util.toDisplayRoleNameId
 
 @BindingAdapter("sharedSpaceDetailsTitle")
@@ -81,4 +84,24 @@ fun bindingRoleName(textView: TextView, sharedSpaceRole: SharedSpaceRole?) {
 @BindingAdapter("versioningEnabled")
 fun bindingDetailsVersioningEnable(checkBox: CheckBox, versioningParameter: VersioningParameter?) {
     checkBox.isChecked = versioningParameter?.enabled ?: false
+}
+
+@BindingAdapter("sharedSpaceUsedSpace")
+fun bindingSharedSpaceUsedSpace(textView: TextView, quotaState: Either<Failure, Success>) {
+    quotaState.map { success ->
+        when (success) {
+            is GetQuotaSuccess -> textView.text = FileSize(success.quota.usedSpace.size)
+                .format(SizeFormat.LONG)
+        }
+    }
+}
+
+@BindingAdapter("sharedSpaceMaxFileSize")
+fun bindingSharedSpaceMaxFileSize(textView: TextView, quotaState: Either<Failure, Success>) {
+    quotaState.map { success ->
+        when (success) {
+            is GetQuotaSuccess -> textView.text = FileSize(success.quota.maxFileSize.size)
+                .format(SizeFormat.LONG)
+        }
+    }
 }

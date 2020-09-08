@@ -40,6 +40,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDetailsInfoBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import com.linagora.android.linshare.util.getViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -47,6 +48,8 @@ class SharedSpaceDetailsInfoFragment(private val sharedSpace: SharedSpace) : Dag
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var viewModel: SharedSpaceDetailsInfoViewModel
 
     private lateinit var binding: FragmentSharedSpaceDetailsInfoBinding
 
@@ -62,6 +65,13 @@ class SharedSpaceDetailsInfoFragment(private val sharedSpace: SharedSpace) : Dag
     }
 
     private fun initViewModel() {
+        viewModel = getViewModel(viewModelFactory)
         binding.sharedSpace = sharedSpace
+        binding.sharedSpaceDetailsInfoViewModel = viewModel
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getSharedSpaceQuota(sharedSpace.quotaId)
     }
 }

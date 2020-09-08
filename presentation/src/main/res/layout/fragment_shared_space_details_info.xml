@@ -36,10 +36,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.view.sharedspace.details.info.SharedSpaceDetailsInfoViewModel"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
+
         <variable
             name="sharedSpace"
             type="SharedSpace" />
+
+        <variable
+            name="sharedSpaceDetailsInfoViewModel"
+            type="SharedSpaceDetailsInfoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +67,8 @@
                 layout="@layout/header_shared_space_details"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/share_info_container_height"
-                app:sharedSpace="@{sharedSpace}"/>
+                app:sharedSpace="@{sharedSpace}"
+                app:quotaState="@{sharedSpaceDetailsInfoViewModel.viewState}"/>
 
         </androidx.cardview.widget.CardView>
 
@@ -150,7 +157,8 @@
             android:layout_marginTop="@dimen/info_line_margin"
             android:layout_marginEnd="@dimen/container_padding_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitleMyRight" />
+            app:layout_constraintTop_toBottomOf="@id/txtTitleMyRight"
+            app:sharedSpaceMaxFileSize="@{sharedSpaceDetailsInfoViewModel.viewState}"/>
 
         <View
             android:id="@+id/divideViewBasicInfoContainer"
