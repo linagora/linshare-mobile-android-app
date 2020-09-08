@@ -36,6 +36,7 @@ package com.linagora.android.linshare.domain.usecases.sharedspace
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
 import com.linagora.android.testshared.SharedSpaceFixtures.NOT_FOUND_SHARED_SPACE_STATE
@@ -43,6 +44,8 @@ import com.linagora.android.testshared.SharedSpaceFixtures.QUERY_STRING_SHARED_S
 import com.linagora.android.testshared.SharedSpaceFixtures.SEARCH_SHARED_SPACE_LIST_VIEW_STATE
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_2
+import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_5
+import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_6
 import com.linagora.android.testshared.TestFixtures.Searchs.QUERY_STRING
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
 import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
@@ -73,7 +76,7 @@ class SearchSharedSpaceInteractorTest {
             `when`(sharedSpaceRepository.search(QUERY_STRING))
                 .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_2) }
 
-            val states = searchSharedSpaceInteractor(QUERY_STRING)
+            val states = searchSharedSpaceInteractor(QUERY_STRING, OrderListConfigurationType.AscendingName)
                 .toList(ArrayList())
 
             assertThat(states).hasSize(2)
@@ -87,7 +90,7 @@ class SearchSharedSpaceInteractorTest {
     @Test
     fun searchShouldReturnSearchInitialWhileQueryLengthIsLowerThanThree() {
         runBlockingTest {
-            val states = searchSharedSpaceInteractor(QueryString("qu"))
+            val states = searchSharedSpaceInteractor(QueryString("qu"), OrderListConfigurationType.AscendingName)
                 .toList(ArrayList())
 
             assertThat(states).hasSize(1)
@@ -102,7 +105,7 @@ class SearchSharedSpaceInteractorTest {
             `when`(sharedSpaceRepository.search(QUERY_STRING))
                 .thenAnswer { emptyList<Document>() }
 
-            val states = searchSharedSpaceInteractor(QUERY_STRING_SHARED_SPACE)
+            val states = searchSharedSpaceInteractor(QUERY_STRING_SHARED_SPACE, OrderListConfigurationType.AscendingName)
                 .toList(ArrayList())
 
             assertThat(states).hasSize(2)
@@ -110,6 +113,144 @@ class SearchSharedSpaceInteractorTest {
                 .isEqualTo(LOADING_STATE)
             assertThat(states[1](LOADING_STATE))
                 .isEqualTo(NOT_FOUND_SHARED_SPACE_STATE)
+        }
+    }
+
+    @Test
+    fun searchShouldSuccessReturnSearchResultsWithAscendingName() {
+        runBlockingTest {
+            `when`(sharedSpaceRepository.search(QUERY_STRING))
+                .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_5, SHARED_SPACE_2) }
+
+            val sortedAscendingName = Either.right(SearchSharedSpaceViewState(listOf(
+                SHARED_SPACE_1,
+                SHARED_SPACE_2,
+                SHARED_SPACE_5
+            )))
+
+            val states = searchSharedSpaceInteractor(QUERY_STRING, OrderListConfigurationType.AscendingName)
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(2)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(LOADING_STATE)
+            assertThat(states[1](LOADING_STATE))
+                .isEqualTo(sortedAscendingName)
+        }
+    }
+
+    @Test
+    fun searchShouldSuccessReturnSearchResultsWithDescendingName() {
+        runBlockingTest {
+            `when`(sharedSpaceRepository.search(QUERY_STRING))
+                .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_5, SHARED_SPACE_2) }
+
+            val sortedAscendingName = Either.right(SearchSharedSpaceViewState(listOf(
+                SHARED_SPACE_5,
+                SHARED_SPACE_2,
+                SHARED_SPACE_1
+            )))
+
+            val states = searchSharedSpaceInteractor(QUERY_STRING, OrderListConfigurationType.DescendingName)
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(2)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(LOADING_STATE)
+            assertThat(states[1](LOADING_STATE))
+                .isEqualTo(sortedAscendingName)
+        }
+    }
+
+    @Test
+    fun searchShouldSuccessReturnSearchResultsWithAscendingCreationDate() {
+        runBlockingTest {
+            `when`(sharedSpaceRepository.search(QUERY_STRING))
+                .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_5, SHARED_SPACE_6) }
+
+            val sortedAscendingName = Either.right(SearchSharedSpaceViewState(listOf(
+                SHARED_SPACE_1,
+                SHARED_SPACE_5,
+                SHARED_SPACE_6
+            )))
+
+            val states = searchSharedSpaceInteractor(QUERY_STRING, OrderListConfigurationType.AscendingCreationDate)
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(2)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(LOADING_STATE)
+            assertThat(states[1](LOADING_STATE))
+                .isEqualTo(sortedAscendingName)
+        }
+    }
+
+    @Test
+    fun searchShouldSuccessReturnSearchResultsWithDescendingCreationDate() {
+        runBlockingTest {
+            `when`(sharedSpaceRepository.search(QUERY_STRING))
+                .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_5, SHARED_SPACE_6) }
+
+            val sortedAscendingName = Either.right(SearchSharedSpaceViewState(listOf(
+                SHARED_SPACE_6,
+                SHARED_SPACE_1,
+                SHARED_SPACE_5
+            )))
+
+            val states = searchSharedSpaceInteractor(QUERY_STRING, OrderListConfigurationType.DescendingCreationDate)
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(2)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(LOADING_STATE)
+            assertThat(states[1](LOADING_STATE))
+                .isEqualTo(sortedAscendingName)
+        }
+    }
+
+    @Test
+    fun searchShouldSuccessReturnSearchResultsWithAscendingModificationDate() {
+        runBlockingTest {
+            `when`(sharedSpaceRepository.search(QUERY_STRING))
+                .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_5, SHARED_SPACE_6) }
+
+            val sortedAscendingName = Either.right(SearchSharedSpaceViewState(listOf(
+                SHARED_SPACE_1,
+                SHARED_SPACE_5,
+                SHARED_SPACE_6
+            )))
+
+            val states = searchSharedSpaceInteractor(QUERY_STRING, OrderListConfigurationType.AscendingModificationDate)
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(2)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(LOADING_STATE)
+            assertThat(states[1](LOADING_STATE))
+                .isEqualTo(sortedAscendingName)
+        }
+    }
+
+    @Test
+    fun searchShouldSuccessReturnSearchResultsWithDescendingModificationDate() {
+        runBlockingTest {
+            `when`(sharedSpaceRepository.search(QUERY_STRING))
+                .thenAnswer { listOf(SHARED_SPACE_1, SHARED_SPACE_5, SHARED_SPACE_6) }
+
+            val sortedAscendingName = Either.right(SearchSharedSpaceViewState(listOf(
+                SHARED_SPACE_6,
+                SHARED_SPACE_1,
+                SHARED_SPACE_5
+            )))
+
+            val states = searchSharedSpaceInteractor(QUERY_STRING, OrderListConfigurationType.DescendingModificationDate)
+                .toList(ArrayList())
+
+            assertThat(states).hasSize(2)
+            assertThat(states[0](INIT_STATE))
+                .isEqualTo(LOADING_STATE)
+            assertThat(states[1](LOADING_STATE))
+                .isEqualTo(sortedAscendingName)
         }
     }
 }

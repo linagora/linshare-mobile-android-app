@@ -140,7 +140,7 @@ class SharedSpaceViewModel @Inject constructor(
 
     private fun getSearchResult(query: QueryString): Flow<State<Either<Failure, Success>>> {
         return query.takeIf { it.getLength() >= MIN_LENGTH_CHARACTERS_TO_SEARCH }
-            ?.let { searchSharedSpaceInteractor(it) }
+            ?.let { searchSharedSpaceInteractor(it, orderByAction.getCurrentOrderListConfigurationType()) }
             ?: getSharedSpaceOrderInteractor(orderByAction.getCurrentOrderListConfigurationType())
     }
 
