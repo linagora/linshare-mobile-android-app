@@ -141,7 +141,8 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun reactToViewState(viewState: Success.ViewState) {
         when (viewState) {
-            is CreateWorkGroupSuccess, is DeletedSharedSpaceSuccess, is GetOrderListConfigurationSuccess -> getSharedSpace()
+            is CreateWorkGroupSuccess, is DeletedSharedSpaceSuccess -> getSharedSpace()
+            is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(viewState.orderListConfigurationType)
         }
     }
 
@@ -229,6 +230,11 @@ class SharedSpaceFragment : MainNavigationFragment() {
                 clearFocus()
             }
         }
+        getSharedSpace()
+    }
+
+    private fun handleGetOrderListConfigSuccess(orderListConfigurationType: OrderListConfigurationType) {
+        sharedSpaceViewModel.setCurrentOrderListConfigurationType(orderListConfigurationType)
         getSharedSpace()
     }
 

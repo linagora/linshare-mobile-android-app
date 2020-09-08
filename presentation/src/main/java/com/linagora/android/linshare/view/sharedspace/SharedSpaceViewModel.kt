@@ -47,7 +47,6 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
-import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupButtonBottomBarClick
@@ -163,6 +162,10 @@ class SharedSpaceViewModel @Inject constructor(
         }
     }
 
+    fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
+        orderByAction.setCurrentOrderListConfigurationType(orderListConfigurationType)
+    }
+
     fun onUploadBottomBarClick() {
         dispatchState(Either.right(CreateWorkGroupButtonBottomBarClick))
     }
@@ -186,7 +189,6 @@ class SharedSpaceViewModel @Inject constructor(
     override fun onSuccessDispatched(success: Success) {
         when (success) {
             is SharedSpaceViewState -> mutableListSharedSpaceNodeNested.value = success.sharedSpace
-            is GetOrderListConfigurationSuccess -> orderByAction.setCurrentOrderListConfigurationType(success.orderListConfigurationType)
             is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
         }
     }
