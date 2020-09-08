@@ -195,7 +195,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             }
             is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_another_shared_space_success)).show()
             is CopyInMySpaceSuccess -> alertCopyToMySpaceSuccess(viewState.documents)
-            is CreateSharedSpaceFolderSuccessViewState, is GetOrderListConfigurationSuccess -> getAllNodes()
+            is CreateSharedSpaceFolderSuccessViewState -> getAllNodes()
+            is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(viewState.orderListConfigurationType)
         }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
@@ -274,6 +275,11 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun handleOrderRowItemClick(orderListConfigurationType: OrderListConfigurationType) {
         dismissOrderByDialog()
         sharedSpacesDocumentViewModel.persistOrderListConfiguration(orderListConfigurationType)
+    }
+
+    private fun handleGetOrderListConfigSuccess(orderListConfigurationType: OrderListConfigurationType) {
+        sharedSpacesDocumentViewModel.setCurrentOrderListConfigurationType(orderListConfigurationType)
+        getAllNodes()
     }
 
     private fun handleCreateFolder(nameWorkGroup: NewNameRequest) {

@@ -57,7 +57,6 @@ import com.linagora.android.linshare.domain.model.sharedspace.toCopyToMySpaceReq
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
-import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
@@ -251,6 +250,10 @@ class SharedSpaceDocumentViewModel @Inject constructor(
             ?: getSharedSpaceChildDocumentsOrderedInteractor(sharedSpaceId, parentNodeId, orderByAction.getCurrentOrderListConfigurationType())
     }
 
+    fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
+        orderByAction.setCurrentOrderListConfigurationType(orderListConfigurationType)
+    }
+
     fun getOrderListConfiguration() {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getOrderListConfigurationInteractor(OrderListType.SharedSpaceDocument))
@@ -268,7 +271,6 @@ class SharedSpaceDocumentViewModel @Inject constructor(
             is GetSharedSpaceSuccess -> mutableCurrentSharedSpace.value = success.sharedSpace
             is GetSharedSpaceNodeSuccess -> mutableCurrentNode.value = success.node
             is SharedSpaceDocumentViewState -> mutableListWorkGroupNode.value = success.documents
-            is GetOrderListConfigurationSuccess -> orderByAction.setCurrentOrderListConfigurationType(success.orderListConfigurationType)
             is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
         }
     }
