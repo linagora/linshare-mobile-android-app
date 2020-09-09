@@ -36,6 +36,7 @@ package com.linagora.android.linshare.view.sharedspacedocument
 import androidx.lifecycle.ViewModel
 import com.linagora.android.linshare.inject.annotation.FragmentScoped
 import com.linagora.android.linshare.inject.annotation.ViewModelKey
+import com.linagora.android.linshare.view.myspace.MySpaceOrderByDialog
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -79,4 +80,8 @@ internal abstract class SharedSpaceDocumentPresentationModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeSharedSpaceDocumentOrderByDialog(): SharedSpaceDocumentOrderByDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeMySpaceOrderByDialog(): MySpaceOrderByDialog
 }

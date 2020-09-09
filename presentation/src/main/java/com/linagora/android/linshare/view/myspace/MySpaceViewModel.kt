@@ -48,8 +48,11 @@ import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsOrde
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
@@ -71,6 +74,7 @@ class MySpaceViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     private val getAllDocumentsOrderedInteractor: GetAllDocumentsOrderedInteractor,
     private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
+    private val persistOrderListConfigurationInteractor: PersistOrderListConfigurationInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor,
@@ -103,6 +107,12 @@ class MySpaceViewModel @Inject constructor(
 
     fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
         orderByAction.setCurrentOrderListConfigurationType(orderListConfigurationType)
+    }
+
+    fun persistOrderListConfiguration(orderListConfigurationType: OrderListConfigurationType) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(persistOrderListConfigurationInteractor(OrderListType.MySpace, orderListConfigurationType))
+        }
     }
 
     fun getAllDocuments() {
@@ -156,6 +166,12 @@ class MySpaceViewModel @Inject constructor(
                 copyToSharedSpaceId,
                 copyToParentNodeId
             ))
+        }
+    }
+
+    override fun onSuccessDispatched(success: Success) {
+        when (success) {
+            is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
         }
     }
 }

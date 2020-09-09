@@ -65,6 +65,8 @@ import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomB
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Failure.CannotExecuteWithoutNetwork
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -171,6 +173,8 @@ class MySpaceFragment : MainNavigationFragment() {
             is ShareItemClick -> navigateToShare(viewEvent.document)
             is CopyDocumentToSharedSpaceClick -> selectCopyDestination(viewEvent.document)
             is DocumentDetailsClick -> navigateToDetails(viewEvent.document)
+            is OpenOrderByDialog -> showOrderByDialog()
+            is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
         }
         mySpaceViewModel.dispatchResetState()
     }
@@ -291,6 +295,20 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun handleGetOrderListConfigSuccess(orderListConfigurationType: OrderListConfigurationType) {
         mySpaceViewModel.setCurrentOrderListConfigurationType(orderListConfigurationType)
         getAllDocuments()
+    }
+
+    private fun showOrderByDialog() {
+        dismissListOrderByDialog()
+        MySpaceOrderByDialog().show(childFragmentManager, MySpaceOrderByDialog.TAG)
+    }
+
+    private fun dismissListOrderByDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(MySpaceOrderByDialog.TAG)
+    }
+
+    private fun handleOrderRowItemClick(orderListConfigurationType: OrderListConfigurationType) {
+        dismissListOrderByDialog()
+        mySpaceViewModel.persistOrderListConfiguration(orderListConfigurationType)
     }
 
     private fun handleCannotExecuteWithoutNetwork(operatorType: OperatorType) {
