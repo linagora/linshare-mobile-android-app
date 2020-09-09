@@ -33,28 +33,43 @@
 
 package com.linagora.android.linshare.domain.usecases.myspace
 
-import com.linagora.android.linshare.domain.model.OperatorType
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
+import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import com.linagora.android.linshare.domain.utils.sortDocumentBy
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class MySpaceViewState(val documents: List<Document>) : Success.ViewState()
-object EmptyMySpaceState : Failure.FeatureFailure()
-data class MySpaceFailure(val throwable: Throwable) : FeatureFailure()
-data class GetDocumentSuccess(val document: Document) : Success.ViewState()
-data class GetDocumentFailure(val throwable: Throwable) : FeatureFailure()
-data class ContextMenuClick(val document: Document) : Success.ViewEvent()
-data class DocumentItemClick(val document: Document) : Success.OnlineViewEvent(OperatorType.OnItemClick)
-data class DownloadClick(val document: Document) : Success.ViewEvent()
-object UploadButtonBottomBarClick : Success.ViewEvent()
-data class RemoveDocumentSuccessViewState(val document: Document) : Success.ViewState()
-data class RemoveDocumentFailure(val throwable: Throwable) : FeatureFailure()
-data class RemoveClick(val document: Document) : Success.OnlineViewEvent(OperatorType.DeleteDocument)
-object SearchButtonClick : Success.ViewEvent()
-data class ShareItemClick(val document: Document) : Success.ViewEvent()
-data class CopyInMySpaceFailure(val throwable: Throwable) : FeatureFailure()
-data class CopyInMySpaceSuccess(val documents: List<Document>) : Success.ViewState()
-object CopyFailedWithFileSizeExceed : FeatureFailure()
-object CopyFailedWithQuotaReach : FeatureFailure()
-data class DocumentDetailsClick(val document: Document) : Success.OnlineViewEvent(OperatorType.ViewDetails)
+@Singleton
+class GetAllDocumentsOrderedInteractor @Inject constructor(
+    private val documentRepository: DocumentRepository
+) {
+
+    operator fun invoke(orderListConfigurationType: OrderListConfigurationType): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Success.Loading) }
+
+            val state = Either.catch { documentRepository.getAll() }
+                .fold(
+                    { throwable -> Either.left(MySpaceFailure(throwable)) },
+                    { documentList -> generateMySpaceState(documentList, orderListConfigurationType) }
+                )
+
+            emitState { state }
+        }
+    }
+
+    private fun generateMySpaceState(
+        documentList: List<Document>,
+        orderListConfigurationType: OrderListConfigurationType
+    ): Either<Failure, Success> = documentList.takeIf { it.isNotEmpty() }
+        ?.let { Either.right(MySpaceViewState(documentList.sortDocumentBy(orderListConfigurationType))) }
+        ?: Either.left(EmptyMySpaceState)
+}

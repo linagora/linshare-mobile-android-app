@@ -60,6 +60,7 @@ import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
 import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
 import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
+import com.linagora.android.linshare.domain.usecases.myspace.EmptyMySpaceState
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
 import com.linagora.android.linshare.domain.usecases.quota.CheckingQuota
@@ -328,6 +329,8 @@ object TestFixtures {
         private val MY_SPACE_VIEW_STATE = MySpaceViewState(listOf(DOCUMENT, DOCUMENT_2))
 
         val ALL_DOCUMENTS_STATE = Either.Right(MY_SPACE_VIEW_STATE)
+
+        val EMPTY_DOCUMENTS_STATE = Either.Left(EmptyMySpaceState)
 
         val REMOVE_DOCUMENT_SUCCESS_VIEW_STATE = Either.Right(RemoveDocumentSuccessViewState(DOCUMENT))
     }
