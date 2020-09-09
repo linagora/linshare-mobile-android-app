@@ -65,10 +65,9 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
         sharedSpaceId: SharedSpaceId,
         parentNodeId: WorkGroupNodeId?
     ): List<WorkGroupNode> {
-        val workGroupNodes = parentNodeId
+        return parentNodeId
             ?.let { parentId -> linShareApi.getAllSharedSpaceNode(sharedSpaceId.uuid.toString(), parentId.uuid.toString()) }
             ?: linShareApi.getAllSharedSpaceNode(sharedSpaceId.uuid.toString())
-        return workGroupNodes.sortedByDescending { it.modificationDate }
     }
 
     override suspend fun getSharedSpaceNode(

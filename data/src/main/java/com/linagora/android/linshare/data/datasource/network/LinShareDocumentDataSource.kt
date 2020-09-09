@@ -98,7 +98,7 @@ class LinShareDocumentDataSource @Inject constructor(
     }
 
     override suspend fun getAll(): List<Document> {
-        return linshareApi.getAll().sortedByDescending { it.modificationDate }
+        return linshareApi.getAll()
     }
 
     override suspend fun get(documentId: DocumentId): Document {

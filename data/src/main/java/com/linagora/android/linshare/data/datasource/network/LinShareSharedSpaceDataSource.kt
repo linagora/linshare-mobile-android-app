@@ -55,7 +55,7 @@ class LinShareSharedSpaceDataSource @Inject constructor(
 ) : SharedSpaceDataSource {
 
     override suspend fun getSharedSpaces(): List<SharedSpaceNodeNested> {
-        return linshareApi.getSharedSpaces().sortedByDescending { it.modificationDate }
+        return linshareApi.getSharedSpaces()
     }
 
     override suspend fun getSharedSpace(
