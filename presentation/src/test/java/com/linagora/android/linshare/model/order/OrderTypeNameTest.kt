@@ -88,6 +88,18 @@ class OrderTypeNameTest {
     }
 
     @Test
+    fun orderTypeSharedShouldGenerateDescendingSharedWithInputAscendingShared() {
+        Truth.assertThat(OrderTypeName.Shared.generateNewConfigurationType(OrderListConfigurationType.AscendingShared))
+            .isEqualTo(OrderListConfigurationType.DescendingShared)
+    }
+
+    @Test
+    fun orderTypeSharedShouldGenerateAscendingSharedWithInputDescendingShared() {
+        Truth.assertThat(OrderTypeName.Shared.generateNewConfigurationType(OrderListConfigurationType.DescendingShared))
+            .isEqualTo(OrderListConfigurationType.AscendingShared)
+    }
+
+    @Test
     fun orderTypeNameShouldGenerateAscendingNameWithDifferentInput() {
         Truth.assertThat(OrderTypeName.Name.generateNewConfigurationType(OrderListConfigurationType.AscendingCreationDate))
             .isEqualTo(OrderListConfigurationType.AscendingName)
@@ -109,5 +121,11 @@ class OrderTypeNameTest {
     fun orderTypeFileSizeShouldGenerateAscendingFileSizeWithDifferentInput() {
         Truth.assertThat(OrderTypeName.FileSize.generateNewConfigurationType(OrderListConfigurationType.AscendingName))
             .isEqualTo(OrderListConfigurationType.AscendingFileSize)
+    }
+
+    @Test
+    fun orderTypeSharedShouldGenerateAscendingSharedWithDifferentInput() {
+        Truth.assertThat(OrderTypeName.Shared.generateNewConfigurationType(OrderListConfigurationType.AscendingName))
+            .isEqualTo(OrderListConfigurationType.AscendingShared)
     }
 }

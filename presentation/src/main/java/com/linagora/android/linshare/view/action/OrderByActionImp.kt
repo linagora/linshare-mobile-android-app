@@ -40,6 +40,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDial
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
 import com.linagora.android.linshare.model.order.OrderTypeName
+import com.linagora.android.linshare.util.toOrderTypeName
 import com.linagora.android.linshare.view.base.BaseViewModel
 
 class OrderByActionImp constructor(
@@ -58,20 +59,7 @@ class OrderByActionImp constructor(
 
     override fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
         mutableCurrentOrderListConfigurationType.value = orderListConfigurationType
-        mutableSelectedOrderType.value = when (orderListConfigurationType) {
-            OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> {
-                OrderTypeName.Name
-            }
-            OrderListConfigurationType.AscendingModificationDate, OrderListConfigurationType.DescendingModificationDate -> {
-                OrderTypeName.ModificationDate
-            }
-            OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate -> {
-                OrderTypeName.CreationDate
-            }
-            OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize -> {
-                OrderTypeName.FileSize
-            }
-        }
+        mutableSelectedOrderType.value = orderListConfigurationType.toOrderTypeName()
     }
 
     override fun getCurrentOrderListConfigurationType(): OrderListConfigurationType {

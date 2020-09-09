@@ -31,21 +31,15 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.order
+package com.linagora.android.linshare.util
 
-enum class OrderListConfigurationType {
-    AscendingModificationDate,
-    DescendingModificationDate,
-    AscendingCreationDate,
-    DescendingCreationDate,
-    AscendingFileSize,
-    DescendingFileSize,
-    AscendingName,
-    DescendingName,
-    AscendingShared,
-    DescendingShared;
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.model.order.OrderTypeName
 
-    fun isAscending(): Boolean {
-        return this.toString().startsWith("Ascending")
-    }
+fun OrderListConfigurationType.toOrderTypeName() = when (this) {
+    OrderListConfigurationType.AscendingName, OrderListConfigurationType.DescendingName -> OrderTypeName.Name
+    OrderListConfigurationType.AscendingModificationDate, OrderListConfigurationType.DescendingModificationDate -> OrderTypeName.ModificationDate
+    OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate -> OrderTypeName.CreationDate
+    OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize -> OrderTypeName.FileSize
+    OrderListConfigurationType.AscendingShared, OrderListConfigurationType.DescendingShared -> OrderTypeName.Shared
 }

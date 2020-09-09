@@ -41,20 +41,14 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 
 fun List<WorkGroupNode>.sortBy(orderConfigType: OrderListConfigurationType): List<WorkGroupNode> {
     return when (orderConfigType) {
-        OrderListConfigurationType.AscendingModificationDate ->
-            this.sortedBy { it.modificationDate }
-        OrderListConfigurationType.DescendingModificationDate ->
-            this.sortedByDescending { it.modificationDate }
-        OrderListConfigurationType.AscendingCreationDate ->
-            this.sortedBy { it.creationDate }
-        OrderListConfigurationType.DescendingCreationDate ->
-            this.sortedByDescending { it.creationDate }
-        OrderListConfigurationType.AscendingName ->
-            this.sortedBy { it.name }
-        OrderListConfigurationType.DescendingName ->
-            this.sortedByDescending { it.name }
-        OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize ->
-            this.sortByFileSize(orderConfigType)
+        OrderListConfigurationType.AscendingModificationDate -> this.sortedBy { it.modificationDate }
+        OrderListConfigurationType.DescendingModificationDate -> this.sortedByDescending { it.modificationDate }
+        OrderListConfigurationType.AscendingCreationDate -> this.sortedBy { it.creationDate }
+        OrderListConfigurationType.DescendingCreationDate -> this.sortedByDescending { it.creationDate }
+        OrderListConfigurationType.AscendingName -> this.sortedBy { it.name }
+        OrderListConfigurationType.DescendingName -> this.sortedByDescending { it.name }
+        OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize -> this.sortByFileSize(orderConfigType)
+        else -> this.sortedBy { it.modificationDate }
     }
 }
 

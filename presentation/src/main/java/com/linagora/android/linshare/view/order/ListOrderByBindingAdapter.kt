@@ -55,6 +55,8 @@ fun bindingOrderByListConfigurationName(
             R.string.order_by_name
         OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize ->
             R.string.order_by_file_size
+        OrderListConfigurationType.AscendingShared, OrderListConfigurationType.DescendingShared ->
+            R.string.order_by_shared
     }
     textView.text = textView.context.getString(configurationNameId)
 }

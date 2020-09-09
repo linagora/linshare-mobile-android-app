@@ -277,6 +277,7 @@
     <string name="order_by_modification_date" translatable="false">Modification date</string>
     <string name="order_by_creation_date" translatable="false">Creation date</string>
     <string name="order_by_file_size" translatable="false">Size</string>
+    <string name="order_by_shared" translatable="false">Shared</string>
     <string name="order_by_dialog_title" translatable="false">Order by</string>
     <string name="modified" translatable="false">Modified</string>
     <string name="created_title" translatable="false">Created</string>
