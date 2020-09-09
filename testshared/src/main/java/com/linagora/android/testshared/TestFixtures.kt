@@ -289,6 +289,38 @@ object TestFixtures {
             hasThumbnail = true,
             shared = 0
         )
+
+        val DOCUMENT_3 = Document(
+            documentId = DocumentId(UUID.fromString("21a2901-b120-4111-9b0d-cbd8d493d7f9")),
+            description = "",
+            name = "document 3.txt",
+            creationDate = Date(1574837876934),
+            modificationDate = Date(1574837876934),
+            expirationDate = Date(1582786676934),
+            ciphered = false,
+            type = MediaType.get("text/plain"),
+            size = 26,
+            metaData = "",
+            sha256sum = "00d0235f6bfd0134d418f0d662c60ada1c45e087bd485bc8b77a24e7a8508b55",
+            hasThumbnail = true,
+            shared = 1
+        )
+
+        val DOCUMENT_4 = Document(
+            documentId = DocumentId(UUID.fromString("21a2901-b120-4111-9b0d-cbd8d493d7f9")),
+            description = "",
+            name = "document 4.txt",
+            creationDate = Date(1574837876922),
+            modificationDate = Date(1574837876922),
+            expirationDate = Date(1582786676922),
+            ciphered = false,
+            type = MediaType.get("text/plain"),
+            size = 27,
+            metaData = "",
+            sha256sum = "00d0235f6bfd0134d418f0d662c60ada1c45e087bd485bc8b77a24e7a8508b55",
+            hasThumbnail = true,
+            shared = 2
+        )
     }
 
     object MySpaces {

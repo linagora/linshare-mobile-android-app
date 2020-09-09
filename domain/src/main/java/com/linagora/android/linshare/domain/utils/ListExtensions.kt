@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.domain.utils
 
+import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
@@ -80,4 +81,26 @@ fun List<SharedSpaceNodeNested>.sortSharedSpaceNodeNestedBy(orderConfigType: Ord
         OrderListConfigurationType.DescendingName -> this.sortedByDescending { it.name }
         else -> this.sortedBy { it.modificationDate }
     }
+}
+
+fun List<Document>.sortDocumentBy(orderConfigType: OrderListConfigurationType): List<Document> {
+    return when (orderConfigType) {
+        OrderListConfigurationType.AscendingModificationDate -> this.sortedBy { it.modificationDate }
+        OrderListConfigurationType.DescendingModificationDate -> this.sortedByDescending { it.modificationDate }
+        OrderListConfigurationType.AscendingCreationDate -> this.sortedBy { it.creationDate }
+        OrderListConfigurationType.DescendingCreationDate -> this.sortedByDescending { it.creationDate }
+        OrderListConfigurationType.AscendingName -> this.sortedBy { it.name }
+        OrderListConfigurationType.DescendingName -> this.sortedByDescending { it.name }
+        OrderListConfigurationType.AscendingFileSize -> this.sortedBy { it.size }
+        OrderListConfigurationType.DescendingFileSize -> this.sortedByDescending { it.size }
+        OrderListConfigurationType.AscendingShared, OrderListConfigurationType.DescendingShared -> sortDocumentByShared(orderConfigType)
+    }
+}
+
+private fun List<Document>.sortDocumentByShared(orderConfigType: OrderListConfigurationType): List<Document> {
+    return takeIf { orderConfigType == OrderListConfigurationType.AscendingShared || orderConfigType == OrderListConfigurationType.DescendingShared }
+        ?.let { documents -> orderConfigType.takeIf { it.isAscending() }
+            ?.let { documents.sortedWith(compareBy(Document::shared).thenBy(Document::modificationDate)) }
+            ?: documents.sortedWith(compareByDescending(Document::shared).thenBy(Document::modificationDate)) }
+        ?: this
 }

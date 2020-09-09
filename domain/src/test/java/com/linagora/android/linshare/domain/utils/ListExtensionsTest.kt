@@ -38,6 +38,10 @@ import com.linagora.android.linshare.domain.model.order.OrderListConfigurationTy
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures
 import com.linagora.android.testshared.SharedSpaceFixtures
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_3
+import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_4
 import org.junit.Test
 
 class ListExtensionsTest {
@@ -321,6 +325,176 @@ class ListExtensionsTest {
         )
 
         Truth.assertThat(inputList.sortSharedSpaceNodeNestedBy(OrderListConfigurationType.AscendingFileSize))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeAscendingName() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT_3,
+            DOCUMENT_4,
+            DOCUMENT,
+            DOCUMENT_2
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.AscendingName))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedDescendingWithTypeDescendingName() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT_2,
+            DOCUMENT,
+            DOCUMENT_4,
+            DOCUMENT_3
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.DescendingName))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeAscendingCreationDate() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT_4,
+            DOCUMENT_3,
+            DOCUMENT,
+            DOCUMENT_2
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.AscendingCreationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeDescendingCreationDate() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT,
+            DOCUMENT_2,
+            DOCUMENT_3,
+            DOCUMENT_4
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.DescendingCreationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeAscendingModificationDate() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT_4,
+            DOCUMENT_3,
+            DOCUMENT,
+            DOCUMENT_2
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.AscendingModificationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeDescendingModificationDate() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT,
+            DOCUMENT_2,
+            DOCUMENT_3,
+            DOCUMENT_4
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.DescendingModificationDate))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeAscendingFileSize() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT,
+            DOCUMENT_2,
+            DOCUMENT_3,
+            DOCUMENT_4
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.AscendingFileSize))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeDescendingFileSize() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT_4,
+            DOCUMENT_3,
+            DOCUMENT,
+            DOCUMENT_2
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.DescendingFileSize))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeAscendingShared() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT,
+            DOCUMENT_2,
+            DOCUMENT_3,
+            DOCUMENT_4
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.AscendingShared))
+            .isEqualTo(expectedList)
+    }
+
+    @Test
+    fun sortDocumentShouldReturnSortedAscendingWithTypeDescendingShared() {
+        val inputList = listOf(
+            DOCUMENT, DOCUMENT_2, DOCUMENT_3, DOCUMENT_4
+        )
+
+        val expectedList = listOf(
+            DOCUMENT_4,
+            DOCUMENT_3,
+            DOCUMENT,
+            DOCUMENT_2
+        )
+
+        Truth.assertThat(inputList.sortDocumentBy(OrderListConfigurationType.DescendingShared))
             .isEqualTo(expectedList)
     }
 }
