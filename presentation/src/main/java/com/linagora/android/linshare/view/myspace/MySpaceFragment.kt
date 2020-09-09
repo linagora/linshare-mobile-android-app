@@ -51,6 +51,7 @@ import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentMySpaceBinding
 import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DocumentDetailsClick
@@ -61,6 +62,7 @@ import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSucce
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.ShareItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -147,6 +149,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is Success.ViewEvent -> reactToViewEvent(success)
             is RemoveDocumentSuccessViewState -> getAllDocuments()
             is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_shared_space_message)).show()
+            is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(success.orderListConfigurationType)
         }
     }
 
@@ -208,12 +211,16 @@ class MySpaceFragment : MainNavigationFragment() {
         super.onViewCreated(view, savedInstanceState)
         LOGGER.info("onViewCreated")
         setUpSwipeRefreshLayout()
-        getAllDocuments()
         handleArguments()
+        getOrderListConfiguration()
     }
 
     private fun setUpSwipeRefreshLayout() {
         swipeLayoutMySpace.setColorSchemeResources(R.color.colorPrimary)
+    }
+
+    private fun getOrderListConfiguration() {
+        mySpaceViewModel.getOrderListConfiguration()
     }
 
     private fun getAllDocuments() {
@@ -279,6 +286,11 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private fun dismissContextMenu() {
         childFragmentManager.dismissDialogFragmentByTag(MySpaceContextMenuDialog.TAG)
+    }
+
+    private fun handleGetOrderListConfigSuccess(orderListConfigurationType: OrderListConfigurationType) {
+        mySpaceViewModel.setCurrentOrderListConfigurationType(orderListConfigurationType)
+        getAllDocuments()
     }
 
     private fun handleCannotExecuteWithoutNetwork(operatorType: OperatorType) {

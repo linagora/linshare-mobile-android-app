@@ -40,11 +40,14 @@ import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.toCopyRequest
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
-import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsInteractor
+import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsOrderedInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.operator.download.DownloadOperator
@@ -53,6 +56,7 @@ import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
+import com.linagora.android.linshare.view.action.OrderByActionImp
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import com.linagora.android.linshare.view.myspace.action.MySpaceCopyToContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextMenu
@@ -65,7 +69,8 @@ import javax.inject.Inject
 class MySpaceViewModel @Inject constructor(
     application: LinShareApplication,
     override val internetAvailable: ConnectionLiveData,
-    private val getAllDocumentsInteractor: GetAllDocumentsInteractor,
+    private val getAllDocumentsOrderedInteractor: GetAllDocumentsOrderedInteractor,
+    private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor,
@@ -82,21 +87,33 @@ class MySpaceViewModel @Inject constructor(
 
     val mySpaceItemAction = MySpaceItemActionImp(this)
 
+    val orderByAction = OrderByActionImp(this)
+
     val itemContextMenu = MySpaceItemContextMenu(this)
 
     val downloadContextMenu = MySpaceDownloadContextMenu(this)
 
     val copyToSharedSpaceContextMenu = MySpaceCopyToContextMenu(this)
 
+    fun getOrderListConfiguration() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(getOrderListConfigurationInteractor(OrderListType.MySpace))
+        }
+    }
+
+    fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
+        orderByAction.setCurrentOrderListConfigurationType(orderListConfigurationType)
+    }
+
     fun getAllDocuments() {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(getAllDocumentsInteractor())
+            consumeStates(getAllDocumentsOrderedInteractor(orderByAction.getCurrentOrderListConfigurationType()))
         }
     }
 
     fun onSwipeRefresh() {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(OperatorType.SwiftRefresh) { getAllDocumentsInteractor() }
+            consumeStates(OperatorType.SwiftRefresh) { getAllDocumentsOrderedInteractor(orderByAction.getCurrentOrderListConfigurationType()) }
         }
     }
 
