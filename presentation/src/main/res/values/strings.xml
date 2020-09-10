@@ -114,6 +114,7 @@
     <!--MySpace-->
     <string name="my_space">My Space</string>
     <string name="account_details">Account details</string>
+    <string name="upload_your_files_here" translatable="false">Upload your files here</string>
 
     <string name="unable_to_perform_download">To perform download LinShare application needs to access to your device storage. You can configure access in system preference.</string>
     <string name="download_failed">Download failed</string>

@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.adapter.myspace
 
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
@@ -42,6 +43,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.usecases.myspace.EmptyMySpaceState
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceFailure
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -64,7 +66,7 @@ fun bindingMySpaceList(
 
     mySpaceState.fold(
         ifLeft = { when (it) {
-            is MySpaceFailure -> recyclerView.isVisible = false }
+            is MySpaceFailure, EmptyMySpaceState -> recyclerView.isVisible = false }
         },
         ifRight = { when (it) {
             is MySpaceViewState -> {
@@ -117,4 +119,19 @@ fun bindingDocumentIcon(imageView: ImageView, document: Document) {
         .load(document.type.getDrawableIcon())
         .placeholder(R.drawable.ic_file)
         .into(imageView)
+}
+
+@BindingAdapter("visibleEmptyMessageMySpace")
+fun bindingEmptyMessageMySpace(linearLayout: LinearLayout, state: Either<Failure, Success>) {
+    state.fold(
+        ifLeft = { failure ->
+            when (failure) {
+                is MySpaceFailure, EmptyMySpaceState -> linearLayout.isVisible = true
+            }
+        },
+        ifRight = { success ->
+            when (success) {
+                is MySpaceViewState -> linearLayout.isVisible = false
+            }
+        })
 }

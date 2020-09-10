@@ -1,0 +1,39 @@
+<!--
+  ~ LinShare is an open source filesharing software, part of the LinPKI software
+  ~ suite, developed by Linagora.
+  ~
+  ~ Copyright (C) 2020 LINAGORA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the
+  ~ terms of the GNU Affero General Public License as published by the Free Software
+  ~ Foundation, either version 3 of the License, or (at your option) any later version,
+  ~ provided you comply with the Additional Terms applicable for LinShare software by
+  ~ Linagora pursuant to Section 7 of the GNU Affero General Public License,
+  ~ subsections (b), (c), and (e), pursuant to which you must notably (i) retain the
+  ~ display in the interface of the “LinShare™” trademark/logo, the "Libre & Free" mention,
+  ~ the words “You are using the Free and Open Source version of LinShare™, powered by
+  ~ Linagora © 2009–2020. Contribute to Linshare R&D by subscribing to an Enterprise
+  ~ offer!”. You must also retain the latter notice in all asynchronous messages such as
+  ~ e-mails sent with the Program, (ii) retain all hypertext links between LinShare and
+  ~ http://www.linshare.org, between linagora.com and Linagora, and (iii) refrain from
+  ~ infringing Linagora intellectual property rights over its trademarks and commercial
+  ~ brands. Other Additional Terms apply, see
+  ~ <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf>
+  ~ for more details.
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY
+  ~ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+  ~ more details.
+  ~ You should have received a copy of the GNU Affero General Public License and its
+  ~ applicable Additional Terms for LinShare along with this program. If not, see
+  ~ <http://www.gnu.org/licenses/> for the GNU Affero General Public License version
+  ~  3 and <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf> for
+  ~  the Additional Terms applicable to LinShare software.
+  -->
+
+<vector android:alpha="0.9" android:height="120dp"
+    android:viewportHeight="120" android:viewportWidth="120"
+    android:width="120dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#F2F2F2" android:pathData="M97.5,120H22.5C10.078,120 0,109.922 0,97.5V22.5C0,10.078 10.078,0 22.5,0H97.5C109.922,0 120,10.078 120,22.5V97.5C120,109.922 109.922,120 97.5,120Z"/>
+    <path android:fillColor="#D3D3D3" android:pathData="M86.8,48.8H84.8C83.8,48.8 83.8,48.8 83.4,47.8C82.8,46.4 81.6,45.6 80,45.6H78.8C77.2,45.6 77.2,45.6 77.2,44V42C76.8,40.4 75.2,39.2 73.6,39.2H35C34,39.4 33.2,39.8 32.6,40.8C32.2,41.2 32.4,41.6 32.2,42V82.2C32.4,83.6 33.6,84.6 35.2,84.6H56.2C57,84.6 57.2,84.6 57.2,83.6V77.2V73.4C57.2,72.8 57,72.6 56.4,72.6H53.8C53.4,72.6 53,72.6 52.6,72.4C51.6,72.2 51.4,71.2 52,70.4L52.6,69.8L62.8,59.6L63.4,59C64,58.6 64.4,58.6 65,59L65.6,59.6L76,70L76.6,70.6C77.2,71.4 76.8,72.2 75.8,72.6C75.4,72.8 75.2,72.8 74.8,72.8H72C71.2,72.8 71.2,73 71.2,73.6V84C71.2,84.6 71.4,84.8 72,84.8H80.6C81.8,84.8 82.8,84.2 83.4,83C83.8,82.4 83.8,81.8 84,81.2C85.6,74.2 87.2,67.2 88.6,60.2C89.2,57.8 89.8,55.4 90,52.8C90.2,50.6 89,49.2 86.8,48.8V48.8ZM73.4,46H70.8C69.2,46 68,47 67.6,48.6C67.4,49.2 67.2,49.2 66.8,49.2H49C46.8,49.2 45.6,50.2 45.2,52.4C43.8,58.4 42.6,64.4 41.2,70.4C40.4,74 39.6,77.4 38.8,81C38.8,81.4 38.6,81.6 38.2,81.6H36.2C35.6,81.6 35.4,81.4 35.4,80.8V74.6V62.2V43.8C35.4,42.8 35.4,42.8 36.4,42.8H73.2C74,42.8 74,42.8 74,43.6V45.4C74,45.8 73.8,46 73.4,46V46Z"/>
+</vector>

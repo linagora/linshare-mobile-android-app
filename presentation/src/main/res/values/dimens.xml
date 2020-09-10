@@ -136,6 +136,8 @@
     <dimen name="my_space_item_context_menu_height">18dp</dimen>
     <dimen name="my_space_item_primary_text_size">16sp</dimen>
     <dimen name="my_space_item_secondary_text_size">13sp</dimen>
+    <dimen name="my_space_item_empty_image_size">120dp</dimen>
+    <dimen name="my_space_item_empty_image_margin_bottom">26dp</dimen>
 
     <!--bottom sheet-->
     <dimen name="padding_vertical_row_bottom_sheet">8dp</dimen>
