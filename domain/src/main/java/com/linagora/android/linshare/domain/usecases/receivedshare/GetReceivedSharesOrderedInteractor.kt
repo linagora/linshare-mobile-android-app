@@ -33,14 +33,41 @@
 
 package com.linagora.android.linshare.domain.usecases.receivedshare
 
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.repository.share.ReceivedShareRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
+import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import com.linagora.android.linshare.domain.utils.sortShareBy
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class ReceivedSharesViewState(val receivedList: List<Share>) : Success.ViewState()
-object EmptyReceivedSharesViewState : Failure.FeatureFailure()
-data class ReceivedSharesFailure(val throwable: Throwable) : FeatureFailure()
-data class ContextMenuReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class DownloadReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class ReceivedSharesCopyInMySpace(val share: Share) : Success.ViewEvent()
+@Singleton
+class GetReceivedSharesOrderedInteractor @Inject constructor(
+    private val receivedShareRepository: ReceivedShareRepository
+) {
+    operator fun invoke(orderListConfigurationType: OrderListConfigurationType): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Success.Loading) }
+
+            val state = Either.catch { receivedShareRepository.getReceivedShares() }
+                .fold(
+                    { throwable -> Either.left(ReceivedSharesFailure(throwable)) },
+                    { shareList -> generateReceivedSharesState(shareList, orderListConfigurationType) })
+
+            emitState { state }
+        }
+    }
+
+    private fun generateReceivedSharesState(
+        shareList: List<Share>,
+        orderListConfigurationType: OrderListConfigurationType
+    ): Either<Failure, Success> = shareList.takeIf { it.isNotEmpty() }
+        ?.let { Either.right(ReceivedSharesViewState(shareList.sortShareBy(orderListConfigurationType))) }
+        ?: Either.left(EmptyReceivedSharesViewState)
+}
