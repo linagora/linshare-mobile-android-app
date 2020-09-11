@@ -50,7 +50,7 @@ class OrderByActionImp constructor(
     private var mutableSelectedOrderType = MutableLiveData<OrderTypeName>(OrderTypeName.Name)
     override val selectedOrderType: LiveData<OrderTypeName> = mutableSelectedOrderType
 
-    private var mutableCurrentOrderListConfigurationType = MutableLiveData<OrderListConfigurationType>(OrderListConfigurationType.AscendingModificationDate)
+    private var mutableCurrentOrderListConfigurationType = MutableLiveData<OrderListConfigurationType>(OrderListConfigurationType.DescendingModificationDate)
     override val currentOrderListConfigurationType = mutableCurrentOrderListConfigurationType
 
     override fun openOrderByDialog() {
@@ -63,7 +63,7 @@ class OrderByActionImp constructor(
     }
 
     override fun getCurrentOrderListConfigurationType(): OrderListConfigurationType {
-        return mutableCurrentOrderListConfigurationType.value ?: OrderListConfigurationType.AscendingModificationDate
+        return mutableCurrentOrderListConfigurationType.value ?: OrderListConfigurationType.DescendingModificationDate
     }
 
     override fun selectOrderByRowItem(orderTypeName: OrderTypeName) {

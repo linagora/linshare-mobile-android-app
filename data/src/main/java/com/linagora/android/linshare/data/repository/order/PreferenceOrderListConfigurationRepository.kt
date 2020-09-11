@@ -59,11 +59,11 @@ class PreferenceOrderListConfigurationRepository @Inject constructor(
         with(sharedPreferences) {
             val orderListConfigurationTypeString = getString(
                 orderListType.toString(),
-                OrderListConfigurationType.AscendingModificationDate.toString())
+                OrderListConfigurationType.DescendingModificationDate.toString())
 
             return OrderListConfigurationType.values()
                 .firstOrNull { it.name == orderListConfigurationTypeString }
-                ?: OrderListConfigurationType.AscendingModificationDate
+                ?: OrderListConfigurationType.DescendingModificationDate
         }
     }
 
