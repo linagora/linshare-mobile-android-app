@@ -57,11 +57,14 @@ import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigura
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.DownloadReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyInMySpace
+import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.resources.StringId
+import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
@@ -148,12 +151,28 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             is ContextMenuReceivedShareClick -> showContextMenuReceivedShare(viewEvent.share)
             is DownloadReceivedShareClick -> handleDownloadDocument(viewEvent.share)
             is ReceivedSharesCopyInMySpace -> handleCopyInMySpace(viewEvent.share)
+            is OpenOrderByDialog -> showOrderByDialog()
+            is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
         }
         resetState()
     }
 
     private fun getOrderListConfiguration() {
         receivedSharesViewModel.getOrderListConfiguration()
+    }
+
+    private fun showOrderByDialog() {
+        dismissListOrderByDialog()
+        ReceivedSharesOrderByDialog().show(childFragmentManager, ReceivedSharesOrderByDialog.TAG)
+    }
+
+    private fun dismissListOrderByDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(ReceivedSharesOrderByDialog.TAG)
+    }
+
+    private fun handleOrderRowItemClick(orderListConfigurationType: OrderListConfigurationType) {
+        dismissListOrderByDialog()
+        receivedSharesViewModel.persistOrderListConfiguration(orderListConfigurationType)
     }
 
     private fun handleGetOrderListConfigSuccess(orderListConfigurationType: OrderListConfigurationType) {

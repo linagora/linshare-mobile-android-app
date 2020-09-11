@@ -44,8 +44,11 @@ import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
+import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesOrderedInteractor
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
@@ -62,6 +65,7 @@ class ReceivedSharesViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
     private val getReceivedSharesOrderedInteractor: GetReceivedSharesOrderedInteractor,
     private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
+    private val persistOrderListConfigurationInteractor: PersistOrderListConfigurationInteractor,
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator
@@ -88,6 +92,12 @@ class ReceivedSharesViewModel @Inject constructor(
         orderByAction.setCurrentOrderListConfigurationType(orderListConfigurationType)
     }
 
+    fun persistOrderListConfiguration(orderListConfigurationType: OrderListConfigurationType) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(persistOrderListConfigurationInteractor(OrderListType.ReceivedShare, orderListConfigurationType))
+        }
+    }
+
     fun getReceivedList() {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getReceivedSharesOrderedInteractor(orderByAction.getCurrentOrderListConfigurationType()))
@@ -112,6 +122,12 @@ class ReceivedSharesViewModel @Inject constructor(
     fun copyInMySpace(share: Share) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(copyInMySpaceInteractor(share.toCopyRequest(SpaceType.RECEIVED_SHARE)))
+        }
+    }
+
+    override fun onSuccessDispatched(success: Success) {
+        when (success) {
+            is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
         }
     }
 }
