@@ -35,7 +35,7 @@ package com.linagora.android.linshare.model.order
 
 import com.google.common.truth.Truth
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class OrderTypeNameTest {
 

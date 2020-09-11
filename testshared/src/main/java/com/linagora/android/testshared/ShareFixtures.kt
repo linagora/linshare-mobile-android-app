@@ -124,6 +124,42 @@ object ShareFixtures {
         sender = TestFixtures.Accounts.LINSHARE_USER
     )
 
+    val SHARE_3 = Share(
+        shareId = ShareId(UUID.fromString("6c0e1f35-89e5-6bc3-a8d4-156ec8074beb")),
+        description = "",
+        name = "document3.txt",
+        creationDate = Date(1574837876922),
+        modificationDate = Date(1574837876922),
+        expirationDate = Date(1582786676962),
+        downloaded = 0,
+        document = TestFixtures.Documents.DOCUMENT,
+        recipient = RECIPIENT_2,
+        type = MediaType.get("text/plain"),
+        size = 25,
+        message = "",
+        hasThumbnail = false,
+        ciphered = false,
+        sender = TestFixtures.Accounts.LINSHARE_USER
+    )
+
+    val SHARE_4 = Share(
+        shareId = ShareId(UUID.fromString("6c0e1f35-89e5-6bc3-a8d4-156ec8074beb")),
+        description = "",
+        name = "document4.txt",
+        creationDate = Date(1574837876925),
+        modificationDate = Date(1574837876925),
+        expirationDate = Date(1582786676962),
+        downloaded = 0,
+        document = TestFixtures.Documents.DOCUMENT,
+        recipient = RECIPIENT_2,
+        type = MediaType.get("text/plain"),
+        size = 27,
+        message = "",
+        hasThumbnail = false,
+        ciphered = false,
+        sender = TestFixtures.Accounts.LINSHARE_USER_2
+    )
+
     val SHARE_STATE_WITH_ONE_SHARE = Either.right(ShareViewState(listOf(SHARE_1)))
 
     val SHARE_STATE_WITH_MULTIPLE_SHARES = Either.right(ShareViewState(listOf(SHARE_1, SHARE_2)))

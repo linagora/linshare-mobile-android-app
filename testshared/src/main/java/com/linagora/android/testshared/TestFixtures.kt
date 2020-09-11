@@ -238,6 +238,19 @@ object TestFixtures {
             true
         )
 
+        val LINSHARE_USER_2 = User(
+            UUID.fromString("b7240862-d03c-4b30-a46b-ffa1eb65301c"),
+            "Bar",
+            "Foo",
+            "user1@linshare.org",
+            Date(1570681477515),
+            Date(1570681477515),
+            QUOTA_UUID,
+            "INTERNAL",
+            "SIMPLE",
+            true
+        )
+
         val QUOTA = AccountQuota(
             QuotaSize(6000000),
             QuotaSize(5000005),

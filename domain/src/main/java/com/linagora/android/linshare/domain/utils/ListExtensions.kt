@@ -35,6 +35,7 @@ package com.linagora.android.linshare.domain.utils
 
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
@@ -104,4 +105,20 @@ private fun List<Document>.sortDocumentByShared(orderConfigType: OrderListConfig
             ?.let { documents.sortedWith(compareBy(Document::shared).thenBy(Document::modificationDate)) }
             ?: documents.sortedWith(compareByDescending(Document::shared).thenBy(Document::modificationDate)) }
         ?: this
+}
+
+fun List<Share>.sortShareBy(orderConfigType: OrderListConfigurationType): List<Share> {
+    return when (orderConfigType) {
+        OrderListConfigurationType.AscendingModificationDate -> this.sortedBy { it.modificationDate }
+        OrderListConfigurationType.DescendingModificationDate -> this.sortedByDescending { it.modificationDate }
+        OrderListConfigurationType.AscendingCreationDate -> this.sortedBy { it.creationDate }
+        OrderListConfigurationType.DescendingCreationDate -> this.sortedByDescending { it.creationDate }
+        OrderListConfigurationType.AscendingName -> this.sortedBy { it.name }
+        OrderListConfigurationType.DescendingName -> this.sortedByDescending { it.name }
+        OrderListConfigurationType.AscendingFileSize -> this.sortedBy { it.size }
+        OrderListConfigurationType.DescendingFileSize -> this.sortedByDescending { it.size }
+        OrderListConfigurationType.AscendingSender -> this.sortedBy { it.sender.firstName }
+        OrderListConfigurationType.DescendingSender -> this.sortedByDescending { it.sender.firstName }
+        else -> this.sortedBy { it.modificationDate }
+    }
 }
