@@ -70,6 +70,13 @@ enum class OrderTypeName {
                 ?.let { if (it.isAscending()) OrderListConfigurationType.DescendingShared else OrderListConfigurationType.AscendingShared }
                 ?: OrderListConfigurationType.AscendingShared
         }
+    },
+    Sender {
+        override fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType {
+            return currentOrderConfigurationType.takeIf { it.isCurrentOrderHasSameType(this) }
+                ?.let { if (it.isAscending()) OrderListConfigurationType.DescendingSender else OrderListConfigurationType.AscendingSender }
+                ?: OrderListConfigurationType.AscendingSender
+        }
     };
 
     abstract fun generateNewConfigurationType(currentOrderConfigurationType: OrderListConfigurationType): OrderListConfigurationType

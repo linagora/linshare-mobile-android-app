@@ -43,7 +43,9 @@ enum class OrderListConfigurationType {
     AscendingName,
     DescendingName,
     AscendingShared,
-    DescendingShared;
+    DescendingShared,
+    AscendingSender,
+    DescendingSender;
 
     fun isAscending(): Boolean {
         return this.toString().startsWith("Ascending")

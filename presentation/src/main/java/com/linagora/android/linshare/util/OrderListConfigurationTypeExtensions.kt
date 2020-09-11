@@ -42,4 +42,5 @@ fun OrderListConfigurationType.toOrderTypeName() = when (this) {
     OrderListConfigurationType.AscendingCreationDate, OrderListConfigurationType.DescendingCreationDate -> OrderTypeName.CreationDate
     OrderListConfigurationType.AscendingFileSize, OrderListConfigurationType.DescendingFileSize -> OrderTypeName.FileSize
     OrderListConfigurationType.AscendingShared, OrderListConfigurationType.DescendingShared -> OrderTypeName.Shared
+    OrderListConfigurationType.AscendingSender, OrderListConfigurationType.DescendingSender -> OrderTypeName.Sender
 }

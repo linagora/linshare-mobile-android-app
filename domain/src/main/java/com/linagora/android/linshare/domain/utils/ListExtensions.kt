@@ -94,6 +94,7 @@ fun List<Document>.sortDocumentBy(orderConfigType: OrderListConfigurationType): 
         OrderListConfigurationType.AscendingFileSize -> this.sortedBy { it.size }
         OrderListConfigurationType.DescendingFileSize -> this.sortedByDescending { it.size }
         OrderListConfigurationType.AscendingShared, OrderListConfigurationType.DescendingShared -> sortDocumentByShared(orderConfigType)
+        else -> this.sortedBy { it.modificationDate }
     }
 }
 
