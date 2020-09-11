@@ -39,14 +39,18 @@ import com.linagora.android.linshare.adapter.receivedshares.action.ReceivedShare
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.copy.SpaceType
 import com.linagora.android.linshare.domain.model.copy.toCopyRequest
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
+import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
-import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesInteractor
+import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesOrderedInteractor
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.view.action.OrderByActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
 import com.linagora.android.linshare.view.myspace.MySpaceViewModel.Companion.NO_DOWNLOADING_DOCUMENT
@@ -56,7 +60,8 @@ import javax.inject.Inject
 
 class ReceivedSharesViewModel @Inject constructor(
     override val internetAvailable: ConnectionLiveData,
-    private val getReceivedSharesInteractor: GetReceivedSharesInteractor,
+    private val getReceivedSharesOrderedInteractor: GetReceivedSharesOrderedInteractor,
+    private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator
@@ -67,13 +72,25 @@ class ReceivedSharesViewModel @Inject constructor(
 
     val copyInMySpaceContextMenu = ReceivedSharesCopyInMySpaceContextMenu(this)
 
+    val orderByAction = OrderByActionImp(this)
+
     override fun onContextMenuClick(data: Share) {
         dispatchState(Either.right(ContextMenuReceivedShareClick(data)))
     }
 
+    fun getOrderListConfiguration() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(getOrderListConfigurationInteractor(OrderListType.ReceivedShare))
+        }
+    }
+
+    fun setCurrentOrderListConfigurationType(orderListConfigurationType: OrderListConfigurationType) {
+        orderByAction.setCurrentOrderListConfigurationType(orderListConfigurationType)
+    }
+
     fun getReceivedList() {
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(getReceivedSharesInteractor())
+            consumeStates(getReceivedSharesOrderedInteractor(orderByAction.getCurrentOrderListConfigurationType()))
         }
     }
 

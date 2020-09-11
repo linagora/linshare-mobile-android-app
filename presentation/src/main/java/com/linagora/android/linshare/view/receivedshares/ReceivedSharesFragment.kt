@@ -47,11 +47,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentReceivedSharesBinding
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithFileSizeExceed
 import com.linagora.android.linshare.domain.usecases.myspace.CopyFailedWithQuotaReach
 import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
+import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.DownloadReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyInMySpace
@@ -106,7 +108,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpSwipeRefreshLayout()
-        getReceivedList()
+        getOrderListConfiguration()
     }
 
     private fun observeViewState() {
@@ -136,6 +138,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     private fun reactToViewState(success: Success.ViewState) {
         when (success) {
             is CopyInMySpaceSuccess -> showCopyInMySpaceSuccess(success.documents)
+            is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(success.orderListConfigurationType)
         }
     }
 
@@ -147,6 +150,15 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             is ReceivedSharesCopyInMySpace -> handleCopyInMySpace(viewEvent.share)
         }
         resetState()
+    }
+
+    private fun getOrderListConfiguration() {
+        receivedSharesViewModel.getOrderListConfiguration()
+    }
+
+    private fun handleGetOrderListConfigSuccess(orderListConfigurationType: OrderListConfigurationType) {
+        receivedSharesViewModel.setCurrentOrderListConfigurationType(orderListConfigurationType)
+        getReceivedList()
     }
 
     private fun handleDownloadDocument(share: Share) {

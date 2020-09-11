@@ -89,6 +89,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <include
+                android:id="@+id/currentOrderListConfigurationStatus"
+                layout="@layout/current_order_by_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:orderByAction="@{viewModel.orderByAction}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/networkBannerContainer" />
+
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeLayoutReceivedList"
                 android:layout_width="match_parent"
@@ -97,7 +107,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/networkBannerContainer"
+                app:layout_constraintTop_toBottomOf="@id/currentOrderListConfigurationStatus"
                 app:onRefreshListener="@{() -> viewModel.onSwipeRefresh()}"
                 app:receivedListLoadingState="@{viewModel.viewState}">
 
