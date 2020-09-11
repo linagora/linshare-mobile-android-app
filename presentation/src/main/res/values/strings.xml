@@ -163,6 +163,7 @@
     <string name="shared_space">Shared Space</string>
     <string name="do_not_have_any_workgroup">You don\'t have any workgroup yet</string>
     <string name="search_in_shared_space">Search in Shared Space</string>
+    <string name="view_your_received_shares" translatable="false">View your received shares</string>
 
     <string name="do_not_have_any_document">You don\'t have any document yet</string>
 

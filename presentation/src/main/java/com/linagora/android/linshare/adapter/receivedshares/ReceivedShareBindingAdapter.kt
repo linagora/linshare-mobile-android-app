@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.adapter.receivedshares
 
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
@@ -42,6 +43,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.usecases.receivedshare.EmptyReceivedSharesViewState
+import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesFailure
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -58,7 +61,12 @@ fun bindingReceivedList(recyclerView: RecyclerView, receivedListState: Either<Fa
     }
 
     receivedListState.fold(
-        ifLeft = { recyclerView.isVisible = false },
+        ifLeft = {
+            when (it) {
+                is ReceivedSharesFailure, EmptyReceivedSharesViewState -> recyclerView.isVisible =
+                    false
+            }
+        },
         ifRight = {
             when (it) {
                 is ReceivedSharesViewState -> {
@@ -95,4 +103,19 @@ fun bindingReceivedIcon(imageView: ImageView, share: Share) {
         .load(share.type.getDrawableIcon())
         .placeholder(R.drawable.ic_file)
         .into(imageView)
+}
+
+@BindingAdapter("visibleEmptyMessageReceivedShares")
+fun bindingEmptyMessageReceivedShares(linearLayout: LinearLayout, state: Either<Failure, Success>) {
+    state.fold(
+        ifLeft = { failure ->
+            when (failure) {
+                is ReceivedSharesFailure, EmptyReceivedSharesViewState -> linearLayout.isVisible = true
+            }
+        },
+        ifRight = { success ->
+            when (success) {
+                is ReceivedSharesViewState -> linearLayout.isVisible = false
+            }
+        })
 }
