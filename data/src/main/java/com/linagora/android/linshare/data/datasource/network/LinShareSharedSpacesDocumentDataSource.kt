@@ -43,6 +43,7 @@ import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.PartParameter.FILE_PARAMETER_FIELD
+import com.linagora.android.linshare.domain.model.sharedspace.RenameWorkGroupNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
@@ -159,5 +160,17 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
         createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest
     ): WorkGroupFolder {
         return linShareApi.createSharedSpaceFolder(sharedSpaceId.uuid.toString(), createSharedSpaceNodeRequest)
+    }
+
+    override suspend fun renameSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        sharedSpaceNodeId: WorkGroupNodeId,
+        renameRequest: RenameWorkGroupNodeRequest
+    ): WorkGroupNode {
+        return linShareApi.renameSharedSpaceNode(
+            sharedSpaceId.uuid.toString(),
+            sharedSpaceNodeId.uuid.toString(),
+            renameRequest
+        )
     }
 }
