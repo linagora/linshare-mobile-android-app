@@ -33,30 +33,4 @@
 
 package com.linagora.android.linshare.domain.model.sharedspace
 
-import com.linagora.android.linshare.domain.model.account.Account
-import com.linagora.android.linshare.domain.model.copy.CopyRequest
-import com.linagora.android.linshare.domain.model.copy.SpaceType
-import java.util.Date
-
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val lastAuthor: Account
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
-
-fun WorkGroupNode.toCopyToMySpaceRequest(): CopyRequest {
-    return CopyRequest(sharedSpaceId.uuid, workGroupNodeId.uuid, SpaceType.SHARED_SPACE)
-}
-
-fun WorkGroupNode.toRenameRequest(newName: String) = RenameWorkGroupNodeRequest(type = this.type, name = newName)
+data class RenameWorkGroupNodeRequest(val type: WorkGroupNodeType, val name: String)

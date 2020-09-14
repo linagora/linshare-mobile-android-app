@@ -37,6 +37,7 @@ import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
+import com.linagora.android.linshare.domain.model.sharedspace.RenameWorkGroupNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
@@ -83,4 +84,10 @@ interface SharedSpacesDocumentRepository {
         sharedSpaceId: SharedSpaceId,
         createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest
     ): WorkGroupFolder
+
+    suspend fun renameSharedSpaceNode(
+        sharedSpaceId: SharedSpaceId,
+        sharedSpaceNodeId: WorkGroupNodeId,
+        renameRequest: RenameWorkGroupNodeRequest
+    ): WorkGroupNode
 }

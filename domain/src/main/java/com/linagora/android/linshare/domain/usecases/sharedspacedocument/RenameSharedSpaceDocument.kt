@@ -31,32 +31,40 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.domain.usecases.sharedspacedocument
 
-import com.linagora.android.linshare.domain.model.account.Account
-import com.linagora.android.linshare.domain.model.copy.CopyRequest
-import com.linagora.android.linshare.domain.model.copy.SpaceType
-import java.util.Date
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.RenameWorkGroupNodeRequest
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
+import com.linagora.android.linshare.domain.usecases.sharedspace.RenameFailure
+import com.linagora.android.linshare.domain.usecases.sharedspace.RenameSuccess
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val lastAuthor: Account
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
+@Singleton
+class RenameSharedSpaceDocument @Inject constructor(
+    private val sharedSpacesDocumentRepository: SharedSpacesDocumentRepository
+) {
+    operator fun invoke(
+        sharedSpaceId: SharedSpaceId,
+        workGroupNodeId: WorkGroupNodeId,
+        renameRequest: RenameWorkGroupNodeRequest
+    ) = flow<State<Either<Failure, Success>>> {
+        emitState { Either.right(Success.Loading) }
+
+        val renameState = Either.catch { sharedSpacesDocumentRepository
+                .renameSharedSpaceNode(sharedSpaceId, workGroupNodeId, renameRequest) }
+            .bimap(leftOperation = ::RenameFailure, rightOperation = ::RenameSuccess)
+
+        println(renameState)
+
+        emitState { renameState }
+    }
 }
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
-
-fun WorkGroupNode.toCopyToMySpaceRequest(): CopyRequest {
-    return CopyRequest(sharedSpaceId.uuid, workGroupNodeId.uuid, SpaceType.SHARED_SPACE)
-}
-
-fun WorkGroupNode.toRenameRequest(newName: String) = RenameWorkGroupNodeRequest(type = this.type, name = newName)

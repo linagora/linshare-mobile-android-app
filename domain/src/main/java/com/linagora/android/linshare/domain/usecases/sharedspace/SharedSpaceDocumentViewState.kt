@@ -73,3 +73,6 @@ data class CopyToSharedSpaceSuccess(
     val destinationParentNodeId: WorkGroupNodeId? = null
 ) : Success.ViewState()
 data class CopyToSharedSpaceFailure(val throwable: Throwable) : Failure.FeatureFailure()
+
+data class RenameFailure(val throwable: Throwable) : Failure.FeatureFailure()
+data class RenameSuccess(val workGroupNode: WorkGroupNode) : Success.ViewState()
