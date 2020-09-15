@@ -54,6 +54,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.createCopyRequest
 import com.linagora.android.linshare.domain.model.sharedspace.toCopyToMySpaceRequest
+import com.linagora.android.linshare.domain.model.sharedspace.toRenameRequest
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
@@ -72,6 +73,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpa
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnAddButtonClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentViewState
+import com.linagora.android.linshare.domain.usecases.sharedspacedocument.RenameSharedSpaceDocument
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -93,6 +95,7 @@ import com.linagora.android.linshare.view.sharedspacedocument.action.CreateFolde
 import com.linagora.android.linshare.view.sharedspacedocument.action.OnSelectedSharedSpaceDocumentAddBehaviorImpl
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentCopyToContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
+import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceEditContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceSelectDestinationSpaceTypeAction
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -121,7 +124,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val copyToSharedSpace: CopyToSharedSpace,
     private val copyToMySpace: CopyInMySpaceInteractor,
     private val nameValidator: NameValidator,
-    private val createSharedSpaceNodeInteractor: CreateSharedSpaceNodeInteractor
+    private val createSharedSpaceNodeInteractor: CreateSharedSpaceNodeInteractor,
+    private val renameSharedSpaceDocument: RenameSharedSpaceDocument
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {
@@ -149,6 +153,8 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     val selectedBehavior = OnSelectedSharedSpaceDocumentAddBehaviorImpl(this)
 
     val createFolderBehavior = CreateFolderBehavior(this)
+
+    val editContextMenu = SharedSpaceEditContextMenu(this)
 
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 
@@ -179,7 +185,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         return Either.cond(
             test = listWorkGroupNode.value?.map { it.name }?.contains(queryString.value) == false,
             ifTrue = { NotDuplicatedName(queryString) },
-            ifFalse = { DuplicatedNameError }
+            ifFalse = { DuplicatedNameError(queryString) }
         )
     }
 
@@ -321,6 +327,15 @@ class SharedSpaceDocumentViewModel @Inject constructor(
                     )
                 }!!
             }
+        }
+    }
+
+    fun renameWorkgroupNode(workGroupNode: WorkGroupNode, newNameRequest: NewNameRequest) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(renameSharedSpaceDocument(
+                workGroupNode.sharedSpaceId,
+                workGroupNode.workGroupNodeId,
+                workGroupNode.toRenameRequest(newNameRequest.value)))
         }
     }
 }

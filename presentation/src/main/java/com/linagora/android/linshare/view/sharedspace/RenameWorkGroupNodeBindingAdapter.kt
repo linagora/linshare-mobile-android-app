@@ -31,31 +31,36 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.util
+package com.linagora.android.linshare.view.sharedspace
 
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatEditText
+import android.view.View
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
+import arrow.core.Either
 import com.linagora.android.linshare.R
-import com.linagora.android.linshare.util.TimeUtils.LinShareTimeFormat.LastModifiedFormat
-import java.util.Date
+import com.linagora.android.linshare.domain.usecases.sharedspace.BlankNameError
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicatedNameError
+import com.linagora.android.linshare.domain.usecases.sharedspace.NameContainSpecialCharacter
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
 
-@BindingAdapter("detailsDate")
-fun bindingModifiedDate(textView: TextView, date: Date?) {
-    textView.text = date
-        ?.let { TimeUtils(textView.context).convertToLocalTime(it, LastModifiedFormat) }
-}
-
-@BindingAdapter("descriptions")
-fun bindingDocumentDescription(textView: TextView, descriptions: String?) {
-    textView.text = descriptions ?: textView.context.getString(R.string.undefined)
-}
-
-@BindingAdapter("setTextWithAllTextSelected")
-fun bindingTextWithAllTextSelected(
-    editText: AppCompatEditText,
-    text: String
+@BindingAdapter("errorMessageRenameWorkGroupNode", "currentName", requireAll = true)
+fun bindingErrorMessageRenameWorkGroupNode(
+    textView: AppCompatTextView,
+    state: Either<Failure, Success>,
+    currentName: String
 ) {
-    editText.setText(text)
-    editText.selectAll()
+    state.fold(
+        ifLeft = { failure ->
+            textView.visibility = View.VISIBLE
+            when (failure) {
+                is BlankNameError -> textView.text = textView.context.getString(R.string.folder_name_can_not_be_blank)
+                is NameContainSpecialCharacter -> textView.text = textView.context.getString(R.string.workgroup_name_not_contain_special_char)
+                is DuplicatedNameError -> {
+                    textView.text = textView.context.getString(R.string.folder_name_already_exists)
+                    textView.visibility = if (failure.duplicateName.value == currentName) View.GONE else View.VISIBLE
+                }
+            }
+        },
+        ifRight = { textView.visibility = View.GONE })
 }

@@ -81,6 +81,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDial
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNodeNotFoundSharedSpaceState
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeSuccessViewState
+import com.linagora.android.linshare.domain.usecases.sharedspace.RenameSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentDetailsClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentItemClick
@@ -90,6 +91,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocu
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceDocumentOnUploadFileClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceFolderItemClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.WorkGroupNodeRenameClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
@@ -197,6 +199,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is CopyInMySpaceSuccess -> alertCopyToMySpaceSuccess(viewState.documents)
             is CreateSharedSpaceFolderSuccessViewState -> getAllNodes()
             is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(viewState.orderListConfigurationType)
+            is RenameSuccess -> getAllNodes()
         }
         bindingTitleName(viewState)
         bindingFolderName(viewState)
@@ -254,6 +257,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is CreateFolderViewEvent -> handleCreateFolder(viewEvent.nameFolder)
             is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
             is SharedSpaceDocumentDetailsClick -> navigateToDetails(viewEvent.node)
+            is WorkGroupNodeRenameClick -> handleRenameClick(viewEvent.workGroupNode)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> showUploadFileOrCreateFolderDialog()
             OpenSearchView -> handleOpenSearch()
@@ -626,6 +630,17 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             return
         }
         sharedSpacesDocumentViewModel.copyNodeToMySpace(workGroupNode)
+    }
+
+    private fun handleRenameClick(workGroupNode: WorkGroupNode) {
+        dismissAllDialog()
+        RenameWorkgroupNodeDialog(
+                currentWorkGroupNode = workGroupNode,
+                listWorkGroupNodes = sharedSpacesDocumentViewModel.listWorkGroupNode,
+                onRenameWorkgroupNode = sharedSpacesDocumentViewModel::renameWorkgroupNode,
+                onNewNameRequestChange = sharedSpacesDocumentViewModel::verifyNewName,
+                viewState = sharedSpacesDocumentViewModel.viewState)
+            .show(childFragmentManager, RenameWorkgroupNodeDialog.TAG)
     }
 
     private fun navigateToSelectDestination(workGroupNode: WorkGroupNode) {

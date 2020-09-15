@@ -89,4 +89,8 @@ internal abstract class SharedSpaceDocumentPresentationModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeReceivedSharesOrderByDialog(): ReceivedSharesOrderByDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeRenameWorkgroupNodeDialog(): RenameWorkgroupNodeDialog
 }

@@ -36,6 +36,7 @@ package com.linagora.android.linshare.view.dialog
 import android.view.View
 import com.linagora.android.linshare.domain.model.GenericUser
 import com.linagora.android.linshare.domain.model.autocomplete.MailingList
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 
 typealias OnNegativeCallback = (View) -> Unit
@@ -56,3 +57,5 @@ typealias OnRemoveMailingList = (MailingList) -> Unit
 typealias OnPositiveWithEnteredCharactersCallback = (String) -> Unit
 
 typealias OnNewNameRequestChange = (NewNameRequest) -> Unit
+
+typealias OnRenameSharedSpaceDocument = (WorkGroupNode, NewNameRequest) -> Unit
