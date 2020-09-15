@@ -76,3 +76,4 @@ data class CopyToSharedSpaceFailure(val throwable: Throwable) : Failure.FeatureF
 
 data class RenameFailure(val throwable: Throwable) : Failure.FeatureFailure()
 data class RenameSuccess(val workGroupNode: WorkGroupNode) : Success.ViewState()
+data class WorkGroupNodeRenameClick(val workGroupNode: WorkGroupNode) : Success.OnlineViewEvent(OperatorType.Rename)

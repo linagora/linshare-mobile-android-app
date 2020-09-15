@@ -51,6 +51,7 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleNam
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.canUpload
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentNoResult
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceDocumentViewState
@@ -202,4 +203,13 @@ fun bindingContextActionWithRoleForTextView(
         ?.let { true }
         ?: false
     textView.isEnabled = enableClick
+}
+
+@BindingAdapter("renameNodeTitle")
+fun bindingRenameNodeTitle(textView: TextView, workGroupNode: WorkGroupNode) {
+    val titleId = when (workGroupNode.type) {
+        WorkGroupNodeType.FOLDER -> R.string.rename_folder
+        else -> R.string.rename_document
+    }
+    textView.text = textView.context.getString(titleId)
 }

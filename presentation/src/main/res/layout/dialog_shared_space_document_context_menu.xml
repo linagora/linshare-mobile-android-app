@@ -44,6 +44,7 @@
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
         <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentCopyToContextMenu"/>
+        <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceEditContextMenu"/>
 
         <variable
             name="downloadContextMenu"
@@ -64,6 +65,10 @@
         <variable
             name="itemContextMenu"
             type="SharedSpaceNodeItemContextMenu" />
+
+        <variable
+            name="editContextMenu"
+            type="SharedSpaceEditContextMenu" />
     </data>
 
     <LinearLayout
@@ -145,6 +150,20 @@
             <TextView
                 style="@style/TextInRowLinerBottomSheetStyle"
                 android:text="@string/details" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> editContextMenu.rename(workGroupNode)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_rename" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/rename" />
 
         </LinearLayout>
 

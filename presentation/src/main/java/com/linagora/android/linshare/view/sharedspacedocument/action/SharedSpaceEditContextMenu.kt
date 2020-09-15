@@ -31,49 +31,16 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model
+package com.linagora.android.linshare.view.sharedspacedocument.action
 
-sealed class OperatorType {
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.usecases.sharedspace.WorkGroupNodeRenameClick
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.EditContextMenu
 
-    abstract class OfflineOperatorType : OperatorType()
-
-    abstract class OnlineOperatorType : OperatorType()
-
-    object SwiftRefresh : OnlineOperatorType()
-
-    object CreateWorkGroup : OnlineOperatorType()
-
-    object OpenContextMenu : OfflineOperatorType()
-
-    object OnItemClick : OnlineOperatorType()
-
-    object DeleteDocument : OnlineOperatorType()
-
-    object ViewDetails : OnlineOperatorType()
-
-    object OnSelectRoleClick : OfflineOperatorType()
-
-    object OnSelectedRoleForUpdate : OnlineOperatorType()
-
-    object SelectDestinationType : OnlineOperatorType()
-
-    object UploadFile : OfflineOperatorType()
-
-    object CopyFile : OnlineOperatorType()
-
-    object DeleteWorkGroupMember : OnlineOperatorType()
-
-    object ShowConfirmDialogClick : OfflineOperatorType()
-
-    object DeleteSharedSpace : OnlineOperatorType()
-
-    object AddMember : OnlineOperatorType()
-
-    object OnFabButtonClick : OfflineOperatorType()
-
-    object CreateFolder : OnlineOperatorType()
-
-    object OrderBy : OfflineOperatorType()
-
-    object Rename : OnlineOperatorType()
+class SharedSpaceEditContextMenu(private val viewModel: BaseViewModel) : EditContextMenu<WorkGroupNode> {
+    override fun rename(item: WorkGroupNode) {
+        viewModel.dispatchUIState(Either.right(WorkGroupNodeRenameClick(item)))
+    }
 }

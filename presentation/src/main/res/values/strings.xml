@@ -298,4 +298,8 @@
     <string name="max_file_size" translatable="false">Max file size</string>
     <string name="versioning_enable" translatable="false">Versioning enable</string>
 
+    <string name="rename" translatable="false">Rename</string>
+    <string name="rename_document" translatable="false">Rename Document</string>
+    <string name="rename_folder" translatable="false">Rename Folder</string>
+
 </resources>

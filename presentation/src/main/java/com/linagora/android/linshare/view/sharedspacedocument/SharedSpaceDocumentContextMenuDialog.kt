@@ -75,5 +75,6 @@ class SharedSpaceDocumentContextMenuDialog(private val workGroupDocument: WorkGr
         binding.downloadContextMenu = sharedSpaceDocumentViewModel.downloadContextMenu
         binding.itemContextMenu = sharedSpaceDocumentViewModel.itemContextMenu
         binding.copyToContextMenu = sharedSpaceDocumentViewModel.copyToContextMenu
+        binding.editContextMenu = sharedSpaceDocumentViewModel.editContextMenu
     }
 }
