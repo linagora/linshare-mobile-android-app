@@ -37,6 +37,7 @@ import com.linagora.android.linshare.data.datasource.SharedSpaceDataSource
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
+import com.linagora.android.linshare.domain.model.sharedspace.RenameSharedSpaceRequest
 import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
@@ -71,5 +72,9 @@ class SharedSpaceRepositoryImp @Inject constructor(
 
     override suspend fun deleteSharedSpace(sharedSpaceId: SharedSpaceId): SharedSpace {
         return sharedSpaceDataSource.deleteSharedSpace(sharedSpaceId)
+    }
+
+    override suspend fun renameSharedSpace(sharedSpaceId: SharedSpaceId, renameRequest: RenameSharedSpaceRequest): SharedSpace {
+        return sharedSpaceDataSource.renameSharedSpace(sharedSpaceId, renameRequest)
     }
 }

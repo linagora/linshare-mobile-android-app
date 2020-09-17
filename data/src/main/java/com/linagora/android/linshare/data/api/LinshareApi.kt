@@ -46,6 +46,7 @@ import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
+import com.linagora.android.linshare.domain.model.sharedspace.RenameSharedSpaceRequest
 import com.linagora.android.linshare.domain.model.sharedspace.RenameWorkGroupNodeRequest
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
@@ -184,6 +185,13 @@ interface LinshareApi {
         @Path("uuid") sharedSpaceUuid: String,
         @Query("members") includeMembers: Boolean = false,
         @Query("withRole") withRole: Boolean = true
+    ): SharedSpace
+
+    @PUT("shared_spaces/{sharedSpaceId}")
+    @Headers("Accept: application/json")
+    suspend fun renameSharedSpace(
+        @Path("sharedSpaceId") sharedSpaceUuid: String,
+        @Body editRequest: RenameSharedSpaceRequest
     ): SharedSpace
 
     @Multipart

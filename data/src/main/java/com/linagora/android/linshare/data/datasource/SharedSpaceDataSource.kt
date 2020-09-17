@@ -36,6 +36,7 @@ package com.linagora.android.linshare.data.datasource
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.CreateWorkGroupRequest
 import com.linagora.android.linshare.domain.model.sharedspace.MembersParameter
+import com.linagora.android.linshare.domain.model.sharedspace.RenameSharedSpaceRequest
 import com.linagora.android.linshare.domain.model.sharedspace.RolesParameter
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
@@ -56,4 +57,6 @@ interface SharedSpaceDataSource {
     suspend fun createWorkGroup(createWorkGroupRequest: CreateWorkGroupRequest): SharedSpace
 
     suspend fun deleteSharedSpace(sharedSpaceId: SharedSpaceId): SharedSpace
+
+    suspend fun renameSharedSpace(sharedSpaceId: SharedSpaceId, renameRequest: RenameSharedSpaceRequest): SharedSpace
 }
