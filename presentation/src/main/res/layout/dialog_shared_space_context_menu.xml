@@ -41,6 +41,7 @@
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole"/>
         <import type="com.linagora.android.linshare.view.base.OnAddMemberContextMenu"/>
+        <import type="com.linagora.android.linshare.view.base.EditContextMenu"/>
 
         <variable
             name="sharedSpaceNodeNested"
@@ -53,6 +54,10 @@
         <variable
             name="addMemberContextMenu"
             type="OnAddMemberContextMenu" />
+        
+        <variable
+            name="editContextMenu"
+            type="EditContextMenu" />
     </data>
 
     <LinearLayout
@@ -101,6 +106,19 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> editContextMenu.rename(sharedSpaceNodeNested)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_rename" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/rename" />
+
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             style="@style/RowLinerBottomSheetStyle"

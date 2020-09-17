@@ -95,7 +95,7 @@ import com.linagora.android.linshare.view.sharedspacedocument.action.CreateFolde
 import com.linagora.android.linshare.view.sharedspacedocument.action.OnSelectedSharedSpaceDocumentAddBehaviorImpl
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentCopyToContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentItemBehavior
-import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceEditContextMenu
+import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentEditContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu
 import com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceSelectDestinationSpaceTypeAction
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -154,7 +154,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
 
     val createFolderBehavior = CreateFolderBehavior(this)
 
-    val editContextMenu = SharedSpaceEditContextMenu(this)
+    val editContextMenu = SharedSpaceDocumentEditContextMenu(this)
 
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 

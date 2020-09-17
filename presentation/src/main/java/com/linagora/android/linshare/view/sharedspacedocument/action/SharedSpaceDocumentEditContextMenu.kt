@@ -39,7 +39,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.WorkGroupNodeRe
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.EditContextMenu
 
-class SharedSpaceEditContextMenu(private val viewModel: BaseViewModel) : EditContextMenu<WorkGroupNode> {
+class SharedSpaceDocumentEditContextMenu(private val viewModel: BaseViewModel) : EditContextMenu<WorkGroupNode> {
     override fun rename(item: WorkGroupNode) {
         viewModel.dispatchUIState(Either.right(WorkGroupNodeRenameClick(item)))
     }

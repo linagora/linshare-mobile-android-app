@@ -43,7 +43,7 @@
         <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceNodeItemContextMenu" />
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpace" />
         <import type="com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole" />
-        <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceEditContextMenu"/>
+        <import type="com.linagora.android.linshare.view.sharedspacedocument.action.SharedSpaceDocumentEditContextMenu"/>
 
         <variable
             name="workGroupNode"
@@ -59,7 +59,7 @@
 
         <variable
             name="editContextMenu"
-            type="SharedSpaceEditContextMenu" />
+            type="SharedSpaceDocumentEditContextMenu" />
     </data>
 
     <LinearLayout
