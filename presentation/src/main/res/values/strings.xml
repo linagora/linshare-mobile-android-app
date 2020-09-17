@@ -302,4 +302,5 @@
     <string name="rename_document" translatable="false">Rename Document</string>
     <string name="rename_folder" translatable="false">Rename Folder</string>
 
+    <string name="common_error_occurred_message" translatable="false">An error occurred, please try again later</string>
 </resources>

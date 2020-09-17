@@ -37,43 +37,64 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import com.linagora.android.linshare.databinding.DialogSharedSpaceContextMenuBinding
+import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.LiveData
+import arrow.core.Either
+import com.linagora.android.linshare.databinding.DialogRenameSharedSpaceBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.util.getParentViewModel
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
-import javax.inject.Inject
+import com.linagora.android.linshare.view.dialog.NoOpCallback
+import com.linagora.android.linshare.view.dialog.OnNegativeCallback
+import com.linagora.android.linshare.view.dialog.OnNewNameRequestChange
+import com.linagora.android.linshare.view.dialog.OnRenameSharedSpace
 
-class SharedSpaceContextMenuDialog(
-    private val sharedSpaceNodeNested: SharedSpaceNodeNested
+class RenameSharedSpaceDialog(
+    private val currentSharedSpaceNodeNested: SharedSpaceNodeNested,
+    private val listSharedSpaceNodeNested: LiveData<List<SharedSpaceNodeNested>>,
+    private val onNegativeCallback: OnNegativeCallback = NoOpCallback,
+    private val onRenameSharedSpace: OnRenameSharedSpace,
+    private val onNewNameRequestChange: OnNewNameRequestChange,
+    private val viewState: LiveData<Either<Failure, Success>>
 ) : DaggerBottomSheetDialogFragment() {
 
     companion object {
-        const val TAG = "sharedSpaceContextMenuDialog"
+        const val TAG = "rename_shared_space_node"
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var sharedSpaceViewModel: SharedSpaceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DialogSharedSpaceContextMenuBinding
-            .inflate(inflater, container, false)
-        initViewModel(binding)
+        val binding = DialogRenameSharedSpaceBinding.inflate(inflater, container, false)
+            .apply { lifecycleOwner = viewLifecycleOwner }
+        initView(binding)
         return binding.root
     }
 
-    private fun initViewModel(binding: DialogSharedSpaceContextMenuBinding) {
-        sharedSpaceViewModel = getParentViewModel(viewModelFactory)
-        binding.sharedSpaceNodeNested = sharedSpaceNodeNested
-        binding.itemContextMenu = sharedSpaceViewModel.sharedSpaceItemContextMenu
-        binding.addMemberContextMenu = sharedSpaceViewModel.onAddMemberContextMenu
-        binding.editContextMenu = sharedSpaceViewModel.editContextMenu
+    private fun initView(binding: DialogRenameSharedSpaceBinding) {
+        binding.apply {
+            currentNode = currentSharedSpaceNodeNested
+            listWorkGroupNode = listSharedSpaceNodeNested
+            state = viewState
+
+            newName.doAfterTextChanged { name ->
+                name?.toString()
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { onNewNameRequestChange(NewNameRequest(it)) } }
+
+            cancelButton.setOnClickListener {
+                onNegativeCallback(it)
+                dismiss() }
+
+            renameButton.setOnClickListener {
+                onRenameSharedSpace(currentSharedSpaceNodeNested, NewNameRequest(newName.text.toString()))
+                dismiss() }
+
+            executePendingBindings()
+        }
     }
 }

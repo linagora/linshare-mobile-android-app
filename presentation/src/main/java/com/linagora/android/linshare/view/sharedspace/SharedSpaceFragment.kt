@@ -60,9 +60,13 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroup
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeletedSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.DetailsSharedSpaceItem
+import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceFailedInRename
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnShowConfirmDeleteSharedSpaceClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
+import com.linagora.android.linshare.domain.usecases.sharedspace.RenameSharedSpaceFailure
+import com.linagora.android.linshare.domain.usecases.sharedspace.RenameSharedSpaceItemClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.RenameSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceContextMenuClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceItemClick
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -129,6 +133,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
         when (failure) {
             is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
             is GetOrderListConfigurationFailed -> getSharedSpace()
+            is GetSharedSpaceFailedInRename, is RenameSharedSpaceFailure -> handleRenameFailure()
         }
     }
 
@@ -141,7 +146,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
 
     private fun reactToViewState(viewState: Success.ViewState) {
         when (viewState) {
-            is CreateWorkGroupSuccess, is DeletedSharedSpaceSuccess -> getSharedSpace()
+            is CreateWorkGroupSuccess, is DeletedSharedSpaceSuccess, is RenameSharedSpaceSuccess -> getSharedSpace()
             is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(viewState.orderListConfigurationType)
         }
     }
@@ -149,6 +154,7 @@ class SharedSpaceFragment : MainNavigationFragment() {
     private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
         when (val filteredViewEvent = viewEvent.filterNetworkViewEvent(sharedSpaceViewModel.internetAvailable.value)) {
             is Success.CancelViewEvent -> handleCannotExecuteViewEvent(filteredViewEvent.operatorType)
+            is RenameSharedSpaceItemClick -> handleRenameItemContextClick(filteredViewEvent.sharedSpaceNodeNested)
             else -> handleViewEvent(filteredViewEvent)
         }
     }
@@ -314,6 +320,25 @@ class SharedSpaceFragment : MainNavigationFragment() {
             .setAnchorView(binding.sharedSpaceUploadButton)
             .show()
         sharedSpaceViewModel.dispatchResetState()
+    }
+
+    private fun handleRenameFailure() {
+        Snackbar.make(binding.root, getString(R.string.common_error_occurred_message), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.sharedSpaceUploadButton)
+            .show()
+        sharedSpaceViewModel.dispatchResetState()
+    }
+
+    private fun handleRenameItemContextClick(sharedSpaceNodeNested: SharedSpaceNodeNested) {
+        dismissContextMenu()
+        RenameSharedSpaceDialog(
+            currentSharedSpaceNodeNested = sharedSpaceNodeNested,
+            listSharedSpaceNodeNested = sharedSpaceViewModel.listSharedSpaceNodeNested,
+            onRenameSharedSpace = sharedSpaceViewModel::renameSharedSpace,
+            onNewNameRequestChange = sharedSpaceViewModel::validName,
+            viewState = sharedSpaceViewModel.viewState
+        ).show(childFragmentManager, RenameSharedSpaceDialog.TAG)
     }
 
     private fun navigateToDetails(sharedSpaceNodeNested: SharedSpaceNodeNested) {

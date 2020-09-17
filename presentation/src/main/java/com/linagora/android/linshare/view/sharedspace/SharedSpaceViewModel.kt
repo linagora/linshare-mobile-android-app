@@ -53,6 +53,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroup
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateWorkGroupInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.DeleteSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceOrderedInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.RenameSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.SearchSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.SharedSpaceViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -68,6 +69,7 @@ import com.linagora.android.linshare.view.action.OrderByActionImp
 import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.sharedspace.action.CreateWorkGroupBehavior
+import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceEditContextMenu
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemBehavior
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceItemContextMenu
 import com.linagora.android.linshare.view.sharedspace.action.SharedSpaceOnAddMemberContextMenu
@@ -90,6 +92,7 @@ class SharedSpaceViewModel @Inject constructor(
     private val deleteSharedSpaceInteractor: DeleteSharedSpaceInteractor,
     private val getOrderListConfigurationInteractor: GetOrderListConfigurationInteractor,
     private val persistOrderListConfigurationInteractor: PersistOrderListConfigurationInteractor,
+    private val renameSharedSpace: RenameSharedSpace,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val nameValidator: NameValidator
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
@@ -108,6 +111,8 @@ class SharedSpaceViewModel @Inject constructor(
     val createWorkGroupBehavior = CreateWorkGroupBehavior(this)
 
     val onAddMemberContextMenu = SharedSpaceOnAddMemberContextMenu(this)
+
+    val editContextMenu = SharedSpaceEditContextMenu(this)
 
     private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 
@@ -183,6 +188,12 @@ class SharedSpaceViewModel @Inject constructor(
     fun deleteSharedSpace(sharedSpaceId: SharedSpaceId) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(deleteSharedSpaceInteractor(sharedSpaceId))
+        }
+    }
+
+    fun renameSharedSpace(sharedSpaceNodeNested: SharedSpaceNodeNested, newNameRequest: NewNameRequest) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(renameSharedSpace(sharedSpaceNodeNested.sharedSpaceId, newNameRequest.value))
         }
     }
 

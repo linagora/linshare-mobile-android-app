@@ -38,6 +38,7 @@ import com.linagora.android.linshare.inject.annotation.FragmentScoped
 import com.linagora.android.linshare.inject.annotation.ViewModelKey
 import com.linagora.android.linshare.view.myspace.MySpaceOrderByDialog
 import com.linagora.android.linshare.view.receivedshares.ReceivedSharesOrderByDialog
+import com.linagora.android.linshare.view.sharedspace.RenameSharedSpaceDialog
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -93,4 +94,8 @@ internal abstract class SharedSpaceDocumentPresentationModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeRenameWorkgroupNodeDialog(): RenameWorkgroupNodeDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeRenameSharedSpaceDialog(): RenameSharedSpaceDialog
 }
