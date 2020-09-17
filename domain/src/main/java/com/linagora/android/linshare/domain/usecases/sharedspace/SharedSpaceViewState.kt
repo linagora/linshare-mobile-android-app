@@ -51,6 +51,7 @@ data class SharedSpaceItemClick(val sharedSpaceNodeNested: SharedSpaceNodeNested
 data class SharedSpaceContextMenuClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OfflineViewEvent(OperatorType.OpenContextMenu)
 data class GetSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewState()
 data class GetSharedSpaceFailed(val throwable: Throwable) : FeatureFailure()
+data class GetSharedSpaceFailedInRename(val throwable: Throwable) : FeatureFailure()
 object NoResultsSearchSharedSpace : Failure.FeatureFailure()
 object SearchSharedSpaceInitial : Success.ViewState()
 data class DetailsSharedSpaceItem(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OnlineViewEvent(OperatorType.ViewDetails)
@@ -70,3 +71,5 @@ data class DeleteSharedSpaceClick(val sharedSpaceNodeNested: SharedSpaceNodeNest
 data class OnShowConfirmDeleteSharedSpaceClick(val sharedSpaceNodeNested: SharedSpaceNodeNested) : Success.OfflineViewEvent(OperatorType.ShowConfirmDialogClick)
 object OpenOrderByDialog : Success.ViewEvent()
 data class OnOrderByRowItemClick(val orderListConfigurationType: OrderListConfigurationType) : Success.OfflineViewEvent(OperatorType.OrderBy)
+data class RenameSharedSpaceFailure(val throwable: Throwable) : Failure.FeatureFailure()
+data class RenameSharedSpaceSuccess(val sharedSpace: SharedSpace) : Success.ViewState()

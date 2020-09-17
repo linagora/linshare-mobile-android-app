@@ -31,25 +31,43 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.domain.usecases.sharedspace
 
-import com.google.gson.annotations.SerializedName
-import com.linagora.android.linshare.domain.model.quota.QuotaId
-import java.util.Date
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.toRenameRequest
+import com.linagora.android.linshare.domain.repository.sharedspace.SharedSpaceRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class SharedSpace(
-    @SerializedName("uuid")
-    val sharedSpaceId: SharedSpaceId,
-    val name: String,
-    @SerializedName("parentUuid")
-    val parentSharedSpaceId: SharedSpaceId? = null,
-    val nodeType: LinShareNodeType,
-    val creationDate: Date,
-    val modificationDate: Date,
-    val role: SharedSpaceRole,
-    @SerializedName("quotaUuid")
-    val quotaId: QuotaId,
-    val versioningParameters: VersioningParameter
-)
+@Singleton
+class RenameSharedSpace @Inject constructor(
+    private val sharedSpaceRepository: SharedSpaceRepository
+) {
+    operator fun invoke(
+        sharedSpaceId: SharedSpaceId,
+        newName: String
+    ): Flow<State<Either<Failure, Success>>> {
+        return flow {
+            emitState { Either.right(Success.Loading) }
 
-fun SharedSpace.toRenameRequest(newName: String) = RenameSharedSpaceRequest(name = newName, versioningParameters = VersioningParameterRequest(enable = this.versioningParameters.enabled))
+            Either.catch { sharedSpaceRepository.getSharedSpace(sharedSpaceId) }
+                .bimap(::GetSharedSpaceFailedInRename, ::GetSharedSpaceSuccess)
+                .fold(
+                    ifLeft = { getSharedSpaceFailed -> emitState { Either.left(getSharedSpaceFailed) } },
+                    ifRight = { getSharedSpaceSuccess ->
+                        val renameState = Either.catch { sharedSpaceRepository.renameSharedSpace(sharedSpaceId, getSharedSpaceSuccess.sharedSpace.toRenameRequest(newName)) }
+                            .bimap(leftOperation = ::RenameSharedSpaceFailure, rightOperation = ::RenameSharedSpaceSuccess)
+
+                        emitState { renameState }
+                    }
+                )
+        }
+    }
+}
