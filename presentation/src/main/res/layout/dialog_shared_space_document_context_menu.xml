@@ -155,6 +155,8 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
+            app:contextActionVisible="@{sharedSpace.role}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.renameRole}"
             android:onClick="@{() -> editContextMenu.rename(workGroupNode)}">
 
             <ImageView
