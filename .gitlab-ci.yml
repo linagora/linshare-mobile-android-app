@@ -72,6 +72,7 @@ uploadInternal:
   stage: upload
   tags:
     - docker
+  when: manual
   # Add Google Play connection information needed by Fastlane
   before_script:
     - echo $JSON_KEY > google_play_api_key.json
@@ -81,9 +82,6 @@ uploadInternal:
     - rm google_play_api_key.json keystore.jks
   script:
     - bundle exec fastlane uploadInternal
-  rules:
-    - if: $CI_COMMIT_REF_NAME =~ "master"
-      when: manual
-    - if: $CI_COMMIT_REF_NAME =~ "/^release/"
-      when: manual
-
+  only:
+    variables:
+        - $CI_COMMIT_REF_PROTECTED
