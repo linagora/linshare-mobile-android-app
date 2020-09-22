@@ -86,4 +86,6 @@ uploadInternal:
       when: manual
     - if: $CI_COMMIT_REF_NAME =~ "/^release/"
       when: manual
-
+    # Wait for the upgrade of Gitlab to 12.9 to make the regex work
+    - if: $CI_COMMIT_REF_NAME =~ "release-1.0.x"
+      when: manual
