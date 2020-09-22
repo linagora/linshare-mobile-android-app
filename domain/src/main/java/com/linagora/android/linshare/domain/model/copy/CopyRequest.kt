@@ -41,3 +41,5 @@ data class CopyRequest(val contextUuid: UUID? = null, val uuid: UUID, val kind: 
 fun Share.toCopyRequest(spaceType: SpaceType): CopyRequest {
     return CopyRequest(uuid = shareId.uuid, kind = spaceType)
 }
+
+// test
