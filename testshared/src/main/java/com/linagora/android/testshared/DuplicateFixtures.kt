@@ -31,36 +31,15 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.testshared
 
-import com.linagora.android.linshare.domain.model.account.Account
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.copy.SpaceType
-import java.util.Date
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_DOCUMENT_1
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val lastAuthor: Account
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
-
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
-
-fun WorkGroupNode.toCopyToMySpaceRequest(): CopyRequest {
-    return CopyRequest(sharedSpaceId.uuid, workGroupNodeId.uuid, SpaceType.SHARED_SPACE)
-}
-
-fun WorkGroupNode.toRenameRequest(newName: String) = RenameWorkGroupNodeRequest(type = this.type, name = newName)
-
-fun WorkGroupNode.toDuplicateRequest(): CopyRequest {
-    return CopyRequest(uuid = workGroupNodeId.uuid, kind = SpaceType.SHARED_SPACE)
+object DuplicateFixtures {
+    val DUPLICATE_REQUEST_1 = CopyRequest(
+        uuid = WORK_GROUP_DOCUMENT_1.workGroupNodeId.uuid,
+        kind = SpaceType.SHARED_SPACE
+    )
 }

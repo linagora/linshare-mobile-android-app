@@ -80,6 +80,11 @@ interface SharedSpacesDocumentRepository {
         destinationParentNodeId: WorkGroupNodeId? = null
     ): List<WorkGroupNode>
 
+    suspend fun duplicateWorkGroupNode(
+        copyRequest: CopyRequest,
+        sharedSpaceUuid: SharedSpaceId
+    ): List<WorkGroupNode>
+
     suspend fun createSharedSpaceFolder(
         sharedSpaceId: SharedSpaceId,
         createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest

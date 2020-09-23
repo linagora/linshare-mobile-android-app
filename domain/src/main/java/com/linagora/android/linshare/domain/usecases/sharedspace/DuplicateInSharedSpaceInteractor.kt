@@ -31,36 +31,43 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.model.sharedspace
+package com.linagora.android.linshare.domain.usecases.sharedspace
 
-import com.linagora.android.linshare.domain.model.account.Account
-import com.linagora.android.linshare.domain.model.copy.CopyRequest
-import com.linagora.android.linshare.domain.model.copy.SpaceType
-import java.util.Date
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.toDuplicateRequest
+import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import org.slf4j.LoggerFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface WorkGroupNode {
-    val type: WorkGroupNodeType
-    val workGroupNodeId: WorkGroupNodeId
-    val parentWorkGroupNodeId: WorkGroupNodeId
-    val creationDate: Date
-    val lastAuthor: Account
-    val sharedSpaceId: SharedSpaceId
-    val modificationDate: Date
-    val description: String?
-    val name: String
-    val treePath: List<TreePath>
-}
+@Singleton
+class DuplicateInSharedSpaceInteractor @Inject constructor(
+    private val sharedSpacesDocumentRepository: SharedSpacesDocumentRepository
+) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(DuplicateInSharedSpaceInteractor::class.java)
+    }
 
-fun WorkGroupNode.nameContains(query: String): Boolean {
-    return name.toLowerCase().contains(query.toLowerCase())
-}
+    operator fun invoke(
+        duplicateWorkGroupNode: WorkGroupNode,
+        sharedSpaceUuid: SharedSpaceId
+    ): Flow<State<Either<Failure, Success>>> = flow<State<Either<Failure, Success>>> {
+        emitState { Either.right(Success.Loading) }
 
-fun WorkGroupNode.toCopyToMySpaceRequest(): CopyRequest {
-    return CopyRequest(sharedSpaceId.uuid, workGroupNodeId.uuid, SpaceType.SHARED_SPACE)
-}
+        val duplicateResultsState = Either.catch { sharedSpacesDocumentRepository
+                    .duplicateWorkGroupNode(duplicateWorkGroupNode.toDuplicateRequest(), sharedSpaceUuid) }
+            .bimap(
+                leftOperation = ::DuplicateInSharedSpaceFailure,
+                rightOperation = { DuplicateInSharedSpaceSuccess(duplicateWorkGroupNode) })
 
-fun WorkGroupNode.toRenameRequest(newName: String) = RenameWorkGroupNodeRequest(type = this.type, name = newName)
-
-fun WorkGroupNode.toDuplicateRequest(): CopyRequest {
-    return CopyRequest(uuid = workGroupNodeId.uuid, kind = SpaceType.SHARED_SPACE)
+        emitState { duplicateResultsState }
+    }
 }
