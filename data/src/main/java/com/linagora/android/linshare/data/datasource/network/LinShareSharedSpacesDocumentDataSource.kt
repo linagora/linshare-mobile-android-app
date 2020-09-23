@@ -155,6 +155,16 @@ class LinShareSharedSpacesDocumentDataSource @Inject constructor(
         )
     }
 
+    override suspend fun duplicateInWorkGroupNode(
+        copyRequest: CopyRequest,
+        sharedSpaceUuid: SharedSpaceId
+    ): List<WorkGroupNode> {
+        return linShareApi.duplicateWorkGroupNode(
+            sharedSpaceUuid.uuid.toString(),
+            copyRequest
+        )
+    }
+
     override suspend fun createSharedSpaceFolder(
         sharedSpaceId: SharedSpaceId,
         createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest

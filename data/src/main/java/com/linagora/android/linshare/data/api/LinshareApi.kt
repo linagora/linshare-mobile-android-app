@@ -277,4 +277,11 @@ interface LinshareApi {
         @Path("sharedSpaceId") sharedSpaceId: String,
         @Body createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest
     ): WorkGroupFolder
+
+    @POST("/shared_spaces/{sharedSpaceUuid}/nodes/copy")
+    @Headers("Accept: application/json")
+    suspend fun duplicateWorkGroupNode(
+        @Path("sharedSpaceUuid") sharedSpaceUuid: String,
+        @Body copyRequest: CopyRequest
+    ): List<WorkGroupNode>
 }
