@@ -61,8 +61,8 @@
     <string name="credential_error_message">Authentification échouée, email ou mot de passe invalide, veuillez réessayer</string>
     <string name="email_is_required">Authentification échouée, email invalide, veuillez réessayer</string>
     <string name="wrong_url">URL du serveur invalide, veuillez réessayer</string>
-    <string name="unknow_error">Une erreur inconnue s\'est produite, veuillez réessayer</string>
-    <string name="logout_account">Oublier le compte</string>
+    <string name="unknow_error">Une erreur inconnue est survenue, veuillez réessayer</string>
+    <string name="logout_account">Déconnecter le compte</string>
     <string name="last_login_title">Dernière connexion:</string>
     <string name="available_space_title">Espace disponible:</string>
     <string name="notification">Notification</string>
@@ -78,13 +78,13 @@
     <string name="upload_and_download_channel_description">Notification de transfert et de téléchargement</string>
 
     <plurals name="file_in_waiting_list">
-        <item quantity="one">%s les fichiers sont ajoutés à la liste d\'attente.</item>
+        <item quantity="one">Le fichier %s est ajouté à la liste d\'attente.</item>
         <item quantity="other">%s les fichiers sont ajoutés à la liste d\'attente.</item>
     </plurals>
 
     <plurals name="notify_count_file_upload">
-        <item quantity="one">Transfert %s de fichier</item>
-        <item quantity="other">Transfert %s de fichiers</item>
+        <item quantity="one">Transfert de %s fichier</item>
+        <item quantity="other">Transfert de %s fichiers</item>
     </plurals>
 
     <string name="upload">Transférer</string>
@@ -92,14 +92,14 @@
     <string name="upload_failed">Transfert échoué</string>
     <string name="upload_and_share_success">Transfert et Partage terminés</string>
     <string name="upload_and_share_failed">Transfert et Partage échoués</string>
-    <string name="upload_success_but_share_failed">Le fichier n\'est pas partagé avec succès</string>
+    <string name="upload_success_but_share_failed">Le partage du fichier a échoué</string>
     <plurals name="file_is_shared_with_people">
         <item quantity="one">Le fichier est partagé avec %d personne</item>
         <item quantity="other">Le fichier est partagé avec %d personnes</item>
     </plurals>
     <string name="can_not_perform_upload">Impossible d\'effectuer le transfert. Veuillez réessayer</string>
     <string name="no_more_space_avalable">Vous avez dépassé votre quota de stockage sur le serveur LinShare. Libérez de l\'espace et réessayez votre transfert.</string>
-    <string name="exceed_max_file_size">La taille du fichier transféré dépasse la limite autorisée. Veuillez essayer un autre fichier.</string>
+    <string name="exceed_max_file_size">La taille du fichier transféré dépasse la limite autorisée. Veuillez essayer avec un autre fichier.</string>
     <string name="extrac_info_failed">Erreur inattendue lors de la tentative d\'accès à ce document via une application tierce.</string>
     <string name="executing">Préparer le transfert</string>
 
@@ -108,12 +108,13 @@
     <string name="upload_and_share">Transférer et Partager</string>
 
     <string name="unable_to_upload_explanation">Pour effectuer le transfert, l\'application LinShare doit pouvoir accéder aux données de stockage de votre appareil. Vous pouvez configurer l\'accès dans les préférences du système.</string>
-    <string name="go_to_setting">Aller aux préférences</string>
+    <string name="go_to_setting">Accéder aux préférences</string>
     <string name="permission_refuse">Permission refusée</string>
 
     <!--MySpace-->
     <string name="my_space">Mon Espace</string>
     <string name="account_details">Détails du compte</string>
+    <string name="upload_your_files_here">Transférez vos fichiers ici</string>
 
     <string name="unable_to_perform_download">Pour effectuer le téléchargement, l\'application LinShare doit pouvoir accéder aux données de stockage de votre appareil. Vous pouvez configurer l\'accès dans les préférences du système.</string>
     <string name="download_failed">Téléchargement échoué</string>
@@ -126,7 +127,7 @@
     <string name="error_insufficient_space">L\'appareil n\'a pas suffisamment d\'espace. Libérez de l\'espace et réessayez</string>
     <string name="downloaded">Téléchargé: %s</string>
 
-    <string name="file_not_found">Le fichier est introuvable à télécharger.</string>
+    <string name="file_not_found">Le fichier est introuvable.</string>
     <string name="you_are_offline">Vous n\'êtes pas connecté</string>
     <string name="internet_not_available">La connexion Internet n\'est pas disponible.</string>
     <string name="file_ready_to_upload">Le fichier %s est prêt à être transféré.</string>
@@ -136,7 +137,7 @@
     <string name="last_modified">Modifié le %s</string>
 
     <string name="search_in_my_space">Rechercher dans Mon Espace</string>
-    <string name="search_no_results">Aucun résultats trouvés</string>
+    <string name="search_no_results">Aucun résultat trouvé</string>
     <plurals name="search_total_results">
         <item quantity="one">%d résultat</item>
         <item quantity="other">%d résultats</item>
@@ -148,7 +149,7 @@
     <string name="quick_share">Partager rapidement</string>
     <string name="share">Partager</string>
     <string name="add_recipients">Ajouter des destinataires</string>
-    <string name="share_failed">Le fichier n\'est pas partagé avec succès.</string>
+    <string name="share_failed">Le partage de votre fichier a échoué.</string>
     <string name="share_success">Votre fichier a été partagé avec succès.</string>
     <string name="created">Créé %s</string>
     <string name="received">Reçu</string>
@@ -159,19 +160,16 @@
     <string name="copied_in_my_space">Le fichier %s a été copié dans Mon Espace</string>
     <string name="view">Voir</string>
     <string name="unable_to_prepare_file_for_upload">Impossible de préparer le fichier pour le transfert</string>
-    <string name="shared_space">Espace commun</string>
-    <string name="do_not_have_any_workgroup">Vous n\'avez pas encore de groupe de travail</string>
-    <string name="search_in_shared_space">Rechercher dans l\'Espace commun</string>
+    <string name="shared_space">Espace Commun</string>
+    <string name="do_not_have_any_workgroup">Vous n\'avez pas encore de Groupe De Travail</string>
+    <string name="search_in_shared_space">Rechercher dans l\'Espace Commun</string>
+    <string name="view_your_received_shares">Visualiser vos partages reçus</string>
 
     <string name="do_not_have_any_document">Vous n\'avez pas encore de document</string>
 
-    <string name="copy_to_my_space_error_quota_reach">Espace insuffisant dans Mon Espace pour copier</string>
+    <string name="copy_to_my_space_error_quota_reach">Espace insuffisant dans Mon Espace</string>
     <string name="copy_to_my_space_error_file_size_exceed">Le fichier a dépassé la taille limite.</string>
     <string name="copy_to_my_space_error">Une erreur s\'est produite, impossible de copier.</string>
-
-    <string name="duplicate" translatable="false">Dupliquer</string>
-    <string name="duplicate_success" translatable="false">Le fichier a été dupliqué avec succés.</string>
-    <string name="duplicate_fail" translatable="false">Le fichier n\'a pas pu être dupliqué.</string>
 
     <string name="details">Détails</string>
     <string name="members">Membres</string>
@@ -189,8 +187,127 @@
         <item quantity="one">Membre existant : %d</item>
         <item quantity="other">Membres existants : %d</item>
     </plurals>
-    <string name="create_new_workgroup"> Créer un nouveau groupe de travail </string>
-    <string name="new_workgroup">Nouveau groupe de travail</string>
+
+    <string name="create_new_workgroup">Créer un nouveau Groupe De Travail</string>
+    <string name="new_workgroup">Nouveau Groupe De Travail</string>
+    <string name="new_workgroup_original_name">Nouveau Groupe De Travail</string>
     <string name="create">Créer</string>
-    <string name="workgroup_name_already_exists">Le nom du groupe de travail existe déjà</string>
+    <string name="workgroup_name_already_exists">Le nom du Groupe De Travail existe déjà</string>
+    <string name="workgroup_name_index">Nouveau Groupe De Travail(%s)</string>
+    <string name="workgroup_name_not_contain_special_char">Le nom du fichier ne peut pas contenir &#8220;&lt;&#8220;, &#8220;&gt;&#8220;, &#8220;.&#8220;, &#8220;,&#8220;, &#8220;/&#8220;, &#8220;\\&#8220;, &#8220;|&#8220;, &#8220;?&#8220;, &#8220;*&#8220;</string>
+
+    <string name="can_not_connect_network">Impossible de se connecter au réseau</string>
+    <string name="can_not_refresh_without_network">Impossible de rafraîchir sans réseau</string>
+    <string name="can_not_process_without_network">Impossible de traiter la demande sans réseau</string>
+    <string name="can_not_create_shared_space_without_network">Impossible de créer un Groupe De Travail sans réseau</string>
+
+    <string name="file_ready_for_download_once_connection_available">Le fichier sera prêt à être téléchargé une fois la connexion rétablie</string>
+    <string name="success_deleted">Le %s a été supprimé avec succès</string>
+    <string name="file">fichier</string>
+    <string name="folder">dossier</string>
+    <string name="add_member_failed">L\'ajout du membre a échoué</string>
+    <string name="lack_of_device_storage">Le transfert a échoué suite à un manque d\'espace</string>
+    <string name="not_access_workgroup_while_offline">Impossible d\'accéder au Groupe De Travail sans réseau</string>
+    <string name="not_access_folder_while_offline">Impossible d\'accéder au dossier sans réseau</string>
+    <string name="can_not_delete_file_while_offline">Impossible de supprimer le fichier sans réseau</string>
+    <string name="not_view_workgroup_details_while_offline">Impossible de voir les détails du Groupe De Travail sans réseau</string>
+
+    <string name="activities">Activités</string>
+    <string name="audit_log_actor">par %s</string>
+
+    <string name="audit_action_title_addition">Ajout:</string>
+    <string name="audit_action_title_delete">Suppression:</string>
+    <string name="audit_action_title_update">Modification:</string>
+    <string name="audit_action_title_create">Création:</string>
+    <string name="audit_action_title_upload">Fichier transféré:</string>
+    <string name="audit_action_title_copy">Copie:</string>
+    <string name="audit_action_title_download">Téléchargement:</string>
+    <string name="audit_action_title_upload_revision">Version mise à jour:</string>
+    <string name="audit_action_title_delete_revision">Version supprimée:</string>
+    <string name="audit_action_title_restore_revision">Version de sauvegarde:</string>
+    <string name="audit_action_title_download_revision">Version téléchargée:</string>
+
+    <string name="audit_action_message_create_workgroup">%1$s a créé un nouveau Groupe De Travail : %2$s.</string>
+    <string name="audit_action_message_delete_workgroup">%1$s a supprimé le Groupe De Travail : %2$s.</string>
+    <string name="audit_action_message_update_workgroup">%1$s a modifié le Groupe De Travail : %2$s.</string>
+
+    <string name="audit_action_message_upload_workgroup_document">%1$s a transféré un nouveau fichier : %2$s dans le Groupe De Travail : %3$s</string>
+    <string name="audit_action_message_copy_document_from_personal_space">%1$s a créé un document : %2$s dans %3$s, à partir de son Espace Personnel.</string>
+    <string name="audit_action_message_copy_document_from_received_share">%1$s a crée un document : %2$s dans %3$s, à partir de son Partage Reçu.</string>
+    <string name="audit_action_message_copy_document_from_shared_space">%1$s a créé ce fichier en copiant : %2$s d\'un autre Groupe De Travail.</string>
+    <string name="audit_action_message_copy_document_to_personal_space">%1$s a copié ce document : %2$s dans son Espace Personnel.</string>
+    <string name="audit_action_message_copy_document_to_shared_space">%1$s a créé une duplication de ce fichier dans %3$s.</string>
+    <string name="audit_action_message_delete_workgroup_document">%1$s a supprimé le fichier : %2$s du Groupe De Travail %3$s.</string>
+    <string name="audit_action_message_update_workgroup_document">%1$s a modifié le fichier : %2$s du Groupe De Travail %3$s.</string>
+    <string name="audit_action_message_download_workgroup_document">%1$s a téléchargé le fichier : %2$s du Groupe De Travail %3$s.</string>
+
+    <string name="audit_action_message_upload_revision">Une version de ce fichier %2$s a été ajouté au Groupe De Travail %3$s.</string>
+    <string name="audit_action_message_delete_revision">Une version de ce fichier %2$s a été supprimé du Groupe De Travail %3$s.</string>
+    <string name="audit_action_message_copy_revision_from_shared_space">Le document a été restauré avec la version %2$s.</string>
+    <string name="audit_action_message_download_revision">%1$s a téléchargé la version : %2$s du Groupe De Travail %3$s.</string>
+
+    <string name="audit_action_message_create_folder">%1$s a créé un nouveau dossier : %2$s dans le Groupe De Travail %3$s.</string>
+    <string name="audit_action_message_delete_folder">%1$s a supprimé un dossier : %2$s dans le Groupe De Travail : %3$s.</string>
+    <string name="audit_action_message_update_folder">%1$s a modifié un dossier : %2$s dans le Groupe De Travail : %3$s.</string>
+    <string name="audit_action_message_download_folder">%1$s a téléchargé un fichier : %2$s dans le Groupe De Travail : %3$s.</string>
+
+    <string name="audit_action_message_add_member">%1$s a ajouté un nouveau membre : %2$s du Groupe De Travail : %3$s.</string>
+    <string name="audit_action_message_delete_member">%1$s a supprimé un membre : %2$s du Groupe De Travail : %3$s.</string>
+    <string name="audit_action_message_update_member">%1$s a modifié un membre : %2$s du Groupe De Travail : %3$s.</string>
+    <string name="can_not_change_member_role_without_network">Impossible de changer les rôles des membres sans réseau</string>
+
+    <string name="copy_to">Copier vers</string>
+    <string name="copy_to_a_workgroup">Copier dans un Groupe De Travail</string>
+    <string name="copy_to_another_shared_space_success">Le fichier a été copié dans un autre Espace Commun.</string>
+    <string name="copy_to_another_shared_space_fail">Impossible de copier ce fichier dans un autre Espace Commun.</string>
+    <string name="copy_to_shared_space_message">Le fichier a été copié dans un autre Espace Commun.</string>
+    <string name="copy_to_shared_space_fail_message">Impossible de copier ce fichier dans un Espace Commun.</string>
+    <string name="copy_success" translatable="false">Le fichier %s a été copié avec succès.</string>
+    <string name="copy_failed" translatable="false">La copie du fichier a échoué.</string>
+
+    <string name="confirm_remove_member_from_work_group">Êtes-vous sûr de supprimer %1$s du Groupe de Travail %2$s?</string>
+    <string name="can_not_delete_member_in_workgroup_without_network">Impossible de supprimer un membre du Groupe De Travail sans réseau</string>
+    <string name="confirm_delete_shared_space">Êtes-vous sûr de supprimer \"%s\"?</string>
+
+    <string name="duplicate" translatable="false">Dupliquer</string>
+    <string name="duplicate_success" translatable="false">Le fichier a été dupliqué avec succès.</string>
+    <string name="duplicate_fail" translatable="false">Le fichier n\'a pas pu être dupliqué.</string>
+
+    <string name="can_not_delete_shared_space_without_network">Impossible de supprimer un Espace Commun sans réseau</string>
+    <string name="add_new_file_or_folder">Ajouter un nouveau fichier ou dossier</string>
+    <string name="create_folder">Créer un dossier</string>
+    <string name="create_new_folder">Créer un nouveau dossier</string>
+    <string name="new_folder">Nouveau dossier</string>
+    <string name="folder_name_already_exists">Le nom du fichier existe déjà</string>
+    <string name="not_create_folder_while_offline">Impossible de créer un dossier sans réseau</string>
+    <string name="folder_name_can_not_be_blank">Le nom du fichier ne peut pas être vide</string>
+
+    <string name="order_by_name">Nom</string>
+    <string name="order_by_modification_date">Date de modification</string>
+    <string name="order_by_creation_date">Date de création</string>
+    <string name="order_by_file_size">Taille</string>
+    <string name="order_by_shared">Partage</string>
+    <string name="order_by_sender">Sender</string>
+    <string name="order_by_dialog_title">Ordonner par</string>
+    <string name="modified">Modifié</string>
+    <string name="created_title">Créé</string>
+    <string name="expiration">Expiration</string>
+    <string name="description">Description</string>
+    <string name="undefined">Non défini</string>
+    <string name="modified_by">Modifié par</string>
+
+    <plurals name="share_with_contacts">
+        <item quantity="one">Partager avec %s contact</item>
+        <item quantity="other">Partager avec %s contacts</item>
+    </plurals>
+
+    <string name="my_right">Mes droits</string>
+    <string name="max_file_size">Taille maximale de fichier</string>
+    <string name="versioning_enable">Activer le versionnement</string>
+
+    <string name="rename">Renommer</string>
+    <string name="rename_document">Renommer le document</string>
+    <string name="rename_folder">Renommer le dossier</string>
+
+    <string name="common_error_occurred_message">Une erreur est survenue, veuillez réessayer plus tard</string>
 </resources>
