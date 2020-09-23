@@ -169,6 +169,10 @@
     <string name="copy_to_my_space_error_file_size_exceed">Le fichier a dépassé la taille limite.</string>
     <string name="copy_to_my_space_error">Une erreur s\'est produite, impossible de copier.</string>
 
+    <string name="duplicate" translatable="false">Dupliquer</string>
+    <string name="duplicate_success" translatable="false">Le fichier a été dupliqué avec succés.</string>
+    <string name="duplicate_fail" translatable="false">Le fichier n\'a pas pu être dupliqué.</string>
+
     <string name="details">Détails</string>
     <string name="members">Membres</string>
     <string name="reader_role_name">Lecture</string>

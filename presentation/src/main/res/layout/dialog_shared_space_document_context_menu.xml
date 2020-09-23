@@ -170,6 +170,21 @@
         </LinearLayout>
 
         <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            app:contextActionVisible="@{sharedSpace.role}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.copyRole}"
+            android:onClick="@{() -> editContextMenu.duplicate(workGroupNode)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_duplicate" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/duplicate" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

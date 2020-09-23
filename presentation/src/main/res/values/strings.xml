@@ -266,6 +266,10 @@
     <string name="can_not_delete_member_in_workgroup_without_network" translatable="false">Can not delete member in workgroup while offline</string>
     <string name="confirm_delete_shared_space" translatable="false">Are you sure to delete \"%s\"</string>
 
+    <string name="duplicate" translatable="false">Duplicate</string>
+    <string name="duplicate_success" translatable="false">The file is successfully duplicated.</string>
+    <string name="duplicate_fail" translatable="false">The file can not be duplicated.</string>
+
     <string name="can_not_delete_shared_space_without_network" translatable="false">Can not delete shared space while offline</string>
     <string name="add_new_file_or_folder" translatable="false">Add new file or folder</string>
     <string name="create_folder" translatable="false">Create Folder</string>

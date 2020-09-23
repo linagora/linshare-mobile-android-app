@@ -35,4 +35,6 @@ package com.linagora.android.linshare.view.base
 
 interface EditContextMenu<T> {
     fun rename(item: T)
+
+    fun duplicate(item: T)
 }

@@ -35,6 +35,7 @@ package com.linagora.android.linshare.view.sharedspacedocument.action
 
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicateWorkGroupNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.WorkGroupNodeRenameClick
 import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.EditContextMenu
@@ -42,5 +43,9 @@ import com.linagora.android.linshare.view.base.EditContextMenu
 class SharedSpaceDocumentEditContextMenu(private val viewModel: BaseViewModel) : EditContextMenu<WorkGroupNode> {
     override fun rename(item: WorkGroupNode) {
         viewModel.dispatchUIState(Either.right(WorkGroupNodeRenameClick(item)))
+    }
+
+    override fun duplicate(item: WorkGroupNode) {
+        viewModel.dispatchUIState(Either.right(DuplicateWorkGroupNodeClick(item)))
     }
 }

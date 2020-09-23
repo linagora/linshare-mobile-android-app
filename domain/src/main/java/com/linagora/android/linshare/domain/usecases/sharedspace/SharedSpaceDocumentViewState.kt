@@ -74,6 +74,7 @@ data class CopyToSharedSpaceSuccess(
 ) : Success.ViewState()
 data class CopyToSharedSpaceFailure(val throwable: Throwable) : Failure.FeatureFailure()
 
+data class DuplicateWorkGroupNodeClick(val workGroupNode: WorkGroupNode) : Success.OnlineViewEvent(OperatorType.DuplicateFile)
 data class DuplicateInSharedSpaceSuccess(
     val duplicatedWorkGroupNode: WorkGroupNode
 ) : Success.ViewState()

@@ -76,4 +76,6 @@ sealed class OperatorType {
     object OrderBy : OfflineOperatorType()
 
     object Rename : OnlineOperatorType()
+
+    object DuplicateFile : OnlineOperatorType()
 }

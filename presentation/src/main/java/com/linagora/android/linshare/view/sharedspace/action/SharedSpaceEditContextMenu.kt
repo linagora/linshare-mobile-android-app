@@ -43,4 +43,6 @@ class SharedSpaceEditContextMenu(private val viewModel: BaseViewModel) : EditCon
     override fun rename(item: SharedSpaceNodeNested) {
         viewModel.dispatchUIState(Either.right(RenameSharedSpaceItemClick(item)))
     }
+
+    override fun duplicate(item: SharedSpaceNodeNested) {}
 }

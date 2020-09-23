@@ -74,6 +74,9 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpa
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateFolderViewEvent
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceFolderSuccessViewState
 import com.linagora.android.linshare.domain.usecases.sharedspace.DownloadSharedSpaceNodeClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicateInSharedSpaceSuccess
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicateInSharedSpaceFailure
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicateWorkGroupNodeClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
@@ -183,6 +186,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is Failure.CannotExecuteWithoutNetwork -> handleCannotExecuteViewEvent(failure.operatorType)
             is RemoveNodeNotFoundSharedSpaceState, is GetOrderListConfigurationFailed -> getAllNodes()
             is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_another_shared_space_fail)).show()
+            is DuplicateInSharedSpaceFailure -> errorSnackBar(getString(R.string.duplicate_fail)).show()
             is CopyFailedWithFileSizeExceed -> errorSnackBar(getString(R.string.copy_to_my_space_error_file_size_exceed)).show()
             is CopyFailedWithQuotaReach -> errorSnackBar(getString(R.string.copy_to_my_space_error_quota_reach)).show()
             is CopyInMySpaceFailure -> errorSnackBar(getString(R.string.copy_to_my_space_error)).show()
@@ -196,6 +200,10 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
                 getAllNodes()
             }
             is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_another_shared_space_success)).show()
+            is DuplicateInSharedSpaceSuccess -> {
+                successSnackBar(getString(R.string.duplicate_success)).show()
+                getAllNodes()
+            }
             is CopyInMySpaceSuccess -> alertCopyToMySpaceSuccess(viewState.documents)
             is CreateSharedSpaceFolderSuccessViewState -> getAllNodes()
             is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(viewState.orderListConfigurationType)
@@ -258,6 +266,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
             is SharedSpaceDocumentDetailsClick -> navigateToDetails(viewEvent.node)
             is WorkGroupNodeRenameClick -> handleRenameClick(viewEvent.workGroupNode)
+            is DuplicateWorkGroupNodeClick -> duplicateFile(viewEvent.workGroupNode)
             SharedSpaceDocumentOnBackClick -> navigateBack()
             SharedSpaceDocumentOnAddButtonClick -> showUploadFileOrCreateFolderDialog()
             OpenSearchView -> handleOpenSearch()
@@ -696,4 +705,12 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     }
 
     private fun navigateToMySpace() = findNavController().navigate(R.id.navigation_my_space)
+
+    private fun duplicateFile(workGroupNode: WorkGroupNode) {
+        dismissAllDialog()
+        if (workGroupNode !is WorkGroupDocument) {
+            return
+        }
+        sharedSpacesDocumentViewModel.duplicateNodeInSharedSpace(workGroupNode.sharedSpaceId, workGroupNode)
+    }
 }

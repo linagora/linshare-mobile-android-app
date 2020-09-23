@@ -63,6 +63,7 @@ import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfi
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicatedNameError
+import com.linagora.android.linshare.domain.usecases.sharedspace.DuplicateInSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceChildDocumentsOrderedInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceNodeSuccess
@@ -123,6 +124,7 @@ class SharedSpaceDocumentViewModel @Inject constructor(
     private val downloadOperator: DownloadOperator,
     private val copyToSharedSpace: CopyToSharedSpace,
     private val copyToMySpace: CopyInMySpaceInteractor,
+    private val duplicateFileInteractor: DuplicateInSharedSpaceInteractor,
     private val nameValidator: NameValidator,
     private val createSharedSpaceNodeInteractor: CreateSharedSpaceNodeInteractor,
     private val renameSharedSpaceDocument: RenameSharedSpaceDocument
@@ -311,6 +313,13 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         LOGGER.info("copyNodeToMySpace(): $copyFromNode")
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(copyToMySpace(copyFromNode.toCopyToMySpaceRequest()))
+        }
+    }
+
+    fun duplicateNodeInSharedSpace(duplicateFileSharedSpaceId: SharedSpaceId, duplicateNode: WorkGroupNode) {
+        LOGGER.info("duplicateFile(): $duplicateNode")
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(duplicateFileInteractor(duplicateNode, duplicateFileSharedSpaceId))
         }
     }
 
