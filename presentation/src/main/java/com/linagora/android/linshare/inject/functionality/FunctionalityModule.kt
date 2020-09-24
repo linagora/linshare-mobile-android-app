@@ -31,48 +31,27 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.inject
+package com.linagora.android.linshare.inject.functionality
 
-import com.linagora.android.linshare.inject.functionality.FunctionalityModule
-import com.linagora.android.linshare.inject.sharedspace.activity.SharedSpaceActivityModule
-import com.linagora.android.linshare.inject.sharedspace.member.SharedSpaceMemberModule
-import com.linagora.android.linshare.inject.sharedspace.role.SharedSpaceRoleModule
-import com.linagora.android.linshare.inject.worker.WorkerBindingModule
-import com.linagora.android.linshare.inject.worker.WorkerFactoryModule
-import com.linagora.android.linshare.view.LinShareApplication
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
+import com.linagora.android.linshare.data.datasource.functionality.FunctionalityDataSource
+import com.linagora.android.linshare.data.datasource.network.functionality.LinShareFunctionalityDataSource
+import com.linagora.android.linshare.data.repository.functionality.FunctionalityRepositoryImp
+import com.linagora.android.linshare.domain.repository.functionality.FunctionalityRepository
+import dagger.Binds
+import dagger.Module
 import javax.inject.Singleton
 
-@Singleton
-@Component(
-    modules = [
-        AndroidSupportInjectionModule::class,
-        AppModule::class,
-        DatabaseModule::class,
-        DocumentModule::class,
-        ContactModule::class,
-        FunctionalityModule::class,
-        SharedSpaceDocumentModule::class,
-        BroadcastReceiverModule::class,
-        ActivityBindingModule::class,
-        ViewModelModule::class,
-        WorkerFactoryModule::class,
-        WorkerBindingModule::class,
-        NetworkModule::class,
-        ShareModule::class,
-        SharedSpaceModule::class,
-        AutoCompleteModule::class,
-        SharedSpaceMemberModule::class,
-        SharedSpaceRoleModule::class,
-        SharedSpaceActivityModule::class
-    ]
-)
-interface AppComponent : AndroidInjector<LinShareApplication> {
-    @Component.Factory
-    interface Factory {
-        fun create(@BindsInstance application: LinShareApplication): AppComponent
-    }
+@Module
+abstract class FunctionalityModule {
+    @Binds
+    @Singleton
+    abstract fun bindLinShareFunctionalityDataSource(
+        linShareFunctionalityDataSource: LinShareFunctionalityDataSource
+    ): FunctionalityDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindingFunctionalityRepository(
+        functionalityRepository: FunctionalityRepositoryImp
+    ): FunctionalityRepository
 }

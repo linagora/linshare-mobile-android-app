@@ -42,6 +42,7 @@ import com.linagora.android.linshare.domain.model.audit.AuditLogEntryUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.functionality.Functionality
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
@@ -284,4 +285,8 @@ interface LinshareApi {
         @Path("sharedSpaceUuid") sharedSpaceUuid: String,
         @Body copyRequest: CopyRequest
     ): List<WorkGroupNode>
+
+    @GET("functionalities")
+    @Headers("Accept: application/json")
+    suspend fun getAllFunctionalities(): List<Functionality>
 }

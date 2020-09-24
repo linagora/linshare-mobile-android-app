@@ -31,48 +31,37 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.inject
+package com.linagora.android.testshared
 
-import com.linagora.android.linshare.inject.functionality.FunctionalityModule
-import com.linagora.android.linshare.inject.sharedspace.activity.SharedSpaceActivityModule
-import com.linagora.android.linshare.inject.sharedspace.member.SharedSpaceMemberModule
-import com.linagora.android.linshare.inject.sharedspace.role.SharedSpaceRoleModule
-import com.linagora.android.linshare.inject.worker.WorkerBindingModule
-import com.linagora.android.linshare.inject.worker.WorkerFactoryModule
-import com.linagora.android.linshare.view.LinShareApplication
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityBoolean
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityIdentifier
+import com.linagora.android.linshare.domain.model.functionality.FunctionalitySimple
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityString
 
-@Singleton
-@Component(
-    modules = [
-        AndroidSupportInjectionModule::class,
-        AppModule::class,
-        DatabaseModule::class,
-        DocumentModule::class,
-        ContactModule::class,
-        FunctionalityModule::class,
-        SharedSpaceDocumentModule::class,
-        BroadcastReceiverModule::class,
-        ActivityBindingModule::class,
-        ViewModelModule::class,
-        WorkerFactoryModule::class,
-        WorkerBindingModule::class,
-        NetworkModule::class,
-        ShareModule::class,
-        SharedSpaceModule::class,
-        AutoCompleteModule::class,
-        SharedSpaceMemberModule::class,
-        SharedSpaceRoleModule::class,
-        SharedSpaceActivityModule::class
-    ]
-)
-interface AppComponent : AndroidInjector<LinShareApplication> {
-    @Component.Factory
-    interface Factory {
-        fun create(@BindsInstance application: LinShareApplication): AppComponent
-    }
+object FunctionalityFixture {
+    val FUNCTIONALITY_WORKGROUP = FunctionalitySimple(
+        identifier = FunctionalityIdentifier.WORK_GROUP,
+        enable = true,
+        canOverride = false
+    )
+
+    val FUNCTIONALITY_CONTACTS_LIST_CREATION_RIGHT = FunctionalitySimple(
+        identifier = FunctionalityIdentifier.CONTACTS_LIST__CREATION_RIGHT,
+        enable = true,
+        canOverride = false
+    )
+
+    val FUNCTIONALITY_ANONYMOUS_URL_NOTIFICATION_URL = FunctionalityString(
+        identifier = FunctionalityIdentifier.WORK_GROUP,
+        enable = true,
+        canOverride = false,
+        value = "https://user.linshare.local"
+    )
+
+    val FUNCTIONALITY_UPLOAD_REQUEST_PROLONGATION = FunctionalityBoolean(
+        identifier = FunctionalityIdentifier.UPLOAD_REQUEST__PROLONGATION,
+        enable = false,
+        canOverride = false,
+        value = false
+    )
 }
