@@ -59,6 +59,7 @@ import com.linagora.android.linshare.domain.repository.authentication.Authentica
 import com.linagora.android.linshare.domain.repository.autocomplete.AutoCompleteRepository
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
 import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
+import com.linagora.android.linshare.domain.repository.functionality.FunctionalityRepository
 import com.linagora.android.linshare.domain.repository.share.ReceivedShareRepository
 import com.linagora.android.linshare.domain.repository.user.AuditUserRepository
 import com.linagora.android.linshare.domain.repository.user.QuotaRepository
@@ -66,12 +67,14 @@ import com.linagora.android.linshare.domain.repository.user.UserRepository
 import com.linagora.android.linshare.domain.usecases.upload.UploadInteractor
 import com.linagora.android.linshare.domain.usecases.upload.UploadToSharedSpaceInteractor
 import com.linagora.android.linshare.domain.usecases.utils.ViewStateStore
+import com.linagora.android.linshare.functionality.FunctionalityObserver
 import com.linagora.android.linshare.network.AuthorizationManagerImp
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.UploadAndDownloadNotification
 import com.linagora.android.linshare.operator.download.DownloadManagerOperator
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
 import com.linagora.android.linshare.util.DeviceStorageStats
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.upload.controller.UploadController
@@ -215,5 +218,14 @@ open class AppModule {
     @Singleton
     fun provideConnectionLiveData(context: Context): ConnectionLiveData {
         return ConnectionLiveData(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFunctionalityObserver(
+        functionalityRepository: FunctionalityRepository,
+        dispatcherProvider: CoroutinesDispatcherProvider
+    ): FunctionalityObserver {
+        return FunctionalityObserver(functionalityRepository, dispatcherProvider)
     }
 }

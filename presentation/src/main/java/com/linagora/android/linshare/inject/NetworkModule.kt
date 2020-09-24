@@ -67,6 +67,13 @@ import com.linagora.android.linshare.domain.model.autocomplete.SimpleAutoComplet
 import com.linagora.android.linshare.domain.model.autocomplete.ThreadMemberAutoCompleteResult
 import com.linagora.android.linshare.domain.model.autocomplete.UserAutoCompleteResult
 import com.linagora.android.linshare.domain.model.document.DocumentId
+import com.linagora.android.linshare.domain.model.functionality.Functionality
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityBoolean
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityInteger
+import com.linagora.android.linshare.domain.model.functionality.FunctionalitySimple
+import com.linagora.android.linshare.domain.model.functionality.FunctionalitySize
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityString
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityTime
 import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.share.ShareId
@@ -132,6 +139,19 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    fun provideFunctionalityTypeAdapterFactory(): RuntimeTypeAdapterFactory<Functionality> {
+        return RuntimeTypeAdapterFactory
+            .of(Functionality::class.java, "type")
+            .registerSubtype(FunctionalityBoolean::class.java, "boolean")
+            .registerSubtype(FunctionalityInteger::class.java, "integer")
+            .registerSubtype(FunctionalityString::class.java, "string")
+            .registerSubtype(FunctionalitySize::class.java, "size")
+            .registerSubtype(FunctionalityTime::class.java, "time")
+            .registerSubtype(FunctionalitySimple::class.java, "simple")
+    }
+
+    @Singleton
+    @Provides
     fun provideWorkgroupNodeTypeAdapterFactory(): RuntimeTypeAdapterFactory<WorkGroupNode> {
         return RuntimeTypeAdapterFactory
             .of(WorkGroupNode::class.java, "type", true)
@@ -169,7 +189,8 @@ class NetworkModule {
         clientBuilder: OkHttpClient.Builder,
         autoCompleteTypeAdapterFactory: RuntimeTypeAdapterFactory<AutoCompleteResult>,
         workGroupNodeTypeAdapterFactory: RuntimeTypeAdapterFactory<WorkGroupNode>,
-        auditLogEntryUserTypeAdapterFactory: RuntimeTypeAdapterFactory<AuditLogEntryUser>
+        auditLogEntryUserTypeAdapterFactory: RuntimeTypeAdapterFactory<AuditLogEntryUser>,
+        functionalityTypeAdapterFactory: RuntimeTypeAdapterFactory<Functionality>
     ): Retrofit {
 
         val gson = GsonBuilder()
@@ -190,6 +211,7 @@ class NetworkModule {
             .registerTypeAdapterFactory(workGroupNodeTypeAdapterFactory)
             .registerTypeAdapterFactory(autoCompleteTypeAdapterFactory)
             .registerTypeAdapterFactory(auditLogEntryUserTypeAdapterFactory)
+            .registerTypeAdapterFactory(functionalityTypeAdapterFactory)
             .create()
 
         return Retrofit.Builder()
