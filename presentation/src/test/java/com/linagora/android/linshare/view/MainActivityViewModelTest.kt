@@ -38,11 +38,13 @@ import arrow.core.Either
 import com.linagora.android.linshare.CoroutinesExtension
 import com.linagora.android.linshare.InstantExecutorExtension
 import com.linagora.android.linshare.domain.network.manager.AuthorizationManager
+import com.linagora.android.linshare.domain.repository.functionality.FunctionalityRepository
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.utils.emitState
+import com.linagora.android.linshare.functionality.FunctionalityObserver
 import com.linagora.android.linshare.network.DynamicBaseUrlInterceptor
 import com.linagora.android.linshare.permission.ReadContactPermission
 import com.linagora.android.linshare.permission.WriteStoragePermission
@@ -87,6 +89,9 @@ class MainActivityViewModelTest {
     lateinit var readContactPermission: ReadContactPermission
 
     @Mock
+    lateinit var functionalityRepository: FunctionalityRepository
+
+    @Mock
     lateinit var internetAvailable: ConnectionLiveData
 
     private lateinit var viewModel: MainActivityViewModel
@@ -94,15 +99,17 @@ class MainActivityViewModelTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        val fakeDispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher)
         viewModel =
             MainActivityViewModel(
                 internetAvailable = internetAvailable,
                 getAuthenticatedInfo = getAuthenticatedInfoInteractor,
-                dispatcherProvider = provideFakeCoroutinesDispatcherProvider(coroutinesExtension.testDispatcher),
+                dispatcherProvider = fakeDispatcherProvider,
                 dynamicBaseUrlInterceptor = dynamicBaseUrlInterceptor,
                 authorizationManager = authorizationManager,
                 writeStoragePermission = writeStoragePermission,
-                readContactPermission = readContactPermission
+                readContactPermission = readContactPermission,
+                functionalityObserver = FunctionalityObserver(functionalityRepository, fakeDispatcherProvider)
             )
     }
 

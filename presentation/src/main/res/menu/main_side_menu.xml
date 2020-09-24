@@ -55,6 +55,7 @@
     </group>
 
     <group
+        android:visible="false"
         android:id="@+id/navigation_shared_space"
         android:checkableBehavior="single">
 

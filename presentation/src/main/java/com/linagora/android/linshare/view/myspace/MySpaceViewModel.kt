@@ -54,6 +54,7 @@ import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfi
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.functionality.FunctionalityObserver
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
@@ -81,7 +82,8 @@ class MySpaceViewModel @Inject constructor(
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor,
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
-    private val copyToSharedSpace: CopyToSharedSpace
+    private val copyToSharedSpace: CopyToSharedSpace,
+    val functionalityObserver: FunctionalityObserver
 ) : LinShareViewModel(internetAvailable, application, dispatcherProvider) {
 
     companion object {

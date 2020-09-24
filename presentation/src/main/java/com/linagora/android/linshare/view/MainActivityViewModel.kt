@@ -44,6 +44,7 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewStat
 import com.linagora.android.linshare.domain.usecases.auth.GetAuthenticatedInfoInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.functionality.FunctionalityObserver
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
@@ -68,7 +69,8 @@ class MainActivityViewModel @Inject constructor(
     private val dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
     private val authorizationManager: AuthorizationManager,
     private val writeStoragePermission: WriteStoragePermission,
-    private val readContactPermission: ReadContactPermission
+    private val readContactPermission: ReadContactPermission,
+    val functionalityObserver: FunctionalityObserver
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
 
     companion object {

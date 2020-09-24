@@ -51,6 +51,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.ActivityMainBinding
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityIdentifier
 import com.linagora.android.linshare.domain.utils.NoOp
 import com.linagora.android.linshare.model.mapper.toParcelable
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.Initial
@@ -64,6 +65,7 @@ import com.linagora.android.linshare.util.Constant.LINSHARE_APPLICATION_ID
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.base.BaseActivity
 import com.linagora.android.linshare.view.dialog.WriteStorageExplanationPermissionDialog
+import com.linagora.android.linshare.view.menu.MenuVisible
 import com.linagora.android.linshare.view.menu.SideMenuDrawer
 import com.linagora.android.linshare.view.upload.UploadFragmentArgs
 import org.slf4j.LoggerFactory
@@ -215,6 +217,15 @@ class MainActivity : BaseActivity(), NavigationHost {
                 }
             )
         }
+
+        viewModel.functionalityObserver.allFunctionality.observe(this, Observer { functionalities ->
+            val menuVisible = functionalities.takeIf { it.isNotEmpty() }
+                ?.first { functionality -> functionality.identifier == FunctionalityIdentifier.WORK_GROUP }?.enable
+                ?.let { enable -> if (enable) MenuVisible.VISIBLE else MenuVisible.GONE }
+                ?: MenuVisible.GONE
+
+            sideMenuDrawer.visibleGroupMenu(R.id.navigation_shared_space, menuVisible)
+        })
     }
 
     private fun setUpSideMenuLockMode(destination: NavDestination) {

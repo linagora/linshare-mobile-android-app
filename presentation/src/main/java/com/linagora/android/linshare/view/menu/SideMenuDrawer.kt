@@ -77,4 +77,13 @@ class SideMenuDrawer(
             ?.let { drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED) }
             ?: drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
+
+    fun visibleGroupMenu(groupMenuId: Int, menuVisible: MenuVisible) {
+        navigationView.menu.setGroupVisible(groupMenuId, menuVisible == MenuVisible.VISIBLE)
+    }
+}
+
+enum class MenuVisible {
+    VISIBLE,
+    GONE
 }
