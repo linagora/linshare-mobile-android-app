@@ -44,6 +44,7 @@ import com.linagora.android.linshare.domain.model.order.OrderListConfigurationTy
 import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsOrderedInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
@@ -63,6 +64,7 @@ import com.linagora.android.linshare.view.action.OrderByActionImp
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import com.linagora.android.linshare.view.myspace.action.MySpaceCopyToContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextMenu
+import com.linagora.android.linshare.view.myspace.action.MySpaceEditContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemBehavior
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemContextMenu
 import kotlinx.coroutines.launch
@@ -78,6 +80,7 @@ class MySpaceViewModel @Inject constructor(
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor,
+    private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
     private val copyToSharedSpace: CopyToSharedSpace
 ) : LinShareViewModel(internetAvailable, application, dispatcherProvider) {
 
@@ -98,6 +101,8 @@ class MySpaceViewModel @Inject constructor(
     val downloadContextMenu = MySpaceDownloadContextMenu(this)
 
     val copyToSharedSpaceContextMenu = MySpaceCopyToContextMenu(this)
+
+    val editContextMenu = MySpaceEditContextMenu(this)
 
     fun getOrderListConfiguration() {
         viewModelScope.launch(dispatcherProvider.io) {
@@ -166,6 +171,15 @@ class MySpaceViewModel @Inject constructor(
                 copyToSharedSpaceId,
                 copyToParentNodeId
             ))
+        }
+    }
+
+    fun duplicateDocumentMySpace(
+        document: Document
+    ) {
+        LOGGER.info("duplicateDocumentMySpace(): duplicate $document in My Space")
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(copyInMySpaceInteractor(document.toCopyRequest()))
         }
     }
 

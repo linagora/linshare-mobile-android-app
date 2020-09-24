@@ -62,6 +62,9 @@ import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSucce
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.ShareItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.myspace.DuplicateDocumentMySpaceClick
+import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
+import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceFailure
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
@@ -143,6 +146,7 @@ class MySpaceFragment : MainNavigationFragment() {
         when (failure) {
             is CannotExecuteWithoutNetwork -> handleCannotExecuteWithoutNetwork(failure.operatorType)
             is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_shared_space_fail_message)).show()
+            is CopyInMySpaceFailure -> errorSnackBar(getString(R.string.copy_failed)).show()
         }
     }
 
@@ -152,6 +156,10 @@ class MySpaceFragment : MainNavigationFragment() {
             is RemoveDocumentSuccessViewState -> getAllDocuments()
             is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_shared_space_message)).show()
             is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(success.orderListConfigurationType)
+            is CopyInMySpaceSuccess -> {
+                successSnackBar(getString(R.string.copy_success, success.documents.first().name)).show()
+                getAllDocuments()
+            }
         }
     }
 
@@ -175,6 +183,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is DocumentDetailsClick -> navigateToDetails(viewEvent.document)
             is OpenOrderByDialog -> showOrderByDialog()
             is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
+            is DuplicateDocumentMySpaceClick -> duplicateDocument(viewEvent.document)
         }
         mySpaceViewModel.dispatchResetState()
     }
@@ -401,5 +410,10 @@ class MySpaceFragment : MainNavigationFragment() {
         val actionToDocumentDetails = MySpaceFragmentDirections
             .navigateToDocumentDetails(document.documentId.toParcelable())
         findNavController().navigate(actionToDocumentDetails)
+    }
+
+    private fun duplicateDocument(document: Document) {
+        dismissContextMenu()
+        mySpaceViewModel.duplicateDocumentMySpace(document)
     }
 }

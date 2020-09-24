@@ -72,6 +72,7 @@ class MySpaceContextMenuDialog(private val document: Document) : DaggerBottomShe
         binding.document = document
         binding.mySpaceItemAction = mySpaceViewModel.mySpaceItemAction
         binding.contextMenu = mySpaceViewModel.itemContextMenu
+        binding.editContextMenu = mySpaceViewModel.editContextMenu
         binding.downloadContextMenu = mySpaceViewModel.downloadContextMenu
         binding.copyToContextMenu = mySpaceViewModel.copyToSharedSpaceContextMenu
     }

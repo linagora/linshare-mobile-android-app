@@ -262,6 +262,9 @@
     <string name="copy_to_another_shared_space_fail" translatable="false">Can not copy file to another Shared space.</string>
     <string name="copy_to_shared_space_message" translatable="false">The file is copied to a Shared space.</string>
     <string name="copy_to_shared_space_fail_message" translatable="false">Can not copy file to Shared space.</string>
+    <string name="copy_success" translatable="false">File %s has been copied successfully.</string>
+    <string name="copy_failed" translatable="false">The file copy has failed.</string>
+
     <string name="confirm_remove_member_from_work_group" translatable="false">Are you sure to remove %1$s from %2$s?</string>
     <string name="can_not_delete_member_in_workgroup_without_network" translatable="false">Can not delete member in workgroup while offline</string>
     <string name="confirm_delete_shared_space" translatable="false">Are you sure to delete \"%s\"</string>
