@@ -31,36 +31,39 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.repository.document
+package com.linagora.android.linshare.domain.usecases.myspace
 
-import com.linagora.android.linshare.domain.model.copy.CopyRequest
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRenameRequest
-import com.linagora.android.linshare.domain.model.document.DocumentRequest
-import com.linagora.android.linshare.domain.model.search.QueryString
-import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.domain.model.share.ShareRequest
-import com.linagora.android.linshare.domain.model.upload.OnTransfer
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
+import com.linagora.android.linshare.domain.repository.document.DocumentRepository
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
+import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface DocumentRepository {
+@Singleton
+class RenameDocumentInteractor @Inject constructor(
+    private val documentRepository: DocumentRepository
+) {
 
-    suspend fun upload(
-        documentRequest: DocumentRequest,
-        onTransfer: OnTransfer
-    ): Document
+    operator fun invoke(document: Document, newNameRequest: NewNameRequest): Flow<State<Either<Failure, Success>>> {
+        return flow<State<Either<Failure, Success>>> {
+            emitState { Either.right(Loading) }
 
-    suspend fun getAll(): List<Document>
+            val renameState = Either.catch { documentRepository.renameDocument(document.documentId, DocumentRenameRequest(newNameRequest.value)) }
+                .bimap(
+                    leftOperation = ::RenameDocumentFailure,
+                    rightOperation = { RenameDocumentSuccess(document) }
+                )
 
-    suspend fun get(documentId: DocumentId): Document
-
-    suspend fun remove(documentId: DocumentId): Document
-
-    suspend fun search(query: QueryString): List<Document>
-
-    suspend fun share(shareRequest: ShareRequest): List<Share>
-
-    suspend fun copy(copyRequest: CopyRequest): List<Document>
-
-    suspend fun renameDocument(documentId: DocumentId, documentRenameRequest: DocumentRenameRequest): Document
+            emitState { renameState }
+        }
+    }
 }
