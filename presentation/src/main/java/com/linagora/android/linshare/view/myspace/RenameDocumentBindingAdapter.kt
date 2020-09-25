@@ -31,22 +31,31 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.myspace.action
+package com.linagora.android.linshare.view.myspace
 
+import android.view.View
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.databinding.BindingAdapter
 import arrow.core.Either
-import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.usecases.myspace.DuplicateDocumentMySpaceClick
-import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentMySpaceClick
-import com.linagora.android.linshare.view.base.BaseViewModel
-import com.linagora.android.linshare.view.base.EditContextMenu
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.usecases.sharedspace.BlankNameError
+import com.linagora.android.linshare.domain.usecases.sharedspace.NameContainSpecialCharacter
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.Success
 
-class MySpaceEditContextMenu(private val viewModel: BaseViewModel) : EditContextMenu<Document> {
-
-    override fun rename(item: Document) {
-        viewModel.dispatchUIState(Either.right(RenameDocumentMySpaceClick(item)))
-    }
-
-    override fun duplicate(item: Document) {
-        viewModel.dispatchUIState(Either.right(DuplicateDocumentMySpaceClick(item)))
-    }
+@BindingAdapter("errorMessageRenameDocument", "currentDocumentName", requireAll = true)
+fun bindingErrorMessageRenameDocument(
+    textView: AppCompatTextView,
+    state: Either<Failure, Success>,
+    currentDocumentName: String
+) {
+    state.fold(
+        ifLeft = { failure ->
+            textView.visibility = View.VISIBLE
+            when (failure) {
+                is BlankNameError -> textView.text = textView.context.getString(R.string.file_name_can_not_be_blank)
+                is NameContainSpecialCharacter -> textView.text = textView.context.getString(R.string.workgroup_name_not_contain_special_char)
+            }
+        },
+        ifRight = { textView.visibility = View.GONE })
 }

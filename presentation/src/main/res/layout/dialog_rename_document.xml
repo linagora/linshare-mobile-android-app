@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ LinShare is an open source filesharing software, part of the LinPKI software
+  ~ suite, developed by Linagora.
+  ~
+  ~ Copyright (C) 2020 LINAGORA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the
+  ~ terms of the GNU Affero General Public License as published by the Free Software
+  ~ Foundation, either version 3 of the License, or (at your option) any later version,
+  ~ provided you comply with the Additional Terms applicable for LinShare software by
+  ~ Linagora pursuant to Section 7 of the GNU Affero General Public License,
+  ~ subsections (b), (c), and (e), pursuant to which you must notably (i) retain the
+  ~ display in the interface of the “LinShare™” trademark/logo, the "Libre & Free" mention,
+  ~ the words “You are using the Free and Open Source version of LinShare™, powered by
+  ~ Linagora © 2009–2020. Contribute to Linshare R&D by subscribing to an Enterprise
+  ~ offer!”. You must also retain the latter notice in all asynchronous messages such as
+  ~ e-mails sent with the Program, (ii) retain all hypertext links between LinShare and
+  ~ http://www.linshare.org, between linagora.com and Linagora, and (iii) refrain from
+  ~ infringing Linagora intellectual property rights over its trademarks and commercial
+  ~ brands. Other Additional Terms apply, see
+  ~ <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf>
+  ~ for more details.
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY
+  ~ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+  ~ more details.
+  ~ You should have received a copy of the GNU Affero General Public License and its
+  ~ applicable Additional Terms for LinShare along with this program. If not, see
+  ~ <http://www.gnu.org/licenses/> for the GNU Affero General Public License version
+  ~  3 and <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf> for
+  ~  the Additional Terms applicable to LinShare software.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.linagora.android.linshare.domain.model.document.Document"/>
+        <import type="com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType"/>
+        <import type="java.util.List"/>
+        <import type="arrow.core.Either"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Success"/>
+        <import type="com.linagora.android.linshare.domain.usecases.utils.Failure"/>
+        <import type="androidx.lifecycle.LiveData"/>
+
+        <variable
+            name="currentDocument"
+            type="Document"/>
+
+        <variable
+            name="state"
+            type="LiveData&lt;Either&lt;Failure, Success&gt;&gt;" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingStart="@dimen/padding_horizontal_row_bottom_sheet"
+        android:paddingEnd="@dimen/padding_horizontal_row_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/padding_top_bottom_sheet">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleRename"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:textSize="@dimen/title_dialog_text_size"
+            android:textColor="@color/file_name_color"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/rename_document"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/newName"
+            style="@style/TextInRowLinerBottomSheetStyle"
+            android:textStyle="italic"
+            android:singleLine="true"
+            android:backgroundTint="@color/file_name_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionNone"
+            app:layout_constraintTop_toBottomOf="@+id/titleRename"
+            app:setTextWithAllTextSelected="@{currentDocument.name}">
+            <requestFocus />
+        </androidx.appcompat.widget.AppCompatEditText>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/errorMessage"
+            android:textSize="@dimen/error_workgroup_name_blank"
+            android:textColor="@color/error_border_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/newName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:currentDocumentName="@{currentDocument.name}"
+            app:errorMessageRenameDocument="@{state}"/>
+
+        <TextView
+            android:id="@+id/renameButton"
+            style="@style/SelectButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rename"
+            android:layout_marginTop="@dimen/upload_button_margin_top"
+            android:layout_marginBottom="@dimen/upload_button_margin_top"
+            app:positiveButtonWithSuggestName="@{state}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newName" />
+
+        <TextView
+            android:id="@+id/cancelButton"
+            style="@style/SelectButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:layout_marginEnd="@dimen/select_button_margin_end"
+            app:layout_constraintEnd_toStartOf="@+id/renameButton"
+            app:layout_constraintTop_toTopOf="@+id/renameButton" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

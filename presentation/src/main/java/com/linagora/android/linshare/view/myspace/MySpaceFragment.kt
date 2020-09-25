@@ -65,6 +65,10 @@ import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomB
 import com.linagora.android.linshare.domain.usecases.myspace.DuplicateDocumentMySpaceClick
 import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSuccess
 import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceFailure
+import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentMySpaceClick
+import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentSuccess
+import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentFailure
+
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
@@ -153,6 +157,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is CannotExecuteWithoutNetwork -> handleCannotExecuteWithoutNetwork(failure.operatorType)
             is CopyToSharedSpaceFailure -> errorSnackBar(getString(R.string.copy_to_shared_space_fail_message)).show()
             is CopyInMySpaceFailure -> errorSnackBar(getString(R.string.copy_failed)).show()
+            is RenameDocumentFailure -> handleRenameDocumentFailure()
         }
     }
 
@@ -166,6 +171,7 @@ class MySpaceFragment : MainNavigationFragment() {
                 successSnackBar(getString(R.string.copy_success, success.documents.first().name)).show()
                 getAllDocuments()
             }
+            is RenameDocumentSuccess -> getAllDocuments()
         }
     }
 
@@ -190,6 +196,7 @@ class MySpaceFragment : MainNavigationFragment() {
             is OpenOrderByDialog -> showOrderByDialog()
             is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
             is DuplicateDocumentMySpaceClick -> duplicateDocument(viewEvent.document)
+            is RenameDocumentMySpaceClick -> handleRenameDocumentClick(viewEvent.document)
         }
         mySpaceViewModel.dispatchResetState()
     }
@@ -421,5 +428,23 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun duplicateDocument(document: Document) {
         dismissContextMenu()
         mySpaceViewModel.duplicateDocumentMySpace(document)
+    }
+
+    private fun handleRenameDocumentClick(document: Document) {
+        dismissContextMenu()
+        RenameDocumentDialog(
+            currentDocumentDialog = document,
+            onRenameMySpaceDocument = mySpaceViewModel::renameDocument,
+            onNewNameRequestChange = mySpaceViewModel::verifyNewName,
+            viewState = mySpaceViewModel.viewState)
+            .show(childFragmentManager, RenameDocumentDialog.TAG)
+    }
+
+    private fun handleRenameDocumentFailure() {
+        Snackbar.make(binding.root, getString(R.string.common_error_occurred_message), Snackbar.LENGTH_SHORT)
+            .errorLayout(requireContext())
+            .setAnchorView(binding.mySpaceUploadButton)
+            .show()
+        mySpaceViewModel.dispatchResetState()
     }
 }

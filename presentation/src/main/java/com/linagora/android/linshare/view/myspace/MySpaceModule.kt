@@ -60,4 +60,8 @@ internal abstract class MySpaceModule {
     @FragmentScoped
     @ContributesAndroidInjector
     internal abstract fun contributeConfirmRemoveDocumentDialogFragment(): ConfirmRemoveDocumentDialog
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    internal abstract fun contributeRenameDocumentDialog(): RenameDocumentDialog
 }

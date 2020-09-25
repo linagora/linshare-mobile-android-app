@@ -310,5 +310,7 @@
     <string name="rename_folder">Rename Folder</string>
 
     <string name="common_error_occurred_message">An error occurred, please try again later</string>
+    <string name="file_name_can_not_be_blank" translatable="false">"File name can not be blank"</string>
+
     <string name="destination" translatable="false">Destination</string>
 </resources>

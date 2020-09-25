@@ -58,6 +58,7 @@ data class CopyInMySpaceSuccess(val documents: List<Document>) : Success.ViewSta
 object CopyFailedWithFileSizeExceed : FeatureFailure()
 object CopyFailedWithQuotaReach : FeatureFailure()
 data class DocumentDetailsClick(val document: Document) : Success.OnlineViewEvent(OperatorType.ViewDetails)
+data class RenameDocumentMySpaceClick(val document: Document) : Success.OnlineViewEvent(OperatorType.Rename)
 data class RenameDocumentSuccess(val document: Document) : Success.ViewState()
 data class RenameDocumentFailure(val throwable: Throwable) : FeatureFailure()
 data class DuplicateDocumentMySpaceClick(val document: Document) : Success.OnlineViewEvent(OperatorType.DuplicateFile)

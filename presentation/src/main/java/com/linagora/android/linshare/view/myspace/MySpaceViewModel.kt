@@ -44,21 +44,28 @@ import com.linagora.android.linshare.domain.model.order.OrderListConfigurationTy
 import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsOrderedInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
+import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
+import com.linagora.android.linshare.domain.usecases.utils.Failure
+import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.functionality.FunctionalityObserver
+import com.linagora.android.linshare.domain.utils.emitState
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
+import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.CoroutinesDispatcherProvider
+import com.linagora.android.linshare.util.NameValidator
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.action.OrderByActionImp
@@ -68,6 +75,13 @@ import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextM
 import com.linagora.android.linshare.view.myspace.action.MySpaceEditContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemBehavior
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemContextMenu
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -83,7 +97,9 @@ class MySpaceViewModel @Inject constructor(
     private val removeDocumentInteractor: RemoveDocumentInteractor,
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
     private val copyToSharedSpace: CopyToSharedSpace,
-    val functionalityObserver: FunctionalityObserver
+    val functionalityObserver: FunctionalityObserver,
+    private val renameDocumentInteractor: RenameDocumentInteractor,
+    private val nameValidator: NameValidator
 ) : LinShareViewModel(internetAvailable, application, dispatcherProvider) {
 
     companion object {
@@ -106,9 +122,21 @@ class MySpaceViewModel @Inject constructor(
 
     val editContextMenu = MySpaceEditContextMenu(this)
 
+    private val enteringName = BroadcastChannel<NewNameRequest>(Channel.CONFLATED)
+
+    private val newNameStates = enteringName.asFlow()
+        .debounce(Constant.QUERY_INTERVAL_MS)
+        .mapLatest { queryString -> nameValidator.validateName(queryString.value) }
+
     fun getOrderListConfiguration() {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(getOrderListConfigurationInteractor(OrderListType.MySpace))
+        }
+    }
+
+    override fun onSuccessDispatched(success: Success) {
+        when (success) {
+            is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
         }
     }
 
@@ -185,9 +213,19 @@ class MySpaceViewModel @Inject constructor(
         }
     }
 
-    override fun onSuccessDispatched(success: Success) {
-        when (success) {
-            is PersistOrderListConfigurationSuccess -> getOrderListConfiguration()
+    fun renameDocument(document: Document, newNameRequest: NewNameRequest) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(renameDocumentInteractor(document, newNameRequest))
+        }
+    }
+
+    fun verifyNewName(nameString: NewNameRequest) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            enteringName.send(nameString)
+            consumeStates(
+                newNameStates.flatMapLatest { state ->
+                    flow<State<Either<Failure, Success>>> { emitState { state } } }
+            )
         }
     }
 }

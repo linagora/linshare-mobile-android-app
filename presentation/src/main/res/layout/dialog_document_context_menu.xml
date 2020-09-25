@@ -152,6 +152,19 @@
 
         </LinearLayout>
 
+        <LinearLayout style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> editContextMenu.rename(document)}">
+
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_rename" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/rename" />
+
+        </LinearLayout>
+
         <View style="@style/DivideView"/>
 
         <LinearLayout
