@@ -36,6 +36,7 @@ package com.linagora.android.linshare.data.datasource
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
+import com.linagora.android.linshare.domain.model.document.DocumentRenameRequest
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.share.Share
@@ -62,4 +63,6 @@ interface DocumentDataSource {
     suspend fun share(shareRequest: ShareRequest): List<Share>
 
     suspend fun copy(copyRequest: CopyRequest): List<Document>
+
+    suspend fun renameDocument(documentId: DocumentId, renameRequest: DocumentRenameRequest): Document
 }

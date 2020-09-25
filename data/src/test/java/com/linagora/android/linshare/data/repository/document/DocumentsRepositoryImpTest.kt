@@ -40,6 +40,7 @@ import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.ErrorResponse
 import com.linagora.android.linshare.domain.model.LinShareErrorCode
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.document.DocumentRenameRequest
 import com.linagora.android.linshare.domain.model.upload.OnTransfer
 import com.linagora.android.linshare.domain.model.upload.TotalBytes
 import com.linagora.android.linshare.domain.model.upload.TransferredBytes
@@ -52,6 +53,7 @@ import com.linagora.android.testshared.ShareFixtures.SHARE_1
 import com.linagora.android.testshared.ShareFixtures.SHARE_2
 import com.linagora.android.testshared.ShareFixtures.SHARE_CREATION_1
 import com.linagora.android.testshared.ShareFixtures.SHARE_CREATION_2
+import com.linagora.android.testshared.TestFixtures
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_ID
@@ -256,6 +258,34 @@ class DocumentsRepositoryImpTest {
 
         assertThrows<RuntimeException> {
             runBlockingTest { documentRepositoryImp.get(DOCUMENT_ID) }
+        }
+    }
+
+    @Test
+    fun renameDocumentShouldSuccessWithValidDocumentName() = runBlockingTest {
+        `when`(documentDataSource.renameDocument(
+                TestFixtures.Documents.DOCUMENT_3.documentId,
+                DocumentRenameRequest("New Name.txt")))
+            .thenAnswer { TestFixtures.Documents.DOCUMENT_3 }
+
+        assertThat(documentDataSource.renameDocument(
+                TestFixtures.Documents.DOCUMENT_3.documentId,
+                DocumentRenameRequest("New Name.txt")))
+            .isEqualTo(TestFixtures.Documents.DOCUMENT_3)
+    }
+
+    @Test
+    fun renameDocumentShouldFailWhenRenameDocumentHasAFailure() = runBlockingTest {
+        val exception = RuntimeException("Can not rename the document")
+        `when`((documentDataSource.renameDocument(
+                TestFixtures.Documents.DOCUMENT_3.documentId,
+                DocumentRenameRequest("New Name.txt"))))
+            .thenThrow(exception)
+
+        assertThrows<RuntimeException> {
+            runBlockingTest { documentDataSource.renameDocument(
+                TestFixtures.Documents.DOCUMENT_3.documentId,
+                DocumentRenameRequest("New Name.txt")) }
         }
     }
 }

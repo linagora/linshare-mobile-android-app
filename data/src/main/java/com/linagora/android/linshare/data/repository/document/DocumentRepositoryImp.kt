@@ -37,6 +37,7 @@ import com.linagora.android.linshare.data.datasource.DocumentDataSource
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
+import com.linagora.android.linshare.domain.model.document.DocumentRenameRequest
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.share.Share
@@ -78,5 +79,9 @@ class DocumentRepositoryImp @Inject constructor(
 
     override suspend fun copy(copyRequest: CopyRequest): List<Document> {
         return linShareDocumentDataSource.copy(copyRequest)
+    }
+
+    override suspend fun renameDocument(documentId: DocumentId, documentRenameRequest: DocumentRenameRequest): Document {
+        return linShareDocumentDataSource.renameDocument(documentId, documentRenameRequest)
     }
 }

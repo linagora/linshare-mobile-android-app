@@ -43,6 +43,7 @@ import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResul
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.functionality.Functionality
+import com.linagora.android.linshare.domain.model.document.DocumentRenameRequest
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
@@ -121,6 +122,13 @@ interface LinshareApi {
     suspend fun getDocument(
         @Path("documentId") documentUuid: String,
         @Query("withShares") withShares: Boolean = true
+    ): Document
+
+    @PUT("/documents/{uuid}")
+    @Headers("Accept: application/json")
+    suspend fun renameDocument(
+        @Path("uuid") uuid: String,
+        @Body documentRenameRequest: DocumentRenameRequest
     ): Document
 
     @DELETE("/documents/{uuid}")

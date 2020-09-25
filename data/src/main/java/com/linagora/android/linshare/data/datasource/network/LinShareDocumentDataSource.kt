@@ -43,6 +43,7 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.document.DocumentRequest
 import com.linagora.android.linshare.domain.model.document.nameContains
+import com.linagora.android.linshare.domain.model.document.DocumentRenameRequest
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
@@ -118,5 +119,9 @@ class LinShareDocumentDataSource @Inject constructor(
         return networkExecutor.execute(
             networkRequest = { linshareApi.copyInMySpace(copyRequest) },
             onFailure = { copyNetworkRequestHandler(it) })
+    }
+
+    override suspend fun renameDocument(documentId: DocumentId, documentRenameRequest: DocumentRenameRequest): Document {
+        return linshareApi.renameDocument(documentId.uuid.toString(), documentRenameRequest)
     }
 }
