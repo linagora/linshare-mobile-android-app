@@ -35,12 +35,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="com.linagora.android.linshare.functionality.FunctionalityObserver"/>
         <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
         <import type="com.linagora.android.linshare.model.upload.UploadDocumentRequest"/>
         <import type="com.linagora.android.linshare.view.Navigation.UploadType"/>
         <import type="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo"/>
         <import type="com.linagora.android.linshare.view.upload.UploadFragmentViewModel"/>
         <import type="android.view.View"/>
+
+        <variable
+            name="functionalityObserver"
+            type="FunctionalityObserver" />
 
         <variable
             name="uploadType"
@@ -214,7 +219,8 @@
                 app:layout_constraintStart_toStartOf="@+id/pickTheDestinationLabel"
                 app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel"
                 app:selectedDestinationInfo="@{selectedDestinationInfo}"
-                app:uploadTypeForTextSelectedDestination="@{uploadType}"/>
+                app:destinationUploadType="@{uploadType}"
+                app:functionality="@{functionalityObserver.allFunctionality}"/>
 
             <View
                 android:id="@+id/dividerPickDestination"

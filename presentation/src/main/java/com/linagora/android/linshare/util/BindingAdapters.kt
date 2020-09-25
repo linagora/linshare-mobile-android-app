@@ -47,6 +47,8 @@ import androidx.databinding.BindingAdapter
 import arrow.core.Either
 import com.auth0.android.jwt.JWT
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.functionality.Functionality
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityIdentifier
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.quota.CheckingQuota
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
@@ -77,11 +79,7 @@ import timber.log.Timber
 
 private val LOGGER = LoggerFactory.getLogger(BindingAdapter::class.java)
 private const val NO_RESOURCE = -1
-private val EMPTY_TOP_DRAWABLE_RESOURCE = null
-private val EMPTY_BOTTOM_DRAWABLE_RESOURCE = null
-private val EMPTY_RIGHT_DRAWABLE_RESOURCE = null
-private const val DISABLE_CLICK = false
-private const val ENABLE_CLICK = true
+private val EMPTY_DRAWABLE_RESOURCE = null
 
 @BindingAdapter("guide")
 fun bindLoginGuide(textView: TextView, loginFormState: LoginFormState) {
@@ -166,7 +164,7 @@ fun bindingLastLogin(textView: TextView, accountDetailsViewState: AccountDetails
 }
 
 @BindingAdapter("availableSpace")
-fun bindingAvailabeSpace(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
+fun bindingAvailableSpace(textView: TextView, accountDetailsViewState: AccountDetailsViewState) {
     textView.text = runCatching {
         val accountQuota = accountDetailsViewState.quota!!
         val quotaSize = FileSize(accountQuota.quota.size)
@@ -302,29 +300,45 @@ fun bindingTextPickTheDestinationLabel(textView: TextView, uploadType: Navigatio
         ?: textView.context.getString(R.string.pick_the_destination)
 }
 
-@BindingAdapter("selectedDestinationInfo", "uploadTypeForTextSelectedDestination")
-fun bindingUploadDestination(textView: TextView, selectedDestinationInfo: SelectedDestinationInfo?, uploadType: Navigation.UploadType) {
+@BindingAdapter("selectedDestinationInfo", "destinationUploadType", "functionality", requireAll = true)
+fun bindingUploadDestinationInfo(
+    textView: TextView,
+    selectedDestinationInfo: SelectedDestinationInfo?,
+    uploadType: Navigation.UploadType,
+    allFunctionality: List<Functionality>
+) {
     textView.text = selectedDestinationInfo
         ?.parentDestinationInfo
         ?.parentNodeName
         ?: textView.context.getString(R.string.my_space)
 
-    val leftDrawable = ContextCompat.getDrawable(textView.context, selectedDestinationInfo?.generateDestinationDrawable()
-        ?: R.drawable.ic_home)
+    val leftDrawable = ContextCompat.getDrawable(
+        textView.context,
+        selectedDestinationInfo?.generateDestinationDrawable() ?: R.drawable.ic_home)
 
-    leftDrawable?.let { checkUploadTypeToSetUpTextView(textView, leftDrawable, uploadType) }
+    leftDrawable?.let { setUpDestinationDrawable(textView, leftDrawable, uploadType) }
+
+    textView.isEnabled = setDestinationEnabled(uploadType, allFunctionality)
 }
 
-private fun checkUploadTypeToSetUpTextView(textView: TextView, leftDrawable: Drawable, uploadType: Navigation.UploadType) {
+private fun setDestinationEnabled(uploadType: Navigation.UploadType, allFunctionality: List<Functionality>): Boolean {
+    return uploadType.takeIf { !it.isUploadInsideAppToWorkGroup() }
+        ?.let {
+            allFunctionality.takeIf { it.isNotEmpty() }
+                ?.first { functionality -> functionality.identifier == FunctionalityIdentifier.WORK_GROUP }
+                ?.enable
+                ?: false }
+        ?: false
+}
+
+private fun setUpDestinationDrawable(textView: TextView, leftDrawable: Drawable, uploadType: Navigation.UploadType) {
     val arrowRightDrawable = ContextCompat.getDrawable(textView.context, R.drawable.ic_arrow_right)
     uploadType.takeIf { it.isUploadInsideAppToWorkGroup() }
-        ?.let { setupTextViewDestination(textView, leftDrawable, EMPTY_RIGHT_DRAWABLE_RESOURCE, R.color.disable_state_color, DISABLE_CLICK) }
-        ?: setupTextViewDestination(textView, leftDrawable, arrowRightDrawable, R.color.greyPrimary, ENABLE_CLICK)
+        ?.let { setupTextViewDestination(textView, leftDrawable, EMPTY_DRAWABLE_RESOURCE, R.color.disable_state_color) }
+        ?: setupTextViewDestination(textView, leftDrawable, arrowRightDrawable, R.color.greyPrimary)
 }
 
-private fun setupTextViewDestination(textView: TextView, leftDrawable: Drawable, rightDrawable: Drawable?, colorRes: Int, isClickAble: Boolean) {
-    textView.isClickable = isClickAble
-
+private fun setupTextViewDestination(textView: TextView, leftDrawable: Drawable, rightDrawable: Drawable?, colorRes: Int) {
     val colorTint = ContextCompat.getColor(textView.context, colorRes)
     colorTint.apply {
         textView.setTextColor(this)
@@ -332,7 +346,7 @@ private fun setupTextViewDestination(textView: TextView, leftDrawable: Drawable,
         leftDrawable.setTint(this)
     }
 
-    textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, EMPTY_TOP_DRAWABLE_RESOURCE, rightDrawable, EMPTY_BOTTOM_DRAWABLE_RESOURCE)
+    textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, EMPTY_DRAWABLE_RESOURCE, rightDrawable, EMPTY_DRAWABLE_RESOURCE)
 }
 
 @BindingAdapter("visibilityAddRecipientContainer")

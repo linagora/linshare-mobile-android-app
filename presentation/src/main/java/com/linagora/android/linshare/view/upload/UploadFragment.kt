@@ -159,6 +159,7 @@ class UploadFragment : MainNavigationFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.uploadType = args.uploadType
         binding.selectedDestinationInfo = args.selectedDestinationInfo
+        binding.functionalityObserver = mainActivityViewModel.functionalityObserver
         initViewModel()
         initAutoComplete()
         checkPickerEventToShowPickDestinationDialog()
@@ -247,6 +248,13 @@ class UploadFragment : MainNavigationFragment() {
             runCatching { extractArgument() }
                 .getOrElse(this@UploadFragment::handlePreUploadError)
         }
+
+        observeFunctionality()
+    }
+
+    private fun observeFunctionality() {
+        LOGGER.info("observeFunctionality()")
+        viewLifecycleOwner.lifecycle.addObserver(mainActivityViewModel.functionalityObserver)
     }
 
     private suspend fun extractArgument() {
