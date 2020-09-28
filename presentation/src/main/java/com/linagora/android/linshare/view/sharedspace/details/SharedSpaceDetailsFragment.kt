@@ -47,6 +47,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.FragmentSharedSpaceDetailsBinding
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceOperationRole
 import com.linagora.android.linshare.domain.usecases.sharedspace.GetSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.SharedSpaceIdParcelable
@@ -69,8 +70,6 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
     private lateinit var viewModel: SharedSpaceDetailsViewModel
 
     private lateinit var binding: FragmentSharedSpaceDetailsBinding
-
-    private val sharedSpaceDetailsPageChange = SharedSpaceDetailsPageChange()
 
     private val sharedSpaceDetailsArgs: SharedSpaceDetailsFragmentArgs by navArgs()
 
@@ -119,7 +118,7 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
     private fun bindingDetailsPageAdapter(sharedSpace: SharedSpace) {
         binding.run {
             viewpager.adapter = DetailsPageAdapter(sharedSpace)
-            viewpager.registerOnPageChangeCallback(sharedSpaceDetailsPageChange)
+            viewpager.registerOnPageChangeCallback(SharedSpaceDetailsPageChange(sharedSpace))
             TabLayoutMediator(tabsDetails, viewpager) { tab, position ->
                 tab.text = getString(DETAILS_TITLES[position])
             }.attach()
@@ -144,10 +143,12 @@ class SharedSpaceDetailsFragment : MainNavigationFragment() {
         }
     }
 
-    private inner class SharedSpaceDetailsPageChange : OnPageChangeCallback() {
+    private inner class SharedSpaceDetailsPageChange(private val sharedSpace: SharedSpace) : OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             when (DETAILS_TITLES[position]) {
-                R.string.members -> binding.addMemberButton.show()
+                R.string.members -> SharedSpaceOperationRole.AddMembersRole.takeIf { it.contains(sharedSpace.role.name) }
+                    ?.let { binding.addMemberButton.show() }
+                    ?: binding.addMemberButton.hide()
                 else -> binding.addMemberButton.hide()
             }
         }
