@@ -183,9 +183,129 @@
         <item quantity="one">Thành viên hiện có: %d</item>
         <item quantity="other">Thành viên hiện có: %d</item>
     </plurals>
+
     <string name="create_new_workgroup">Tạo nhóm làm việc mới</string>
     <string name="new_workgroup">Nhóm làm việc mới</string>
+    <string name="new_workgroup_original_name">Nhóm làm việc mới</string>
     <string name="create">Tạo</string>
     <string name="workgroup_name_already_exists">Tên nhóm làm việc đã tồn tại</string>
+    <string name="workgroup_name_index">Nhóm làm việc mới(%s)</string>
+    <string name="workgroup_name_not_contain_special_char">Tên tệp không thể chứa &#8220;&lt;&#8220;, &#8220;&gt;&#8220;, &#8220;.&#8220;, &#8220;,&#8220;, &#8220;/&#8220;, &#8220;\\&#8220;, &#8220;|&#8220;, &#8220;?&#8220;, &#8220;*&#8220;</string>
+
+    <string name="can_not_connect_network">Không thể kết nối tới mạng</string>
+    <string name="can_not_refresh_without_network">Không thể làm mới khi offline</string>
+    <string name="can_not_process_without_network">Không thể thực hiện khi offline</string>
+    <string name="can_not_create_shared_space_without_network">Can not create Shared space while offline</string>
+
+    <string name="file_ready_for_download_once_connection_available">Tệp sẽ sắn sàng được tải xuống khi có kết nối</string>
+    <string name="success_deleted">The %s is successfully deleted</string>
+    <string name="file">tệp</string>
+    <string name="folder">thư mục</string>
+    <string name="add_member_failed">Không thể thêm thành viên</string>
+    <string name="lack_of_device_storage">Không thể tải lên vì thiếu dung lượng thiết bị</string>
+    <string name="not_access_workgroup_while_offline">Không thể truy cập nhóm làm việc khi ngoại tuyến</string>
+    <string name="not_access_folder_while_offline">Không thể truy cập thư mục khi ngoại tuyến</string>
+    <string name="can_not_delete_file_while_offline">Không thể xóa tệp khi ngoại tuyến</string>
+    <string name="not_view_workgroup_details_while_offline">Không thể xem chi tiết nhóm làm việc khi ngoại tuyến</string>
+
+    <string name="activities">Hoạt động</string>
+    <string name="audit_log_actor">bởi %s</string>
+
+    <string name="audit_action_title_addition">Thêm mới:</string>
+    <string name="audit_action_title_delete">Xóa:</string>
+    <string name="audit_action_title_update">Cập nhật:</string>
+    <string name="audit_action_title_create">Tạo mới:</string>
+    <string name="audit_action_title_upload">Tải tệp lên:</string>
+    <string name="audit_action_title_copy">Sao chép:</string>
+    <string name="audit_action_title_download">Tải xuống:</string>
+    <string name="audit_action_title_upload_revision">Tải lên phiên bản:</string>
+    <string name="audit_action_title_delete_revision">Xóa phiên bản:</string>
+    <string name="audit_action_title_restore_revision">Khôi phục phiên bản:</string>
+    <string name="audit_action_title_download_revision">Tải xuống phiên bản:</string>
+
+    <string name="audit_action_message_create_workgroup">%1$s đã tạo nhóm làm việc mới : %2$s.</string>
+    <string name="audit_action_message_delete_workgroup">%1$s đã xóa nhóm làm việc : %2$s.</string>
+    <string name="audit_action_message_update_workgroup">%1$s đã sửa nhóm làm việc : %2$s.</string>
+
+    <string name="audit_action_message_upload_workgroup_document">%1$s đã tải lên tệp mới : %2$s into the Workgroup : %3$s</string>
+    <string name="audit_action_message_copy_document_from_personal_space">%1$s đã tạo tài liệu : %2$s đến %3$s, từ không gian riêng của anh ấy.</string>
+    <string name="audit_action_message_copy_document_from_received_share">%1$s đã tạo tài liệu : %2$s đến %3$s, từ chia sẻ nhận được của anh ấy.</string>
+    <string name="audit_action_message_copy_document_from_shared_space">%1$s đã tạo tệp này bằng sao chép : %2$s từ nhóm làm việc khác.</string>
+    <string name="audit_action_message_copy_document_to_personal_space">%1$s đã sao chép : %2$s sang không gian riêng của anh ấy.</string>
+    <string name="audit_action_message_copy_document_to_shared_space">%1$s đã tạo bảo sao của tệp này vào %3$s.</string>
+    <string name="audit_action_message_delete_workgroup_document">%1$s đã xóa tệp : %2$s từ nhóm làm việc %3$s.</string>
+    <string name="audit_action_message_update_workgroup_document">%1$s đã sửa tệp : %2$s từ nhóm làm việc %3$s.</string>
+    <string name="audit_action_message_download_workgroup_document">%1$s đã tải xuống tệp : %2$s từ nhóm làm việc %3$s.</string>
+
+    <string name="audit_action_message_upload_revision">Phiên bản của tệp %2$s đã được thêm vào nhóm làm việc %3$s.</string>
+    <string name="audit_action_message_delete_revision">Phiên bản của tệp %2$s đã bị xóa khỏi nhóm làm việc %3$s.</string>
+    <string name="audit_action_message_copy_revision_from_shared_space">Tài liệu đã được khôi phục với phiên bản %2$s.</string>
+    <string name="audit_action_message_download_revision">%1$s đã tải xuống phiên bản : %2$s từ nhóm làm việc %3$s.</string>
+
+    <string name="audit_action_message_create_folder">%1$s đã tạo thư mục mới : %2$s trong nhóm làm việc %3$s.</string>
+    <string name="audit_action_message_delete_folder">%1$s đã xóa thư mục : %2$s từ nhóm làm việc : %3$s.</string>
+    <string name="audit_action_message_update_folder">%1$s đã sửa thư mục : %2$s từ nhóm làm việc : %3$s.</string>
+    <string name="audit_action_message_download_folder">%1$s đã tải xuống thư mục : %2$s từ nhóm làm việc : %3$s.</string>
+
+    <string name="audit_action_message_add_member">%1$s đã thêm thành viên mới : %2$s trong nhóm làm việc : %3$s.</string>
+    <string name="audit_action_message_delete_member">%1$s đã xóa thành viên : %2$s từ nhóm làm việc : %3$s.</string>
+    <string name="audit_action_message_update_member">%1$s đã sửa thành viên : %2$s từ nhóm làm việc : %3$s.</string>
+    <string name="can_not_change_member_role_without_network">Không thể thay đổi quyền thành viên khi ngoại tuyến</string>
+
+    <string name="copy_to">Sao chép đến</string>
+    <string name="copy_to_a_workgroup">Sao chép đến nhóm làm việc</string>
+    <string name="copy_to_another_shared_space_success">Tệp đã được sao chép đến nhóm làm việc</string>
+    <string name="copy_to_another_shared_space_fail">Không thể sao chép tệp đến nhóm làm việc</string>
+    <string name="copy_to_shared_space_message">Tệp đã được sao chép đến nhóm làm việc</string>
+    <string name="copy_to_shared_space_fail_message">Không thể sao chép tệp đến nhóm làm việc</string>
+    <string name="copy_success">Tệp %s đã được sao chép thành công</string>
+    <string name="copy_failed">Không thể sao chép tệp</string>
+
+    <string name="confirm_remove_member_from_work_group">Bạn có chắc muốn xóa %1$s từ %2$s?</string>
+    <string name="can_not_delete_member_in_workgroup_without_network">Không thể xóa thành viên khỏi nhóm làm việc khi ngoại tuyến</string>
+    <string name="confirm_delete_shared_space">Bạn có chắc muốn xóa \"%s\"</string>
+
+    <string name="duplicate">Tạo bản sao</string>
+    <string name="duplicate_success">Tệp đã tạo bản sao thành công.</string>
+    <string name="duplicate_fail">Không thể tạo bản sao của tệp.</string>
+
+    <string name="can_not_delete_shared_space_without_network">Không thể xóa nhóm làm việc khi ngoại tuyến</string>
+    <string name="add_new_file_or_folder">Thêm tệp hoặc thư mục mới</string>
+    <string name="create_folder">Tạo thư mục</string>
+    <string name="create_new_folder">Tạo thư mục mới</string>
+    <string name="new_folder">Thư mục mới</string>
+    <string name="folder_name_already_exists">Tên thư mục đã tồn tại</string>
+    <string name="not_create_folder_while_offline">Không thể tạo thư mục khi ngoại tuyến </string>
+    <string name="folder_name_can_not_be_blank">"Tên thư mục không thể để trống"</string>
+
+    <string name="order_by_name">Tên</string>
+    <string name="order_by_modification_date">Ngày sửa đổi</string>
+    <string name="order_by_creation_date">Ngày khởi tạo</string>
+    <string name="order_by_file_size">Kích cỡ</string>
+    <string name="order_by_shared">Đã chia sẻ</string>
+    <string name="order_by_sender">Người gửi</string>
+    <string name="order_by_dialog_title">Sắp xếp theo</string>
+    <string name="modified">Đã cập nhật</string>
+    <string name="created_title">Ngày tạo</string>
+    <string name="expiration">Ngày hết hạn</string>
+    <string name="description">Mô tả</string>
+    <string name="undefined">Chưa có</string>
+    <string name="modified_by">Cập nhật bởi</string>
+
+    <plurals name="share_with_contacts">
+        <item quantity="one">Shared with contact</item>
+        <item quantity="other">Shared with %s contacts</item>
+    </plurals>
+
+    <string name="my_right">Quyền của tôi</string>
+    <string name="max_file_size">Kích cỡ tệp tối đa</string>
+    <string name="versioning_enable">Cho phép phiên bản</string>
+
+    <string name="rename">Đổi tên</string>
+    <string name="rename_document">Đổi tên tài liệu</string>
+    <string name="rename_folder">Đổi tên thư mục</string>
+
+    <string name="common_error_occurred_message">Có lỗi xảy ra, hãy thử lại sau</string>
+    <string name="destination">Điển đến</string>
 
 </resources>
