@@ -109,7 +109,7 @@
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
             app:contextActionVisible="@{sharedSpaceNodeNested.role}"
-            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.renameRole}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.renameWorkGroupRole}"
             android:onClick="@{() -> editContextMenu.rename(sharedSpaceNodeNested)}">
 
             <ImageView

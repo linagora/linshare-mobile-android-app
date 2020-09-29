@@ -88,6 +88,10 @@ object SharedSpaceOperationRole {
         SharedSpaceRoleName.WRITER,
         SharedSpaceRoleName.ADMIN
     )
+
+    val RenameWorkGroupRole = listOf(
+        SharedSpaceRoleName.ADMIN
+    )
 }
 
 fun SharedSpaceRole.canUpload(): Boolean {
