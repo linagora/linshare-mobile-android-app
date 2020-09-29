@@ -102,9 +102,6 @@ class SearchFragment : MainNavigationFragment() {
         searchViewModel = getViewModel(viewModelFactory)
         searchBinding.lifecycleOwner = viewLifecycleOwner
         searchBinding.searchViewModel = searchViewModel
-
-        observeViewState()
-        observeRequestPermission()
     }
 
     private fun observeViewState() {
@@ -138,8 +135,9 @@ class SearchFragment : MainNavigationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         LOGGER.info("onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
-
         setUpSearchView()
+        observeViewState()
+        observeRequestPermission()
     }
 
     private fun setUpSearchView() {
