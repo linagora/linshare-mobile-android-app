@@ -63,6 +63,7 @@ object SharedSpaceOperationRole {
     )
 
     val CopyRole = listOf(
+        SharedSpaceRoleName.READER,
         SharedSpaceRoleName.CONTRIBUTOR,
         SharedSpaceRoleName.WRITER,
         SharedSpaceRoleName.ADMIN
