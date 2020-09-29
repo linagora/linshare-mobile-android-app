@@ -90,6 +90,7 @@
     <string name="upload">Transférer</string>
     <string name="upload_success">Transfert terminé</string>
     <string name="upload_failed">Transfert échoué</string>
+    <string name="upload_cancelled">Transfert annulé</string>
     <string name="upload_and_share_success">Transfert et Partage terminés</string>
     <string name="upload_and_share_failed">Transfert et Partage échoués</string>
     <string name="upload_success_but_share_failed">Le partage du fichier a échoué</string>

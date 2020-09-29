@@ -89,6 +89,7 @@
     <string name="upload">Tải lên</string>
     <string name="upload_success">Hoàn thành tải lên</string>
     <string name="upload_failed">Tải lên không thành công</string>
+    <string name="upload_cancelled">Đã hủy tải lên</string>
     <string name="upload_and_share_success">Chia sẻ thành công</string>
     <string name="upload_and_share_failed">Chia sẻ không thành công</string>
     <string name="upload_success_but_share_failed">Chia sẻ tệp không thành công</string>
@@ -113,6 +114,7 @@
     <!--MySpace-->
     <string name="my_space">Không gian của tôi</string>
     <string name="account_details">Thông tin tài khoản</string>
+    <string name="upload_your_files_here">Hãy tải tệp lên</string>
 
     <string name="unable_to_perform_download">LinShare cần được truy cập vào bộ nhớ để thực hiện tải xuống. Bạn hãy cấp quyền truy cập trong cài đặt hệ thống</string>
     <string name="download_failed">Tải xuống không thành công</string>
@@ -161,6 +163,7 @@
     <string name="shared_space">Không gian chia sẻ</string>
     <string name="do_not_have_any_workgroup">Bạn chưa có nhóm làm việc nào</string>
     <string name="search_in_shared_space">Tìm kiếm trong không gian chia sẻ</string>
+    <string name="view_your_received_shares">Chia sẻ với tôi</string>
 
     <string name="do_not_have_any_document">Chưa có tài liệu</string>
 

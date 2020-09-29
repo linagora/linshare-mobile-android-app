@@ -92,6 +92,7 @@
     <string name="upload">Загрузка</string>
     <string name="upload_success">Загрузка завершена</string>
     <string name="upload_failed">Не удалось загрузить</string>
+    <string name="upload_cancelled">Загрузка отменена</string>
     <string name="upload_and_share_success">Загрузка завершена и доступ предоставлен</string>
     <string name="upload_and_share_failed">Не удалось загрузить и предоставить доступ</string>
     <string name="upload_success_but_share_failed">Не удалось поделиться файлом</string>
@@ -117,6 +118,7 @@
     <!--MySpace-->
     <string name="my_space">Моё пространство</string>
     <string name="account_details">Информация о профиле</string>
+    <string name="upload_your_files_here">Загрузите ваши файлы здесь</string>
 
     <string name="unable_to_perform_download">Для выполнения скачивания приложение LinShare должно иметь доступ к хранилищу вашего устройства. Вы можете настроить доступ в настройках системы.</string>
     <string name="download_failed">Не удалось скачать</string>
@@ -166,6 +168,7 @@
     <string name="shared_space">Рабочие группы</string>
     <string name="do_not_have_any_workgroup">У вас еще нет рабочей группы.</string>
     <string name="search_in_shared_space">Поиск в рабочих группах</string>
+    <string name="view_your_received_shares">Посмотреть полученные файлы</string>
 
     <string name="do_not_have_any_document">У вас еще нет документов</string>
 

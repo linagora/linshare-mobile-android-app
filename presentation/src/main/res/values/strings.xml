@@ -89,7 +89,7 @@
     <string name="upload">Upload</string>
     <string name="upload_success">Upload completed</string>
     <string name="upload_failed">Upload failed</string>
-    <string name="upload_cancelled" translatable="false">Upload Cancelled</string>
+    <string name="upload_cancelled">Upload Cancelled</string>
     <string name="upload_and_share_success">Upload and Share completed</string>
     <string name="upload_and_share_failed">Upload and Share failed</string>
     <string name="upload_success_but_share_failed">File is not shared successfully</string>
@@ -114,7 +114,7 @@
     <!--MySpace-->
     <string name="my_space">My Space</string>
     <string name="account_details">Account details</string>
-    <string name="upload_your_files_here" translatable="false">Upload your files here</string>
+    <string name="upload_your_files_here">Upload your files here</string>
 
     <string name="unable_to_perform_download">To perform download LinShare application needs to access to your device storage. You can configure access in system preference.</string>
     <string name="download_failed">Download failed</string>
@@ -163,7 +163,7 @@
     <string name="shared_space">Shared Space</string>
     <string name="do_not_have_any_workgroup">You don\'t have any workgroup yet</string>
     <string name="search_in_shared_space">Search in Shared Space</string>
-    <string name="view_your_received_shares" translatable="false">View your received shares</string>
+    <string name="view_your_received_shares">View your received shares</string>
 
     <string name="do_not_have_any_document">You don\'t have any document yet</string>
 
@@ -188,127 +188,127 @@
         <item quantity="other">Existing members: %d</item>
     </plurals>
 
-    <string name="create_new_workgroup" translatable="false">Create New Workgroup</string>
-    <string name="new_workgroup" translatable="false">New Workgroup</string>
-    <string name="new_workgroup_original_name" translatable="false">New workgroup</string>
-    <string name="create" translatable="false">Create</string>
-    <string name="workgroup_name_already_exists" translatable="false">Workgroup name already exists</string>
-    <string name="workgroup_name_index" translatable="false">New workgroup(%s)</string>
-    <string name="workgroup_name_not_contain_special_char" translatable="false">File name can not contain &#8220;&lt;&#8220;, &#8220;&gt;&#8220;, &#8220;.&#8220;, &#8220;,&#8220;, &#8220;/&#8220;, &#8220;\\&#8220;, &#8220;|&#8220;, &#8220;?&#8220;, &#8220;*&#8220;</string>
+    <string name="create_new_workgroup">Create New Workgroup</string>
+    <string name="new_workgroup">New Workgroup</string>
+    <string name="new_workgroup_original_name">New workgroup</string>
+    <string name="create">Create</string>
+    <string name="workgroup_name_already_exists">Workgroup name already exists</string>
+    <string name="workgroup_name_index">New workgroup(%s)</string>
+    <string name="workgroup_name_not_contain_special_char">File name can not contain &#8220;&lt;&#8220;, &#8220;&gt;&#8220;, &#8220;.&#8220;, &#8220;,&#8220;, &#8220;/&#8220;, &#8220;\\&#8220;, &#8220;|&#8220;, &#8220;?&#8220;, &#8220;*&#8220;</string>
 
-    <string name="can_not_connect_network" translatable="false">Cannot connect to the network</string>
-    <string name="can_not_refresh_without_network" translatable="false">Cannot refresh while offline</string>
-    <string name="can_not_process_without_network" translatable="false">Cannot process while offline</string>
-    <string name="can_not_create_shared_space_without_network" translatable="false">Can not create Shared space while offline</string>
+    <string name="can_not_connect_network">Cannot connect to the network</string>
+    <string name="can_not_refresh_without_network">Cannot refresh while offline</string>
+    <string name="can_not_process_without_network">Cannot process while offline</string>
+    <string name="can_not_create_shared_space_without_network">Can not create Shared space while offline</string>
 
-    <string name="file_ready_for_download_once_connection_available" translatable="false">The file will be ready for download once connection is available</string>
-    <string name="success_deleted" translatable="false">The %s is successfully deleted</string>
-    <string name="file" translatable="false">file</string>
-    <string name="folder" translatable="false">folder</string>
-    <string name="add_member_failed" translatable="false">Add member failed</string>
-    <string name="lack_of_device_storage" translatable="false">Unable to upload due to lack of device storage</string>
-    <string name="not_access_workgroup_while_offline" translatable="false">Cannot access workgroup while offline</string>
-    <string name="not_access_folder_while_offline" translatable="false">Cannot access folder while offline</string>
-    <string name="can_not_delete_file_while_offline" translatable="false">Cannot delete file while offline</string>
-    <string name="not_view_workgroup_details_while_offline" translatable="false">Cannot view workgroup details while offline</string>
+    <string name="file_ready_for_download_once_connection_available">The file will be ready for download once connection is available</string>
+    <string name="success_deleted">The %s is successfully deleted</string>
+    <string name="file">file</string>
+    <string name="folder">folder</string>
+    <string name="add_member_failed">Add member failed</string>
+    <string name="lack_of_device_storage">Unable to upload due to lack of device storage</string>
+    <string name="not_access_workgroup_while_offline">Cannot access workgroup while offline</string>
+    <string name="not_access_folder_while_offline">Cannot access folder while offline</string>
+    <string name="can_not_delete_file_while_offline">Cannot delete file while offline</string>
+    <string name="not_view_workgroup_details_while_offline">Cannot view workgroup details while offline</string>
 
-    <string name="activities" translatable="false">Activities</string>
-    <string name="audit_log_actor" translatable="false">by %s</string>
+    <string name="activities">Activities</string>
+    <string name="audit_log_actor">by %s</string>
 
-    <string name="audit_action_title_addition" translatable="false">Addition:</string>
-    <string name="audit_action_title_delete" translatable="false">Delete:</string>
-    <string name="audit_action_title_update" translatable="false">Update:</string>
-    <string name="audit_action_title_create" translatable="false">Creation:</string>
-    <string name="audit_action_title_upload" translatable="false">Upload file:</string>
-    <string name="audit_action_title_copy" translatable="false">Copy:</string>
-    <string name="audit_action_title_download" translatable="false">Download:</string>
-    <string name="audit_action_title_upload_revision" translatable="false">Version uploaded:</string>
-    <string name="audit_action_title_delete_revision" translatable="false">Version deleted:</string>
-    <string name="audit_action_title_restore_revision" translatable="false">Restore version:</string>
-    <string name="audit_action_title_download_revision" translatable="false">Version downloaded:</string>
+    <string name="audit_action_title_addition">Addition:</string>
+    <string name="audit_action_title_delete">Delete:</string>
+    <string name="audit_action_title_update">Update:</string>
+    <string name="audit_action_title_create">Creation:</string>
+    <string name="audit_action_title_upload">Upload file:</string>
+    <string name="audit_action_title_copy">Copy:</string>
+    <string name="audit_action_title_download">Download:</string>
+    <string name="audit_action_title_upload_revision">Version uploaded:</string>
+    <string name="audit_action_title_delete_revision">Version deleted:</string>
+    <string name="audit_action_title_restore_revision">Restore version:</string>
+    <string name="audit_action_title_download_revision">Version downloaded:</string>
 
-    <string name="audit_action_message_create_workgroup" translatable="false">%1$s has created a new Workgroup : %2$s.</string>
-    <string name="audit_action_message_delete_workgroup" translatable="false">%1$s has deleted the Workgroup : %2$s.</string>
-    <string name="audit_action_message_update_workgroup" translatable="false">%1$s has edited the Workgroup : %2$s.</string>
+    <string name="audit_action_message_create_workgroup">%1$s has created a new Workgroup : %2$s.</string>
+    <string name="audit_action_message_delete_workgroup">%1$s has deleted the Workgroup : %2$s.</string>
+    <string name="audit_action_message_update_workgroup">%1$s has edited the Workgroup : %2$s.</string>
 
-    <string name="audit_action_message_upload_workgroup_document" translatable="false">%1$s has upload a new file : %2$s into the Workgroup : %3$s</string>
-    <string name="audit_action_message_copy_document_from_personal_space" translatable="false">%1$s has created the document : %2$s into %3$s, from his Personal Space.</string>
-    <string name="audit_action_message_copy_document_from_received_share" translatable="false">%1$s has created the document : %2$s into %3$s, from his received share.</string>
-    <string name="audit_action_message_copy_document_from_shared_space" translatable="false">%1$s has created this file by copying : %2$s from another Workgroup.</string>
-    <string name="audit_action_message_copy_document_to_personal_space" translatable="false">%1$s has copied the document : %2$s into his Personal Space.</string>
-    <string name="audit_action_message_copy_document_to_shared_space" translatable="false">%1$s has created a duplicated of this file into %3$s.</string>
-    <string name="audit_action_message_delete_workgroup_document" translatable="false">%1$s has deleted the file : %2$s from the Workgroup %3$s.</string>
-    <string name="audit_action_message_update_workgroup_document" translatable="false">%1$s has edited the file : %2$s from the Workgroup %3$s.</string>
-    <string name="audit_action_message_download_workgroup_document" translatable="false">%1$s has downloaded the file : %2$s from the Workgroup %3$s.</string>
+    <string name="audit_action_message_upload_workgroup_document">%1$s has upload a new file : %2$s into the Workgroup : %3$s</string>
+    <string name="audit_action_message_copy_document_from_personal_space">%1$s has created the document : %2$s into %3$s, from his Personal Space.</string>
+    <string name="audit_action_message_copy_document_from_received_share">%1$s has created the document : %2$s into %3$s, from his received share.</string>
+    <string name="audit_action_message_copy_document_from_shared_space">%1$s has created this file by copying : %2$s from another Workgroup.</string>
+    <string name="audit_action_message_copy_document_to_personal_space">%1$s has copied the document : %2$s into his Personal Space.</string>
+    <string name="audit_action_message_copy_document_to_shared_space">%1$s has created a duplicated of this file into %3$s.</string>
+    <string name="audit_action_message_delete_workgroup_document">%1$s has deleted the file : %2$s from the Workgroup %3$s.</string>
+    <string name="audit_action_message_update_workgroup_document">%1$s has edited the file : %2$s from the Workgroup %3$s.</string>
+    <string name="audit_action_message_download_workgroup_document">%1$s has downloaded the file : %2$s from the Workgroup %3$s.</string>
 
-    <string name="audit_action_message_upload_revision" translatable="false">A version of the file %2$s has been added in the workgroup %3$s.</string>
-    <string name="audit_action_message_delete_revision" translatable="false">The version of the file %2$s had been removed from the workgroup %3$s.</string>
-    <string name="audit_action_message_copy_revision_from_shared_space" translatable="false">The document was restore with the version %2$s.</string>
-    <string name="audit_action_message_download_revision" translatable="false">%1$s has downloaded the version : %2$s from the workgroup %3$s.</string>
+    <string name="audit_action_message_upload_revision">A version of the file %2$s has been added in the workgroup %3$s.</string>
+    <string name="audit_action_message_delete_revision">The version of the file %2$s had been removed from the workgroup %3$s.</string>
+    <string name="audit_action_message_copy_revision_from_shared_space">The document was restore with the version %2$s.</string>
+    <string name="audit_action_message_download_revision">%1$s has downloaded the version : %2$s from the workgroup %3$s.</string>
 
-    <string name="audit_action_message_create_folder" translatable="false">%1$s has created a new folder : %2$s into the Workgroup %3$s.</string>
-    <string name="audit_action_message_delete_folder" translatable="false">%1$s has deleted the folder : %2$s from the Workgroup : %3$s.</string>
-    <string name="audit_action_message_update_folder" translatable="false">%1$s has edited the folder : %2$s from the Workgroup : %3$s.</string>
-    <string name="audit_action_message_download_folder" translatable="false">%1$s has downloaded the folder : %2$s from the Workgroup : %3$s.</string>
+    <string name="audit_action_message_create_folder">%1$s has created a new folder : %2$s into the Workgroup %3$s.</string>
+    <string name="audit_action_message_delete_folder">%1$s has deleted the folder : %2$s from the Workgroup : %3$s.</string>
+    <string name="audit_action_message_update_folder">%1$s has edited the folder : %2$s from the Workgroup : %3$s.</string>
+    <string name="audit_action_message_download_folder">%1$s has downloaded the folder : %2$s from the Workgroup : %3$s.</string>
 
-    <string name="audit_action_message_add_member" translatable="false">%1$s has added a new member : %2$s to the Workgroup : %3$s.</string>
-    <string name="audit_action_message_delete_member" translatable="false">%1$s has removed the member : %2$s from the Workgroup : %3$s.</string>
-    <string name="audit_action_message_update_member" translatable="false">%1$s has edited the member : %2$s from the Workgroup : %3$s.</string>
-    <string name="can_not_change_member_role_without_network" translatable="false">Can not change member role while offline</string>
+    <string name="audit_action_message_add_member">%1$s has added a new member : %2$s to the Workgroup : %3$s.</string>
+    <string name="audit_action_message_delete_member">%1$s has removed the member : %2$s from the Workgroup : %3$s.</string>
+    <string name="audit_action_message_update_member">%1$s has edited the member : %2$s from the Workgroup : %3$s.</string>
+    <string name="can_not_change_member_role_without_network">Can not change member role while offline</string>
 
-    <string name="copy_to" translatable="false">Copy to</string>
-    <string name="copy_to_a_workgroup" translatable="false">Copy to a workgroup</string>
-    <string name="copy_to_another_shared_space_success" translatable="false">The file is copied to another Shared space.</string>
-    <string name="copy_to_another_shared_space_fail" translatable="false">Can not copy file to another Shared space.</string>
-    <string name="copy_to_shared_space_message" translatable="false">The file is copied to a Shared space.</string>
-    <string name="copy_to_shared_space_fail_message" translatable="false">Can not copy file to Shared space.</string>
+    <string name="copy_to">Copy to</string>
+    <string name="copy_to_a_workgroup">Copy to a workgroup</string>
+    <string name="copy_to_another_shared_space_success">The file is copied to another Shared space.</string>
+    <string name="copy_to_another_shared_space_fail">Can not copy file to another Shared space.</string>
+    <string name="copy_to_shared_space_message">The file is copied to a Shared space.</string>
+    <string name="copy_to_shared_space_fail_message">Can not copy file to Shared space.</string>
     <string name="copy_success" translatable="false">File %s has been copied successfully.</string>
     <string name="copy_failed" translatable="false">The file copy has failed.</string>
 
-    <string name="confirm_remove_member_from_work_group" translatable="false">Are you sure to remove %1$s from %2$s?</string>
-    <string name="can_not_delete_member_in_workgroup_without_network" translatable="false">Can not delete member in workgroup while offline</string>
-    <string name="confirm_delete_shared_space" translatable="false">Are you sure to delete \"%s\"</string>
+    <string name="confirm_remove_member_from_work_group">Are you sure to remove %1$s from %2$s?</string>
+    <string name="can_not_delete_member_in_workgroup_without_network">Can not delete member in workgroup while offline</string>
+    <string name="confirm_delete_shared_space">Are you sure to delete \"%s\"</string>
 
     <string name="duplicate" translatable="false">Duplicate</string>
     <string name="duplicate_success" translatable="false">The file is successfully duplicated.</string>
     <string name="duplicate_fail" translatable="false">The file can not be duplicated.</string>
 
-    <string name="can_not_delete_shared_space_without_network" translatable="false">Can not delete shared space while offline</string>
-    <string name="add_new_file_or_folder" translatable="false">Add new file or folder</string>
-    <string name="create_folder" translatable="false">Create Folder</string>
-    <string name="create_new_folder" translatable="false">Create New Folder</string>
-    <string name="new_folder" translatable="false">New folder</string>
-    <string name="folder_name_already_exists" translatable="false">Folder name already exists</string>
-    <string name="not_create_folder_while_offline" translatable="false">Cannot create folder while offline</string>
-    <string name="folder_name_can_not_be_blank" translatable="false">"Folder name can not be blank"</string>
+    <string name="can_not_delete_shared_space_without_network">Can not delete shared space while offline</string>
+    <string name="add_new_file_or_folder">Add new file or folder</string>
+    <string name="create_folder">Create Folder</string>
+    <string name="create_new_folder">Create New Folder</string>
+    <string name="new_folder">New folder</string>
+    <string name="folder_name_already_exists">Folder name already exists</string>
+    <string name="not_create_folder_while_offline">Cannot create folder while offline</string>
+    <string name="folder_name_can_not_be_blank">"Folder name can not be blank"</string>
 
-    <string name="order_by_name" translatable="false">Name</string>
-    <string name="order_by_modification_date" translatable="false">Modification date</string>
-    <string name="order_by_creation_date" translatable="false">Creation date</string>
-    <string name="order_by_file_size" translatable="false">Size</string>
-    <string name="order_by_shared" translatable="false">Shared</string>
-    <string name="order_by_sender" translatable="false">Sender</string>
-    <string name="order_by_dialog_title" translatable="false">Order by</string>
-    <string name="modified" translatable="false">Modified</string>
-    <string name="created_title" translatable="false">Created</string>
-    <string name="expiration" translatable="false">Expiration</string>
-    <string name="description" translatable="false">Description</string>
-    <string name="undefined" translatable="false">Undefined</string>
-    <string name="modified_by" translatable="false">Modified by</string>
+    <string name="order_by_name">Name</string>
+    <string name="order_by_modification_date">Modification date</string>
+    <string name="order_by_creation_date">Creation date</string>
+    <string name="order_by_file_size">Size</string>
+    <string name="order_by_shared">Shared</string>
+    <string name="order_by_sender">Sender</string>
+    <string name="order_by_dialog_title">Order by</string>
+    <string name="modified">Modified</string>
+    <string name="created_title">Created</string>
+    <string name="expiration">Expiration</string>
+    <string name="description">Description</string>
+    <string name="undefined">Undefined</string>
+    <string name="modified_by">Modified by</string>
 
     <plurals name="share_with_contacts">
         <item quantity="one">Shared with contact</item>
         <item quantity="other">Shared with %s contacts</item>
     </plurals>
 
-    <string name="my_right" translatable="false">My rights</string>
-    <string name="max_file_size" translatable="false">Max file size</string>
-    <string name="versioning_enable" translatable="false">Versioning enable</string>
+    <string name="my_right">My rights</string>
+    <string name="max_file_size">Max file size</string>
+    <string name="versioning_enable">Versioning enable</string>
 
-    <string name="rename" translatable="false">Rename</string>
-    <string name="rename_document" translatable="false">Rename Document</string>
-    <string name="rename_folder" translatable="false">Rename Folder</string>
+    <string name="rename">Rename</string>
+    <string name="rename_document">Rename Document</string>
+    <string name="rename_folder">Rename Folder</string>
 
-    <string name="common_error_occurred_message" translatable="false">An error occurred, please try again later</string>
+    <string name="common_error_occurred_message">An error occurred, please try again later</string>
     <string name="destination" translatable="false">Destination</string>
 </resources>
