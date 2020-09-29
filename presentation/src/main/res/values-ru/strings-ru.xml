@@ -190,4 +190,121 @@
 	    <item quantity="few">Участники рабочей группы: %d</item>
         <item quantity="many">Участники рабочей группы: %d</item>
     </plurals>
+
+    <string name="create_new_workgroup">Создать новую рабочую группу</string>
+    <string name="new_workgroup">Новая рабочая группа</string>
+    <string name="new_workgroup_original_name">Новая рабочая группа</string>
+    <string name="create">Создать</string>
+    <string name="workgroup_name_already_exists">Рабочая группа с таким названием уже существует</string>
+    <string name="workgroup_name_index">Новая рабочая группа</string>
+    <string name="workgroup_name_not_contain_special_char">Название файла не может содержать &#8220;&lt;&#8220;, &#8220;&gt;&#8220;, &#8220;.&#8220;, &#8220;,&#8220;, &#8220;/&#8220;, &#8220;\\&#8220;, &#8220;|&#8220;, &#8220;?&#8220;, &#8220;*&#8220;</string>
+
+    <string name="can_not_connect_network">Невозможно подключиться к сети</string>
+    <string name="can_not_refresh_without_network">Невозможно обновить файл оффлайн</string>
+    <string name="can_not_process_without_network">Невозможно продолжить оффлайн</string>
+    <string name="can_not_create_shared_space_without_network">Невозможно создать рабочую группу оффлайн</string>
+
+    <string name="file_ready_for_download_once_connection_available">Файл возможно скачать после подключения к сети</string>
+    <string name="success_deleted">%s успешно удален</string>
+    <string name="file">файл</string>
+    <string name="folder">папка</string>
+    <string name="add_member_failed">Произошла ошибка при попытке добавить нового участника</string>
+    <string name="lack_of_device_storage">Память вашего телефона заполнена, невозможно загрузить файл</string>
+    <string name="not_access_workgroup_while_offline">Доступ к рабочей группе невозможен оффлайн</string>
+    <string name="not_access_folder_while_offline">Доступ к папке невозможен оффлайн</string>
+    <string name="can_not_delete_file_while_offline">Невозможно удалить файл оффлайн</string>
+    <string name="not_view_workgroup_details_while_offline">Доступ к деталяи рабочей группе невозможен оффлайн</string>
+
+    <string name="activities">Действия</string>
+    <string name="audit_log_actor">%s</string>
+
+    <string name="audit_action_title_addition">Дополнение:</string>
+    <string name="audit_action_title_delete">Удалить:</string>
+    <string name="audit_action_title_update">Обновить:</string>
+    <string name="audit_action_title_create">Создание:</string>
+    <string name="audit_action_title_upload">Загрузить файл:</string>
+    <string name="audit_action_title_copy">Скопировать:</string>
+    <string name="audit_action_title_download">Загрузить:</string>
+    <string name="audit_action_title_upload_revision">Версия загружена:</string>
+    <string name="audit_action_title_delete_revision">Версия удалена:</string>
+    <string name="audit_action_title_restore_revision">Восстановить версию:</string>
+    <string name="audit_action_title_download_revision">Версия скачана:</string>
+
+    <string name="audit_action_message_create_workgroup">%1$s создал(а) новую рабочую группу : %2$s.</string>
+    <string name="audit_action_message_delete_workgroup">%1$s удалил(а) рабочую группу : %2$s.</string>
+    <string name="audit_action_message_update_workgroup">%1$s внес(ла) изменения в рабочую группу : %2$s.</string>
+
+    <string name="audit_action_message_upload_workgroup_document">%1$s загрузил(а) новый файл : %2$s в рабочую группу : %3$s</string>
+    <string name="audit_action_message_copy_document_from_personal_space">%1$s создал(а) документ : %2$s в %3$s, из его(её) личного пространства.</string>
+    <string name="audit_action_message_copy_document_from_received_share">%1$s создал(а) документ : %2$s в %3$s, из его(её) полученных файлов.</string>
+    <string name="audit_action_message_copy_document_from_shared_space">%1$s создал(а) файл, копируя : %2$s из другой рабочей группы.</string>
+    <string name="audit_action_message_copy_document_to_personal_space">%1$s скопировал(а) документ : %2$s в свое личное пространство.</string>
+    <string name="audit_action_message_copy_document_to_shared_space">%1$s создал(а) копию этого файлв в %3$s.</string>
+    <string name="audit_action_message_delete_workgroup_document">%1$s удалил(а) файл : %2$s из рабочей группы %3$s.</string>
+    <string name="audit_action_message_update_workgroup_document">%1$s отредактировал(а) файл : %2$s из рабочей группы %3$s.</string>
+    <string name="audit_action_message_download_workgroup_document">%1$s скачал(а) файл : %2$s рабочей группы %3$s.</string>
+
+    <string name="audit_action_message_upload_revision">Версия файла %2$s была добавлена в рабочую группу %3$s.</string>
+    <string name="audit_action_message_delete_revision">Версия файла %2$s была удалена из рабочей группы %3$s.</string>
+    <string name="audit_action_message_copy_revision_from_shared_space">Докумнет был восстановлен в версию %2$s.</string>
+    <string name="audit_action_message_download_revision">%1$s скачал(а) версию : %2$s из рабочей группы %3$s.</string>
+
+    <string name="audit_action_message_create_folder">%1$s создал(а) новую папку : %2$s в рабочей группе %3$s.</string>
+    <string name="audit_action_message_delete_folder">%1$s удалил(а) папку : %2$s из рабочей группы : %3$s.</string>
+    <string name="audit_action_message_update_folder">%1$s отредактировал(а) папку : %2$s в рабочей группе : %3$s.</string>
+    <string name="audit_action_message_download_folder">%1$s скачал(а) папку : %2$s рабочей группы : %3$s.</string>
+
+    <string name="audit_action_message_add_member">%1$s добавил(а) нового участника : %2$s в рабочую группу %3$s.</string>
+    <string name="audit_action_message_delete_member">%1$s удалил(а) участника : %2$s из рабочей группы : %3$s.</string>
+    <string name="audit_action_message_update_member">%1$s отредактировал(а) список участников : %2$s рабочей группы : %3$s.</string>
+    <string name="can_not_change_member_role_without_network">Невозможно изменить роль участника оффлайн</string>
+
+    <string name="copy_to">Скопировать в</string>
+    <string name="copy_to_a_workgroup">Скопировать в рабочую группу</string>
+    <string name="copy_to_another_shared_space_success">Файл скопирован в другое общее пространство.</string>
+    <string name="copy_to_another_shared_space_fail">Невозможно скопировать в другое общее пространство.</string>
+    <string name="copy_to_shared_space_message">Файл скопирован в общее пространство.</string>
+    <string name="copy_to_shared_space_fail_message">Невозможно скопировать файл в общее пространство.</string>
+    <string name="confirm_remove_member_from_work_group">Вы уверены, что хотите удалить %1$s из %2$s?</string>
+    <string name="can_not_delete_member_in_workgroup_without_network">Невозможно удалить участника из рабочей группы оффлайн</string>
+    <string name="confirm_delete_shared_space">Вы уверены, что хотите удалить \"%s\"</string>
+
+    <string name="can_not_delete_shared_space_without_network">Невозможно удалить рабочую группу</string>
+    <string name="add_new_file_or_folder">Добавить новый файл или папку</string>
+    <string name="create_folder">Создать папку</string>
+    <string name="create_new_folder">Создать новую папку</string>
+    <string name="new_folder">Новая папка</string>
+    <string name="folder_name_already_exists">Такое название папки уже существует</string>
+    <string name="not_create_folder_while_offline">Невозможно создать папку оффлайн</string>
+    <string name="folder_name_can_not_be_blank">"Название папки не может быть пустым"</string>
+
+    <string name="order_by_name">Имя</string>
+    <string name="order_by_modification_date">Дата изменения</string>
+    <string name="order_by_creation_date">Дата создания</string>
+    <string name="order_by_file_size">Размер</string>
+    <string name="order_by_shared">Общий</string>
+    <string name="order_by_sender">Отправитель</string>
+    <string name="order_by_dialog_title">Запрошен</string>
+    <string name="modified">Изменен</string>
+    <string name="created_title">Создан</string>
+    <string name="expiration">Окончание</string>
+    <string name="description">Описание</string>
+    <string name="undefined">Неопределённый</string>
+    <string name="modified_by">Изменен</string>
+
+    <plurals name="share_with_contacts">
+        <item quantity="one">Отправлен %s участникам</item>
+        <item quantity="few">Отправлен %s участникам</item>
+        <item quantity="many">Отправлен %s участникам</item>
+    </plurals>
+
+    <string name="my_right">Мои права</string>
+    <string name="max_file_size">Максимальный размер файла</string>
+    <string name="versioning_enable">Возможность создавать версии</string>
+
+    <string name="rename">Переименновать</string>
+    <string name="rename_document">Переименновать документ</string>
+    <string name="rename_folder">Переименновать папку</string>
+
+    <string name="common_error_occurred_message">Возникла ошибка, пожалуйста, попробуйте позже</string>
 </resources>
