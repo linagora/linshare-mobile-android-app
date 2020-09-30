@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ LinShare is an open source filesharing software, part of the LinPKI software
+  ~ suite, developed by Linagora.
+  ~
+  ~ Copyright (C) 2020 LINAGORA
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the
+  ~ terms of the GNU Affero General Public License as published by the Free Software
+  ~ Foundation, either version 3 of the License, or (at your option) any later version,
+  ~ provided you comply with the Additional Terms applicable for LinShare software by
+  ~ Linagora pursuant to Section 7 of the GNU Affero General Public License,
+  ~ subsections (b), (c), and (e), pursuant to which you must notably (i) retain the
+  ~ display in the interface of the “LinShare™” trademark/logo, the "Libre & Free" mention,
+  ~ the words “You are using the Free and Open Source version of LinShare™, powered by
+  ~ Linagora © 2009–2020. Contribute to Linshare R&D by subscribing to an Enterprise
+  ~ offer!”. You must also retain the latter notice in all asynchronous messages such as
+  ~ e-mails sent with the Program, (ii) retain all hypertext links between LinShare and
+  ~ http://www.linshare.org, between linagora.com and Linagora, and (iii) refrain from
+  ~ infringing Linagora intellectual property rights over its trademarks and commercial
+  ~ brands. Other Additional Terms apply, see
+  ~ <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf>
+  ~ for more details.
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY
+  ~ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+  ~ more details.
+  ~ You should have received a copy of the GNU Affero General Public License and its
+  ~ applicable Additional Terms for LinShare along with this program. If not, see
+  ~ <http://www.gnu.org/licenses/> for the GNU Affero General Public License version
+  ~  3 and <http://www.linshare.org/licenses/LinShare-License_AfferoGPL-v3.pdf> for
+  ~  the Additional Terms applicable to LinShare software.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="com.linagora.android.linshare.model.user.PresentationUser" />
+
+        <variable
+            name="user"
+            type="PresentationUser" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="@dimen/user_suggestion_item_padding">
+
+        <TextView
+            android:id="@+id/userAvatar"
+            style="@style/CharacterAvatarStyle"
+            tools:text="T"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/bottom_sheet_item_margin_side"
+            app:userIcon="@{user}"/>
+
+        <TextView
+            android:id="@+id/userFullName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/file_name_color"
+            android:textSize="@dimen/user_suggestion_full_name_text_size"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/userAvatar"
+            android:paddingBottom="@dimen/user_suggestion_line_spacing"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/user_suggestion_text_margin_start"
+            app:userFullName="@{user}"/>
+
+        <TextView
+            android:id="@+id/userMail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/file_size_color"
+            android:textSize="@dimen/user_suggestion_mail_text_size"
+            android:textStyle="italic"
+            app:layout_constraintTop_toBottomOf="@id/userFullName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/userAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/user_suggestion_text_margin_start"
+            android:text="@{user.mail}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
