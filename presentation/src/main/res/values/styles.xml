@@ -102,6 +102,7 @@
 
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/dialog_bottom_sheet_background</item>
+        <item name="behavior_peekHeight">@dimen/bottom_sheet_peek_height</item>
     </style>
 
     <style name="RowLinerBottomSheetStyle">
