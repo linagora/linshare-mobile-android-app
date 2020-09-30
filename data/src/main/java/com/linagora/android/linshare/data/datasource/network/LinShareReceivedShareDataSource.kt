@@ -36,6 +36,7 @@ package com.linagora.android.linshare.data.datasource.network
 import com.linagora.android.linshare.data.api.LinshareApi
 import com.linagora.android.linshare.data.datasource.ReceivedShareDataSource
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.model.share.ShareId
 import javax.inject.Inject
 
 class LinShareReceivedShareDataSource @Inject constructor(
@@ -44,5 +45,9 @@ class LinShareReceivedShareDataSource @Inject constructor(
 
     override suspend fun getReceivedShares(): List<Share> {
         return linshareApi.getReceivedShares().sortedByDescending { it.creationDate }
+    }
+
+    override suspend fun getReceivedShare(shareId: ShareId): Share {
+        return linshareApi.getReceivedShare(shareId.uuid.toString())
     }
 }

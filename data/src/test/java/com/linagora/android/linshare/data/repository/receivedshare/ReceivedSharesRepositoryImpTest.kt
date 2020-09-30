@@ -42,6 +42,7 @@ import com.linagora.android.testshared.ShareFixtures.SHARE_2
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
@@ -78,6 +79,33 @@ class ReceivedSharesRepositoryImpTest {
 
             val receivedList = sharesRepositoryImp.getReceivedShares()
             assertThat(receivedList).isEmpty()
+        }
+    }
+
+    @Test
+    fun getOneShouldReturnReceivedShare() {
+        runBlockingTest {
+            `when`(receivedShareDataSource.getReceivedShare(SHARE_1.shareId))
+                .thenAnswer { SHARE_1 }
+
+            val receivedShare = sharesRepositoryImp.getReceivedShare(SHARE_1.shareId)
+            assertThat(receivedShare).isEqualTo(SHARE_1)
+        }
+    }
+
+    @Test
+    fun getOneShouldThrowExceptionWhenNoReceivedShareExists() {
+        val exception = RuntimeException("Received share not found")
+
+        runBlockingTest {
+            `when`(receivedShareDataSource.getReceivedShare(SHARE_1.shareId))
+                .thenThrow(exception)
+
+            assertThrows<RuntimeException> {
+                runBlockingTest {
+                    sharesRepositoryImp.getReceivedShare(SHARE_1.shareId)
+                }
+            }
         }
     }
 }

@@ -135,6 +135,10 @@ interface LinshareApi {
     @Headers("Accept: application/json")
     suspend fun getReceivedShares(): List<Share>
 
+    @GET("/received_shares/{uuid}")
+    @Headers("Accept: application/json")
+    suspend fun getReceivedShare(@Path("uuid") uuid: String): Share
+
     @GET("/autocomplete/{pattern}?type=SHARING")
     @Headers("Accept: application/json")
     suspend fun getSharingAutoComplete(
