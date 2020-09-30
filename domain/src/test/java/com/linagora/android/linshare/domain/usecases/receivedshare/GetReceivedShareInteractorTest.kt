@@ -33,16 +33,59 @@
 
 package com.linagora.android.linshare.domain.usecases.receivedshare
 
-import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
-import com.linagora.android.linshare.domain.usecases.utils.Success
+import arrow.core.Either
+import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.repository.share.ReceivedShareRepository
+import com.linagora.android.testshared.ShareFixtures.SHARE_1
+import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
+import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 
-data class ReceivedSharesViewState(val receivedList: List<Share>) : Success.ViewState()
-object EmptyReceivedSharesViewState : Failure.FeatureFailure()
-data class ReceivedSharesFailure(val throwable: Throwable) : FeatureFailure()
-data class ContextMenuReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class DownloadReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class ReceivedSharesCopyInMySpace(val share: Share) : Success.ViewEvent()
-data class GetReceivedShareFailure(val throwable: Throwable) : Failure.FeatureFailure()
-data class GetReceivedShareSuccess(val share: Share) : Success.ViewState()
+class GetReceivedShareInteractorTest {
+
+    @Mock
+    private lateinit var receivedRepository: ReceivedShareRepository
+
+    private lateinit var getReceivedShareInteractor: GetReceivedShareInteractor
+
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.initMocks(this)
+        getReceivedShareInteractor = GetReceivedShareInteractor(receivedRepository)
+    }
+
+    @Test
+    fun getReceivedShareShouldSuccessWithSingleReceivedShare() {
+        runBlockingTest {
+            `when`(receivedRepository.getReceivedShare(SHARE_1.shareId))
+                .thenAnswer { SHARE_1 }
+
+            assertThat(getReceivedShareInteractor(SHARE_1.shareId)
+                .map { it(INIT_STATE) }
+                .toList(ArrayList()))
+                .containsExactly(LOADING_STATE, Either.Right(GetReceivedShareSuccess(SHARE_1)))
+        }
+    }
+
+    @Test
+    fun getReceivedShareShouldFailedWhenGetReceivedShareFailed() {
+        runBlockingTest {
+            val exception = RuntimeException("Get single received share failed")
+
+            `when`(receivedRepository.getReceivedShare(SHARE_1.shareId))
+                .thenThrow(exception)
+
+            assertThat(getReceivedShareInteractor(SHARE_1.shareId)
+                .map { it(INIT_STATE) }
+                .toList(ArrayList()))
+                .containsExactly(LOADING_STATE, Either.Left(GetReceivedShareFailure(exception)))
+        }
+    }
+}

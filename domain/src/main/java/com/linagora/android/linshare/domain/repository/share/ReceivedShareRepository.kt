@@ -34,8 +34,11 @@
 package com.linagora.android.linshare.domain.repository.share
 
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.model.share.ShareId
 
 interface ReceivedShareRepository {
 
     suspend fun getReceivedShares(): List<Share>
+
+    suspend fun getReceivedShare(shareId: ShareId): Share
 }

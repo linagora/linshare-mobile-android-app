@@ -33,16 +33,31 @@
 
 package com.linagora.android.linshare.domain.usecases.receivedshare
 
-import com.linagora.android.linshare.domain.model.share.Share
+import arrow.core.Either
+import com.linagora.android.linshare.domain.model.share.ShareId
+import com.linagora.android.linshare.domain.repository.share.ReceivedShareRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
+import com.linagora.android.linshare.domain.usecases.utils.State
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
+import com.linagora.android.linshare.domain.utils.emitState
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class ReceivedSharesViewState(val receivedList: List<Share>) : Success.ViewState()
-object EmptyReceivedSharesViewState : Failure.FeatureFailure()
-data class ReceivedSharesFailure(val throwable: Throwable) : FeatureFailure()
-data class ContextMenuReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class DownloadReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class ReceivedSharesCopyInMySpace(val share: Share) : Success.ViewEvent()
-data class GetReceivedShareFailure(val throwable: Throwable) : Failure.FeatureFailure()
-data class GetReceivedShareSuccess(val share: Share) : Success.ViewState()
+@Singleton
+class GetReceivedShareInteractor @Inject constructor(
+    private val receivedShareRepository: ReceivedShareRepository
+) {
+    operator fun invoke(shareId: ShareId) = flow<State<Either<Failure, Success>>> {
+        emitState { Either.right(Loading) }
+
+        val shareState = Either.catch { receivedShareRepository.getReceivedShare(shareId) }
+            .fold(
+                ifLeft = { throwable -> Either.left(GetReceivedShareFailure(throwable)) },
+                ifRight = { share -> Either.right(GetReceivedShareSuccess(share)) }
+            )
+
+        emitState { shareState }
+    }
+}
