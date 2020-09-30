@@ -76,6 +76,8 @@ class ReceivedSharesViewModel @Inject constructor(
 
     val copyInMySpaceContextMenu = ReceivedSharesCopyInMySpaceContextMenu(this)
 
+    val itemContextMenu = ReceivedShareItemContextMenu(this)
+
     val orderByAction = OrderByActionImp(this)
 
     override fun onContextMenuClick(data: Share) {

@@ -45,6 +45,11 @@ import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
 import javax.inject.Inject
 
 class ReceivedShareContextMenuDialog(private val share: Share) : DaggerBottomSheetDialogFragment() {
+
+    companion object {
+        const val TAG = "receivedSharesContextMenu"
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -67,5 +72,6 @@ class ReceivedShareContextMenuDialog(private val share: Share) : DaggerBottomShe
         binding.share = share
         binding.downloadContextMenu = receivedSharesViewModel.downloadContextMenu
         binding.copyInMySpaceContextMenu = receivedSharesViewModel.copyInMySpaceContextMenu
+        binding.contextMenu = receivedSharesViewModel.itemContextMenu
     }
 }

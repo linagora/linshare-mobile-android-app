@@ -56,11 +56,13 @@ import com.linagora.android.linshare.domain.usecases.myspace.CopyInMySpaceSucces
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.DownloadReceivedShareClick
+import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedShareDetailsClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyInMySpace
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.toParcelable
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.resources.StringId
@@ -80,8 +82,6 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             by activityViewModels { viewModelFactory }
 
     private lateinit var receivedSharesViewModel: ReceivedSharesViewModel
-
-    private lateinit var receivedShareContextMenuDialog: ReceivedShareContextMenuDialog
 
     private lateinit var binding: FragmentReceivedSharesBinding
 
@@ -153,6 +153,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             is ReceivedSharesCopyInMySpace -> handleCopyInMySpace(viewEvent.share)
             is OpenOrderByDialog -> showOrderByDialog()
             is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
+            is ReceivedShareDetailsClick -> navigateToDetails(viewEvent.share)
         }
         resetState()
     }
@@ -170,6 +171,10 @@ class ReceivedSharesFragment : MainNavigationFragment() {
         childFragmentManager.dismissDialogFragmentByTag(ReceivedSharesOrderByDialog.TAG)
     }
 
+    private fun dismissContextMenu() {
+        childFragmentManager.dismissDialogFragmentByTag(ReceivedShareContextMenuDialog.TAG)
+    }
+
     private fun handleOrderRowItemClick(orderListConfigurationType: OrderListConfigurationType) {
         dismissListOrderByDialog()
         receivedSharesViewModel.persistOrderListConfiguration(orderListConfigurationType)
@@ -181,7 +186,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     }
 
     private fun handleDownloadDocument(share: Share) {
-        receivedShareContextMenuDialog.dismiss()
+        dismissContextMenu()
         when (mainActivityViewModel.checkWriteStoragePermission(requireContext())) {
             PermissionResult.PermissionGranted -> { download(share) }
             else -> { shouldRequestWriteStoragePermission() }
@@ -212,8 +217,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     }
 
     private fun showContextMenuReceivedShare(share: Share) {
-        receivedShareContextMenuDialog = ReceivedShareContextMenuDialog(share)
-        receivedShareContextMenuDialog.show(childFragmentManager, receivedShareContextMenuDialog.tag)
+        ReceivedShareContextMenuDialog(share).show(childFragmentManager, ReceivedShareContextMenuDialog.TAG)
     }
 
     private fun setUpSwipeRefreshLayout() {
@@ -244,7 +248,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
 
     private fun handleCopyInMySpace(share: Share) {
         LOGGER.info("handleCopyInMySpace(): $share")
-        receivedShareContextMenuDialog.dismiss()
+        dismissContextMenu()
         receivedSharesViewModel.copyInMySpace(share)
     }
 
@@ -268,4 +272,11 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     private fun goToMySpace() = findNavController().navigate(R.id.navigation_my_space)
 
     private fun resetState() = receivedSharesViewModel.dispatchState(Either.right(Success.Idle))
+
+    private fun navigateToDetails(share: Share) {
+        dismissContextMenu()
+        val actionToShareDetails = ReceivedSharesFragmentDirections
+            .navigateToShareDetails(share.shareId.toParcelable())
+        findNavController().navigate(actionToShareDetails)
+    }
 }

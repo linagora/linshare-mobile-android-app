@@ -40,7 +40,13 @@
     <data>
         <import type="com.linagora.android.linshare.view.action.CopyInMySpaceContextMenu"/>
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
+        <import type="com.linagora.android.linshare.view.receivedshares.ReceivedShareItemContextMenu"/>
+
         <import type="com.linagora.android.linshare.domain.model.share.Share"/>
+
+        <variable
+            name="contextMenu"
+            type="ReceivedShareItemContextMenu" />
 
         <variable
             name="downloadContextMenu"
@@ -97,6 +103,19 @@
                 style="@style/TextInRowLinerBottomSheetStyle"
                 android:text="@string/download_to_device" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> contextMenu.details(share)}">
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_detail" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/details" />
         </LinearLayout>
     </LinearLayout>
 </layout>

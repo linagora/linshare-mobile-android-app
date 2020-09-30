@@ -31,20 +31,19 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.usecases.receivedshare
+package com.linagora.android.linshare.view.receivedshares
 
-import com.linagora.android.linshare.domain.model.OperatorType
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.domain.usecases.utils.Failure
-import com.linagora.android.linshare.domain.usecases.utils.Failure.FeatureFailure
-import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedShareDetailsClick
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.ItemContextMenu
 
-data class ReceivedSharesViewState(val receivedList: List<Share>) : Success.ViewState()
-object EmptyReceivedSharesViewState : Failure.FeatureFailure()
-data class ReceivedSharesFailure(val throwable: Throwable) : FeatureFailure()
-data class ContextMenuReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class DownloadReceivedShareClick(val share: Share) : Success.ViewEvent()
-data class ReceivedSharesCopyInMySpace(val share: Share) : Success.ViewEvent()
-data class ReceivedShareDetailsClick(val share: Share) : Success.OnlineViewEvent(OperatorType.ViewDetails)
-data class GetReceivedShareFailure(val throwable: Throwable) : Failure.FeatureFailure()
-data class GetReceivedShareSuccess(val share: Share) : Success.ViewState()
+class ReceivedShareItemContextMenu(private val viewModel: BaseViewModel) : ItemContextMenu<Share> {
+
+    override fun remove(data: Share) {}
+
+    override fun details(data: Share) {
+        viewModel.dispatchUIState(Either.right(ReceivedShareDetailsClick(data)))
+    }
+}
