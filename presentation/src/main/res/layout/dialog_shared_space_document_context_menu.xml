@@ -172,7 +172,7 @@
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
             app:contextActionVisible="@{sharedSpace.role}"
-            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.copyRole}"
+            app:operationRoles="@{SharedSpaceOperationRole.INSTANCE.duplicateDocumentInWorkGroup}"
             android:onClick="@{() -> editContextMenu.duplicate(workGroupNode)}">
 
             <ImageView

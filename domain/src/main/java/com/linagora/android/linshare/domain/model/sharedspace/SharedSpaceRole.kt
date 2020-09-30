@@ -92,6 +92,12 @@ object SharedSpaceOperationRole {
     val RenameWorkGroupRole = listOf(
         SharedSpaceRoleName.ADMIN
     )
+
+    val DuplicateDocumentInWorkGroup = listOf(
+        SharedSpaceRoleName.CONTRIBUTOR,
+        SharedSpaceRoleName.WRITER,
+        SharedSpaceRoleName.ADMIN
+    )
 }
 
 fun SharedSpaceRole.canUpload(): Boolean {
