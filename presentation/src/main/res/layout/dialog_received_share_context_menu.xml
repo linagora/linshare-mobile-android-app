@@ -41,7 +41,8 @@
         <import type="com.linagora.android.linshare.view.action.CopyInMySpaceContextMenu"/>
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.view.receivedshares.ReceivedShareItemContextMenu"/>
-
+        <import type="com.linagora.android.linshare.view.receivedshares.action.ReceivedSharesCopyToContextMenu"/>
+        <import type="com.linagora.android.linshare.view.base.CopyToContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.share.Share"/>
 
         <variable
@@ -55,6 +56,10 @@
         <variable
             name="copyInMySpaceContextMenu"
             type="CopyInMySpaceContextMenu&lt;Share&gt;" />
+
+        <variable
+            name="copyToContextMenu"
+            type="CopyToContextMenu&lt;Share&gt;" />
 
         <variable
             name="share"
@@ -103,6 +108,18 @@
                 style="@style/TextInRowLinerBottomSheetStyle"
                 android:text="@string/download_to_device" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> copyToContextMenu.copyTo(share)}">
+            <ImageView
+                style="@style/ImageInRowLinerBottomSheetStyle"
+                android:src="@drawable/ic_shared_space_item" />
+
+            <TextView
+                style="@style/TextInRowLinerBottomSheetStyle"
+                android:text="@string/copy_to_a_workgroup" />
         </LinearLayout>
 
         <LinearLayout

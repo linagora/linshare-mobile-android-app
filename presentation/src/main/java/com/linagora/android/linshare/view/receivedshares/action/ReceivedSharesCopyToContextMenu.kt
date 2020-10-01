@@ -31,48 +31,19 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.receivedshares
+package com.linagora.android.linshare.view.receivedshares.action
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import com.linagora.android.linshare.databinding.DialogReceivedShareContextMenuBinding
+import arrow.core.Either
 import com.linagora.android.linshare.domain.model.share.Share
-import com.linagora.android.linshare.util.getParentViewModel
-import com.linagora.android.linshare.view.dialog.DaggerBottomSheetDialogFragment
-import javax.inject.Inject
+import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyToSharedSpaceClick
+import com.linagora.android.linshare.view.base.BaseViewModel
+import com.linagora.android.linshare.view.base.CopyToContextMenu
 
-class ReceivedShareContextMenuDialog(private val share: Share) : DaggerBottomSheetDialogFragment() {
+class ReceivedSharesCopyToContextMenu(
+    private val viewModel: BaseViewModel
+) : CopyToContextMenu<Share> {
 
-    companion object {
-        const val TAG = "receivedSharesContextMenu"
-    }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var receivedSharesViewModel: ReceivedSharesViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = DialogReceivedShareContextMenuBinding.inflate(inflater, container, false)
-        initViewModel(binding)
-        return binding.root
-    }
-
-    private fun initViewModel(binding: DialogReceivedShareContextMenuBinding) {
-        receivedSharesViewModel = getParentViewModel(viewModelFactory)
-
-        binding.share = share
-        binding.downloadContextMenu = receivedSharesViewModel.downloadContextMenu
-        binding.copyInMySpaceContextMenu = receivedSharesViewModel.copyInMySpaceContextMenu
-        binding.contextMenu = receivedSharesViewModel.itemContextMenu
-        binding.copyToContextMenu = receivedSharesViewModel.copyToContextMenu
+    override fun copyTo(item: Share) {
+        viewModel.dispatchUIState(Either.right(ReceivedSharesCopyToSharedSpaceClick(item)))
     }
 }

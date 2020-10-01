@@ -58,6 +58,7 @@ import com.linagora.android.linshare.view.base.BaseViewModel
 import com.linagora.android.linshare.view.base.ListItemBehavior
 import com.linagora.android.linshare.view.myspace.MySpaceViewModel.Companion.NO_DOWNLOADING_DOCUMENT
 import com.linagora.android.linshare.view.receivedshares.action.ReceivedSharesCopyInMySpaceContextMenu
+import com.linagora.android.linshare.view.receivedshares.action.ReceivedSharesCopyToContextMenu
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -77,6 +78,8 @@ class ReceivedSharesViewModel @Inject constructor(
     val copyInMySpaceContextMenu = ReceivedSharesCopyInMySpaceContextMenu(this)
 
     val itemContextMenu = ReceivedShareItemContextMenu(this)
+
+    val copyToContextMenu = ReceivedSharesCopyToContextMenu(this)
 
     val orderByAction = OrderByActionImp(this)
 
