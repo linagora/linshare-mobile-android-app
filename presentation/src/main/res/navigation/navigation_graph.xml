@@ -151,11 +151,22 @@
         <action
             android:id="@+id/navigateToShareDetails"
             app:destination="@id/navigationSharedSpaceShareDetails" />
+        <action
+            android:id="@+id/navigateToCopyReceivedShareDestinationFragment"
+            app:destination="@id/navigationCopyReceivedShareDestinationFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigationSharedSpaceShareDetails"
         android:name="com.linagora.android.linshare.view.receivedshares.details.ReceivedSharesShareDetailsFragment"
         tools:layout="@layout/fragment_received_shares_share_details">
+        <argument
+            android:name="shareId"
+            app:argType="com.linagora.android.linshare.model.parcelable.ShareIdParcelable" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationCopyReceivedShareDestinationFragment"
+        android:name="com.linagora.android.linshare.view.sharedspacedestination.copy.receivedshare.CopyReceivedShareDestinationFragment"
+        tools:layout="@layout/fragment_shared_space_destination">
         <argument
             android:name="shareId"
             app:argType="com.linagora.android.linshare.model.parcelable.ShareIdParcelable" />

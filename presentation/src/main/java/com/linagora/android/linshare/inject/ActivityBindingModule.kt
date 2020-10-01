@@ -51,6 +51,7 @@ import com.linagora.android.linshare.view.sharedspace.details.SharedSpaceAddMemb
 import com.linagora.android.linshare.view.sharedspace.details.SharedSpaceDetailsModule
 import com.linagora.android.linshare.view.sharedspacedestination.SharedSpaceDestinationModule
 import com.linagora.android.linshare.view.sharedspacedestination.copy.myspace.CopyMySpaceDestinationModule
+import com.linagora.android.linshare.view.sharedspacedestination.copy.receivedshare.CopyReceivedShareDestinationModule
 import com.linagora.android.linshare.view.sharedspacedestination.copy.sharedspace.CopySharedSpaceDestinationModule
 import com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentPresentationModule
 import com.linagora.android.linshare.view.sharedspacedocument.details.SharedSpaceDocumentDetailsModule
@@ -95,6 +96,7 @@ abstract class ActivityBindingModule {
         CopySharedSpaceDestinationDocumentModule::class,
         CopyMySpaceDestinationModule::class,
         CopyMySpaceDestinationDocumentModule::class,
+        CopyReceivedShareDestinationModule::class,
         SharedSpaceDocumentDetailsModule::class
     ])
     internal abstract fun mainActivity(): MainActivity
