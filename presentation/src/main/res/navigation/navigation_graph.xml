@@ -148,6 +148,11 @@
         android:id="@id/navigation_received_shares"
         android:name="com.linagora.android.linshare.view.receivedshares.ReceivedSharesFragment"
         tools:layout="@layout/fragment_received_shares">
+        <argument
+            android:name="selectedDestinationInfoForOperate"
+            app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperateShare"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/navigateToShareDetails"
             app:destination="@id/navigationSharedSpaceShareDetails" />
@@ -170,6 +175,26 @@
         <argument
             android:name="shareId"
             app:argType="com.linagora.android.linshare.model.parcelable.ShareIdParcelable" />
+        <action
+            android:id="@+id/navigateToCopyReceivedShareDestinationDocumentFragment"
+            app:destination="@id/navigationCopyReceivedShareDestinationDocumentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationCopyReceivedShareDestinationDocumentFragment"
+        android:name="com.linagora.android.linshare.view.sharedspacedocumentdestination.copy.receivedshare.CopyReceivedShareDestinationDocumentFragment"
+        tools:layout="@layout/fragment_shared_space_document_destination">
+        <argument
+            android:name="shareId"
+            app:argType="com.linagora.android.linshare.model.parcelable.ShareIdParcelable" />
+        <argument
+            android:name="navigationInfo"
+            app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <action
+            android:id="@+id/navigateToFolder"
+            app:destination="@id/navigationCopyReceivedShareDestinationDocumentFragment" />
+        <action
+            android:id="@+id/navigateToReceivedShares"
+            app:destination="@id/navigation_received_shares" />
     </fragment>
     <fragment
         android:id="@id/navigation_shared_space"
