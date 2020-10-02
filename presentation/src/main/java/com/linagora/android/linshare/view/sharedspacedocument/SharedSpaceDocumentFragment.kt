@@ -711,6 +711,11 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         if (workGroupNode !is WorkGroupDocument) {
             return
         }
-        sharedSpacesDocumentViewModel.duplicateNodeInSharedSpace(workGroupNode.sharedSpaceId, workGroupNode)
+
+        sharedSpacesDocumentViewModel.duplicateNodeInSharedSpace(
+            workGroupNode.sharedSpaceId,
+            workGroupNode,
+            arguments.navigationInfo.nodeIdParcelable.toWorkGroupNodeId()
+        )
     }
 }

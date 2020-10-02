@@ -316,10 +316,14 @@ class SharedSpaceDocumentViewModel @Inject constructor(
         }
     }
 
-    fun duplicateNodeInSharedSpace(duplicateFileSharedSpaceId: SharedSpaceId, duplicateNode: WorkGroupNode) {
+    fun duplicateNodeInSharedSpace(duplicateFileSharedSpaceId: SharedSpaceId, duplicateNode: WorkGroupNode, parentWorkGroupNodeId: WorkGroupNodeId) {
         LOGGER.info("duplicateFile(): $duplicateNode")
         viewModelScope.launch(dispatcherProvider.io) {
-            consumeStates(duplicateFileInteractor(duplicateNode, duplicateFileSharedSpaceId))
+            consumeStates(duplicateFileInteractor(
+                duplicateNode,
+                duplicateFileSharedSpaceId,
+                parentWorkGroupNodeId
+            ))
         }
     }
 
