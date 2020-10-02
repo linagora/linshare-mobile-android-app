@@ -104,16 +104,6 @@ class SharedSpacesDocumentRepositoryImp @Inject constructor(
         )
     }
 
-    override suspend fun duplicateWorkGroupNode(
-        copyRequest: CopyRequest,
-        sharedSpaceUuid: SharedSpaceId
-    ): List<WorkGroupNode> {
-        return sharedSpacesDocumentDataSource.duplicateInWorkGroupNode(
-            copyRequest,
-            sharedSpaceUuid
-        )
-    }
-
     override suspend fun createSharedSpaceFolder(
         sharedSpaceId: SharedSpaceId,
         createSharedSpaceNodeRequest: CreateSharedSpaceNodeRequest

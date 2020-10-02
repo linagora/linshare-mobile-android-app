@@ -40,7 +40,6 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.CreateSharedSpa
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveNotFoundSharedSpaceDocumentException
 import com.linagora.android.linshare.domain.usecases.sharedspace.RemoveSharedSpaceNodeException
 import com.linagora.android.testshared.CopyFixtures
-import com.linagora.android.testshared.DuplicateFixtures
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.CREATE_SHARED_SPACE_NODE_REQUEST
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.CREATE_SHARED_SPACE_NODE_REQUEST_WITH_PARENT_NULL
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.NODE_ID_1
@@ -275,35 +274,6 @@ class SharedSpacesDocumentRepositoryImpTest {
 
                 assertThrows<CreateSharedSpaceNodeException> {
                     runBlockingTest { sharedSpacesDocumentRepositoryImp.createSharedSpaceFolder(SHARED_SPACE_ID_1, CREATE_SHARED_SPACE_NODE_REQUEST) }
-                }
-            }
-        }
-    }
-
-    @Nested
-    inner class DuplicateInSharedSpace {
-        @Test
-        fun duplicateWorkGroupNodeSuccessShouldReturnDuplicatedDocument() {
-            runBlockingTest {
-                `when`(sharedSpacesDocumentRepositoryImp.duplicateWorkGroupNode(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1))
-                    .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1) }
-
-                val duplicatedDocuments = sharedSpacesDocumentRepositoryImp
-                    .duplicateWorkGroupNode(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1)
-
-                assertThat(duplicatedDocuments).hasSize(1)
-                assertThat(duplicatedDocuments[0]).isEqualTo(WORK_GROUP_DOCUMENT_1)
-            }
-        }
-
-        @Test
-        fun duplicateWorkGroupNodeShouldFailWhenDataSourceFail() {
-            runBlockingTest {
-                `when`(sharedSpacesDocumentRepositoryImp.duplicateWorkGroupNode(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1))
-                    .thenThrow(RuntimeException())
-
-                assertThrows<RuntimeException> {
-                    runBlockingTest { sharedSpacesDocumentRepositoryImp.duplicateWorkGroupNode(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1) }
                 }
             }
         }
