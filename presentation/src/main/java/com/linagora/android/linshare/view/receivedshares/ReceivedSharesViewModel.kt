@@ -42,12 +42,17 @@ import com.linagora.android.linshare.domain.model.copy.toCopyRequest
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.order.OrderListType
 import com.linagora.android.linshare.domain.model.share.Share
+import com.linagora.android.linshare.domain.model.share.ShareId
+import com.linagora.android.linshare.domain.model.share.toCopyRequest
+import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesOrderedInteractor
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
@@ -60,6 +65,7 @@ import com.linagora.android.linshare.view.myspace.MySpaceViewModel.Companion.NO_
 import com.linagora.android.linshare.view.receivedshares.action.ReceivedSharesCopyInMySpaceContextMenu
 import com.linagora.android.linshare.view.receivedshares.action.ReceivedSharesCopyToContextMenu
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class ReceivedSharesViewModel @Inject constructor(
@@ -69,9 +75,14 @@ class ReceivedSharesViewModel @Inject constructor(
     private val persistOrderListConfigurationInteractor: PersistOrderListConfigurationInteractor,
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
-    private val downloadOperator: DownloadOperator
+    private val downloadOperator: DownloadOperator,
+    private val copyToSharedSpaceUseCase: CopyToSharedSpace
 ) : BaseViewModel(internetAvailable, dispatcherProvider),
     ListItemBehavior<Share> {
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(ReceivedSharesViewModel::class.java)
+    }
 
     val downloadContextMenu = ReceivedShareDownloadContextMenu(this)
 
@@ -127,6 +138,21 @@ class ReceivedSharesViewModel @Inject constructor(
     fun copyInMySpace(share: Share) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(copyInMySpaceInteractor(share.toCopyRequest(SpaceType.RECEIVED_SHARE)))
+        }
+    }
+
+    fun copyToSharedSpace(
+        shareId: ShareId,
+        copyToSharedSpaceId: SharedSpaceId,
+        copyToParentNodeId: WorkGroupNodeId
+    ) {
+        LOGGER.info("copyDocumentToSharedSpace(): copy $shareId to $copyToParentNodeId in $copyToSharedSpaceId")
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(copyToSharedSpaceUseCase(
+                shareId.toCopyRequest(),
+                copyToSharedSpaceId,
+                copyToParentNodeId
+            ))
         }
     }
 

@@ -42,6 +42,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import arrow.core.Either
 import com.google.android.material.snackbar.Snackbar
 import com.linagora.android.linshare.R
@@ -58,16 +59,23 @@ import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuRe
 import com.linagora.android.linshare.domain.usecases.receivedshare.DownloadReceivedShareClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedShareDetailsClick
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyInMySpace
+import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesCopyToSharedSpaceClick
+import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
 import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDialog
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperateShare
 import com.linagora.android.linshare.model.parcelable.toParcelable
+import com.linagora.android.linshare.model.parcelable.toShareId
+import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
+import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest
 import com.linagora.android.linshare.model.resources.StringId
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.getViewModel
+import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
 import com.linagora.android.linshare.view.WriteExternalPermissionRequestCode
@@ -84,6 +92,8 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     private lateinit var receivedSharesViewModel: ReceivedSharesViewModel
 
     private lateinit var binding: FragmentReceivedSharesBinding
+
+    private val args: ReceivedSharesFragmentArgs by navArgs()
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(ReceivedSharesFragment::class.java)
@@ -110,8 +120,21 @@ class ReceivedSharesFragment : MainNavigationFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        handleArguments()
         setUpSwipeRefreshLayout()
         getOrderListConfiguration()
+    }
+
+    private fun handleArguments() {
+        args.selectedDestinationInfoForOperate
+            ?.let(this@ReceivedSharesFragment::operateSelectedDestinationInfo)
+    }
+
+    private fun operateSelectedDestinationInfo(selectedDestinationInfoForOperateShare: SelectedDestinationInfoForOperateShare) {
+        LOGGER.info("operateSelectedDestinationInfo(): $selectedDestinationInfoForOperateShare")
+        when (selectedDestinationInfoForOperateShare.operatorPickDestination) {
+            Event.OperatorPickDestination.COPY -> copyToSharedSpace(selectedDestinationInfoForOperateShare)
+        }
     }
 
     private fun observeViewState() {
@@ -141,6 +164,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
     private fun reactToViewState(success: Success.ViewState) {
         when (success) {
             is CopyInMySpaceSuccess -> showCopyInMySpaceSuccess(success.documents)
+            is CopyToSharedSpaceSuccess -> successSnackBar(getString(R.string.copy_to_shared_space_message)).show()
             is GetOrderListConfigurationSuccess -> handleGetOrderListConfigSuccess(success.orderListConfigurationType)
         }
     }
@@ -154,6 +178,7 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             is OpenOrderByDialog -> showOrderByDialog()
             is OnOrderByRowItemClick -> handleOrderRowItemClick(viewEvent.orderListConfigurationType)
             is ReceivedShareDetailsClick -> navigateToDetails(viewEvent.share)
+            is ReceivedSharesCopyToSharedSpaceClick -> selectDestinationToCopyTo(viewEvent.share)
         }
         resetState()
     }
@@ -199,6 +224,14 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             ?.let { authentication ->
                 receivedSharesViewModel.downloadShare(authentication.credential, authentication.token, share)
             }
+    }
+
+    private fun copyToSharedSpace(selectedDestinationInfoForOperateShare: SelectedDestinationInfoForOperateShare) {
+        receivedSharesViewModel.copyToSharedSpace(
+            selectedDestinationInfoForOperateShare.sharedId.toShareId(),
+            selectedDestinationInfoForOperateShare.selectedDestinationInfo.sharedSpaceDestinationInfo.sharedSpaceIdParcelable.toSharedSpaceId(),
+            selectedDestinationInfoForOperateShare.selectedDestinationInfo.parentDestinationInfo.parentNodeId.toWorkGroupNodeId()
+        )
     }
 
     private fun shouldRequestWriteStoragePermission() {
@@ -252,6 +285,12 @@ class ReceivedSharesFragment : MainNavigationFragment() {
         receivedSharesViewModel.copyInMySpace(share)
     }
 
+    private fun selectDestinationToCopyTo(share: Share) {
+        val actionToDestinationPicker = ReceivedSharesFragmentDirections
+            .navigateToCopyReceivedShareDestinationFragment(share.shareId.toParcelable())
+        findNavController().navigate(actionToDestinationPicker)
+    }
+
     private fun showCopyToMySpaceError(stringId: StringId) {
         LOGGER.info("showCopyToMySpaceError()")
         Snackbar.make(binding.root, getString(stringId.value), Snackbar.LENGTH_SHORT)
@@ -267,6 +306,11 @@ class ReceivedSharesFragment : MainNavigationFragment() {
             .setAction(R.string.view) { goToMySpace() }
             .show()
         resetState()
+    }
+
+    private fun successSnackBar(message: String): Snackbar {
+        return Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+            .withLinShare(requireContext())
     }
 
     private fun goToMySpace() = findNavController().navigate(R.id.navigation_my_space)

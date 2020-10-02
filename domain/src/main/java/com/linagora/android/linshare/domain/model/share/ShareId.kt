@@ -33,6 +33,12 @@
 
 package com.linagora.android.linshare.domain.model.share
 
+import com.linagora.android.linshare.domain.model.copy.CopyRequest
+import com.linagora.android.linshare.domain.model.copy.SpaceType
 import java.util.UUID
 
 data class ShareId(val uuid: UUID)
+
+fun ShareId.toCopyRequest(): CopyRequest {
+    return CopyRequest(uuid = uuid, kind = SpaceType.RECEIVED_SHARE)
+}
