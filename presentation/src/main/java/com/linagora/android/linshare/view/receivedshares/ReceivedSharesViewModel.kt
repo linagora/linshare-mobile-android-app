@@ -54,6 +54,7 @@ import com.linagora.android.linshare.domain.usecases.receivedshare.ContextMenuRe
 import com.linagora.android.linshare.domain.usecases.receivedshare.GetReceivedSharesOrderedInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.functionality.FunctionalityObserver
 import com.linagora.android.linshare.operator.download.DownloadOperator
 import com.linagora.android.linshare.operator.download.toDownloadRequest
 import com.linagora.android.linshare.util.ConnectionLiveData
@@ -76,7 +77,8 @@ class ReceivedSharesViewModel @Inject constructor(
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider,
     private val downloadOperator: DownloadOperator,
-    private val copyToSharedSpaceUseCase: CopyToSharedSpace
+    private val copyToSharedSpaceUseCase: CopyToSharedSpace,
+    val functionalityObserver: FunctionalityObserver
 ) : BaseViewModel(internetAvailable, dispatcherProvider),
     ListItemBehavior<Share> {
 

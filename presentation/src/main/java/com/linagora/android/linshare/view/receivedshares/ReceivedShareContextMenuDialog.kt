@@ -53,7 +53,6 @@ class ReceivedShareContextMenuDialog(private val share: Share) : DaggerBottomShe
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
     lateinit var receivedSharesViewModel: ReceivedSharesViewModel
 
     override fun onCreateView(
@@ -74,5 +73,6 @@ class ReceivedShareContextMenuDialog(private val share: Share) : DaggerBottomShe
         binding.copyInMySpaceContextMenu = receivedSharesViewModel.copyInMySpaceContextMenu
         binding.contextMenu = receivedSharesViewModel.itemContextMenu
         binding.copyToContextMenu = receivedSharesViewModel.copyToContextMenu
+        binding.functionalityObserver = receivedSharesViewModel.functionalityObserver
     }
 }

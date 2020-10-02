@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.adapter.receivedshares
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -42,6 +43,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.model.functionality.Functionality
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityIdentifier
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.usecases.receivedshare.EmptyReceivedSharesViewState
 import com.linagora.android.linshare.domain.usecases.receivedshare.ReceivedSharesFailure
@@ -118,4 +121,15 @@ fun bindingEmptyMessageReceivedShares(linearLayout: LinearLayout, state: Either<
                 is ReceivedSharesViewState -> linearLayout.isVisible = false
             }
         })
+}
+
+@BindingAdapter("workGroupContextActionVisibleWithFunctionality")
+fun bindingWorkGroupContextActionWithFunctionality(
+    view: View,
+    allFunctionalities: List<Functionality>
+) {
+    view.isVisible = allFunctionalities.takeIf { it.isNotEmpty() }
+        ?.first { functionality -> functionality.identifier == FunctionalityIdentifier.WORK_GROUP }
+        ?.enable
+        ?: false
 }

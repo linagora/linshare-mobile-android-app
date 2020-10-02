@@ -38,12 +38,17 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.functionality.FunctionalityObserver"/>
         <import type="com.linagora.android.linshare.view.action.CopyInMySpaceContextMenu"/>
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
         <import type="com.linagora.android.linshare.view.receivedshares.ReceivedShareItemContextMenu"/>
         <import type="com.linagora.android.linshare.view.receivedshares.action.ReceivedSharesCopyToContextMenu"/>
         <import type="com.linagora.android.linshare.view.base.CopyToContextMenu"/>
         <import type="com.linagora.android.linshare.domain.model.share.Share"/>
+
+        <variable
+            name="functionalityObserver"
+            type="FunctionalityObserver" />
 
         <variable
             name="contextMenu"
@@ -112,6 +117,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
+            app:workGroupContextActionVisibleWithFunctionality="@{functionalityObserver.allFunctionality}"
             android:onClick="@{() -> copyToContextMenu.copyTo(share)}">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"
