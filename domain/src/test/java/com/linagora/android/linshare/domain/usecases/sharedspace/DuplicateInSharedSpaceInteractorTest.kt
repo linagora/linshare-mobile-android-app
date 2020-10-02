@@ -38,6 +38,7 @@ import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
 import com.linagora.android.testshared.DuplicateFixtures
 import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_DOCUMENT_1
+import com.linagora.android.testshared.SharedSpaceDocumentFixtures.WORK_GROUP_FOLDER_1
 import com.linagora.android.testshared.SharedSpaceFixtures.SHARED_SPACE_ID_1
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
 import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
@@ -65,9 +66,9 @@ class DuplicateInSharedSpaceInteractorTest {
     }
 
     @Test
-    fun duplicateInSharedSpaceShouldSuccessWithACopyRequest() {
+    fun duplicateInSharedSpaceRootShouldSuccessWithACopyRequest() {
         runBlockingTest {
-            `when`(sharedSpaceDocumentRepository.duplicateWorkGroupNode(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1))
+            `when`(sharedSpaceDocumentRepository.copyToSharedSpace(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1))
                 .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1) }
 
             val duplicateStates = duplicateInSharedSpaceInteractor(WORK_GROUP_DOCUMENT_1, SHARED_SPACE_ID_1)
@@ -79,10 +80,24 @@ class DuplicateInSharedSpaceInteractorTest {
     }
 
     @Test
+    fun duplicateInSharedSpaceSubFoldersShouldSuccessWithACopyRequest() {
+        runBlockingTest {
+            `when`(sharedSpaceDocumentRepository.copyToSharedSpace(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1, WORK_GROUP_FOLDER_1.parentWorkGroupNodeId))
+                .thenAnswer { listOf(WORK_GROUP_DOCUMENT_1) }
+
+            val duplicateStates = duplicateInSharedSpaceInteractor(WORK_GROUP_DOCUMENT_1, SHARED_SPACE_ID_1, WORK_GROUP_FOLDER_1.parentWorkGroupNodeId)
+                .map { it(INIT_STATE) }
+                .toList(ArrayList())
+
+            assertThat(duplicateStates).containsExactly(LOADING_STATE, Either.right(DuplicateInSharedSpaceSuccess(WORK_GROUP_DOCUMENT_1)))
+        }
+    }
+
+    @Test
     fun duplicateInSharedSpaceShouldFailedWhenDuplicateThrowException() {
         runBlockingTest {
             val duplicateException = RuntimeException("Duplicate Failed")
-            `when`(sharedSpaceDocumentRepository.duplicateWorkGroupNode(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1))
+            `when`(sharedSpaceDocumentRepository.copyToSharedSpace(DuplicateFixtures.DUPLICATE_REQUEST_1, SHARED_SPACE_ID_1))
                 .thenThrow(duplicateException)
 
             val duplicateStates = duplicateInSharedSpaceInteractor(WORK_GROUP_DOCUMENT_1, SHARED_SPACE_ID_1)

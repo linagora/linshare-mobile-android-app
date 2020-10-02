@@ -36,6 +36,7 @@ package com.linagora.android.linshare.domain.usecases.sharedspace
 import arrow.core.Either
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.model.sharedspace.toDuplicateRequest
 import com.linagora.android.linshare.domain.repository.sharedspacesdocument.SharedSpacesDocumentRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
@@ -58,12 +59,13 @@ class DuplicateInSharedSpaceInteractor @Inject constructor(
 
     operator fun invoke(
         duplicateWorkGroupNode: WorkGroupNode,
-        sharedSpaceUuid: SharedSpaceId
+        sharedSpaceUuid: SharedSpaceId,
+        sharedSpaceNodeParentId: WorkGroupNodeId? = null
     ): Flow<State<Either<Failure, Success>>> = flow<State<Either<Failure, Success>>> {
         emitState { Either.right(Success.Loading) }
 
         val duplicateResultsState = Either.catch { sharedSpacesDocumentRepository
-                    .duplicateWorkGroupNode(duplicateWorkGroupNode.toDuplicateRequest(), sharedSpaceUuid) }
+                    .copyToSharedSpace(duplicateWorkGroupNode.toDuplicateRequest(), sharedSpaceUuid, sharedSpaceNodeParentId) }
             .bimap(
                 leftOperation = ::DuplicateInSharedSpaceFailure,
                 rightOperation = { DuplicateInSharedSpaceSuccess(duplicateWorkGroupNode) })
