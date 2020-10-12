@@ -41,6 +41,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.linagora.android.linshare.adapter.diff.WorkGroupNodeDiffCallback
 import com.linagora.android.linshare.databinding.SharedSpaceDocumentRowItemBinding
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
+import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType
+import com.linagora.android.linshare.util.Constant.ACTIVE_STATE_ALPHA
+import com.linagora.android.linshare.util.Constant.INACTIVE_STATE_ALPHA
 import com.linagora.android.linshare.view.base.ListItemBehavior
 
 class SharedSpaceDocumentAdapter constructor(
@@ -74,6 +77,13 @@ class SharedSpaceDocumentViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(workGroupNode: WorkGroupNode) {
+        val nodeAlpha = adapterType.takeIf {
+            it == AdapterType.SHARE_SPACE_DESTINATION_PICKER && workGroupNode.type !== WorkGroupNodeType.FOLDER }
+            ?.let { INACTIVE_STATE_ALPHA } ?: ACTIVE_STATE_ALPHA
+
+        binding.documentName.alpha = nodeAlpha
+        binding.documentIcon.alpha = nodeAlpha
+
         binding.documentMenuContainer.visibility = adapterType.takeIf {
             it == AdapterType.SHARE_SPACE_DESTINATION_PICKER }
             ?.let { View.GONE }

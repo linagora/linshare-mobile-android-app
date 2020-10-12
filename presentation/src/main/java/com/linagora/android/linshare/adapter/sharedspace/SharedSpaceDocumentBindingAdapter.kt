@@ -49,7 +49,6 @@ import com.linagora.android.linshare.domain.model.sharedspace.SharedSpace
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRole
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceRoleName
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupDocument
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupFolder
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeType
 import com.linagora.android.linshare.domain.model.sharedspace.canUpload
@@ -88,11 +87,7 @@ fun bindingSharedSpaceDocumentList(
 private fun submitSharedSpaceDocumentList(recyclerView: RecyclerView, success: Success, adapterType: AdapterType) {
     recyclerView.isVisible = true
     val documents = when (success) {
-        is SharedSpaceDocumentViewState -> {
-            adapterType.takeIf { it == AdapterType.SHARE_SPACE_DESTINATION_PICKER }
-                ?.let { success.documents.filterIsInstance<WorkGroupFolder>() }
-                ?: success.documents
-        }
+        is SharedSpaceDocumentViewState -> success.documents
         is SearchSharedSpaceDocumentViewState -> success.documents
         is SharedSpaceDocumentEmpty -> {
             recyclerView.isVisible = false

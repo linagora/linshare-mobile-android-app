@@ -74,6 +74,9 @@ object Constant {
     const val EMPTY_LEFT_DRAWABLE_RESOURCE = 0
     const val EMPTY_RIGHT_DRAWABLE_RESOURCE = 0
 
+    const val INACTIVE_STATE_ALPHA = 0.6F
+    const val ACTIVE_STATE_ALPHA = 1F
+
     object Session {
         val NO_SESSION_ID = null
         const val J_SESSION_ID = "JSESSIONID"
