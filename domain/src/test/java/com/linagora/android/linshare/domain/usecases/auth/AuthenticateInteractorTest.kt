@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.domain.usecases.auth
 
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_PASSWORD
@@ -49,6 +50,7 @@ import com.linagora.android.testshared.TestFixtures.State.CONNECT_ERROR_STATE
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
 import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
 import com.linagora.android.testshared.TestFixtures.State.SERVER_NOT_FOUND_STATE
+import com.linagora.android.testshared.TestFixtures.State.SERVER_VERSION_4_NOT_FOUND_STATE
 import com.linagora.android.testshared.TestFixtures.State.UNKNOW_ERROR_STATE
 import com.linagora.android.testshared.TestFixtures.State.WRONG_CREDENTIAL_STATE
 import com.linagora.android.testshared.TestFixtures.State.WRONG_PASSWORD_STATE
@@ -78,10 +80,10 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldSuccessWithRightUsernamePassword() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD))
+            `when`(authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, PASSWORD))
                 .thenAnswer { TOKEN }
 
-            assertThat(authenticateInteractor(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD)
+            assertThat(authenticateInteractor(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, PASSWORD)
                     .map { it(INIT_STATE) }
                     .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, AUTHENTICATE_SUCCESS_STATE)
@@ -91,10 +93,10 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldFailureWithWrongUrl() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME, PASSWORD))
+            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD))
                 .thenThrow(BadCredentials(WRONG_CREDENTIAL))
 
-            assertThat(authenticateInteractor(SERVER_URL, USER_NAME, PASSWORD)
+            assertThat(authenticateInteractor(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD)
                     .map { it(INIT_STATE) }
                     .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, WRONG_CREDENTIAL_STATE)
@@ -104,10 +106,10 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldFailureWithWrongUsername() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME2, PASSWORD))
+            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version2, USER_NAME2, PASSWORD))
                 .thenThrow(BadCredentials(WRONG_CREDENTIAL))
 
-            assertThat(authenticateInteractor(SERVER_URL, USER_NAME2, PASSWORD)
+            assertThat(authenticateInteractor(SERVER_URL, SupportVersion.Version2, USER_NAME2, PASSWORD)
                     .map { it(INIT_STATE) }
                     .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, WRONG_CREDENTIAL_STATE)
@@ -117,10 +119,10 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldFailureWithWrongPassword() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME, PASSWORD_2))
+            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD_2))
                 .thenThrow(BadCredentials(WRONG_PASSWORD))
 
-            assertThat(authenticateInteractor(SERVER_URL, USER_NAME, PASSWORD_2)
+            assertThat(authenticateInteractor(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD_2)
                     .map { it(INIT_STATE) }
                     .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, WRONG_PASSWORD_STATE)
@@ -130,10 +132,10 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldFailureWithConnectError() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME, PASSWORD))
+            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD))
                 .thenThrow(ConnectError)
 
-            assertThat(authenticateInteractor(SERVER_URL, USER_NAME, PASSWORD)
+            assertThat(authenticateInteractor(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD)
                     .map { it(INIT_STATE) }
                     .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, CONNECT_ERROR_STATE)
@@ -143,10 +145,10 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldFailureWithUnknownError() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME, PASSWORD))
+            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD))
                 .thenThrow(UnknownError)
 
-            assertThat(authenticateInteractor(SERVER_URL, USER_NAME, PASSWORD)
+            assertThat(authenticateInteractor(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD)
                 .map { it(INIT_STATE) }
                 .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, UNKNOW_ERROR_STATE)
@@ -156,13 +158,27 @@ class AuthenticateInteractorTest {
     @Test
     fun authenticateShouldFailureWithServerNotFound() {
         runBlockingTest {
-            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME, PASSWORD))
-                .thenThrow(ServerNotFound)
+            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD))
+                .thenThrow(ServerNotFoundException(SupportVersion.Version2))
 
-            assertThat(authenticateInteractor(SERVER_URL, USER_NAME, PASSWORD)
+            assertThat(authenticateInteractor(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD)
                 .map { it(INIT_STATE) }
                 .toList(ArrayList()))
                 .containsExactly(LOADING_STATE, SERVER_NOT_FOUND_STATE)
+        }
+    }
+
+    @Test
+    fun authenticateWithVersion4ShouldFailureWithServerNotFound() {
+        runBlockingTest {
+            `when`(authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version4, USER_NAME, PASSWORD))
+                .thenThrow(ServerNotFoundException(SupportVersion.Version4))
+
+            val states = authenticateInteractor(SERVER_URL, SupportVersion.Version4, USER_NAME, PASSWORD)
+                .map { it(INIT_STATE) }
+                .toList(ArrayList())
+
+            assertThat(states).containsExactly(LOADING_STATE, SERVER_VERSION_4_NOT_FOUND_STATE)
         }
     }
 }

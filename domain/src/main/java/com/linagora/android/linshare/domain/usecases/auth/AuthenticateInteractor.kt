@@ -37,6 +37,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -59,20 +60,23 @@ class AuthenticateInteractor @Inject constructor(
         const val AUTHENTICATION_REQUEST_TIMEOUT_MS = 1000 * 30L
     }
 
-    operator fun invoke(baseUrl: URL, username: Username, password: Password): Flow<State<Either<Failure, Success>>> {
+    operator fun invoke(baseUrl: URL, supportVersion: SupportVersion, username: Username, password: Password): Flow<State<Either<Failure, Success>>> {
         return flow<State<Either<Failure, Success>>> {
             emitState { Either.Right(Loading) }
             try {
                 withTimeout(AUTHENTICATION_REQUEST_TIMEOUT_MS) {
-                    authenticationRepository.retrievePermanentToken(baseUrl, username, password)
+                    authenticationRepository.retrievePermanentToken(baseUrl, supportVersion, username, password)
                 }.run {
                     emitState { Either.Right(AuthenticationViewState(
-                        credential = Credential(baseUrl, username),
+                        credential = Credential(baseUrl, supportVersion, username),
                         token = this@run))
                     }
                 }
             } catch (authException: AuthenticationException) {
-                emitState { Either.Left(AuthenticationFailure(authException)) }
+                when (authException) {
+                    is ServerNotFoundException -> emitState { Either.Left(ServerNotFoundFailure(authException)) }
+                    else -> emitState { Either.Left(AuthenticationFailure(authException)) }
+                }
             }
         }
     }

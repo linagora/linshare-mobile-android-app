@@ -41,4 +41,5 @@ import com.linagora.android.linshare.domain.usecases.utils.Success.ViewState
 
 data class AuthenticationViewState(val credential: Credential, val token: Token) : Success.ViewState()
 data class AuthenticationFailure(val exception: AuthenticationException) : Failure.FeatureFailure()
+data class ServerNotFoundFailure(val exception: ServerNotFoundException) : Failure.FeatureFailure()
 object SuccessRemoveAccount : ViewState()

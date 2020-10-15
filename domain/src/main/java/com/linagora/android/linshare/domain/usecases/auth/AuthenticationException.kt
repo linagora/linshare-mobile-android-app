@@ -33,6 +33,8 @@
 
 package com.linagora.android.linshare.domain.usecases.auth
 
+import com.linagora.android.linshare.domain.network.SupportVersion
+
 sealed class AuthenticationException(message: String) : RuntimeException(message) {
 
     companion object {
@@ -52,6 +54,6 @@ sealed class AuthenticationException(message: String) : RuntimeException(message
 
 data class BadCredentials(override val message: String) : AuthenticationException(message)
 object EmptyToken : AuthenticationException(EMPTY_TOKEN)
-object ServerNotFound : AuthenticationException(SERVER_NOT_FOUND)
+data class ServerNotFoundException(val supportVersion: SupportVersion) : AuthenticationException(SERVER_NOT_FOUND)
 object ConnectError : AuthenticationException(CONNECT_ERROR)
 object UnknownError : AuthenticationException(UNKNOWN)

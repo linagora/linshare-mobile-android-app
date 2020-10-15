@@ -181,6 +181,10 @@ object TestFixtures {
             ServerNotFoundFailure(ServerNotFoundException(SupportVersion.Version2))
         )
 
+        val SERVER_VERSION_4_NOT_FOUND_STATE = Either.Left(
+            ServerNotFoundFailure(ServerNotFoundException(SupportVersion.Version4))
+        )
+
         val EMPTY_TOKEN_STATE = Either.Left(
             AuthenticationFailure(EmptyToken)
         )
