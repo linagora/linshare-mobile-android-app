@@ -34,6 +34,7 @@
 package com.linagora.android.testshared.repository.authentication
 
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_PASSWORD
@@ -57,7 +58,16 @@ abstract class AuthenticationRepositoryContract {
     @Test
     open fun retrievePermanentTokenShouldSuccessWithRightUsernamePassword() {
         runBlockingTest {
-            val token = authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+            val token = authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1)
+
+            assertThat(token).isEqualTo(TOKEN)
+        }
+    }
+
+    @Test
+    open fun retrievePermanentTokenVersion4ShouldSuccessWithRightUsernamePassword() {
+        runBlockingTest {
+            val token = authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version4, LINSHARE_USER1, LINSHARE_PASSWORD1)
 
             assertThat(token).isEqualTo(TOKEN)
         }
@@ -67,7 +77,17 @@ abstract class AuthenticationRepositoryContract {
     open fun retrievePermanentTokenShouldFailureWithWrongUrl() {
         val exception = assertThrows<BadCredentials> {
             runBlockingTest {
-                authenticationRepository.retrievePermanentToken(SERVER_URL, USER_NAME2, LINSHARE_PASSWORD1)
+                authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version2, USER_NAME2, LINSHARE_PASSWORD1)
+            }
+        }
+        assertThat(exception.message).isEqualTo(WRONG_CREDENTIAL)
+    }
+
+    @Test
+    open fun retrievePermanentTokenVersion4ShouldFailureWithWrongUrl() {
+        val exception = assertThrows<BadCredentials> {
+            runBlockingTest {
+                authenticationRepository.retrievePermanentToken(SERVER_URL, SupportVersion.Version4, USER_NAME2, LINSHARE_PASSWORD1)
             }
         }
         assertThat(exception.message).isEqualTo(WRONG_CREDENTIAL)
@@ -77,7 +97,17 @@ abstract class AuthenticationRepositoryContract {
     open fun retrievePermanentTokenShouldFailureWithWrongUsername() {
         val exception = assertThrows<BadCredentials> {
             runBlockingTest {
-                authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, USER_NAME2, LINSHARE_PASSWORD1)
+                authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, USER_NAME2, LINSHARE_PASSWORD1)
+            }
+        }
+        assertThat(exception.message).isEqualTo(WRONG_CREDENTIAL)
+    }
+
+    @Test
+    open fun retrievePermanentTokenVersion4ShouldFailureWithWrongUsername() {
+        val exception = assertThrows<BadCredentials> {
+            runBlockingTest {
+                authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version4, USER_NAME2, LINSHARE_PASSWORD1)
             }
         }
         assertThat(exception.message).isEqualTo(WRONG_CREDENTIAL)
@@ -87,7 +117,17 @@ abstract class AuthenticationRepositoryContract {
     open fun retrievePermanentTokenShouldFailureWithWrongPassword() {
         val exception = assertThrows<BadCredentials> {
             runBlockingTest {
-                authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD_2)
+                authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, PASSWORD_2)
+            }
+        }
+        assertThat(exception.message).isEqualTo(WRONG_PASSWORD)
+    }
+
+    @Test
+    open fun retrievePermanentTokenVersion4ShouldFailureWithWrongPassword() {
+        val exception = assertThrows<BadCredentials> {
+            runBlockingTest {
+                authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version4, LINSHARE_USER1, PASSWORD_2)
             }
         }
         assertThat(exception.message).isEqualTo(WRONG_PASSWORD)

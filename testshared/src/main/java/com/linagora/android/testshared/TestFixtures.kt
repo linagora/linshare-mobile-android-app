@@ -50,6 +50,7 @@ import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
@@ -57,7 +58,8 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewStat
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.domain.usecases.auth.ConnectError
 import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
-import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundException
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundFailure
 import com.linagora.android.linshare.domain.usecases.auth.SuccessRemoveAccount
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.myspace.EmptyMySpaceState
@@ -124,10 +126,11 @@ object TestFixtures {
         val USER_NAME2 = Username(NAME2)
         val LINSHARE_USER1 = Username(LINSHARE_NAME)
         val LINSHARE_BASE_URL = URL(LINSHARE_URL)
-        val LINSHARE_CREDENTIAL = Credential(LINSHARE_BASE_URL, LINSHARE_USER1)
+        val LINSHARE_CREDENTIAL = Credential(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1)
+        val LINSHARE_CREDENTIAL_VERSION4 = Credential(LINSHARE_BASE_URL, SupportVersion.Version4, LINSHARE_USER1)
         val SERVER_URL = URL(SERVER_NAME)
-        val CREDENTIAL = Credential(SERVER_URL, USER_NAME)
-        val CREDENTIAL2 = Credential(SERVER_URL, USER_NAME2)
+        val CREDENTIAL = Credential(SERVER_URL, SupportVersion.Version2, USER_NAME)
+        val CREDENTIAL2 = Credential(SERVER_URL, SupportVersion.Version2, USER_NAME2)
     }
 
     object Authentications {
@@ -175,7 +178,7 @@ object TestFixtures {
         )
 
         val SERVER_NOT_FOUND_STATE = Either.Left(
-            AuthenticationFailure(ServerNotFound)
+            ServerNotFoundFailure(ServerNotFoundException(SupportVersion.Version2))
         )
 
         val EMPTY_TOKEN_STATE = Either.Left(

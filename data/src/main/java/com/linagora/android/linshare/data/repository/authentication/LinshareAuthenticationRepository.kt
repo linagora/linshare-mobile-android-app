@@ -38,8 +38,7 @@ import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
-import com.linagora.android.linshare.domain.network.Endpoint
-import com.linagora.android.linshare.domain.network.withServicePath
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.CredentialRepository
 import com.linagora.android.linshare.domain.repository.TokenRepository
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
@@ -52,16 +51,22 @@ class LinshareAuthenticationRepository @Inject constructor(
     private val tokenRepository: TokenRepository
 ) : AuthenticationRepository {
 
-    override suspend fun retrievePermanentToken(baseUrl: URL, username: Username, password: Password): Token {
+    override suspend fun retrievePermanentToken(
+        baseUrl: URL,
+        supportVersion: SupportVersion,
+        username: Username,
+        password: Password
+    ): Token {
         return linshareDataSource.retrievePermanentToken(
-                baseUrl = baseUrl.withServicePath(Endpoint.AUTHENTICAION),
+                baseUrl = baseUrl,
+                supportVersion = supportVersion,
                 username = username,
                 password = password)
-            .also { storeAuthenticationInfo(baseUrl, username, it) }
+            .also { storeAuthenticationInfo(baseUrl, supportVersion, username, it) }
     }
 
-    private suspend fun storeAuthenticationInfo(baseUrl: URL, username: Username, token: Token) {
-        Credential(baseUrl, username)
+    private suspend fun storeAuthenticationInfo(baseUrl: URL, supportVersion: SupportVersion, username: Username, token: Token) {
+        Credential(baseUrl, supportVersion, username)
             .also { credentialRepository.persistsCredential(it) }
             .also { tokenRepository.persistsToken(it, token) }
     }

@@ -37,6 +37,7 @@ import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
@@ -54,8 +55,8 @@ class MemoryAuthenticationRepository(
     private val authenticationStore: AtomicReference<Triple<Credential, Password, Token>> =
         AtomicReference(Triple(predefinedCredential, predefinedPassword, token))
 
-    override suspend fun retrievePermanentToken(baseUrl: URL, username: Username, password: Password): Token {
-        return validateCredential(Credential(baseUrl, username)) { authenticationStore.get().first == it }
+    override suspend fun retrievePermanentToken(baseUrl: URL, supportVersion: SupportVersion, username: Username, password: Password): Token {
+        return validateCredential(Credential(baseUrl, supportVersion, username)) { authenticationStore.get().first == it }
             .run { validatePassword(password) { authenticationStore.get().second == it } }
             .let { authenticationStore.get().third }
     }

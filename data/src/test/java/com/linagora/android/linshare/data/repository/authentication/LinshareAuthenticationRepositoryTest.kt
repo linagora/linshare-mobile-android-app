@@ -37,24 +37,23 @@ import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.data.datasource.LinshareDataSource
 import com.linagora.android.linshare.data.repository.credential.MemoryCredentialRepository
 import com.linagora.android.linshare.data.repository.credential.MemoryTokenRepository
-import com.linagora.android.linshare.domain.network.Endpoint
-import com.linagora.android.linshare.domain.network.withServicePath
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.CONNECT_ERROR
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.EMPTY_TOKEN
-import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.SERVER_NOT_FOUND
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.UNKNOWN
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_PASSWORD
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.domain.usecases.auth.ConnectError
 import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
-import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundException
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.testshared.TestFixtures.Authentications.LINSHARE_PASSWORD1
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD_2
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_BASE_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
+import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL_VERSION4
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_USER1
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.USER_NAME2
@@ -99,7 +98,8 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     override fun retrievePermanentTokenShouldSuccessWithRightUsernamePassword() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
                 .thenAnswer { TOKEN }
@@ -110,11 +110,40 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
         }
     }
 
+    override fun retrievePermanentTokenVersion4ShouldSuccessWithRightUsernamePassword() {
+        runBlockingTest {
+            `when`(linshareDataSource.retrievePermanentToken(
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version4,
+                    username = LINSHARE_USER1,
+                    password = LINSHARE_PASSWORD1))
+                .thenAnswer { TOKEN }
+
+            super.retrievePermanentTokenShouldSuccessWithRightUsernamePassword()
+
+            assertThat(credentialRepository.getAllCredential()).containsExactly(LINSHARE_CREDENTIAL_VERSION4)
+            assertThat(tokenRepository.getToken(LINSHARE_CREDENTIAL_VERSION4))
+        }
+    }
+
     @Test
     override fun retrievePermanentTokenShouldFailureWithWrongUrl() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = SERVER_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = SERVER_URL,
+                    supportVersion = SupportVersion.Version2,
+                    username = USER_NAME2,
+                    password = LINSHARE_PASSWORD1))
+                .thenThrow(BadCredentials(WRONG_CREDENTIAL))
+            super.retrievePermanentTokenShouldFailureWithWrongUrl()
+        }
+    }
+
+    override fun retrievePermanentTokenVersion4ShouldFailureWithWrongUrl() {
+        runBlockingTest {
+            `when`(linshareDataSource.retrievePermanentToken(
+                    baseUrl = SERVER_URL,
+                    supportVersion = SupportVersion.Version4,
                     username = USER_NAME2,
                     password = LINSHARE_PASSWORD1))
                 .thenThrow(BadCredentials(WRONG_CREDENTIAL))
@@ -126,7 +155,20 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     override fun retrievePermanentTokenShouldFailureWithWrongUsername() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
+                    username = USER_NAME2,
+                    password = LINSHARE_PASSWORD1))
+                .thenThrow(BadCredentials(WRONG_CREDENTIAL))
+            super.retrievePermanentTokenShouldFailureWithWrongUsername()
+        }
+    }
+
+    override fun retrievePermanentTokenVersion4ShouldFailureWithWrongUsername() {
+        runBlockingTest {
+            `when`(linshareDataSource.retrievePermanentToken(
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
                     username = USER_NAME2,
                     password = LINSHARE_PASSWORD1))
                 .thenThrow(BadCredentials(WRONG_CREDENTIAL))
@@ -138,7 +180,21 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     override fun retrievePermanentTokenShouldFailureWithWrongPassword() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
+                    username = LINSHARE_USER1,
+                    password = PASSWORD_2))
+                .thenThrow(BadCredentials(WRONG_PASSWORD))
+
+            super.retrievePermanentTokenShouldFailureWithWrongPassword()
+        }
+    }
+
+    override fun retrievePermanentTokenVersion4ShouldFailureWithWrongPassword() {
+        runBlockingTest {
+            `when`(linshareDataSource.retrievePermanentToken(
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version4,
                     username = LINSHARE_USER1,
                     password = PASSWORD_2))
                 .thenThrow(BadCredentials(WRONG_PASSWORD))
@@ -151,14 +207,15 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     fun retrievePermanentTokenShouldFailureWithEmptyToken() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
                 .thenThrow(EmptyToken)
 
             val exception = assertThrows<EmptyToken> {
                 runBlockingTest {
-                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1)
                 }
             }
             assertThat(exception.message).isEqualTo(EMPTY_TOKEN)
@@ -169,17 +226,37 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     fun retrievePermanentTokenShouldFailureWithServerNotFound() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
-                .thenThrow(ServerNotFound)
+                .thenThrow(ServerNotFoundException(SupportVersion.Version2))
 
-            val exception = assertThrows<ServerNotFound> {
+            val exception = assertThrows<ServerNotFoundException> {
                 runBlockingTest {
-                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1)
                 }
             }
-            assertThat(exception.message).isEqualTo(SERVER_NOT_FOUND)
+            assertThat(exception.supportVersion).isEqualTo(SupportVersion.Version2)
+        }
+    }
+
+    @Test
+    fun retrievePermanentTokenVersion4ShouldFailureWithServerNotFound() {
+        runBlockingTest {
+            `when`(linshareDataSource.retrievePermanentToken(
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version4,
+                    username = LINSHARE_USER1,
+                    password = LINSHARE_PASSWORD1))
+                .thenThrow(ServerNotFoundException(SupportVersion.Version4))
+
+            val exception = assertThrows<ServerNotFoundException> {
+                runBlockingTest {
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version4, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                }
+            }
+            assertThat(exception.supportVersion).isEqualTo(SupportVersion.Version4)
         }
     }
 
@@ -187,14 +264,15 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     fun retrievePermanentTokenShouldFailureWithUnknownError() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
                 .thenThrow(UnknownError)
 
             val exception = assertThrows<UnknownError> {
                 runBlockingTest {
-                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1)
                 }
             }
             assertThat(exception.message).isEqualTo(UNKNOWN)
@@ -205,14 +283,15 @@ class LinshareAuthenticationRepositoryTest : AuthenticationRepositoryContract() 
     fun retrievePermanentTokenShouldFailureWithConnectError() {
         runBlockingTest {
             `when`(linshareDataSource.retrievePermanentToken(
-                    baseUrl = LINSHARE_BASE_URL.withServicePath(Endpoint.AUTHENTICAION),
+                    baseUrl = LINSHARE_BASE_URL,
+                    supportVersion = SupportVersion.Version2,
                     username = LINSHARE_USER1,
                     password = LINSHARE_PASSWORD1))
                 .thenThrow(ConnectError)
 
             val exception = assertThrows<ConnectError> {
                 runBlockingTest {
-                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+                    authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1)
                 }
             }
             assertThat(exception.message).isEqualTo(CONNECT_ERROR)

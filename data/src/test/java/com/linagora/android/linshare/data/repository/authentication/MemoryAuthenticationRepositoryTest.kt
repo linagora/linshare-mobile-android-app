@@ -36,9 +36,11 @@ package com.linagora.android.linshare.data.repository.authentication
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
 import com.linagora.android.testshared.TestFixtures.Authentications.LINSHARE_PASSWORD1
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL
+import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_CREDENTIAL_VERSION4
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
 import com.linagora.android.testshared.repository.authentication.AuthenticationRepositoryContract
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class MemoryAuthenticationRepositoryTest : AuthenticationRepositoryContract() {
 
@@ -50,5 +52,17 @@ class MemoryAuthenticationRepositoryTest : AuthenticationRepositoryContract() {
     @BeforeEach
     fun setUp() {
         authenticationRepo = MemoryAuthenticationRepository(LINSHARE_CREDENTIAL, LINSHARE_PASSWORD1, TOKEN)
+    }
+
+    @Test
+    override fun retrievePermanentTokenVersion4ShouldFailureWithWrongPassword() {
+        authenticationRepo = MemoryAuthenticationRepository(LINSHARE_CREDENTIAL_VERSION4, LINSHARE_PASSWORD1, TOKEN)
+        super.retrievePermanentTokenVersion4ShouldFailureWithWrongPassword()
+    }
+
+    @Test
+    override fun retrievePermanentTokenVersion4ShouldSuccessWithRightUsernamePassword() {
+        authenticationRepo = MemoryAuthenticationRepository(LINSHARE_CREDENTIAL_VERSION4, LINSHARE_PASSWORD1, TOKEN)
+        super.retrievePermanentTokenVersion4ShouldSuccessWithRightUsernamePassword()
     }
 }
