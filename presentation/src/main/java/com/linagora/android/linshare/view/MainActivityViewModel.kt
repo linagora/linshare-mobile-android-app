@@ -142,8 +142,10 @@ class MainActivityViewModel @Inject constructor(
 
     private fun setUpInterceptors(authenticationViewState: AuthenticationViewState) {
         LOGGER.info("setUpInterceptors()")
-        dynamicBaseUrlInterceptor.changeBaseUrl(authenticationViewState.credential.serverUrl)
-        authorizationManager.updateToken(authenticationViewState.token)
+        with(authenticationViewState) {
+            dynamicBaseUrlInterceptor.changeBaseUrl(credential.serverUrl, credential.supportVersion)
+            authorizationManager.updateToken(token)
+        }
     }
 
     fun shouldShowReadContactPermissionRequest(activity: Activity) {

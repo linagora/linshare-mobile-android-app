@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.network
 
 import com.linagora.android.linshare.domain.network.Endpoint
+import com.linagora.android.linshare.domain.network.SupportVersion
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Interceptor
 import okhttp3.Interceptor.Chain
@@ -48,13 +49,15 @@ import javax.inject.Singleton
 class DynamicBaseUrlInterceptor @Inject constructor() : Interceptor {
 
     private val newScheme = AtomicReference<String>()
+    private val newSupportVersion = AtomicReference<SupportVersion>()
     private val newHost = AtomicReference<String>()
     private var newPort = AtomicReference<Port>()
 
-    fun changeBaseUrl(baseUrl: URL) {
+    fun changeBaseUrl(baseUrl: URL, supportVersion: SupportVersion) {
         baseUrl.toHttpUrlOrNull()
             ?.apply {
                 newScheme.set(scheme)
+                newSupportVersion.set(supportVersion)
                 newHost.set(host)
                 newPort.set(Port(port))
             }
@@ -77,7 +80,7 @@ class DynamicBaseUrlInterceptor @Inject constructor() : Interceptor {
                 .scheme(newScheme.get()!!)
                 .host(newHost.get()!!)
                 .port(newPort.get()!!.portNumber)
-                .encodedPath("/" + Endpoint.ROOT_PATH + original.url.encodedPath)
+                .encodedPath("/${Endpoint.ROOT_PATH}/${newSupportVersion.get()!!.value}${original.url.encodedPath}")
                 .build()
             return original.newBuilder()
                 .url(newUrl)

@@ -293,8 +293,10 @@ class UploadWorker(
 
     private fun setUpInterceptors(authenticationViewState: AuthenticationViewState) {
         LOGGER.info("setUpInterceptors()")
-        dynamicBaseUrlInterceptor.changeBaseUrl(authenticationViewState.credential.serverUrl)
-        authorizationManager.updateToken(authenticationViewState.token)
+        with(authenticationViewState) {
+            dynamicBaseUrlInterceptor.changeBaseUrl(credential.serverUrl, credential.supportVersion)
+            authorizationManager.updateToken(token)
+        }
     }
 
     private fun configUploadingNotificationBuilder(builder: Builder): Builder {
