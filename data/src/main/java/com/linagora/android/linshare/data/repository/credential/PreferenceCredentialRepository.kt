@@ -47,12 +47,15 @@ class PreferenceCredentialRepository @Inject constructor(
         const val SERVER_NAME = "serverName"
 
         const val USER_NAME = "userName"
+
+        const val BACK_END_API_VERSION = "backEndApiVersion"
     }
 
     override suspend fun persistsCredential(credential: Credential) {
         with(sharedPreferences.edit()) {
             putString(Key.SERVER_NAME, credential.serverUrl.toString())
             putString(Key.USER_NAME, credential.userName.username)
+            putString(Key.BACK_END_API_VERSION, credential.supportVersion.name)
             commit()
         }
     }
@@ -70,13 +73,10 @@ class PreferenceCredentialRepository @Inject constructor(
     override suspend fun getCurrentCredential(): Credential? {
         return with(sharedPreferences) {
             val serverName = getString(Key.SERVER_NAME, null)
+            val supportVersion = getString(Key.BACK_END_API_VERSION, null)
             val userName = getString(Key.USER_NAME, null)
-
-            serverName?.let {
-                userName?.let {
-                    Credential.fromString(serverName, userName)
-                }
-            }
+            serverName?.takeIf { supportVersion != null && userName != null }
+                ?.let { Credential.fromString(serverName, supportVersion!!, userName!!) }
         }
     }
 

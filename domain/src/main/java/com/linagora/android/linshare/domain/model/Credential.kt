@@ -33,15 +33,16 @@
 
 package com.linagora.android.linshare.domain.model
 
+import com.linagora.android.linshare.domain.network.SupportVersion
 import java.net.URL
 
-data class Credential(val serverUrl: URL, val userName: Username) {
+data class Credential(val serverUrl: URL, val supportVersion: SupportVersion, val userName: Username) {
 
     companion object {
-        fun fromString(serverStr: String, userNameStr: String): Credential {
-            return Credential(URL(serverStr), Username(userNameStr))
+        fun fromString(serverStr: String, supportVersion: String, userNameStr: String): Credential {
+            return Credential(URL(serverStr), SupportVersion.valueOf(supportVersion), Username(userNameStr))
         }
 
-        val InvalidCredential = Credential(URL("http://invalid"), Username("invalid"))
+        val InvalidCredential = Credential(URL("http://invalid"), SupportVersion.Version2, Username("invalid"))
     }
 }

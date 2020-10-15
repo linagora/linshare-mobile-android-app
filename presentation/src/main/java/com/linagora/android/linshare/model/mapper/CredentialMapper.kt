@@ -37,9 +37,9 @@ import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.model.CredentialParcelable
 
 fun CredentialParcelable.toCredential(): Credential {
-    return Credential(baseUrl, username)
+    return Credential(baseUrl, supportVersion, username)
 }
 
 fun Credential.toParcelable(): CredentialParcelable {
-    return CredentialParcelable(serverUrl, userName)
+    return CredentialParcelable(serverUrl, supportVersion, userName)
 }
