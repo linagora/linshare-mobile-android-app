@@ -44,12 +44,16 @@ import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.model.quota.QuotaId
+import com.linagora.android.linshare.domain.network.Endpoint
+import com.linagora.android.linshare.domain.network.SupportVersion
+import com.linagora.android.linshare.domain.network.withServicePath
+import com.linagora.android.linshare.domain.network.withSupportVersion
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.domain.usecases.auth.ConnectError
 import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
-import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundException
 import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import kotlinx.coroutines.TimeoutCancellationException
 import okhttp3.Credentials
@@ -65,22 +69,24 @@ class LinshareDataSource @Inject constructor(
     private val linshareApi: LinshareApi
 ) {
 
-    suspend fun retrievePermanentToken(baseUrl: URL, username: Username, password: Password): Token {
+    suspend fun retrievePermanentToken(baseUrl: URL, supportVersion: SupportVersion, username: Username, password: Password): Token {
         try {
             val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
             val response = linshareApi.createPermanentToken(
-                authenticateUrl = baseUrl.toString(),
+                authenticateUrl = baseUrl.withSupportVersion(supportVersion)
+                    .withServicePath(Endpoint.AUTHENTICATION_PATH).toString(),
                 basicToken = Credentials.basic(username.username, password.value),
                 permanentToken = PermanentTokenBodyRequest(label = "LinShare-Android-App-$androidId")
             )
             return when (response.isSuccessful) {
                 true -> response.body() ?: throw EmptyToken
-                else -> throw produceError(response)
+                else -> throw produceError(response, supportVersion)
             }
         } catch (exp: Exception) {
             exp.printStackTrace()
             when (exp) {
-                is EmptyToken, ServerNotFound -> throw exp
+                is EmptyToken -> throw exp
+                is ServerNotFoundException -> throw exp
                 is BadCredentials -> throw exp
                 is SocketTimeoutException -> throw ConnectError
                 is SocketException -> throw ConnectError
@@ -91,9 +97,9 @@ class LinshareDataSource @Inject constructor(
         }
     }
 
-    private fun produceError(response: Response<Token>): AuthenticationException {
+    private fun produceError(response: Response<Token>, supportVersion: SupportVersion): AuthenticationException {
         return when (response.code()) {
-            404 -> ServerNotFound
+            404 -> ServerNotFoundException(supportVersion)
             401 -> BadCredentials(WRONG_CREDENTIAL)
             else -> UnknownError
         }

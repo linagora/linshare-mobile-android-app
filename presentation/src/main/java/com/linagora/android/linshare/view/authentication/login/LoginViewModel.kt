@@ -39,6 +39,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticateInteractor
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.utils.Success
@@ -63,29 +64,30 @@ class LoginViewModel @Inject constructor(
         private val EMPTY = null
     }
 
-    fun authenticate(baseUrl: URL, username: Username, password: Password) {
+    fun authenticate(baseUrl: URL, supportVersion: SupportVersion, username: Username, password: Password) {
         viewModelScope.launch(dispatcherProvider.io) {
             consumeStates(authenticateInteractor(
                 baseUrl = baseUrl,
+                supportVersion = supportVersion,
                 username = username,
                 password = password)
             )
         }
     }
 
-    fun authenticate(baseUrl: String, username: String, password: String) {
+    fun authenticate(baseUrl: String, supportVersion: SupportVersion, username: String, password: String) {
         parseForm(baseUrl, username, password)
-            ?.let { authenticate(it.first, it.second, it.third) }
+            ?.let { authenticate(it.first, supportVersion, it.second, it.third) }
     }
 
     override fun onSuccessDispatched(success: Success) {
         success.takeIf { it is AuthenticationViewState }
             ?.let { it as AuthenticationViewState }
-            ?.let { setUpServiceBaseUrl(it.credential.serverUrl) }
+            ?.let { setUpServiceBaseUrl(it.credential.serverUrl, it.credential.supportVersion) }
     }
 
-    private fun setUpServiceBaseUrl(baseUrl: URL) {
-        baseUrlInterceptor.changeBaseUrl(baseUrl)
+    private fun setUpServiceBaseUrl(baseUrl: URL, supportVersion: SupportVersion) {
+        baseUrlInterceptor.changeBaseUrl(baseUrl, supportVersion)
     }
 
     private fun parseForm(url: String, username: String, password: String): Triple<URL, Username, Password>? {

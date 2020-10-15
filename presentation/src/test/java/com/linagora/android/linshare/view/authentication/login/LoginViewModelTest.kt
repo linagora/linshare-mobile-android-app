@@ -38,6 +38,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.CoroutinesExtension
 import com.linagora.android.linshare.InstantExecutorExtension
 import com.linagora.android.linshare.R
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticateInteractor
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -108,7 +109,7 @@ class LoginViewModelTest {
     @Test
     fun authenticateShouldSuccessWithRightCredential() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
+            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -118,18 +119,18 @@ class LoginViewModelTest {
 
             loginViewModel.viewState.observeForever(viewObserver)
 
-            loginViewModel.authenticate(LINSHARE_BASE_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+            loginViewModel.authenticate(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1)
 
             `verify`(viewObserver).onChanged(LOADING_STATE)
             `verify`(viewObserver).onChanged(AUTHENTICATE_SUCCESS_STATE)
-            `verify`(baseUrlInterceptor).changeBaseUrl(LINSHARE_BASE_URL)
+            `verify`(baseUrlInterceptor).changeBaseUrl(LINSHARE_BASE_URL, SupportVersion.Version2)
         }
     }
 
     @Test
     fun authenticateShouldFailedWithWrongBaseURL() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(SERVER_URL, LINSHARE_USER1, LINSHARE_PASSWORD1))
+            Mockito.`when`(authenticateInteractor(SERVER_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -139,7 +140,7 @@ class LoginViewModelTest {
 
             loginViewModel.viewState.observeForever(viewObserver)
 
-            loginViewModel.authenticate(SERVER_URL, LINSHARE_USER1, LINSHARE_PASSWORD1)
+            loginViewModel.authenticate(SERVER_URL, SupportVersion.Version2, LINSHARE_USER1, LINSHARE_PASSWORD1)
 
             `verify`(viewObserver).onChanged(LOADING_STATE)
             `verify`(viewObserver).onChanged(WRONG_CREDENTIAL_STATE)
@@ -149,7 +150,7 @@ class LoginViewModelTest {
     @Test
     fun authenticateShouldFailedWithWrongUsername() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD))
+            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, PASSWORD))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -159,7 +160,7 @@ class LoginViewModelTest {
 
             loginViewModel.viewState.observeForever(viewObserver)
 
-            loginViewModel.authenticate(LINSHARE_BASE_URL, LINSHARE_USER1, PASSWORD)
+            loginViewModel.authenticate(LINSHARE_BASE_URL, SupportVersion.Version2, LINSHARE_USER1, PASSWORD)
 
             `verify`(viewObserver).onChanged(LOADING_STATE)
             `verify`(viewObserver).onChanged(WRONG_CREDENTIAL_STATE)
@@ -169,7 +170,7 @@ class LoginViewModelTest {
     @Test
     fun authenticateShouldFailedWithWrongPassword() {
         coroutinesExtension.runBlockingTest {
-            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, USER_NAME, LINSHARE_PASSWORD1))
+            Mockito.`when`(authenticateInteractor(LINSHARE_BASE_URL, SupportVersion.Version2, USER_NAME, LINSHARE_PASSWORD1))
                 .then {
                     flow<State<Either<Failure, Success>>> {
                         emitState { LOADING_STATE }
@@ -179,7 +180,7 @@ class LoginViewModelTest {
 
             loginViewModel.viewState.observeForever(viewObserver)
 
-            loginViewModel.authenticate(LINSHARE_BASE_URL, USER_NAME, LINSHARE_PASSWORD1)
+            loginViewModel.authenticate(LINSHARE_BASE_URL, SupportVersion.Version2, USER_NAME, LINSHARE_PASSWORD1)
 
             `verify`(viewObserver).onChanged(LOADING_STATE)
             `verify`(viewObserver).onChanged(WRONG_CREDENTIAL_STATE)
@@ -190,7 +191,7 @@ class LoginViewModelTest {
     fun authenticateShouldNoticeWhenUrlEmpty() {
         loginViewModel.viewState.observeForever(viewObserver)
 
-        loginViewModel.authenticate("", NAME, PASSWORD_VALUE)
+        loginViewModel.authenticate("", SupportVersion.Version2, NAME, PASSWORD_VALUE)
 
         `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
             errorMessage = R.string.wrong_url,
@@ -202,7 +203,7 @@ class LoginViewModelTest {
     fun loginFormChangedShouldNoticeWhenUsernameEmpty() {
         loginViewModel.viewState.observeForever(viewObserver)
 
-        loginViewModel.authenticate("linsahre.domain", "", PASSWORD_VALUE)
+        loginViewModel.authenticate("linsahre.domain", SupportVersion.Version2, "", PASSWORD_VALUE)
 
         `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
             errorMessage = R.string.email_is_required,
@@ -214,7 +215,7 @@ class LoginViewModelTest {
     fun loginFormChangedShouldNoticeWhenUsernameIsNotEmail() {
         loginViewModel.viewState.observeForever(viewObserver)
 
-        loginViewModel.authenticate("linsahre.domain", "linshare", PASSWORD_VALUE)
+        loginViewModel.authenticate("linsahre.domain", SupportVersion.Version2, "linshare", PASSWORD_VALUE)
 
         `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
             errorMessage = R.string.email_is_required,
@@ -226,7 +227,7 @@ class LoginViewModelTest {
     fun loginFormChangedShouldNoticeWhenPasswordWrong() {
         loginViewModel.viewState.observeForever(viewObserver)
 
-        loginViewModel.authenticate("linsahre.domain", NAME, "")
+        loginViewModel.authenticate("linsahre.domain", SupportVersion.Version2, NAME, "")
 
         `verify`(viewObserver).onChanged(Either.Right(LoginFormState(
             errorMessage = R.string.credential_error_message,

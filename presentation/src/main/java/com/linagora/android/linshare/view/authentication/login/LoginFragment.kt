@@ -49,12 +49,15 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.LoginFragmentBinding
 import com.linagora.android.linshare.domain.model.Credential
+import com.linagora.android.linshare.domain.network.SupportVersion
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.domain.usecases.auth.ConnectError
 import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
-import com.linagora.android.linshare.domain.usecases.auth.ServerNotFound
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundException
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundFailure
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
@@ -128,14 +131,12 @@ class LoginFragment : MainNavigationFragment() {
 
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
-                    EditorInfo.IME_ACTION_DONE -> authenticate()
+                    EditorInfo.IME_ACTION_DONE -> authenticate(SupportVersion.Version4)
                 }
                 false
             }
 
-            btnLogin.setOnClickListener {
-                authenticate()
-            }
+            btnLogin.setOnClickListener { authenticate(SupportVersion.Version4) }
         }
     }
 
@@ -150,9 +151,10 @@ class LoginFragment : MainNavigationFragment() {
         })
     }
 
-    private fun authenticate() {
+    private fun authenticate(version: SupportVersion) {
         loginViewModel.authenticate(
             baseUrl = edtLoginUrl.text.toString(),
+            supportVersion = version,
             username = edtLoginUsername.text.toString(),
             password = edtLoginPassword.text.toString()
         )
@@ -172,21 +174,31 @@ class LoginFragment : MainNavigationFragment() {
 
     private fun reactToFailure(failure: Failure) {
         when (failure) {
-            is AuthenticationFailure -> {
-                val errorType = when (failure.exception) {
-                    is EmptyToken -> ErrorType.WRONG_CREDENTIAL
-                    is BadCredentials -> ErrorType.WRONG_CREDENTIAL
-                    is ServerNotFound, ConnectError -> ErrorType.WRONG_URL
-                    else -> ErrorType.UNKNOWN_ERROR
-                }
-                loginFormState.set(
-                    LoginFormState(
-                        isLoading = false,
-                        errorMessage = getErrorMessageByType(errorType),
-                        errorType = errorType
-                ))
-            }
+            is ServerNotFoundFailure -> handleServerNotFound(failure)
+            is AuthenticationFailure -> handleAuthenticationException(failure.exception)
         }
+    }
+
+    private fun handleServerNotFound(serverNotFoundFailure: ServerNotFoundFailure) {
+        when (serverNotFoundFailure.exception.supportVersion) {
+            SupportVersion.Version4 -> authenticate(SupportVersion.Version2)
+            else -> handleAuthenticationException(serverNotFoundFailure.exception)
+        }
+    }
+
+    private fun handleAuthenticationException(authenticationException: AuthenticationException) {
+        val errorType = when (authenticationException) {
+            is EmptyToken -> ErrorType.WRONG_CREDENTIAL
+            is BadCredentials -> ErrorType.WRONG_CREDENTIAL
+            is ServerNotFoundException, ConnectError -> ErrorType.WRONG_URL
+            else -> ErrorType.UNKNOWN_ERROR
+        }
+        loginFormState.set(
+            LoginFormState(
+                isLoading = false,
+                errorMessage = getErrorMessageByType(errorType),
+                errorType = errorType
+            ))
     }
 
     private fun getErrorMessageByType(errorType: ErrorType): Int? {
