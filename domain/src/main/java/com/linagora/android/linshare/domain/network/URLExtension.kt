@@ -35,11 +35,18 @@ package com.linagora.android.linshare.domain.network
 
 import java.net.URL
 
-fun URL.withServicePath(servicePath: ServicePath): URL {
-    val urlString = this.toString()
+fun RequestBasePath.withServicePath(servicePath: ServicePath): URL {
+    val urlString = this.rootPath.toString()
     val newUrl = urlString
         .takeIf { it.endsWith("/") }
-        ?.let { it.plus(servicePath.path) }
-        ?: urlString.plus("/${servicePath.path}")
+        ?.plus(Endpoint.ROOT_PATH)
+        ?.plus("/")
+        ?.plus(supportVersion.value)
+        ?.plus("/${servicePath.path}")
+        ?: urlString.plus("/${Endpoint.ROOT_PATH}/${supportVersion.value}/${servicePath.path}")
     return URL(newUrl)
+}
+
+fun URL.withSupportVersion(supportVersion: SupportVersion): RequestBasePath {
+    return RequestBasePath(this, supportVersion)
 }

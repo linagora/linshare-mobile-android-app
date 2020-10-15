@@ -45,6 +45,7 @@ import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.download.DownloadingTask
 import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.network.withServicePath
+import com.linagora.android.linshare.domain.network.withSupportVersion
 import com.linagora.android.linshare.domain.repository.download.DownloadingRepository
 import com.linagora.android.linshare.notification.BaseNotification
 import com.linagora.android.linshare.notification.NotificationId
@@ -96,6 +97,7 @@ class DownloadManagerOperator @Inject constructor(
 
     private suspend fun execute(credential: Credential, token: Token, downloadRequest: DownloadRequest) {
         val downloadUri = Uri.parse(credential.serverUrl
+            .withSupportVersion(credential.supportVersion)
             .withServicePath(downloadRequest.toServicePath())
             .toString())
         val request = DownloadManager.Request(downloadUri)
