@@ -70,6 +70,7 @@ import com.linagora.android.linshare.domain.model.document.DocumentId
 import com.linagora.android.linshare.domain.model.functionality.Functionality
 import com.linagora.android.linshare.domain.model.functionality.FunctionalityBoolean
 import com.linagora.android.linshare.domain.model.functionality.FunctionalityInteger
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityLanguage
 import com.linagora.android.linshare.domain.model.functionality.FunctionalitySimple
 import com.linagora.android.linshare.domain.model.functionality.FunctionalitySize
 import com.linagora.android.linshare.domain.model.functionality.FunctionalityString
@@ -148,6 +149,7 @@ class NetworkModule {
             .registerSubtype(FunctionalitySize::class.java, "size")
             .registerSubtype(FunctionalityTime::class.java, "time")
             .registerSubtype(FunctionalitySimple::class.java, "simple")
+            .registerSubtype(FunctionalityLanguage::class.java, "language")
     }
 
     @Singleton
