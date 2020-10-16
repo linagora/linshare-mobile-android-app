@@ -98,6 +98,7 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.WorkGroupNodeRe
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.model.parcelable.ParentDestinationInfo
+import com.linagora.android.linshare.model.parcelable.QueryStringParcelable
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfo
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate
 import com.linagora.android.linshare.model.parcelable.SharedSpaceDestinationInfo
@@ -106,6 +107,7 @@ import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable
 import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
 import com.linagora.android.linshare.model.parcelable.toParcelable
+import com.linagora.android.linshare.model.parcelable.toQueryString
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.model.permission.PermissionResult
@@ -164,6 +166,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = sharedSpacesDocumentViewModel
         binding.navigationInfo = arguments.navigationInfo
+        binding.searchInfo = arguments.searchInfo
         observeViewState()
         observeRequestPermission()
     }
@@ -373,6 +376,11 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             includeSearchContainer.searchContainer.visibility = View.VISIBLE
             includeSearchContainer.searchView.requestFocus()
             sharedSpaceDocumentBottomBar.visibility = View.GONE
+
+            binding.searchInfo?.toQueryString()?.let {
+                includeSearchContainer.searchView.setQuery(it.value, Constant.NOT_SUBMIT_TEXT)
+                searchSharedSpaceDocument(it.value)
+            }
         }
     }
 
@@ -384,6 +392,7 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
                 setQuery(Constant.CLEAR_QUERY_STRING, Constant.NOT_SUBMIT_TEXT)
                 clearFocus()
             }
+            binding.searchInfo = QueryStringParcelable(Constant.CLEAR_QUERY_STRING)
         }
     }
 
@@ -553,6 +562,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
     private fun handleNewArguments() {
         arguments.selectedDestinationInfoFor
             ?.let(this@SharedSpaceDocumentFragment::operateSelectedDestinationInfo)
+        arguments.searchInfo?.toQueryString()?.let {
+                sharedSpacesDocumentViewModel.searchAction.openSearchView() }
     }
 
     private fun operateSelectedDestinationInfo(selectedDestinationInfo: SelectedDestinationInfoForOperate) {
@@ -660,7 +671,8 @@ class SharedSpaceDocumentFragment : MainNavigationFragment() {
             .navigateToCopySharedSpaceDestinationFragment(
                 workGroupNode.sharedSpaceId.toParcelable(),
                 arguments.navigationInfo.nodeIdParcelable,
-                workGroupNode.workGroupNodeId.toParcelable())
+                workGroupNode.workGroupNodeId.toParcelable(),
+                QueryStringParcelable(binding.includeSearchContainer.searchView.query.toString()))
         findNavController().navigate(action)
     }
 

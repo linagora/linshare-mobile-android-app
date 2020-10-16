@@ -223,6 +223,11 @@
             app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="searchInfo"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
         <action
             android:id="@+id/navigateToCopySharedSpaceDestinationFragment"
             app:destination="@id/navigationCopySharedSpaceDestinationFragment" />
@@ -329,6 +334,11 @@
         <argument
             android:name="copyFromNodeId"
             app:argType="com.linagora.android.linshare.model.parcelable.WorkGroupNodeIdParcelable" />
+        <argument
+            android:name="searchInfo"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
         <action
             android:id="@+id/navigateToCopySharedSpaceDestinationDocumentFragment"
             app:destination="@id/navigationCopySharedSpaceDestinationDocumentFragment" />
@@ -354,6 +364,11 @@
         <argument
             android:name="navigationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <argument
+            android:name="searchInfo"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
         <action
             android:id="@+id/navigateToFolder"
             app:destination="@id/navigationCopySharedSpaceDestinationDocumentFragment" />

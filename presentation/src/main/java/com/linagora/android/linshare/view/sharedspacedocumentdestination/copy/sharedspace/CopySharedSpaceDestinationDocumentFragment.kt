@@ -39,6 +39,7 @@ import androidx.navigation.fragment.navArgs
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
+import com.linagora.android.linshare.model.parcelable.QueryStringParcelable
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperate
 import com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo
 import com.linagora.android.linshare.model.parcelable.getCurrentNodeId
@@ -94,7 +95,10 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
                 SharedSpaceNavigationInfo(
                     subFolder.sharedSpaceId.toParcelable(),
                     Navigation.FileType.NORMAL,
-                    subFolder.workGroupNodeId.toParcelable()))
+                    subFolder.workGroupNodeId.toParcelable()
+                ),
+                args.searchInfo
+            )
 
         findNavController().navigate(actionIntoSubfolder)
     }
@@ -108,7 +112,8 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
                         args.copyFromSharedSpaceId.toSharedSpaceId(),
                         args.copyFromParentNodeId.toWorkGroupNodeId()),
                     args.copyFromParentNodeId
-                )
+                ),
+                searchInfo = args.searchInfo
             )
 
         findNavController().navigate(actionCancelCopy)
@@ -123,11 +128,11 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
                 Event.OperatorPickDestination.COPY,
                 args.copyFromNodeId,
                 selectedNavigation) }
-            .map(this@CopySharedSpaceDestinationDocumentFragment::createChooseAction)
+            .map { selectedDestinationInfoForOperate -> createChooseAction(selectedDestinationInfoForOperate, args.searchInfo) }
             .map { findNavController().navigate(it) }
     }
 
-    private fun createChooseAction(selectedDestinationInfoForOperate: SelectedDestinationInfoForOperate): NavDirections {
+    private fun createChooseAction(selectedDestinationInfoForOperate: SelectedDestinationInfoForOperate, searchInfo: QueryStringParcelable?): NavDirections {
         return CopySharedSpaceDestinationDocumentFragmentDirections.navigateToSharedSpacedDocument(
             navigationInfo = SharedSpaceNavigationInfo(
                 args.copyFromSharedSpaceId,
@@ -136,7 +141,9 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
                     args.copyFromParentNodeId.toWorkGroupNodeId()),
                 args.copyFromParentNodeId
             ),
-            selectedDestinationInfoFor = selectedDestinationInfoForOperate)
+            selectedDestinationInfoFor = selectedDestinationInfoForOperate,
+            searchInfo = searchInfo
+        )
     }
 
     override fun navigateBackToSharedSpaceDestination() {
@@ -144,7 +151,8 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
             .navigateToCopySharedSpaceDestinationFragment(
                 args.copyFromSharedSpaceId,
                 args.copyFromParentNodeId,
-                args.copyFromNodeId
+                args.copyFromNodeId,
+                args.searchInfo
             )
 
         findNavController().navigate(actionToDestination)
@@ -164,7 +172,8 @@ class CopySharedSpaceDestinationDocumentFragment : DestinationDocumentFragment()
                     workGroupNode.sharedSpaceId.toParcelable(),
                     destinationFileType,
                     workGroupNode.parentWorkGroupNodeId.toParcelable()
-                )
+                ),
+                args.searchInfo
             )
 
         findNavController().navigate(actionToParent)

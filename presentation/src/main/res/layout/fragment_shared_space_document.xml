@@ -39,11 +39,16 @@
     <data>
         <import type="com.linagora.android.linshare.view.sharedspacedocument.SharedSpaceDocumentViewModel" />
         <import type="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <import type="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
         <import type="com.linagora.android.linshare.adapter.sharedspace.AdapterType"/>
 
         <variable
             name="navigationInfo"
             type="SharedSpaceNavigationInfo" />
+
+        <variable
+            name="searchInfo"
+            type="QueryStringParcelable" />
 
         <variable
             name="viewModel"

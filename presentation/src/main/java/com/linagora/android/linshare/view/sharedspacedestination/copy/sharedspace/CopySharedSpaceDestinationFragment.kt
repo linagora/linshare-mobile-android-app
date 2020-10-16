@@ -82,7 +82,8 @@ class CopySharedSpaceDestinationFragment : DestinationFragment() {
                         args.copyFromParentNodeId.toWorkGroupNodeId()
                     ),
                     args.copyFromParentNodeId
-                )
+                ),
+                searchInfo = args.searchInfo
             )
 
         findNavController().navigate(actionToBack)
@@ -97,7 +98,9 @@ class CopySharedSpaceDestinationFragment : DestinationFragment() {
                 navigationInfo = SharedSpaceNavigationInfo(
                     sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
                     Navigation.FileType.ROOT,
-                    WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)))
+                    WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)),
+                searchInfo = args.searchInfo
+            )
 
         findNavController().navigate(actionToDocument)
     }
