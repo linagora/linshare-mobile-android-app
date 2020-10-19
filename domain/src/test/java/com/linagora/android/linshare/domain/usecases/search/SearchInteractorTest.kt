@@ -36,13 +36,16 @@ package com.linagora.android.linshare.domain.usecases.search
 import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.repository.document.DocumentRepository
+import com.linagora.android.linshare.domain.usecases.myspace.MySpaceFailure
+import com.linagora.android.linshare.domain.usecases.myspace.SearchDocumentNoResult
+import com.linagora.android.linshare.domain.usecases.myspace.SearchDocumentViewState
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT
 import com.linagora.android.testshared.TestFixtures.Documents.DOCUMENT_2
-import com.linagora.android.testshared.TestFixtures.Searchs.NOT_FOUND_STATE
+import com.linagora.android.testshared.TestFixtures.MySpaces.SEARCH__DOCUMENT_STATE
+import com.linagora.android.testshared.TestFixtures.MySpaces.SEARCH__DOCUMENT_STATE_REVERSED
 import com.linagora.android.testshared.TestFixtures.Searchs.QUERY_STRING
-import com.linagora.android.testshared.TestFixtures.Searchs.SEARCH_SUCCESS_STATE
 import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
 import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
 import kotlinx.coroutines.flow.toList
@@ -67,48 +70,170 @@ class SearchInteractorTest {
     }
 
     @Test
-    fun searchShouldSuccessReturnSearchResults() {
-        runBlockingTest {
-            `when`(documentRepository.search(QUERY_STRING))
-                .thenAnswer { listOf(DOCUMENT, DOCUMENT_2) }
+    fun searchShouldReturnSuccessStateWithMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT_2, DOCUMENT) }
 
-            val states = searchInteractor(QUERY_STRING)
-                .toList(ArrayList())
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.DescendingName)
+            .toList(ArrayList())
 
-            assertThat(states).hasSize(2)
-            assertThat(states[0](INIT_STATE))
-                .isEqualTo(LOADING_STATE)
-            assertThat(states[1](LOADING_STATE))
-                .isEqualTo(SEARCH_SUCCESS_STATE)
-        }
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE_REVERSED)
     }
 
     @Test
-    fun searchShouldReturnSearchInitialWhileQueryLengthIsLowerThanThree() {
-        runBlockingTest {
-            val states = searchInteractor(QueryString("qu"))
-                .toList(ArrayList())
+    fun searchShouldReturnEmptyStateWhenNoResultMatched() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { emptyList<Document>() }
 
-            assertThat(states).hasSize(1)
-            assertThat(states[0](INIT_STATE))
-                .isEqualTo(Either.right(SearchInitial))
-        }
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.DescendingName)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(Either.Left(SearchDocumentNoResult))
     }
 
     @Test
-    fun searchShouldReturnNotFound() {
-        runBlockingTest {
-            `when`(documentRepository.search(QUERY_STRING))
-                .thenAnswer { emptyList<Document>() }
+    fun searchShouldReturnFailureStateWhenSearchHaveError() = runBlockingTest {
+        val exception = RuntimeException("Search document failed")
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenThrow(exception)
 
-            val states = searchInteractor(QUERY_STRING)
-                .toList(ArrayList())
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.DescendingName)
+            .toList(ArrayList())
 
-            assertThat(states).hasSize(2)
-            assertThat(states[0](INIT_STATE))
-                .isEqualTo(LOADING_STATE)
-            assertThat(states[1](LOADING_STATE))
-                .isEqualTo(NOT_FOUND_STATE)
-        }
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(Either.left(MySpaceFailure(exception)))
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingNameMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT, DOCUMENT_2) }
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.AscendingName)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingNameMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT_2, DOCUMENT) }
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.DescendingName)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE_REVERSED)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingModificationDateMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT_2, DOCUMENT) }
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.AscendingModificationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE_REVERSED)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingModificationDateMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT_2, DOCUMENT) }
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.DescendingModificationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE_REVERSED)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingCreationDateMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT_2, DOCUMENT) }
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.AscendingCreationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE_REVERSED)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingCreationDateMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT_2, DOCUMENT) }
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.DescendingCreationDate)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE_REVERSED)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithAscendingFileSizeMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT_2, DOCUMENT) }
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.AscendingFileSize)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(SEARCH__DOCUMENT_STATE_REVERSED)
+    }
+
+    @Test
+    fun searchShouldReturnSuccessStateWithDescendingFileSizeMatchedListDocument() = runBlockingTest {
+        `when`(documentRepository.search(QUERY_STRING))
+            .thenAnswer { listOf(DOCUMENT, DOCUMENT_2) }
+
+        val expectedState = Either.right(SearchDocumentViewState(listOf(DOCUMENT, DOCUMENT_2)))
+
+        val states = searchInteractor(QUERY_STRING, OrderListConfigurationType.DescendingFileSize)
+            .toList(ArrayList())
+
+        assertThat(states).hasSize(2)
+        assertThat(states[0](INIT_STATE))
+            .isEqualTo(LOADING_STATE)
+        assertThat(states[1](LOADING_STATE))
+            .isEqualTo(expectedState)
     }
 }

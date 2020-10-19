@@ -63,6 +63,7 @@ import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.usecases.myspace.EmptyMySpaceState
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
+import com.linagora.android.linshare.domain.usecases.myspace.SearchDocumentViewState
 import com.linagora.android.linshare.domain.usecases.quota.CheckingQuota
 import com.linagora.android.linshare.domain.usecases.quota.ExceedMaxFileSize
 import com.linagora.android.linshare.domain.usecases.quota.QuotaAccountNoMoreSpaceAvailable
@@ -346,6 +347,14 @@ object TestFixtures {
         val EMPTY_DOCUMENTS_STATE = Either.Left(EmptyMySpaceState)
 
         val REMOVE_DOCUMENT_SUCCESS_VIEW_STATE = Either.Right(RemoveDocumentSuccessViewState(DOCUMENT))
+
+        val SEARCH__DOCUMENT_STATE = Either.right(
+            SearchDocumentViewState(listOf(DOCUMENT, DOCUMENT_2))
+        )
+
+        val SEARCH__DOCUMENT_STATE_REVERSED = Either.right(
+            SearchDocumentViewState(listOf(DOCUMENT_2, DOCUMENT))
+        )
     }
 
     object DownloadingTasks {
