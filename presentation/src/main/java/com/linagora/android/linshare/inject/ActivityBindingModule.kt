@@ -44,7 +44,6 @@ import com.linagora.android.linshare.view.myspace.MySpaceModule
 import com.linagora.android.linshare.view.myspace.details.DocumentDetailsModule
 import com.linagora.android.linshare.view.receivedshares.ReceivedSharesModule
 import com.linagora.android.linshare.view.receivedshares.details.ReceivedSharesShareDetailsModule
-import com.linagora.android.linshare.view.search.SearchModule
 import com.linagora.android.linshare.view.share.ShareFragmentModule
 import com.linagora.android.linshare.view.sharedspace.SharedSpacePresentationModule
 import com.linagora.android.linshare.view.sharedspace.details.SharedSpaceAddMembersModule
@@ -83,7 +82,6 @@ abstract class ActivityBindingModule {
         UploadFragmentModule::class,
         MySpaceModule::class,
         DocumentDetailsModule::class,
-        SearchModule::class,
         ShareFragmentModule::class,
         ReceivedSharesModule::class,
         ReceivedSharesShareDetailsModule::class,
