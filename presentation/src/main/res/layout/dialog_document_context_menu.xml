@@ -38,6 +38,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.linagora.android.linshare.functionality.FunctionalityObserver"/>
         <import type="com.linagora.android.linshare.view.action.MySpaceItemAction"/>
         <import type="com.linagora.android.linshare.view.base.ItemContextMenu"/>
         <import type="com.linagora.android.linshare.view.action.DownloadItemContextMenu"/>
@@ -68,6 +69,10 @@
         <variable
             name="document"
             type="com.linagora.android.linshare.domain.model.document.Document" />
+
+        <variable
+            name="functionalityObserver"
+            type="FunctionalityObserver" />
     </data>
 
     <LinearLayout
@@ -113,8 +118,10 @@
 
         </LinearLayout>
 
-        <LinearLayout style="@style/RowLinerBottomSheetStyle"
-            android:onClick="@{() -> copyToContextMenu.copyTo(document)}">
+        <LinearLayout
+            style="@style/RowLinerBottomSheetStyle"
+            android:onClick="@{() -> copyToContextMenu.copyTo(document)}"
+            app:workGroupContextActionVisibleWithFunctionality="@{functionalityObserver.allFunctionalities}">
 
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"

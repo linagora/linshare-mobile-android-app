@@ -56,15 +56,15 @@ class FunctionalityObserver @Inject constructor(
         private val LOGGER = LoggerFactory.getLogger(FunctionalityObserver::class.java)
     }
 
-    private val mutableAllFunctionality = MutableLiveData<List<Functionality>>(emptyList())
-    val allFunctionality: LiveData<List<Functionality>> = mutableAllFunctionality
+    private val mutableAllFunctionalities = MutableLiveData<List<Functionality>>(emptyList())
+    val allFunctionalities: LiveData<List<Functionality>> = mutableAllFunctionalities
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun retrieveAllFunctionalities() {
         LOGGER.info("retrieveAllFunctionality()")
         GlobalScope.launch(dispatcherProvider.io) {
             Either.catch { functionalityRepository.getAll() }
-                .map(mutableAllFunctionality::postValue)
+                .map(mutableAllFunctionalities::postValue)
         }
     }
 }

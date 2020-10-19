@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.adapter.myspace
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -43,6 +44,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.document.Document
+import com.linagora.android.linshare.domain.model.functionality.Functionality
+import com.linagora.android.linshare.domain.model.functionality.FunctionalityIdentifier
 import com.linagora.android.linshare.domain.usecases.myspace.EmptyMySpaceState
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceFailure
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
@@ -134,4 +137,15 @@ fun bindingEmptyMessageMySpace(linearLayout: LinearLayout, state: Either<Failure
                 is MySpaceViewState -> linearLayout.isVisible = false
             }
         })
+}
+
+@BindingAdapter("workGroupContextActionVisibleWithFunctionality")
+fun bindingWorkGroupContextActionWithFunctionality(
+    view: View,
+    allFunctionalities: List<Functionality>
+) {
+    view.isVisible = allFunctionalities.takeIf { it.isNotEmpty() }
+        ?.first { functionality -> functionality.identifier == FunctionalityIdentifier.WORK_GROUP }
+        ?.enable
+        ?: false
 }

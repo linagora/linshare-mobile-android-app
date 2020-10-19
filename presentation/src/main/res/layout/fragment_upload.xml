@@ -220,7 +220,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/pickTheDestinationLabel"
                 app:selectedDestinationInfo="@{selectedDestinationInfo}"
                 app:destinationUploadType="@{uploadType}"
-                app:functionality="@{functionalityObserver.allFunctionality}"/>
+                app:functionality="@{functionalityObserver.allFunctionalities}"/>
 
             <View
                 android:id="@+id/dividerPickDestination"

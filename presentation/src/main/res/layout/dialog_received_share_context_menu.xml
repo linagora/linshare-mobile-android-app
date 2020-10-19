@@ -117,7 +117,7 @@
 
         <LinearLayout
             style="@style/RowLinerBottomSheetStyle"
-            app:workGroupContextActionVisibleWithFunctionality="@{functionalityObserver.allFunctionality}"
+            app:workGroupContextActionVisibleWithFunctionality="@{functionalityObserver.allFunctionalities}"
             android:onClick="@{() -> copyToContextMenu.copyTo(share)}">
             <ImageView
                 style="@style/ImageInRowLinerBottomSheetStyle"

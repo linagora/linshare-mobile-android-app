@@ -218,7 +218,7 @@ class MainActivity : BaseActivity(), NavigationHost {
             )
         }
 
-        viewModel.functionalityObserver.allFunctionality.observe(this, Observer { functionalities ->
+        viewModel.functionalityObserver.allFunctionalities.observe(this, Observer { functionalities ->
             val menuVisible = functionalities.takeIf { it.isNotEmpty() }
                 ?.first { functionality -> functionality.identifier == FunctionalityIdentifier.WORK_GROUP }?.enable
                 ?.let { enable -> if (enable) MenuVisible.VISIBLE else MenuVisible.GONE }
