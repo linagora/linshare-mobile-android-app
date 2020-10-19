@@ -126,6 +126,11 @@
             app:argType="com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperateDocument"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="searchInfo"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
         <action
             android:id="@+id/action_navigation_my_space_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -136,10 +141,6 @@
             android:id="@+id/navigateToDocumentDetails"
             app:destination="@id/navigationDocumentDetails" />
     </fragment>
-    <fragment
-        android:id="@+id/navigationSearch"
-        android:name="com.linagora.android.linshare.view.search.SearchFragment"
-        tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/navigationShare"
         android:name="com.linagora.android.linshare.view.share.ShareFragment"
@@ -388,6 +389,11 @@
         <argument
             android:name="copyDocument"
             app:argType="com.linagora.android.linshare.model.parcelable.DocumentParcelable" />
+        <argument
+            android:name="searchInfo"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
         <action
             android:id="@+id/navigateToCopyMySpaceDestinationDocumentFragment"
             app:destination="@id/navigationCopyMySpaceDestinationDocumentFragment" />
@@ -402,6 +408,11 @@
         <argument
             android:name="navigationInfo"
             app:argType="com.linagora.android.linshare.model.parcelable.SharedSpaceNavigationInfo" />
+        <argument
+            android:name="searchInfo"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
         <action
             android:id="@+id/navigateToFolder"
             app:destination="@id/navigationCopyMySpaceDestinationDocumentFragment" />

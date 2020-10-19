@@ -41,6 +41,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -53,13 +54,13 @@ import com.linagora.android.linshare.domain.model.OperatorType
 import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.properties.PreviousUserPermissionAction.DENIED
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.usecases.myspace.ContextMenuClick
 import com.linagora.android.linshare.domain.usecases.myspace.DocumentDetailsClick
 import com.linagora.android.linshare.domain.usecases.myspace.DocumentItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.DownloadClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveClick
 import com.linagora.android.linshare.domain.usecases.myspace.RemoveDocumentSuccessViewState
-import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.ShareItemClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.myspace.DuplicateDocumentMySpaceClick
@@ -70,6 +71,8 @@ import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentSucce
 import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentFailure
 
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationSuccess
+import com.linagora.android.linshare.domain.usecases.search.CloseSearchView
+import com.linagora.android.linshare.domain.usecases.search.OpenSearchView
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceFailure
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpaceSuccess
 import com.linagora.android.linshare.domain.usecases.sharedspace.OnOrderByRowItemClick
@@ -77,17 +80,22 @@ import com.linagora.android.linshare.domain.usecases.sharedspace.OpenOrderByDial
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Failure.CannotExecuteWithoutNetwork
 import com.linagora.android.linshare.domain.usecases.utils.Success
+import com.linagora.android.linshare.model.parcelable.QueryStringParcelable
 import com.linagora.android.linshare.model.parcelable.SelectedDestinationInfoForOperateDocument
 import com.linagora.android.linshare.model.parcelable.toDocument
 import com.linagora.android.linshare.model.parcelable.toParcelable
+import com.linagora.android.linshare.model.parcelable.toQueryString
 import com.linagora.android.linshare.model.parcelable.toSharedSpaceId
 import com.linagora.android.linshare.model.parcelable.toWorkGroupNodeId
 import com.linagora.android.linshare.model.permission.PermissionResult
 import com.linagora.android.linshare.model.properties.RuntimePermissionRequest.ShouldShowWriteStorage
+import com.linagora.android.linshare.util.Constant
 import com.linagora.android.linshare.util.dismissDialogFragmentByTag
+import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.filterNetworkViewEvent
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.util.openFilePicker
+import com.linagora.android.linshare.util.showKeyboard
 import com.linagora.android.linshare.view.Event
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
@@ -135,6 +143,7 @@ class MySpaceFragment : MainNavigationFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.internetAvailable = mainActivityViewModel.internetAvailable
         binding.viewModel = mySpaceViewModel
+        binding.searchInfo = args.searchInfo
 
         observeFunctionality()
         observeViewState()
@@ -189,7 +198,8 @@ class MySpaceFragment : MainNavigationFragment() {
             is DownloadClick -> handleDownloadDocument(viewEvent.document)
             is UploadButtonBottomBarClick -> openFilePicker()
             is RemoveClick -> confirmRemoveDocument(viewEvent.document)
-            is SearchButtonClick -> openSearch()
+            is OpenSearchView -> handleOpenSearch()
+            is CloseSearchView -> handleCloseSearch()
             is ShareItemClick -> navigateToShare(viewEvent.document)
             is CopyDocumentToSharedSpaceClick -> selectCopyDestination(viewEvent.document)
             is DocumentDetailsClick -> navigateToDetails(viewEvent.document)
@@ -213,7 +223,7 @@ class MySpaceFragment : MainNavigationFragment() {
     }
 
     private fun showContextMenu(document: Document) {
-        dismissContextMenu()
+        binding.includeSearchContainer.searchView.clearFocus()
         MySpaceContextMenuDialog(document)
             .show(childFragmentManager, MySpaceContextMenuDialog.TAG)
     }
@@ -237,8 +247,16 @@ class MySpaceFragment : MainNavigationFragment() {
         super.onViewCreated(view, savedInstanceState)
         LOGGER.info("onViewCreated")
         setUpSwipeRefreshLayout()
+        setUpSearchView()
         handleArguments()
         getOrderListConfiguration()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (binding.includeSearchContainer.searchView.query.isNotEmpty()) {
+            mySpaceViewModel.searchAction.openSearchView()
+        }
     }
 
     private fun setUpSwipeRefreshLayout() {
@@ -257,6 +275,9 @@ class MySpaceFragment : MainNavigationFragment() {
     private fun handleArguments() {
         args.selectedDestinationInfoForOperate
             ?.let(this@MySpaceFragment::operateSelectedDestinationInfo)
+
+        args.searchInfo?.toQueryString()?.let {
+            mySpaceViewModel.searchAction.openSearchView() }
     }
 
     private fun operateSelectedDestinationInfo(selectedDestinationInfo: SelectedDestinationInfoForOperateDocument) {
@@ -371,7 +392,10 @@ class MySpaceFragment : MainNavigationFragment() {
 
     private fun selectCopyDestination(document: Document) {
         val actionToSelectDestination = MySpaceFragmentDirections
-            .navigateToCopyMySpaceDestinationFragment(document.toParcelable())
+            .navigateToCopyMySpaceDestinationFragment(
+                document.toParcelable(),
+                searchInfo = QueryStringParcelable(binding.includeSearchContainer.searchView.query.toString())
+            )
 
         findNavController().navigate(actionToSelectDestination)
     }
@@ -407,8 +431,30 @@ class MySpaceFragment : MainNavigationFragment() {
         findNavController().navigate(R.id.uploadFragment, bundle)
     }
 
-    private fun openSearch() {
-        findNavController().navigate(R.id.navigationSearch)
+    private fun handleOpenSearch() {
+        binding.apply {
+            includeSearchContainer.searchContainer.visibility = View.VISIBLE
+            includeSearchContainer.searchView.requestFocus()
+            mySpaceBottomBar.visibility = View.GONE
+
+            binding.searchInfo?.toQueryString()?.let {
+                includeSearchContainer.searchView.setQuery(it.value, Constant.NOT_SUBMIT_TEXT)
+                searchDocument(it.value)
+            }
+        }
+    }
+
+    private fun handleCloseSearch() {
+        binding.apply {
+            includeSearchContainer.searchContainer.visibility = View.GONE
+            mySpaceBottomBar.visibility = View.VISIBLE
+            includeSearchContainer.searchView.apply {
+                setQuery(Constant.CLEAR_QUERY_STRING, Constant.NOT_SUBMIT_TEXT)
+                clearFocus()
+            }
+        }
+        binding.searchInfo = QueryStringParcelable(Constant.CLEAR_QUERY_STRING)
+        getAllDocuments()
     }
 
     private fun navigateToShare(document: Document) {
@@ -423,6 +469,40 @@ class MySpaceFragment : MainNavigationFragment() {
         val actionToDocumentDetails = MySpaceFragmentDirections
             .navigateToDocumentDetails(document.documentId.toParcelable())
         findNavController().navigate(actionToDocumentDetails)
+    }
+
+    private fun setUpSearchView() {
+        binding.includeSearchContainer.searchView.apply {
+
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    this@apply.dismissKeyboard()
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    LOGGER.info("onQueryTextChange() $newText")
+                    searchDocument(newText)
+                    return true
+                }
+            })
+
+            setOnQueryTextFocusChangeListener { view, hasFocus ->
+                if (hasFocus && childFragmentManager.findFragmentByTag(MySpaceContextMenuDialog.TAG) === null) {
+                    view.findFocus().showKeyboard()
+                }
+            }
+        }
+    }
+
+    private fun searchDocument(query: String) {
+        query.trim()
+            .let(::QueryString)
+            .let { sendQueryString(it) }
+    }
+
+    private fun sendQueryString(query: QueryString) {
+        mySpaceViewModel.searchDocument(query)
     }
 
     private fun duplicateDocument(document: Document) {

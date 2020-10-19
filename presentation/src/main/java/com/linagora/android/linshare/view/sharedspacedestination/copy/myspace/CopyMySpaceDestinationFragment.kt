@@ -67,7 +67,8 @@ class CopyMySpaceDestinationFragment : DestinationFragment() {
                     sharedSpaceNodeNested.sharedSpaceId.toParcelable(),
                     Navigation.FileType.ROOT,
                     WorkGroupNodeIdParcelable(sharedSpaceNodeNested.sharedSpaceId.uuid)
-                )
+                ),
+                searchInfo = args.searchInfo
             )
 
         findNavController().navigate(actionToDocument)

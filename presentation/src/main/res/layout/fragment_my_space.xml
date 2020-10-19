@@ -38,6 +38,8 @@
 
     <data>
         <import type="com.linagora.android.linshare.util.ConnectionLiveData"/>
+        <import type="android.view.View" />
+        <import type="com.linagora.android.linshare.model.parcelable.QueryStringParcelable" />
 
         <variable
             name="internetAvailable"
@@ -46,6 +48,11 @@
         <variable
             name="viewModel"
             type="com.linagora.android.linshare.view.myspace.MySpaceViewModel" />
+
+        <variable
+            name="searchInfo"
+            type="QueryStringParcelable" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -82,6 +89,16 @@
                 </androidx.appcompat.widget.Toolbar>
 
             </com.google.android.material.appbar.AppBarLayout>
+
+            <include
+                android:id="@+id/includeSearchContainer"
+                layout="@layout/search_view_container"
+                style="@style/Search.AppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:visibility="gone"
+                app:searchAction="@{viewModel.searchAction}"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <include
                 android:id="@+id/networkBannerContainer"
@@ -181,8 +198,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:onClick="@{() -> viewModel.onSearchButtonClick()}"
-                    />
+                    android:onClick="@{() -> viewModel.searchAction.openSearchView()}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -197,6 +213,7 @@
             app:tint="@color/white"
             app:backgroundTint="@color/colorPrimary"
             app:layout_anchor="@id/mySpaceBottomBar"
+            android:visibility="@{viewModel.searchAction.isSearching() ? View.GONE : View.VISIBLE}"
             app:rippleColor="@color/divide_view"
             android:onClick="@{() -> viewModel.onUploadBottomBarClick()}"/>
 

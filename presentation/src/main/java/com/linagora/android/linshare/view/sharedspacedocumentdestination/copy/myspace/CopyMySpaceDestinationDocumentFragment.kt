@@ -91,7 +91,8 @@ class CopyMySpaceDestinationDocumentFragment : DestinationDocumentFragment() {
                     sharedSpaceIdParcelable = args.navigationInfo.sharedSpaceIdParcelable,
                     fileType = Navigation.FileType.NORMAL,
                     nodeIdParcelable = subFolder.workGroupNodeId.toParcelable()
-                )
+                ),
+                searchInfo = args.searchInfo
             )
 
         findNavController().navigate(actionToSubFolder)
@@ -99,7 +100,7 @@ class CopyMySpaceDestinationDocumentFragment : DestinationDocumentFragment() {
 
     override fun navigateInCancelDestination() {
         val cancelAction = CopyMySpaceDestinationDocumentFragmentDirections
-            .navigateToMySpace()
+            .navigateToMySpace(searchInfo = args.searchInfo)
         findNavController().navigate(cancelAction)
     }
 
@@ -112,7 +113,7 @@ class CopyMySpaceDestinationDocumentFragment : DestinationDocumentFragment() {
                 Event.OperatorPickDestination.COPY,
                 args.copyDocument,
                 selectedDestination) }
-            .map(CopyMySpaceDestinationDocumentFragmentDirections.Companion::navigateToMySpace)
+            .map { selectedDestinationInfo -> CopyMySpaceDestinationDocumentFragmentDirections.navigateToMySpace(selectedDestinationInfo, args.searchInfo) }
             .map(findNavController()::navigate)
     }
 

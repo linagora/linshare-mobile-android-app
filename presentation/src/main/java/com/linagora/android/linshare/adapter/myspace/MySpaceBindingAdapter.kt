@@ -49,6 +49,8 @@ import com.linagora.android.linshare.domain.model.functionality.FunctionalityIde
 import com.linagora.android.linshare.domain.usecases.myspace.EmptyMySpaceState
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceFailure
 import com.linagora.android.linshare.domain.usecases.myspace.MySpaceViewState
+import com.linagora.android.linshare.domain.usecases.myspace.SearchDocumentNoResult
+import com.linagora.android.linshare.domain.usecases.myspace.SearchDocumentViewState
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.glide.GlideApp
@@ -69,10 +71,14 @@ fun bindingMySpaceList(
 
     mySpaceState.fold(
         ifLeft = { when (it) {
-            is MySpaceFailure, EmptyMySpaceState -> recyclerView.isVisible = false }
+            is MySpaceFailure, EmptyMySpaceState, SearchDocumentNoResult -> recyclerView.isVisible = false }
         },
         ifRight = { when (it) {
             is MySpaceViewState -> {
+                recyclerView.isVisible = true
+                (recyclerView.adapter as MySpaceAdapter).submitList(it.documents)
+            }
+            is SearchDocumentViewState -> {
                 recyclerView.isVisible = true
                 (recyclerView.adapter as MySpaceAdapter).submitList(it.documents)
             } }
@@ -91,7 +97,7 @@ fun bindingMySpaceLoading(
             when (it) {
                 is Success.Idle -> swipeRefreshLayout.isRefreshing = false
                 is Success.Loading -> swipeRefreshLayout.isRefreshing = true
-                is MySpaceViewState -> swipeRefreshLayout.isRefreshing = false
+                is MySpaceViewState, is SearchDocumentViewState -> swipeRefreshLayout.isRefreshing = false
             }
         }
     )

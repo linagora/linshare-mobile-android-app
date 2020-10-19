@@ -42,18 +42,19 @@ import com.linagora.android.linshare.domain.model.document.Document
 import com.linagora.android.linshare.domain.model.document.toCopyRequest
 import com.linagora.android.linshare.domain.model.order.OrderListConfigurationType
 import com.linagora.android.linshare.domain.model.order.OrderListType
+import com.linagora.android.linshare.domain.model.search.QueryString
 import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceId
 import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNodeId
 import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
 import com.linagora.android.linshare.domain.usecases.copy.CopyInMySpaceInteractor
 import com.linagora.android.linshare.domain.usecases.myspace.GetAllDocumentsOrderedInteractor
-import com.linagora.android.linshare.domain.usecases.myspace.SearchButtonClick
 import com.linagora.android.linshare.domain.usecases.myspace.UploadButtonBottomBarClick
 import com.linagora.android.linshare.domain.usecases.myspace.RenameDocumentInteractor
 import com.linagora.android.linshare.domain.usecases.order.GetOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationInteractor
 import com.linagora.android.linshare.domain.usecases.order.PersistOrderListConfigurationSuccess
 import com.linagora.android.linshare.domain.usecases.remove.RemoveDocumentInteractor
+import com.linagora.android.linshare.domain.usecases.search.SearchInteractor
 import com.linagora.android.linshare.domain.usecases.sharedspace.CopyToSharedSpace
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.State
@@ -69,6 +70,7 @@ import com.linagora.android.linshare.util.NameValidator
 import com.linagora.android.linshare.view.LinShareApplication
 import com.linagora.android.linshare.view.action.MySpaceItemActionImp
 import com.linagora.android.linshare.view.action.OrderByActionImp
+import com.linagora.android.linshare.view.action.SearchActionImp
 import com.linagora.android.linshare.view.base.LinShareViewModel
 import com.linagora.android.linshare.view.myspace.action.MySpaceCopyToContextMenu
 import com.linagora.android.linshare.view.myspace.action.MySpaceDownloadContextMenu
@@ -77,6 +79,7 @@ import com.linagora.android.linshare.view.myspace.action.MySpaceItemBehavior
 import com.linagora.android.linshare.view.myspace.action.MySpaceItemContextMenu
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
@@ -96,6 +99,7 @@ class MySpaceViewModel @Inject constructor(
     private val downloadOperator: DownloadOperator,
     private val removeDocumentInteractor: RemoveDocumentInteractor,
     private val copyInMySpaceInteractor: CopyInMySpaceInteractor,
+    private val searchInteractor: SearchInteractor,
     private val copyToSharedSpace: CopyToSharedSpace,
     val functionalityObserver: FunctionalityObserver,
     private val renameDocumentInteractor: RenameDocumentInteractor,
@@ -121,6 +125,10 @@ class MySpaceViewModel @Inject constructor(
     val copyToSharedSpaceContextMenu = MySpaceCopyToContextMenu(this)
 
     val editContextMenu = MySpaceEditContextMenu(this)
+
+    val searchAction = SearchActionImp(this)
+
+    private val queryChannel = BroadcastChannel<QueryString>(Channel.CONFLATED)
 
     private val enteringName = BroadcastChannel<NewNameRequest>(Channel.CONFLATED)
 
@@ -165,11 +173,6 @@ class MySpaceViewModel @Inject constructor(
     fun onUploadBottomBarClick() {
         LOGGER.info("onUploadBottomBarClick()")
         dispatchState(Either.right(UploadButtonBottomBarClick))
-    }
-
-    fun onSearchButtonClick() {
-        LOGGER.info("openSearchButtonClick()")
-        dispatchState(Either.right(SearchButtonClick))
     }
 
     fun getDownloadingDocument(): Document? {
@@ -227,5 +230,20 @@ class MySpaceViewModel @Inject constructor(
                     flow<State<Either<Failure, Success>>> { emitState { state } } }
             )
         }
+    }
+
+    fun searchDocument(query: QueryString) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            queryChannel.send(query)
+            consumeStates(queryChannel.asFlow()
+                .debounce(Constant.QUERY_INTERVAL_MS)
+                .flatMapLatest { searchQuery -> getSearchResult(searchQuery) })
+        }
+    }
+
+    private fun getSearchResult(query: QueryString): Flow<State<Either<Failure, Success>>> {
+        return query.takeIf { it.getLength() >= Constant.MIN_LENGTH_CHARACTERS_TO_SEARCH }
+            ?.let { searchInteractor(query, orderByAction.getCurrentOrderListConfigurationType()) }
+            ?: getAllDocumentsOrderedInteractor(orderByAction.getCurrentOrderListConfigurationType())
     }
 }
