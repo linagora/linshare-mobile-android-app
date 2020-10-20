@@ -170,10 +170,10 @@ fun bindingSharedSpaceDocumentAddButton(
 fun bindingTextEmptyMessageInSharedSpaceDocument(textView: TextView, state: Either<Failure, Success>?) {
     state?.fold(
         ifLeft = { failure -> failure.takeIf { it is SearchSharedSpaceDocumentNoResult }
-            ?.let { textView.setText(R.string.search_no_results) }
-            ?: textView.setText(R.string.do_not_have_any_document) },
-        ifRight = { textView.setText(R.string.do_not_have_any_document) }
-    )
+            ?.let { textView.setText(R.string.search_no_results) } },
+        ifRight = { success -> success.takeIf { it is SharedSpaceDocumentEmpty }
+            ?. let { textView.setText(R.string.do_not_have_any_document) } }
+        )
 }
 
 @BindingAdapter("contextActionVisible", "operationRoles", requireAll = true)
