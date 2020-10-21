@@ -33,26 +33,53 @@
 
 package com.linagora.android.linshare.view.authentication.login
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import android.app.Dialog
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.Window
+import androidx.appcompat.app.AppCompatDialog
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import com.linagora.android.linshare.R
+import com.linagora.android.linshare.databinding.DialogSecondFactorAuthBinding
+import com.linagora.android.linshare.domain.network.SupportVersion
+import com.linagora.android.linshare.util.binding.initView
+import com.linagora.android.linshare.util.getParentViewModel
+import dagger.android.support.DaggerAppCompatDialogFragment
+import javax.inject.Inject
 
-@Module
-internal abstract class LoginModule {
+class SecondFactorAuthDialog(
+    private val baseUrl: String,
+    private val supportVersion: SupportVersion,
+    private val username: String,
+    private val password: String
+) : DaggerAppCompatDialogFragment() {
+    companion object {
+        const val TAG = "secondFactorAuthDialog"
+    }
 
-    @ContributesAndroidInjector
-    internal abstract fun contributeLoginFragment(): LoginFragment
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSecondFactorAuthDialog(): SecondFactorAuthDialog
+    private lateinit var loginViewModel: LoginViewModel
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginViewModel::class)
-    abstract fun bindViewModel(viewModel: LoginViewModel): ViewModel
+    private lateinit var binding: DialogSecondFactorAuthBinding
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        inflateView()
+        initViewModel()
+        val dialog = AppCompatDialog(context!!, android.R.style.Theme_Light)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(binding.root)
+        return dialog
+    }
+
+    private fun inflateView() {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_second_factor_auth, null, false)
+        binding.inputSecondFAContainer.initView()
+    }
+
+    private fun initViewModel() {
+        loginViewModel = getParentViewModel(viewModelFactory)
+    }
 }

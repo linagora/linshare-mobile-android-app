@@ -31,28 +31,19 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.authentication.login
+package com.linagora.android.linshare.util.binding
 
-import androidx.lifecycle.ViewModel
-import com.linagora.android.linshare.inject.annotation.FragmentScoped
-import com.linagora.android.linshare.inject.annotation.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
+import com.linagora.android.linshare.databinding.SecondFactorAuthenticationCodeViewBinding
 
-@Module
-internal abstract class LoginModule {
-
-    @ContributesAndroidInjector
-    internal abstract fun contributeLoginFragment(): LoginFragment
-
-    @FragmentScoped
-    @ContributesAndroidInjector
-    internal abstract fun contributeSecondFactorAuthDialog(): SecondFactorAuthDialog
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginViewModel::class)
-    abstract fun bindViewModel(viewModel: LoginViewModel): ViewModel
+fun SecondFactorAuthenticationCodeViewBinding.initView() {
+    codeZero.setOnKeyListener { _, keyCode, _ ->
+        println(keyCode)
+        if (keyCode in 7..16) { //number
+            codeOne.requestFocus()
+        }
+        if (keyCode == 67) {
+            println("delete $keyCode")
+        }
+        false
+    }
 }

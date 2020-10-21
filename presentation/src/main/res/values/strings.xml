@@ -67,6 +67,9 @@
     <string name="notification">Notification</string>
     <string name="available_space">%s on %s</string>
 
+    <!--2fa-->
+    <string name="second_factor_authentication" translatable="false">Second factor authentication</string>
+
     <string name="confirm_remove_account_title">Are you sure you want to log out of this account ?</string>
     <string name="cancel">Cancel</string>
     <string name="remove">Remove</string>

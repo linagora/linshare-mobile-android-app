@@ -54,6 +54,9 @@
     <dimen name="logo_margin_top">8dp</dimen>
     <dimen name="slogan_text_size">17dp</dimen>
     <dimen name="guide_text_size">15sp</dimen>
+    <dimen name="second_factor_authentication_title_text_size">18sp</dimen>
+    <dimen name="digit_input_text_size">24dp</dimen>
+    <dimen name="digit_input_container_size">40dp</dimen>
     <dimen name="guide_margin_top">72dp</dimen>
     <dimen name="guide_padding_side">40dp</dimen>
     <dimen name="login_input_radius">6dp</dimen>

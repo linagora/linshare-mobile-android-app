@@ -73,6 +73,28 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="SecondFactorAuthenticationTitle" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/second_factor_authentication_title_text_size</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="DigitInputAuthentication">
+        <item name="android:layout_width">@dimen/digit_input_container_size</item>
+        <item name="android:inputType">number</item>
+        <item name="android:textSize">@dimen/digit_input_text_size</item>
+        <item name="android:textColor">@color/text_with_logo_color</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="singleLine">true</item>
+        <item name="backgroundTint">@color/text_with_logo_color</item>
+    </style>
+
     <style name="LoginButton" parent="Widget.AppCompat.Button">
         <item name="android:layout_height">48dp</item>
         <item name="android:background">@drawable/login_drawable</item>
