@@ -323,6 +323,8 @@ class UploadFragment : MainNavigationFragment() {
     }
 
     private fun checkAccountQuota(uploadDocumentRequest: UploadDocumentRequest) {
+        uploadFragmentViewModel.canNotVerifyQuotaOffline()
+
         if (mainActivityViewModel.internetAvailable.value == NetworkConnectivity.CONNECTED)
             uploadFragmentViewModel.checkAccountQuota(uploadDocumentRequest)
     }

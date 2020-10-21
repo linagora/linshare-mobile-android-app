@@ -82,6 +82,10 @@ class UploadFragmentViewModel @Inject constructor(
         }
     }
 
+    fun canNotVerifyQuotaOffline() {
+        dispatchUIState(Either.left(CanNotVerifyQuotaOfflineViewState))
+    }
+
     fun addRecipient(user: GenericUser) {
         LOGGER.info("addRecipient() $user")
         if (shareRecipientsManager.addRecipient(user)) {

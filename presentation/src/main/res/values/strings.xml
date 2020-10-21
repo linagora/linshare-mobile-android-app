@@ -129,6 +129,7 @@
 
     <string name="file_not_found">File is not found to upload.</string>
     <string name="you_are_offline">You\'re Offline</string>
+    <string name="upload_while_offline" translatable="false">You\'re Offline, upload will start after connection restored</string>
     <string name="internet_not_available">Internet is not available.</string>
     <string name="file_ready_to_upload">File %s is ready to be uploaded.</string>
     <string name="file_added_to_waiting_list">File %s is added to the waiting list.</string>

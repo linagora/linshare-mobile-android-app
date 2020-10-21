@@ -72,6 +72,7 @@ import com.linagora.android.linshare.view.authentication.login.LoginFormState
 import com.linagora.android.linshare.view.canShowPickDestination
 import com.linagora.android.linshare.view.upload.BuildDocumentRequestSuccess
 import com.linagora.android.linshare.view.upload.CanNotCreateFileViewState
+import com.linagora.android.linshare.view.upload.CanNotVerifyQuotaOfflineViewState
 import com.linagora.android.linshare.view.upload.NotEnoughDeviceStorageViewState
 import com.linagora.android.linshare.view.uploadToWorkgroup
 import org.slf4j.LoggerFactory
@@ -235,6 +236,7 @@ private fun getUploadErrorMessageId(failure: Failure): Int {
         ExtractInfoFailed -> R.string.extrac_info_failed
         NotEnoughDeviceStorageViewState -> R.string.lack_of_device_storage
         CanNotCreateFileViewState -> R.string.unable_to_prepare_file_for_upload
+        CanNotVerifyQuotaOfflineViewState -> R.string.upload_while_offline
         else -> NO_RESOURCE
     }
 }
@@ -242,7 +244,7 @@ private fun getUploadErrorMessageId(failure: Failure): Int {
 @BindingAdapter("uploadState")
 fun bindingUploadButton(button: Button, uploadState: Either<Failure, Success>) {
     uploadState.fold(
-        ifLeft = { disableButtonUpload(button) },
+        ifLeft = { failure -> bindingUploadButtonWhenFailure(failure, button) },
         ifRight = { success -> bindingUploadButtonWhenSuccess(success, button) }
     )
 }
@@ -262,6 +264,12 @@ private fun bindingUploadButtonWhenSuccess(success: Success, button: Button) {
         PreUploadExecuting, CheckingQuota -> disableButtonUpload(button)
         ValidAccountQuota -> enableButtonUpload(button)
         is BuildDocumentRequestSuccess -> enableButtonUpload(button)
+    }
+}
+
+private fun bindingUploadButtonWhenFailure(failure: Failure, button: Button) {
+    when (failure) {
+        is CanNotVerifyQuotaOfflineViewState -> enableButtonUpload(button)
     }
 }
 
