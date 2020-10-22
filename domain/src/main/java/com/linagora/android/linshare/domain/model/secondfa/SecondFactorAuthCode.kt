@@ -31,40 +31,10 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.view.dialog
+package com.linagora.android.linshare.domain.model.secondfa
 
-import android.view.View
-import com.linagora.android.linshare.domain.model.GenericUser
-import com.linagora.android.linshare.domain.model.autocomplete.MailingList
-import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
-import com.linagora.android.linshare.domain.model.sharedspace.SharedSpaceNodeNested
-import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
-import com.linagora.android.linshare.domain.model.workgroup.NewNameRequest
-
-typealias OnNegativeCallback = (View) -> Unit
-
-typealias OnPositiveCallback = (View) -> Unit
-
-object NoOpCallback : (View) -> Unit {
-
-    override fun invoke(view: View) {
-        // do nothing
+data class SecondFactorAuthCode(val value: String) {
+    init {
+        require(value.length == 6) { "invalid 2FA format" }
     }
 }
-
-typealias OnRemoveRecipient = (GenericUser) -> Unit
-
-typealias OnRemoveMailingList = (MailingList) -> Unit
-
-typealias OnPositiveWithEnteredCharactersCallback = (String) -> Unit
-
-typealias OnNewNameRequestChange = (NewNameRequest) -> Unit
-
-typealias OnRenameSharedSpaceDocument = (WorkGroupNode, NewNameRequest) -> Unit
-
-typealias OnRenameSharedSpace = (SharedSpaceNodeNested, NewNameRequest) -> Unit
-
-typealias OnRenameMySpaceDocument = (Document, NewNameRequest) -> Unit
-
-typealias OnSecondFactorAuthChange = (SecondFactorAuthCode?) -> Unit

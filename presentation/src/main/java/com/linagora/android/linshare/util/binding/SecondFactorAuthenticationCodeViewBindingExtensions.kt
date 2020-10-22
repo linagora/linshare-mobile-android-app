@@ -33,17 +33,104 @@
 
 package com.linagora.android.linshare.util.binding
 
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import androidx.core.text.isDigitsOnly
 import com.linagora.android.linshare.databinding.SecondFactorAuthenticationCodeViewBinding
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
+import com.linagora.android.linshare.util.afterTextChanged
+import com.linagora.android.linshare.util.binding.SecondFactorAuthenticationCodeViewBindingExtensions.NO_CODES
+import com.linagora.android.linshare.view.dialog.OnSecondFactorAuthChange
+
+object SecondFactorAuthenticationCodeViewBindingExtensions {
+    val NO_CODES = null
+}
+
+private fun SecondFactorAuthenticationCodeViewBinding.validateCompletedState(): Boolean {
+    return codeZero.digitValidation() && codeOne.digitValidation() &&
+            codeTwo.digitValidation() && codeThree.digitValidation() &&
+            codeFour.digitValidation() && codeFive.digitValidation()
+}
+
+private fun SecondFactorAuthenticationCodeViewBinding.getSecondFactorAuthCode(): SecondFactorAuthCode? {
+    if (validateCompletedState()) {
+        val codeBuilder = StringBuilder(codeZero.text.toString())
+            .append(codeOne.text.toString())
+            .append(codeTwo.text.toString())
+            .append(codeThree.text.toString())
+            .append(codeFour.text.toString())
+            .append(codeFive.text.toString())
+        return SecondFactorAuthCode(codeBuilder.toString())
+    }
+    return NO_CODES
+}
 
 fun SecondFactorAuthenticationCodeViewBinding.initView() {
-    codeZero.setOnKeyListener { _, keyCode, _ ->
-        println(keyCode)
-        if (keyCode in 7..16) { //number
-            codeOne.requestFocus()
-        }
-        if (keyCode == 67) {
-            println("delete $keyCode")
+    codeZero.afterTextChanged { input ->
+        input.takeIf { it.isNotEmpty() }
+            ?.let { codeOne.requestFocus() }
+    }
+
+    codeOne.afterTextChanged { input ->
+        input.takeIf { it.isNotEmpty() }
+            ?.let { codeTwo.requestFocus() }
+            ?: codeZero.requestFocus()
+    }
+
+    codeTwo.afterTextChanged { input ->
+        input.takeIf { it.isNotEmpty() }
+            ?.let { codeThree.requestFocus() }
+            ?: codeOne.requestFocus()
+    }
+
+    codeThree.afterTextChanged { input ->
+        input.takeIf { it.isNotEmpty() }
+            ?.let { codeFour.requestFocus() }
+            ?: codeTwo.requestFocus()
+    }
+
+    codeFour.afterTextChanged { input ->
+        input.takeIf { it.isNotEmpty() }
+            ?.let { codeFive.requestFocus() }
+            ?: codeThree.requestFocus()
+    }
+
+    codeFive.afterTextChanged { input ->
+        input.takeIf { it.isEmpty() }
+            ?.let { codeFour.requestFocus() }
+    }
+}
+
+fun SecondFactorAuthenticationCodeViewBinding.onSecondFActorAuthChange(
+    onSecondFactorAuthChange: OnSecondFactorAuthChange
+) {
+    codeZero.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    codeOne.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    codeTwo.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    codeThree.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    codeFour.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    codeFive.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    codeFive.setOnEditorActionListener { _, actionId, _ ->
+        when (actionId) {
+            EditorInfo.IME_ACTION_DONE -> onSecondFactorAuthChange(getSecondFactorAuthCode())
         }
         false
     }
+}
+
+fun EditText.digitValidation(): Boolean {
+    val input = text.toString()
+    if (input.isNullOrEmpty() || input.isNullOrBlank()) {
+        return false
+    }
+
+    if (input.trim().length > 1) {
+        return false
+    }
+
+    if (!input.isDigitsOnly()) {
+        return false
+    }
+
+    return true
 }
