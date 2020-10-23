@@ -48,6 +48,8 @@ object Endpoint {
     val RECEIVED_SHARES_PATH = ServicePath("received_shares")
 
     val SHARED_SPACE_PATH = ServicePath("shared_spaces")
+
+    const val HeaderAuthErrorCode = "X-LinShare-Auth-error-code"
 }
 
 enum class SupportVersion(val value: String) {

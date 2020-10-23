@@ -49,6 +49,8 @@ sealed class AuthenticationException(message: String) : RuntimeException(message
         const val CONNECT_ERROR = "Connect error"
 
         const val UNKNOWN = "Unknown error"
+
+        const val INVALID_TOTP_CODE = "Missing or Invalid format for TOTP code"
     }
 }
 
@@ -57,3 +59,4 @@ object EmptyToken : AuthenticationException(EMPTY_TOKEN)
 data class ServerNotFoundException(val supportVersion: SupportVersion) : AuthenticationException(SERVER_NOT_FOUND)
 object ConnectError : AuthenticationException(CONNECT_ERROR)
 object UnknownError : AuthenticationException(UNKNOWN)
+object Invalid2FactorAuthException : AuthenticationException(INVALID_TOTP_CODE)

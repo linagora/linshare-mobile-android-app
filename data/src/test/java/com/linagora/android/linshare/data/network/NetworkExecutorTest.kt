@@ -34,25 +34,51 @@
 package com.linagora.android.linshare.data.network
 
 import com.google.common.truth.Truth.assertThat
+import com.linagora.android.linshare.data.network.handler.CommonNetworkRequestHandler
+import com.linagora.android.linshare.domain.network.Endpoint
+import com.linagora.android.linshare.domain.usecases.auth.Invalid2FactorAuthException
+import com.linagora.android.linshare.domain.utils.BusinessErrorCode
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.MediaType
+import okhttp3.Protocol
+import okhttp3.Request
+import okhttp3.ResponseBody
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.MockitoAnnotations
+import retrofit2.HttpException
+import retrofit2.Response
 
 class NetworkExecutorTest {
 
     private lateinit var networkExecutor: NetworkExecutor
+
+    private lateinit var commonNetworkRequestHandler: CommonNetworkRequestHandler
 
     private fun fakeRequest(value: Int): Int {
         require(value < 5) { "invalid value" }
         return value
     }
 
+    private fun fakeRequestWithInvalidSecondFactorAuthCodeError(value: Int): Int {
+        require(value < 5) { "invalid value" }
+        return value.takeIf { value < 3 }
+            ?: throw HttpException(
+                Response.error<Int>(
+                    ResponseBody.create(MediaType.get("text/plain"), "fake request"),
+                    okhttp3.Response.Builder()
+                        .code(401)
+                        .request(Request.Builder().url("http://localhost").build())
+                        .protocol(Protocol.HTTP_1_1)
+                        .message("Fake request")
+                        .addHeader(Endpoint.HeaderAuthErrorCode, BusinessErrorCode.InvalidTOTPCode.value.toString())
+                        .build()))
+    }
+
     @BeforeEach
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        networkExecutor = NetworkExecutor()
+        commonNetworkRequestHandler = CommonNetworkRequestHandler()
+        networkExecutor = NetworkExecutor(commonNetworkRequestHandler)
     }
 
     @Test
@@ -61,6 +87,26 @@ class NetworkExecutorTest {
                 networkRequest = { fakeRequest(3) },
                 onFailure = { if (it is IllegalArgumentException) throw RuntimeException("failed request") }))
             .isEqualTo(3)
+    }
+
+    @Test
+    fun executeShouldThrowAnExceptionWhenRequestHaveInvalidSecondFactorAuthCode() {
+        assertThrows<Invalid2FactorAuthException> { runBlockingTest {
+            networkExecutor.execute(
+                networkRequest = { fakeRequestWithInvalidSecondFactorAuthCodeError(4) },
+                onFailure = { if (it is IllegalArgumentException) throw RuntimeException("failed request") }
+            )
+        } }
+    }
+
+    @Test
+    fun executeShouldThrowAnExceptionWhenRequestHaveAnErrorNotInCommonHandler() {
+        assertThrows<RuntimeException> { runBlockingTest {
+            networkExecutor.execute(
+                networkRequest = { fakeRequestWithInvalidSecondFactorAuthCodeError(7) },
+                onFailure = { if (it is IllegalArgumentException) throw RuntimeException("failed request") }
+            )
+        } }
     }
 
     @Test

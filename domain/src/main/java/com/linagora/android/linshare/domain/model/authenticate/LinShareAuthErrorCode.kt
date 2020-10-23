@@ -31,30 +31,8 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.utils
+package com.linagora.android.linshare.domain.model.authenticate
 
-import com.linagora.android.linshare.domain.model.ClientErrorCode
-import com.linagora.android.linshare.domain.model.LinShareErrorCode
-import com.linagora.android.linshare.domain.model.authenticate.LinShareAuthErrorCode
+import com.linagora.android.linshare.domain.model.BaseErrorCode
 
-object BusinessErrorCode {
-
-    val QuotaAccountNoMoreSpaceErrorCode = LinShareErrorCode(46011)
-
-    val FileSizeIsGreaterThanMaxFileSize = LinShareErrorCode(46010)
-
-    val InternetNotAvailableErrorCode = ClientErrorCode(1)
-
-    val CancelUploadErrorCode = ClientErrorCode(2)
-
-    val DeviceNotEnoughStorageErrorCode = ClientErrorCode(1100)
-
-    val EmptyDocumentErrorCode = ClientErrorCode(1200)
-
-    val WorkGroupNodeNotFoundErrorCode = LinShareErrorCode(26007)
-
-    val AddExistingMemberErrorCode = LinShareErrorCode(62003)
-
-    // Auth error code
-    val InvalidTOTPCode = LinShareAuthErrorCode(1002)
-}
+data class LinShareAuthErrorCode(override val value: Int) : BaseErrorCode()

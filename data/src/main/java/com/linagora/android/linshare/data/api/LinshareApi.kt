@@ -42,8 +42,8 @@ import com.linagora.android.linshare.domain.model.audit.AuditLogEntryUser
 import com.linagora.android.linshare.domain.model.autocomplete.AutoCompleteResult
 import com.linagora.android.linshare.domain.model.copy.CopyRequest
 import com.linagora.android.linshare.domain.model.document.Document
-import com.linagora.android.linshare.domain.model.functionality.Functionality
 import com.linagora.android.linshare.domain.model.document.DocumentRenameRequest
+import com.linagora.android.linshare.domain.model.functionality.Functionality
 import com.linagora.android.linshare.domain.model.share.Share
 import com.linagora.android.linshare.domain.model.share.ShareRequest
 import com.linagora.android.linshare.domain.model.sharedspace.CreateSharedSpaceNodeRequest
@@ -58,7 +58,6 @@ import com.linagora.android.linshare.domain.model.sharedspace.WorkGroupNode
 import com.linagora.android.linshare.domain.model.sharedspace.member.AddMemberRequest
 import com.linagora.android.linshare.domain.model.sharedspace.member.SharedSpaceMember
 import okhttp3.MultipartBody
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -83,7 +82,7 @@ interface LinshareApi {
         @Url authenticateUrl: String,
         @Header("Authorization") basicToken: String,
         @Body permanentToken: PermanentTokenBodyRequest
-    ): Response<Token>
+    ): Token
 
     @DELETE("/jwt/{uuid}")
     @Headers(

@@ -31,30 +31,44 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.domain.utils
+package com.linagora.android.linshare.data.network.handler
 
-import com.linagora.android.linshare.domain.model.ClientErrorCode
-import com.linagora.android.linshare.domain.model.LinShareErrorCode
-import com.linagora.android.linshare.domain.model.authenticate.LinShareAuthErrorCode
+import com.linagora.android.linshare.domain.network.Endpoint
+import com.linagora.android.linshare.domain.usecases.auth.Invalid2FactorAuthException
+import com.linagora.android.linshare.domain.utils.BusinessErrorCode
+import com.linagora.android.linshare.domain.utils.OnCatch
+import org.slf4j.LoggerFactory
+import retrofit2.HttpException
+import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object BusinessErrorCode {
+@Singleton
+class CommonNetworkRequestHandler @Inject constructor() : OnCatch {
 
-    val QuotaAccountNoMoreSpaceErrorCode = LinShareErrorCode(46011)
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(CommonNetworkRequestHandler::class.java)
+    }
 
-    val FileSizeIsGreaterThanMaxFileSize = LinShareErrorCode(46010)
+    override fun invoke(throwable: Throwable) {
+        LOGGER.error("invoke(): ${throwable.message} - ${throwable.printStackTrace()}")
+        when (throwable) {
+            is HttpException -> reactToHttpErrorResponse(throwable)
+        }
+    }
 
-    val InternetNotAvailableErrorCode = ClientErrorCode(1)
+    private fun reactToHttpErrorResponse(httpException: HttpException) {
+        httpException.response()
+            ?.let { response ->
+                when (response.code()) {
+                    401 -> { handleUnAuthorizedStatus(response) }
+                } }
+    }
 
-    val CancelUploadErrorCode = ClientErrorCode(2)
-
-    val DeviceNotEnoughStorageErrorCode = ClientErrorCode(1100)
-
-    val EmptyDocumentErrorCode = ClientErrorCode(1200)
-
-    val WorkGroupNodeNotFoundErrorCode = LinShareErrorCode(26007)
-
-    val AddExistingMemberErrorCode = LinShareErrorCode(62003)
-
-    // Auth error code
-    val InvalidTOTPCode = LinShareAuthErrorCode(1002)
+    private fun handleUnAuthorizedStatus(response: Response<*>) {
+        response.raw().header(Endpoint.HeaderAuthErrorCode)
+            ?.toIntOrNull()
+            ?.takeIf { it == BusinessErrorCode.InvalidTOTPCode.value }
+            ?.let { throw Invalid2FactorAuthException }
+    }
 }

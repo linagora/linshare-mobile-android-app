@@ -31,26 +31,58 @@
  *  the Additional Terms applicable to LinShare software.
  */
 
-package com.linagora.android.linshare.data.network
+package com.linagora.android.linshare.data.network.handler
 
-import com.linagora.android.linshare.data.network.handler.CommonNetworkRequestHandler
-import com.linagora.android.linshare.domain.utils.NoOpOnCatch
+import com.linagora.android.linshare.domain.network.SupportVersion
+import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_CREDENTIAL
+import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
+import com.linagora.android.linshare.domain.usecases.auth.ConnectError
+import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundException
+import com.linagora.android.linshare.domain.usecases.auth.UnknownError
 import com.linagora.android.linshare.domain.utils.OnCatch
+import kotlinx.coroutines.TimeoutCancellationException
+import org.slf4j.LoggerFactory
+import retrofit2.HttpException
+import java.net.SocketException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NetworkExecutor @Inject constructor(
-    private val commonNetworkRequestHandler: CommonNetworkRequestHandler
-) {
+class AuthenticationRequestHandler @Inject constructor() : OnCatch {
 
-    suspend fun <R> execute(
-        networkRequest: suspend () -> R,
-        onFailure: OnCatch = NoOpOnCatch
-    ): R {
-        return runCatching { networkRequest() }
-            .onFailure { commonNetworkRequestHandler(it) }
-            .onFailure(onFailure)
-            .getOrThrow()
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(AuthenticationRequestHandler::class.java)
+    }
+
+    override fun invoke(throwable: Throwable) {
+        handle(throwable, SupportVersion.Version4)
+    }
+
+    fun handle(throwable: Throwable, supportVersion: SupportVersion) {
+        LOGGER.error("invoke(): ${throwable.message} - ${throwable.printStackTrace()}")
+        when (throwable) {
+            is HttpException -> handleToHttpErrorResponse(throwable, supportVersion)
+            is BadCredentials -> throw throwable
+            is SocketTimeoutException -> throw ConnectError
+            is SocketException -> throw ConnectError
+            is TimeoutCancellationException -> throw ConnectError
+            is UnknownHostException -> throw ConnectError
+            else -> throw UnknownError
+        }
+    }
+
+    private fun handleToHttpErrorResponse(httpException: HttpException, supportVersion: SupportVersion) {
+        val response = httpException.response()
+        val exception = response
+            ?.let {
+                when (response.code()) {
+                    401 -> BadCredentials(WRONG_CREDENTIAL)
+                    404 -> ServerNotFoundException(supportVersion)
+                    else -> UnknownError
+                } }
+            ?: UnknownError
+        throw exception
     }
 }
