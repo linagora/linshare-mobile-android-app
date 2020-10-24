@@ -34,6 +34,7 @@
 package com.linagora.android.linshare.view.authentication.login
 
 import android.util.Patterns
+import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.linagora.android.linshare.R
@@ -58,6 +59,8 @@ class LoginViewModel @Inject constructor(
     private val authenticateInteractor: AuthenticateInteractor,
     private val dispatcherProvider: CoroutinesDispatcherProvider
 ) : BaseViewModel(internetAvailable, dispatcherProvider) {
+
+    val secondFactorAuthState = ObservableField(SecondFactorAuthState.NotCompleted)
 
     companion object {
         private const val HTTPS_PREFIX = "https://"

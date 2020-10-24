@@ -49,6 +49,8 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.LoginFragmentBinding
 import com.linagora.android.linshare.domain.model.Credential
+import com.linagora.android.linshare.domain.model.Password
+import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationFailure
@@ -56,12 +58,14 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewStat
 import com.linagora.android.linshare.domain.usecases.auth.BadCredentials
 import com.linagora.android.linshare.domain.usecases.auth.ConnectError
 import com.linagora.android.linshare.domain.usecases.auth.EmptyToken
+import com.linagora.android.linshare.domain.usecases.auth.Invalid2FACodeViewState
 import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundException
 import com.linagora.android.linshare.domain.usecases.auth.ServerNotFoundFailure
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.Loading
 import com.linagora.android.linshare.util.afterTextChanged
+import com.linagora.android.linshare.util.dismissDialogFragmentByTag
 import com.linagora.android.linshare.util.getViewModel
 import com.linagora.android.linshare.view.MainActivityViewModel
 import com.linagora.android.linshare.view.MainNavigationFragment
@@ -70,6 +74,7 @@ import kotlinx.android.synthetic.main.login_fragment.btnLogin
 import kotlinx.android.synthetic.main.login_fragment.edtLoginPassword
 import kotlinx.android.synthetic.main.login_fragment.edtLoginUrl
 import kotlinx.android.synthetic.main.login_fragment.edtLoginUsername
+import java.net.URL
 
 class LoginFragment : MainNavigationFragment() {
 
@@ -162,12 +167,26 @@ class LoginFragment : MainNavigationFragment() {
 
     private fun reactToSuccess(success: Success) {
         when (success) {
+            is Success.ViewState -> reactToViewState(success)
+            is Success.ViewEvent -> reactToViewEvent(success)
+        }
+    }
+
+    private fun reactToViewEvent(viewEvent: Success.ViewEvent) {
+        when (viewEvent) {
+            is LoginFormState -> loginFormState.set(viewEvent)
+            is SecondFactorAuthChangeViewState -> loginViewModel.secondFactorAuthState
+                .set(viewEvent.secondFactorAuthState)
+        }
+    }
+
+    private fun reactToViewState(viewState: Success.ViewState) {
+        when (viewState) {
             is Loading -> loginFormState.set(LoginFormState(isLoading = true))
-            is LoginFormState -> loginFormState.set(success)
             is AuthenticationViewState -> {
                 loginFormState.set(LoginFormState(isLoading = false))
-                mainActivityViewModel.setUpAuthenticated(success)
-                loginSuccess(success.credential)
+                mainActivityViewModel.setUpAuthenticated(viewState)
+                loginSuccess(viewState.credential)
             }
         }
     }
@@ -175,6 +194,11 @@ class LoginFragment : MainNavigationFragment() {
     private fun reactToFailure(failure: Failure) {
         when (failure) {
             is ServerNotFoundFailure -> handleServerNotFound(failure)
+            is Invalid2FACodeViewState -> showSecondFactorAuthScreen(
+                failure.baseUrl,
+                failure.supportVersion,
+                failure.username,
+                failure.password)
             is AuthenticationFailure -> handleAuthenticationException(failure.exception)
         }
     }
@@ -184,6 +208,17 @@ class LoginFragment : MainNavigationFragment() {
             SupportVersion.Version4 -> authenticate(SupportVersion.Version2)
             else -> handleAuthenticationException(serverNotFoundFailure.exception)
         }
+    }
+
+    private fun showSecondFactorAuthScreen(
+        baseUrl: URL,
+        supportVersion: SupportVersion,
+        username: Username,
+        password: Password
+    ) {
+        dismissSecondFactorAuthDialog()
+        SecondFactorAuthDialog(baseUrl, supportVersion, username, password)
+            .show(childFragmentManager, SecondFactorAuthDialog.TAG)
     }
 
     private fun handleAuthenticationException(authenticationException: AuthenticationException) {
@@ -208,6 +243,10 @@ class LoginFragment : MainNavigationFragment() {
             ErrorType.UNKNOWN_ERROR -> R.string.unknow_error
             else -> null
         }
+    }
+
+    private fun dismissSecondFactorAuthDialog() {
+        childFragmentManager.dismissDialogFragmentByTag(SecondFactorAuthDialog.TAG)
     }
 
     private fun loginSuccess(credentials: Credential) {

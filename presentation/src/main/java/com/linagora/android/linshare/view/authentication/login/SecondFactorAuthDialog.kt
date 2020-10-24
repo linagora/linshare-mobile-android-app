@@ -37,22 +37,31 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.databinding.DialogSecondFactorAuthBinding
+import com.linagora.android.linshare.domain.model.Password
+import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.util.binding.initView
+import com.linagora.android.linshare.util.binding.onSecondFActorAuthChange
+import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getParentViewModel
+import com.linagora.android.linshare.util.showKeyboard
 import dagger.android.support.DaggerAppCompatDialogFragment
+import java.net.URL
 import javax.inject.Inject
 
 class SecondFactorAuthDialog(
-    private val baseUrl: String,
+    private val baseUrl: URL,
     private val supportVersion: SupportVersion,
-    private val username: String,
-    private val password: String
+    private val username: Username,
+    private val password: Password
 ) : DaggerAppCompatDialogFragment() {
     companion object {
         const val TAG = "secondFactorAuthDialog"
@@ -61,7 +70,8 @@ class SecondFactorAuthDialog(
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var loginViewModel: LoginViewModel
+    private val loginViewModel: LoginViewModel
+        by lazy { getParentViewModel<LoginViewModel>(viewModelFactory) }
 
     private lateinit var binding: DialogSecondFactorAuthBinding
 
@@ -69,17 +79,47 @@ class SecondFactorAuthDialog(
         inflateView()
         initViewModel()
         val dialog = AppCompatDialog(context!!, android.R.style.Theme_Light)
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(binding.root)
         return dialog
     }
 
-    private fun inflateView() {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_second_factor_auth, null, false)
-        binding.inputSecondFAContainer.initView()
+    private fun initViewModel() {
+        binding.viewModel = loginViewModel
     }
 
-    private fun initViewModel() {
-        loginViewModel = getParentViewModel(viewModelFactory)
+    private fun inflateView() {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_second_factor_auth, null, false)
+        with(binding) {
+            inputSecondFAContainer.initView()
+            inputSecondFAContainer.onSecondFActorAuthChange(this@SecondFactorAuthDialog::onCodeChange)
+            inputSecondFAContainer.codeZero.requestFocus()
+            inputSecondFAContainer.codeZero.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    v.showKeyboard()
+                }
+            }
+
+            toolbar.setNavigationOnClickListener {
+                loginViewModel.dispatchUIState(Either.Right(CloseSecondFactorAuthScreen))
+                dismiss()
+            }
+        }
+    }
+
+
+
+    override fun onPause() {
+        binding.root.dismissKeyboard()
+        super.onPause()
+    }
+
+    private fun onCodeChange(secondFactorAuthCode: SecondFactorAuthCode?) {
+        val state = secondFactorAuthCode?.let { SecondFactorAuthState.Completed }
+            ?: SecondFactorAuthState.NotCompleted
+
+        loginViewModel.dispatchUIState(
+            Either.Right(SecondFactorAuthChangeViewState(state)))
     }
 }

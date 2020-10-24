@@ -78,4 +78,6 @@ sealed class OperatorType {
     object Rename : OnlineOperatorType()
 
     object DuplicateFile : OnlineOperatorType()
+
+    object Login : OnlineOperatorType()
 }

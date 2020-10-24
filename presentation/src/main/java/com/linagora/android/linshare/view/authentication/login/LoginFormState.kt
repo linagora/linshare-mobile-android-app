@@ -33,6 +33,8 @@
 
 package com.linagora.android.linshare.view.authentication.login
 
+import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.ViewEvent
 import com.linagora.android.linshare.view.authentication.login.ErrorType.NONE
 
@@ -53,3 +55,14 @@ enum class ErrorType {
     UNKNOWN_ERROR,
     NONE
 }
+
+enum class SecondFactorAuthState {
+    Completed,
+    NotCompleted
+}
+
+object CloseSecondFactorAuthScreen : Success.OfflineViewEvent(OperatorType.Login)
+
+data class SecondFactorAuthChangeViewState(
+    val secondFactorAuthState: SecondFactorAuthState
+) : Success.OfflineViewEvent(OperatorType.Login)

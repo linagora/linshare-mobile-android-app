@@ -34,12 +34,22 @@
 package com.linagora.android.linshare.domain.usecases.auth
 
 import com.linagora.android.linshare.domain.model.Credential
+import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
+import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.utils.Failure
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.ViewState
+import java.net.URL
 
 data class AuthenticationViewState(val credential: Credential, val token: Token) : Success.ViewState()
 data class AuthenticationFailure(val exception: AuthenticationException) : Failure.FeatureFailure()
 data class ServerNotFoundFailure(val exception: ServerNotFoundException) : Failure.FeatureFailure()
 object SuccessRemoveAccount : ViewState()
+data class Invalid2FACodeViewState(
+    val baseUrl: URL,
+    val supportVersion: SupportVersion,
+    val username: Username,
+    val password: Password
+) : Failure.FeatureFailure()
