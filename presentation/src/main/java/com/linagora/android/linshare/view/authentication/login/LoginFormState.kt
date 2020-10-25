@@ -34,9 +34,14 @@
 package com.linagora.android.linshare.view.authentication.login
 
 import com.linagora.android.linshare.domain.model.OperatorType
+import com.linagora.android.linshare.domain.model.Password
+import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
+import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.utils.Success
 import com.linagora.android.linshare.domain.usecases.utils.Success.ViewEvent
 import com.linagora.android.linshare.view.authentication.login.ErrorType.NONE
+import java.net.URL
 
 data class LoginFormState(
     val isLoading: Boolean = false,
@@ -66,3 +71,11 @@ object CloseSecondFactorAuthScreen : Success.OfflineViewEvent(OperatorType.Login
 data class SecondFactorAuthChangeViewState(
     val secondFactorAuthState: SecondFactorAuthState
 ) : Success.OfflineViewEvent(OperatorType.Login)
+
+data class LoginWithSecondFactorAuthCode(
+    val baseUrl: URL,
+    val supportVersion: SupportVersion,
+    val username: Username,
+    val password: Password,
+    val secondFactorAuthCode: SecondFactorAuthCode
+) : Success.OnlineViewEvent(OperatorType.Login)

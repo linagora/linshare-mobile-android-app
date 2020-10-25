@@ -46,6 +46,7 @@ import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.User
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.model.quota.QuotaId
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
 import com.linagora.android.linshare.domain.network.Endpoint
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.network.withServicePath
@@ -61,18 +62,31 @@ class LinshareDataSource @Inject constructor(
     private val authenticationRequestHandler: AuthenticationRequestHandler
 ) {
 
-    suspend fun retrievePermanentToken(baseUrl: URL, supportVersion: SupportVersion, username: Username, password: Password): Token {
+    suspend fun retrievePermanentToken(
+        baseUrl: URL,
+        supportVersion: SupportVersion,
+        username: Username,
+        password: Password,
+        secondFactorAuthCode: SecondFactorAuthCode? = null
+    ): Token {
         return networkExecutor.execute(
-            networkRequest = { createPermanentToken(baseUrl, supportVersion, username, password) },
+            networkRequest = { createPermanentToken(baseUrl, supportVersion, username, password, secondFactorAuthCode) },
             onFailure = { authenticationRequestHandler.handle(it, supportVersion) }
         )
     }
 
-    private suspend fun createPermanentToken(baseUrl: URL, supportVersion: SupportVersion, username: Username, password: Password): Token {
+    private suspend fun createPermanentToken(
+        baseUrl: URL,
+        supportVersion: SupportVersion,
+        username: Username,
+        password: Password,
+        secondFactorAuthCode: SecondFactorAuthCode? = null
+    ): Token {
         val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
         return linshareApi.createPermanentToken(
             authenticateUrl = baseUrl.withSupportVersion(supportVersion)
                 .withServicePath(Endpoint.AUTHENTICATION_PATH).toString(),
+            secondFactorAuthCode = secondFactorAuthCode?.value,
             basicToken = Credentials.basic(username.username, password.value),
             permanentToken = PermanentTokenBodyRequest(label = "LinShare-Android-App-$androidId")
         )

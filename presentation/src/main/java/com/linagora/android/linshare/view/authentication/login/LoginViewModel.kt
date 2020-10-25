@@ -40,6 +40,7 @@ import arrow.core.Either
 import com.linagora.android.linshare.R
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticateInteractor
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationViewState
@@ -81,6 +82,26 @@ class LoginViewModel @Inject constructor(
     fun authenticate(baseUrl: String, supportVersion: SupportVersion, username: String, password: String) {
         parseForm(baseUrl, username, password)
             ?.let { authenticate(it.first, supportVersion, it.second, it.third) }
+    }
+
+    fun authenticate(
+        baseUrl: URL,
+        supportVersion: SupportVersion,
+        username: Username,
+        password: Password,
+        secondFactorAuthCode: SecondFactorAuthCode
+    ) {
+        viewModelScope.launch(dispatcherProvider.io) {
+            consumeStates(
+                authenticateInteractor(
+                    baseUrl,
+                    supportVersion,
+                    username,
+                    password,
+                    secondFactorAuthCode
+                )
+            )
+        }
     }
 
     override fun onSuccessDispatched(success: Success) {

@@ -33,6 +33,7 @@
 
 package com.linagora.android.linshare.domain.usecases.auth
 
+import arrow.core.Either
 import com.google.common.truth.Truth.assertThat
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.authentication.AuthenticationRepository
@@ -40,6 +41,7 @@ import com.linagora.android.linshare.domain.usecases.auth.AuthenticationExceptio
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException.Companion.WRONG_PASSWORD
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD
 import com.linagora.android.testshared.TestFixtures.Authentications.PASSWORD_2
+import com.linagora.android.testshared.TestFixtures.Authentications.SECOND_FACTOR_AUTH_CODE
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_BASE_URL
 import com.linagora.android.testshared.TestFixtures.Credentials.LINSHARE_USER1
 import com.linagora.android.testshared.TestFixtures.Credentials.SERVER_URL
@@ -51,7 +53,7 @@ import com.linagora.android.testshared.TestFixtures.State.INIT_STATE
 import com.linagora.android.testshared.TestFixtures.State.LOADING_STATE
 import com.linagora.android.testshared.TestFixtures.State.SERVER_NOT_FOUND_STATE
 import com.linagora.android.testshared.TestFixtures.State.SERVER_VERSION_4_NOT_FOUND_STATE
-import com.linagora.android.testshared.TestFixtures.State.UNKNOW_ERROR_STATE
+import com.linagora.android.testshared.TestFixtures.State.UNKNOWN_ERROR_STATE
 import com.linagora.android.testshared.TestFixtures.State.WRONG_CREDENTIAL_STATE
 import com.linagora.android.testshared.TestFixtures.State.WRONG_PASSWORD_STATE
 import com.linagora.android.testshared.TestFixtures.Tokens.TOKEN
@@ -75,6 +77,19 @@ class AuthenticateInteractorTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         authenticateInteractor = AuthenticateInteractor(authenticationRepository)
+    }
+
+    @Test
+    fun authenticateShouldReturnInvalid2FAErrorWhenHaveInvalid2FAException() = runBlockingTest {
+        `when`(authenticationRepository.retrievePermanentToken(LINSHARE_BASE_URL, SupportVersion.Version4, LINSHARE_USER1, PASSWORD, SECOND_FACTOR_AUTH_CODE))
+            .thenThrow(Invalid2FactorAuthException)
+
+        assertThat(authenticateInteractor(LINSHARE_BASE_URL, SupportVersion.Version4, LINSHARE_USER1, PASSWORD, SECOND_FACTOR_AUTH_CODE)
+                .map { it(INIT_STATE) }
+                .toList(ArrayList()))
+            .containsExactly(
+                LOADING_STATE,
+                Either.Left(Invalid2FACodeViewState(LINSHARE_BASE_URL, SupportVersion.Version4, LINSHARE_USER1, PASSWORD)))
     }
 
     @Test
@@ -151,7 +166,7 @@ class AuthenticateInteractorTest {
             assertThat(authenticateInteractor(SERVER_URL, SupportVersion.Version2, USER_NAME, PASSWORD)
                 .map { it(INIT_STATE) }
                 .toList(ArrayList()))
-                .containsExactly(LOADING_STATE, UNKNOW_ERROR_STATE)
+                .containsExactly(LOADING_STATE, UNKNOWN_ERROR_STATE)
         }
     }
 

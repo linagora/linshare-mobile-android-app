@@ -177,6 +177,13 @@ class LoginFragment : MainNavigationFragment() {
             is LoginFormState -> loginFormState.set(viewEvent)
             is SecondFactorAuthChangeViewState -> loginViewModel.secondFactorAuthState
                 .set(viewEvent.secondFactorAuthState)
+            is LoginWithSecondFactorAuthCode -> loginViewModel.authenticate(
+                viewEvent.baseUrl,
+                viewEvent.supportVersion,
+                viewEvent.username,
+                viewEvent.password,
+                viewEvent.secondFactorAuthCode
+            )
         }
     }
 

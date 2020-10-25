@@ -36,6 +36,7 @@ package com.linagora.android.linshare.domain.repository.authentication
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.auth.AuthenticationException
 import java.net.URL
@@ -43,7 +44,13 @@ import java.net.URL
 interface AuthenticationRepository {
 
     @Throws(AuthenticationException::class)
-    suspend fun retrievePermanentToken(baseUrl: URL, supportVersion: SupportVersion, username: Username, password: Password): Token
+    suspend fun retrievePermanentToken(
+        baseUrl: URL,
+        supportVersion: SupportVersion,
+        username: Username,
+        password: Password,
+        secondFactorAuthCode: SecondFactorAuthCode? = null
+    ): Token
 
     suspend fun deletePermanentToken(token: Token): Boolean
 }

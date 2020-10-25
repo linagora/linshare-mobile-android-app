@@ -35,6 +35,7 @@ package com.linagora.android.linshare.util.binding
 
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.text.isDigitsOnly
 import com.linagora.android.linshare.databinding.SecondFactorAuthenticationCodeViewBinding
 import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
@@ -46,13 +47,15 @@ object SecondFactorAuthenticationCodeViewBindingExtensions {
     val NO_CODES = null
 }
 
+private fun SecondFactorAuthenticationCodeViewBinding.allInputCode() = listOf(
+    codeZero, codeOne, codeTwo, codeThree, codeFour, codeFive
+)
+
 private fun SecondFactorAuthenticationCodeViewBinding.validateCompletedState(): Boolean {
-    return codeZero.digitValidation() && codeOne.digitValidation() &&
-            codeTwo.digitValidation() && codeThree.digitValidation() &&
-            codeFour.digitValidation() && codeFive.digitValidation()
+    return allInputCode().all(AppCompatEditText::digitValidation)
 }
 
-private fun SecondFactorAuthenticationCodeViewBinding.getSecondFactorAuthCode(): SecondFactorAuthCode? {
+fun SecondFactorAuthenticationCodeViewBinding.getSecondFactorAuthCode(): SecondFactorAuthCode? {
     if (validateCompletedState()) {
         val codeBuilder = StringBuilder(codeZero.text.toString())
             .append(codeOne.text.toString())
@@ -101,15 +104,13 @@ fun SecondFactorAuthenticationCodeViewBinding.initView() {
     }
 }
 
-fun SecondFactorAuthenticationCodeViewBinding.onSecondFActorAuthChange(
+fun SecondFactorAuthenticationCodeViewBinding.onSecondFactorAuthChange(
     onSecondFactorAuthChange: OnSecondFactorAuthChange
 ) {
-    codeZero.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
-    codeOne.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
-    codeTwo.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
-    codeThree.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
-    codeFour.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
-    codeFive.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    allInputCode().map {
+        it.afterTextChanged { onSecondFactorAuthChange(getSecondFactorAuthCode()) }
+    }
+
     codeFive.setOnEditorActionListener { _, actionId, _ ->
         when (actionId) {
             EditorInfo.IME_ACTION_DONE -> onSecondFactorAuthChange(getSecondFactorAuthCode())
@@ -119,12 +120,12 @@ fun SecondFactorAuthenticationCodeViewBinding.onSecondFActorAuthChange(
 }
 
 fun EditText.digitValidation(): Boolean {
-    val input = text.toString()
+    val input = text.toString().trim()
     if (input.isNullOrEmpty() || input.isNullOrBlank()) {
         return false
     }
 
-    if (input.trim().length > 1) {
+    if (input.length > 1) {
         return false
     }
 

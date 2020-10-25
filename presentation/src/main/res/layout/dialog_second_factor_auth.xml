@@ -38,6 +38,10 @@
     <data>
         <import type="com.linagora.android.linshare.view.authentication.login.SecondFactorAuthState"/>
         <import type="com.linagora.android.linshare.view.authentication.login.LoginViewModel"/>
+        <import type="java.net.URL"/>
+        <import type="com.linagora.android.linshare.domain.network.SupportVersion"/>
+        <import type="com.linagora.android.linshare.domain.model.Username"/>
+        <import type="com.linagora.android.linshare.domain.model.Password"/>
         <variable
             name="viewModel"
             type="LoginViewModel" />

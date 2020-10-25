@@ -38,6 +38,7 @@ import com.linagora.android.linshare.domain.model.Credential
 import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Token
 import com.linagora.android.linshare.domain.model.Username
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.repository.CredentialRepository
 import com.linagora.android.linshare.domain.repository.TokenRepository
@@ -55,13 +56,15 @@ class LinshareAuthenticationRepository @Inject constructor(
         baseUrl: URL,
         supportVersion: SupportVersion,
         username: Username,
-        password: Password
+        password: Password,
+        secondFactorAuthCode: SecondFactorAuthCode?
     ): Token {
         return linshareDataSource.retrievePermanentToken(
                 baseUrl = baseUrl,
                 supportVersion = supportVersion,
                 username = username,
-                password = password)
+                password = password,
+                secondFactorAuthCode = secondFactorAuthCode)
             .also { storeAuthenticationInfo(baseUrl, supportVersion, username, it) }
     }
 

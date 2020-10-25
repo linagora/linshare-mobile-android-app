@@ -48,8 +48,9 @@ import com.linagora.android.linshare.domain.model.Password
 import com.linagora.android.linshare.domain.model.Username
 import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
 import com.linagora.android.linshare.domain.network.SupportVersion
+import com.linagora.android.linshare.util.binding.getSecondFactorAuthCode
 import com.linagora.android.linshare.util.binding.initView
-import com.linagora.android.linshare.util.binding.onSecondFActorAuthChange
+import com.linagora.android.linshare.util.binding.onSecondFactorAuthChange
 import com.linagora.android.linshare.util.dismissKeyboard
 import com.linagora.android.linshare.util.getParentViewModel
 import com.linagora.android.linshare.util.showKeyboard
@@ -93,12 +94,19 @@ class SecondFactorAuthDialog(
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_second_factor_auth, null, false)
         with(binding) {
             inputSecondFAContainer.initView()
-            inputSecondFAContainer.onSecondFActorAuthChange(this@SecondFactorAuthDialog::onCodeChange)
+            inputSecondFAContainer.onSecondFactorAuthChange(this@SecondFactorAuthDialog::onCodeChange)
             inputSecondFAContainer.codeZero.requestFocus()
-            inputSecondFAContainer.codeZero.setOnFocusChangeListener { v, hasFocus ->
+            inputSecondFAContainer.codeZero.setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
-                    v.showKeyboard()
+                    view.showKeyboard()
                 }
+            }
+
+            btnLogin.setOnClickListener {
+                inputSecondFAContainer.getSecondFactorAuthCode()
+                    ?.let { loginViewModel.dispatchUIState(
+                        Either.Right(LoginWithSecondFactorAuthCode(baseUrl, supportVersion, username, password, it)))
+                    }
             }
 
             toolbar.setNavigationOnClickListener {
@@ -107,8 +115,6 @@ class SecondFactorAuthDialog(
             }
         }
     }
-
-
 
     override fun onPause() {
         binding.root.dismissKeyboard()

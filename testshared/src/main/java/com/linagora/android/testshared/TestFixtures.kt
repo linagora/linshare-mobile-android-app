@@ -49,6 +49,7 @@ import com.linagora.android.linshare.domain.model.download.EnqueuedDownloadId
 import com.linagora.android.linshare.domain.model.quota.QuotaId
 import com.linagora.android.linshare.domain.model.quota.QuotaSize
 import com.linagora.android.linshare.domain.model.search.QueryString
+import com.linagora.android.linshare.domain.model.secondfa.SecondFactorAuthCode
 import com.linagora.android.linshare.domain.network.InternetNotAvailable
 import com.linagora.android.linshare.domain.network.SupportVersion
 import com.linagora.android.linshare.domain.usecases.account.AccountDetailsViewState
@@ -142,6 +143,7 @@ object TestFixtures {
         val LINSHARE_PASSWORD1 = Password(LINSHARE_PASSWORD)
         val PASSWORD = Password(PASSWORD_VALUE)
         val PASSWORD_2 = Password(PASSWORD_VALUE_2)
+        val SECOND_FACTOR_AUTH_CODE = SecondFactorAuthCode("123456")
     }
 
     object State {
@@ -173,7 +175,7 @@ object TestFixtures {
             AuthenticationFailure(ConnectError)
         )
 
-        val UNKNOW_ERROR_STATE = Either.Left(
+        val UNKNOWN_ERROR_STATE = Either.Left(
             AuthenticationFailure(UnknownError)
         )
 

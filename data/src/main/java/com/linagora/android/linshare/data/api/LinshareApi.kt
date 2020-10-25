@@ -81,6 +81,7 @@ interface LinshareApi {
     suspend fun createPermanentToken(
         @Url authenticateUrl: String,
         @Header("Authorization") basicToken: String,
+        @Header("x-linShare-2fa-pin") secondFactorAuthCode: String? = null,
         @Body permanentToken: PermanentTokenBodyRequest
     ): Token
 
